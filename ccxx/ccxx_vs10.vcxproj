@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="ccxx" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5ADCABC2-B2B3-44C3-9871-39D28AD6D858}</ProjectGuid>
+    <RootNamespace>ccxx</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\cxVcProject-vs10.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\cxVcProject-vs10.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="ccxx.h" />
+    <ClInclude Include="cxapplication.h" />
+    <ClInclude Include="cxbitmap.h" />
+    <ClInclude Include="cxbuffer.h" />
+    <ClInclude Include="cxchannel.h" />
+    <ClInclude Include="cxchannel_serial.h" />
+    <ClInclude Include="cxchannel_tcpclient.h" />
+    <ClInclude Include="cxchannel_tcpserver.h" />
+    <ClInclude Include="cxchannel_udp.h" />
+    <ClInclude Include="cxcontainer.h" />
+    <ClInclude Include="cxcontext.h" />
+    <ClInclude Include="cxcrc.h" />
+    <ClInclude Include="cxdescribe.h" />
+    <ClInclude Include="cxfactory.h" />
+    <ClInclude Include="cxfile.h" />
+    <ClInclude Include="cxglobal.h" />
+    <ClInclude Include="cxinterinfo.h" />
+    <ClInclude Include="cxlog.h" />
+    <ClInclude Include="cxmacro.h" />
+    <ClInclude Include="cxmath.h" />
+    <ClInclude Include="cxpacket.h" />
+    <ClInclude Include="cxprocess.h" />
+    <ClInclude Include="cxprofile.h" />
+    <ClInclude Include="cxprofile_loo.h" />
+    <ClInclude Include="cxprofile_skv.h" />
+    <ClInclude Include="cxprofile_skv_ini.h" />
+    <ClInclude Include="cxprofile_skv_txt.h" />
+    <ClInclude Include="cxsafebuffer.h" />
+    <ClInclude Include="cxsafequeue.h" />
+    <ClInclude Include="cxsafethread.h" />
+    <ClInclude Include="cxsocket.h" />
+    <ClInclude Include="cxstring.h" />
+    <ClInclude Include="cxsystem.h" />
+    <ClInclude Include="cxthread.h" />
+    <ClInclude Include="cxtime.h" />
+    <ClInclude Include="cxtimer.h" />
+    <ClInclude Include="cxvalue.h" />
+    <ClInclude Include="cxxml.h" />
+    <ClInclude Include="tinyxml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cxapplication.cpp" />
+    <ClCompile Include="cxbitmap.cpp" />
+    <ClCompile Include="cxbuffer.cpp" />
+    <ClCompile Include="cxchannel.cpp" />
+    <ClCompile Include="cxchannel_serial.cpp" />
+    <ClCompile Include="cxchannel_tcpclient.cpp" />
+    <ClCompile Include="cxchannel_tcpserver.cpp" />
+    <ClCompile Include="cxchannel_udp.cpp" />
+    <ClCompile Include="cxcontainer.cpp" />
+    <ClCompile Include="cxcontext.cpp" />
+    <ClCompile Include="cxcrc.cpp" />
+    <ClCompile Include="cxdescribe.cpp" />
+    <ClCompile Include="cxfactory.cpp" />
+    <ClCompile Include="cxfile.cpp" />
+    <ClCompile Include="cxglobal.cpp" />
+    <ClCompile Include="cxinterinfo.cpp" />
+    <ClCompile Include="cxlog.cpp" />
+    <ClCompile Include="cxmath.cpp" />
+    <ClCompile Include="cxpacket.cpp" />
+    <ClCompile Include="cxprocess.cpp" />
+    <ClCompile Include="cxprofile.cpp" />
+    <ClCompile Include="cxprofile_loo.cpp" />
+    <ClCompile Include="cxprofile_skv.cpp" />
+    <ClCompile Include="cxprofile_skv_ini.cpp" />
+    <ClCompile Include="cxprofile_skv_txt.cpp" />
+    <ClCompile Include="cxsafebuffer.cpp" />
+    <ClCompile Include="cxsafequeue.cpp" />
+    <ClCompile Include="cxsafethread.cpp" />
+    <ClCompile Include="cxsocket.cpp" />
+    <ClCompile Include="cxstring.cpp" />
+    <ClCompile Include="cxsystem.cpp" />
+    <ClCompile Include="cxthread.cpp" />
+    <ClCompile Include="cxtime.cpp" />
+    <ClCompile Include="cxtimer.cpp" />
+    <ClCompile Include="cxvalue.cpp" />
+    <ClCompile Include="cxxml.cpp" />
+    <ClCompile Include="tinyxml.cpp" />
+    <ClCompile Include="tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxmlparser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
