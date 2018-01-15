@@ -1,0 +1,75 @@
+#include "resource.h"
+
+#define GM_PRODUCT_VERSION_VALUE 1,0,1306,2515
+#define GM_PRODUCT_VERSION_STRING "1,0,1306,2515"
+#define GM_PRODUCT_NAME_VALUE qt
+#define GM_PRODUCT_NAME_STRING "qt"
+
+#define APSTUDIO_READONLY_SYMBOLS
+
+#include "afxres.h"
+
+
+#undef APSTUDIO_READONLY_SYMBOLS
+
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+IDI_ICON1               ICON     DISCARDABLE     "qt.ico"
+
+#ifdef APSTUDIO_INVOKED
+
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.\0"
+END
+
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION GM_PRODUCT_VERSION_VALUE
+ PRODUCTVERSION GM_PRODUCT_VERSION_VALUE
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x0L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName", GM_PRODUCT_NAME_STRING
+            VALUE "FileDescription", GM_PRODUCT_NAME_STRING
+            VALUE "FileVersion", GM_PRODUCT_VERSION_STRING
+            VALUE "InternalName", GM_PRODUCT_NAME_STRING
+            VALUE "LegalCopyright", "Copyright (C) 2099"
+            VALUE "OriginalFilename", GM_PRODUCT_NAME_STRING
+            VALUE "ProductName", GM_PRODUCT_NAME_STRING
+            VALUE "ProductVersion", GM_PRODUCT_VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif

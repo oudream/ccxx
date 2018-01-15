@@ -1,0 +1,51 @@
+###environment
+
+#include(./../../src/CCXX/ccxx.cmake)
+
+set(fslSources
+        test_qt1/main.cpp
+        test_qt1/mainwindow.cpp
+        )
+
+set(fslUiHeads
+        test_qt1/mainwindow.h
+        )
+
+set(fslUiSources
+        test_qt1/mainwindow.ui
+        )
+
+mc_merge_file_path(${gs_project_test_path} "${fslSources}" fslSourcePaths)
+mc_merge_file_path(${gs_project_test_path} "${fslUiHeads}" fslUiHeadsPaths)
+mc_merge_file_path(${gs_project_test_path} "${fslUiSources}" fslUiSourcesPaths)
+
+find_package(Qt4 REQUIRED)
+#set(QT_DONT_USE_QTGUI TRUE)
+include(${QT_USE_FILE})
+add_definitions(${QT_DEFINITIONS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+
+qt4_wrap_cpp(this_MOCS ${fslUiHeadsPaths})
+qt4_wrap_ui(this_UIS ${fslUiSourcesPaths})
+
+add_executable(test_qt1
+        ${fslSourcePaths}
+        ${this_MOCS}
+        ${this_UIS}
+        )
+
+#ADD_EXECUTABLE(example main.cpp)
+target_link_libraries(test_qt1 ${QT_LIBRARIES})
+
+#add_dependencies(test_qt1
+#        libccxx
+#        )
+#
+#target_link_libraries(test_qt1
+#        libccxx
+#        )
+
+set_target_properties(test_qt1 PROPERTIES FOLDER ccxx/test)
+
+
+#PROJECT(example)

@@ -6,7 +6,7 @@
 
 class SerialPrivate;
 
-class CxChannelSerial : public CxChannelBase
+class GM_CCXX_CORE_API CxChannelSerial : public CxChannelBase
 {
 public:
     enum BaudRateEnum {
@@ -419,7 +419,7 @@ private:
 
 };
 
-class CxChannelSerialFactory : public CxChannelFactoryBase
+class GM_CCXX_CORE_API CxChannelSerialFactory : public CxChannelFactoryBase
 {
 
 //    GM_SINGLETON_DECLARATION( CxChannelSerialFactory )

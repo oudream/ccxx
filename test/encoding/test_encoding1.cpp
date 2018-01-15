@@ -1,12 +1,12 @@
 
-#include <ccxx.h>
+#include <ccxx/ccxx.h>
 
 using namespace std;
 
 int f_argc = 0;
-char * * f_argv = NULL;
+const char * * f_argv = NULL;
 
-int main(int argc, char * argv[])
+int main(int argc,const char * argv[])
 {
     f_argc = argc;
     f_argv = argv;

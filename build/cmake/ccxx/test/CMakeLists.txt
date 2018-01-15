@@ -1,0 +1,13 @@
+
+add_subdirectory(stl)
+add_subdirectory(custom)
+add_subdirectory(channel)
+add_subdirectory(crc)
+add_subdirectory(database)
+add_subdirectory(env)
+#add_subdirectory(algorithm)
+add_subdirectory(pure)
+add_subdirectory(json)
+add_subdirectory(dll)
+add_subdirectory(log)
+add_subdirectory(dump)

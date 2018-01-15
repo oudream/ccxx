@@ -27,7 +27,7 @@ typedef void (*fn_timer_timeout_t)(int iInterval);
 
 
 //*timer object
-class CxTimer
+class GM_CCXX_CORE_API CxTimer
 {
 public:
     CxTimer() :
@@ -98,7 +98,7 @@ private:
 //attention : only one : iInterval and bIndependence == true
 //attention : host is alway start
 //main thread : startTimer stopTimer stopAll
-class CxTimerManager
+class GM_CCXX_CORE_API CxTimerManager
 {
 public:
     static void startTimer(CxTimer * timer);

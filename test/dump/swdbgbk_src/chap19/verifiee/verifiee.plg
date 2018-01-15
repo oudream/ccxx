@@ -1,0 +1,98 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: verifiee - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/verifiee.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap19\verifiee\verifiee.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A0.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/verifiee.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap19\verifiee\Bugs.cpp"
+"C:\dig\dbg\author\code\chap19\verifiee\verifiee.cpp"
+"C:\dig\dbg\author\code\chap19\verifiee\verifieeDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A0.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A1.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/verifiee.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap19\verifiee\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A1.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A2.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/verifiee.pdb" /machine:I386 /out:"../../bin/Release/verifiee.exe" 
+\dig\dbg\author\code\temp\Release\Bugs.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\verifiee.obj
+\dig\dbg\author\code\temp\Release\verifiee.res
+\dig\dbg\author\code\temp\Release\verifieeDlg.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A2.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+Bugs.cpp
+verifiee.cpp
+verifieeDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+verifiee.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: verifiee - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/verifiee.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap19\verifiee\verifiee.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A4.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/verifiee.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap19\verifiee\Bugs.cpp"
+"C:\dig\dbg\author\code\chap19\verifiee\verifiee.cpp"
+"C:\dig\dbg\author\code\chap19\verifiee\verifieeDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A4.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A5.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/verifiee.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap19\verifiee\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A5.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A6.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/verifiee.pdb" /debug /machine:I386 /out:"../../bin/Debug/verifiee.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\Bugs.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\verifiee.obj
+\dig\dbg\author\code\temp\Debug\verifiee.res
+\dig\dbg\author\code\temp\Debug\verifieeDlg.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4A6.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+Bugs.cpp
+verifiee.cpp
+verifieeDlg.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"../../bin/Debug/verifiee.bsc"  \dig\dbg\author\code\temp\Debug\StdAfx.sbr \dig\dbg\author\code\temp\Debug\Bugs.sbr \dig\dbg\author\code\temp\Debug\verifiee.sbr \dig\dbg\author\code\temp\Debug\verifieeDlg.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+verifiee.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

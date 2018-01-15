@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D4dTest", "D4dTest\D4dTest.vcproj", "{FAB35556-4723-4C8C-821E-CC2C5F2282BA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d4d", "d4d.vcproj", "{1356539E-05B6-4A48-AFAC-F81882C91FF0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FAB35556-4723-4C8C-821E-CC2C5F2282BA} = {FAB35556-4723-4C8C-821E-CC2C5F2282BA}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAB35556-4723-4C8C-821E-CC2C5F2282BA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FAB35556-4723-4C8C-821E-CC2C5F2282BA}.Debug|Win32.Build.0 = Debug|Win32
+		{FAB35556-4723-4C8C-821E-CC2C5F2282BA}.Release|Win32.ActiveCfg = Release|Win32
+		{FAB35556-4723-4C8C-821E-CC2C5F2282BA}.Release|Win32.Build.0 = Release|Win32
+		{1356539E-05B6-4A48-AFAC-F81882C91FF0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1356539E-05B6-4A48-AFAC-F81882C91FF0}.Debug|Win32.Build.0 = Debug|Win32
+		{1356539E-05B6-4A48-AFAC-F81882C91FF0}.Release|Win32.ActiveCfg = Release|Win32
+		{1356539E-05B6-4A48-AFAC-F81882C91FF0}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

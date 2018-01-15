@@ -46,9 +46,13 @@ void CxXml::loadTable1Level(const char *pData, int iLength, std::vector<std::map
     if (pData && iLength > 5)
     {
         TiXmlDocument doc;
-        if(doc.Parse(pData))
+        try
         {
+            doc.Parse(pData);
             loadTable1LevelByDocument(doc, rows, sTableName);
+        }
+        catch (...)
+        {
         }
     }
 }
@@ -106,10 +110,8 @@ void CxXml::loadTable2Level(const char *pData, int iLength, std::vector<std::map
     if (pData && iLength > 5)
     {
         TiXmlDocument doc;
-        if(doc.Parse(pData))
-        {
-            loadTable2LevelByDocument(doc, rows, sDataBaseName, sTableName);
-        }
+        doc.Parse(pData);
+        loadTable2LevelByDocument(doc, rows, sDataBaseName, sTableName);
     }
 }
 
@@ -175,10 +177,8 @@ void CxXml::loadTable3Level(const char *pData, int iLength, std::vector<std::map
     if (pData && iLength > 5)
     {
         TiXmlDocument doc;
-        if(doc.Parse(pData))
-        {
-            loadTable3LevelByDocument(doc, rows, sDataBaseName, sTableName, sLevel1Key);
-        }
+        doc.Parse(pData);
+        loadTable3LevelByDocument(doc, rows, sDataBaseName, sTableName, sLevel1Key);
     }
 }
 
@@ -252,10 +252,8 @@ void CxXml::loadTable4Level(const char *pData, int iLength, std::vector<std::map
     if (pData && iLength > 5)
     {
         TiXmlDocument doc;
-        if(doc.Parse(pData))
-        {
-            loadTable4LevelByDocument(doc, rows, sDataBaseName, sTableName, sLevel1Key, sLevel2Key);
-        }
+        doc.Parse(pData);
+        loadTable4LevelByDocument(doc, rows, sDataBaseName, sTableName, sLevel1Key, sLevel2Key);
     }
 }
 
@@ -337,10 +335,8 @@ void CxXml::loadTable5Level(const char *pData, int iLength, std::vector<std::map
     if (pData && iLength > 5)
     {
         TiXmlDocument doc;
-        if(doc.Parse(pData))
-        {
-            loadTable5LevelByDocument(doc, rows, sDataBaseName, sTableName, sLevel1Key, sLevel2Key, sLevel3Key);
-        }
+        doc.Parse(pData);
+        loadTable5LevelByDocument(doc, rows, sDataBaseName, sTableName, sLevel1Key, sLevel2Key, sLevel3Key);
     }
 }
 
@@ -411,4 +407,55 @@ bool CxXml::saveTable4Level(const string &sFilePath, const std::vector<std::map<
     iWroteTotal += fwrite (const_cast<char *>(sLine.data()) , 1, sLine.size(), pFile);
     fclose (pFile);
     return iWroteTotal;
+}
+
+string CxXml::toXmlBuffer1(const std::vector<string> &sFields, const std::vector<std::vector<string> > &sRows, const string &sLevel1Name, const string &sLevel2Name, const string &sLevel3Name)
+{
+    vector<string> sLines;
+    string sLine = CxString::format("<?xml version=\"1.0\" encoding=\"utf-8\" ?><%s><%s>", sLevel1Name.c_str(), sLevel2Name.c_str());
+    sLines.push_back(sLine);
+    //记录
+    for (size_t i = 0; i < sRows.size(); ++i)
+    {
+       vector<string> sRow = sRows.at(i);
+       if (sFields.size()<sRow.size()) continue;
+       sLine = CxString::format("</%s ", sLevel3Name.c_str());
+       for (size_t j = 0; j < sRow.size(); ++j)
+       {
+           const string & sField = sFields.at(j);
+           const string & sValue = sRow.at(j);
+           sLine += CxString::format("%s=\"%s\"", sField.c_str(), sValue.c_str());
+       }
+       sLines.push_back(sLine);
+    }
+    //结束
+    sLine = CxString::format("</%s></%s>", sLevel2Name.c_str(), sLevel1Name.c_str());;
+    sLines.push_back(sLine);
+    return CxString::join(sLines, 0);
+}
+
+string CxXml::toXmlBuffer2(const std::vector<string> &sFields, const std::vector<std::vector<string> > &sRows, const string &sLevel1Name, const string &sLevel2Name, const string &sLevel3Name)
+{
+    vector<string> sLines;
+    string sLine = CxString::format("<?xml version=\"1.0\" encoding=\"utf-8\" ?><%s><%s>", sLevel1Name.c_str(), sLevel2Name.c_str());
+    sLines.push_back(sLine);
+    //记录
+    for (size_t i = 0; i < sRows.size(); ++i)
+    {
+       vector<string> sRow = sRows.at(i);
+       if (sFields.size()<sRow.size()) continue;
+       sLine = CxString::format("<%s>", sLevel3Name.c_str());
+       for (size_t j = 0; j < sRow.size(); ++j)
+       {
+           const string & sField = sFields.at(j);
+           const string & sValue = sRow.at(j);
+           sLine += CxString::format("<%s>%s</%s>", sField.c_str(), sValue.c_str(), sField.c_str());
+       }
+       sLine += CxString::format("</%s>", sLevel3Name.c_str());
+       sLines.push_back(sLine);
+    }
+    //结束
+    sLine = CxString::format("</%s></%s>", sLevel2Name.c_str(), sLevel1Name.c_str());;
+    sLines.push_back(sLine);
+    return CxString::join(sLines, 0);
 }

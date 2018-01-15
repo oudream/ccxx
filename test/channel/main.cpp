@@ -7,7 +7,7 @@
 //using namespace std;
 
 
-//int main(int argc, char * argv[])
+//int main(int argc,const char * argv[])
 //{
 //    CxApplication::init(argc, argv);
 
@@ -21,16 +21,17 @@
 
 #include <QApplication>
 #include <ccxx/ccxx.h>
+#include <ccxx/cxapplication_qt.h>
 
-int main(int argc, char *argv[])
+
+#undef main
+int main(int argc, const char *argv[])
 {
-    QApplication a(argc, argv);
-    CxApplication::init(argc, argv);
-
-    CxLogThread::startLog();
+    QApplication a(argc, (char **)argv);
+    CxApplicationQt::init(argc, argv);
 
     TestChannelWin w;
     w.show();
 
-    return CxApplication::exec(1);
+    return CxApplicationQt::exec(1);
 }

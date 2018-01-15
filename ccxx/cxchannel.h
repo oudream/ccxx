@@ -3,8 +3,6 @@
 
 
 #include "cxchannel_global.h"
-#include "cxcontext.h"
-#include "cxfactory.h"
 #include "cxtimer.h"
 #include "cxcontainer.h"
 #include "cxinterinfo.h"
@@ -34,7 +32,7 @@
 class CxChannelBase;
 
 
-class CxChannelRoad
+class GM_CCXX_CORE_API CxChannelRoad
 {
 public:
     CxChannelRoad(const struct sockaddr * oRemoteSockAddr, CxChannelBase * oChannel);
@@ -107,7 +105,7 @@ private:
 };
 
 
-class CxChannelRoadManager
+class GM_CCXX_CORE_API CxChannelRoadManager
 {
 public:
     static CxChannelRoad * find(const struct sockaddr * oRemoteSockAddr, CxChannelBase *oLocalChannel);
@@ -115,6 +113,8 @@ public:
     static CxChannelRoad * find(const std::string & sRemoteIp, ushort iRemotePort);
 
     static CxChannelRoad * find(int iSourceId);
+
+    static CxChannelRoad * find(void * oSource);
 
     static CxChannelRoad * allocate(const struct sockaddr * oRecSockAddr, CxChannelBase * oLocalChannel, socket_t iLocalSocket);
 
@@ -151,7 +151,7 @@ protected:
 };
 
 
-class CxChannelPublisher
+class GM_CCXX_CORE_API CxChannelPublisher
 {
 public:
     CxChannelPublisher();
@@ -193,7 +193,7 @@ class CxChannelFactoryBase : public CxFactoryTemplate<CxChannelBase>
 };
 
 
-class CxChannelBase : public ICxTimerNotify
+class GM_CCXX_CORE_API CxChannelBase : public ICxTimerNotify
 {
 public:
     static std::vector<CxFactoryTemplate<CxChannelBase>*>* factoriesContainer();
@@ -257,6 +257,8 @@ public:
     void open();
 
     void close();
+
+    bool isOpen() const;
 
     bool connected() const;
 
@@ -322,17 +324,17 @@ protected:
     //attention : may be main thread or processer thread run
     void processReceivedData(const char *, int, void * oSource, int iTag);
 
-    inline CxOutStream outChannelPrompt() {
-        CxOutStream r; r.noend(); r.type(CxInterinfo::Type_IO_Channel); r.source(_channelId); r.title(_localName); r << CxGlobal::promptString; return r;
+    inline CxInterinfoOutStream outChannelPrompt() {
+        CxInterinfoOutStream r; r.noend(); r.type(CxInterinfo::Type_IO_Channel); r.source(_channelId); r.title(_localName); r << CxGlobal::promptString; return r;
     }
 
 #if defined(GM_DEBUG)
-    inline CxOutStream outChannelDebug() {
-        CxOutStream r; r.noend(); r.type(CxInterinfo::Type_IO_Channel); r.source(_channelId); r.title(_localName); r << CxGlobal::debugString; return r;
+    inline CxInterinfoOutStream outChannelDebug() {
+        CxInterinfoOutStream r; r.noend(); r.type(CxInterinfo::Type_IO_Channel); r.source(_channelId); r.title(_localName); r << CxGlobal::debugString; return r;
     }
 #else
 #undef outChannelDebug
-    inline CxNoOutStream outChannelDebug() { return CxNoOutStream(); }
+    inline CxInterinfoNoOutStream outChannelDebug() { return CxInterinfoNoOutStream(); }
 #define CX_NO_outChannelDebug_MACRO while (false) outChannelDebug
 #define outChannelDebug CX_NO_outChannelDebug_MACRO
 #endif
@@ -365,7 +367,7 @@ protected:
 
         inline void setStatus(int * volatile v) { _status = v; }
 
-        void waitExit() { _singleWait.signal(); join(); }
+        void stop() { _singleWait.signal(); join(); }
 
         int push(const char * pData, int iLength, void * oTarget);
 
@@ -410,7 +412,7 @@ protected:
 
         inline void setStatus(int * volatile v) { _status = v; }
 
-        void waitExit() { _singleWait.signal(); join(); }
+        void stop() { _singleWait.signal(); join(); }
 
         int push(const char * pData, int iLength, void * oSource, int iTag);
 
@@ -464,6 +466,7 @@ private:
     msepoch_t _lastSentTime;
     CxChannelPublisher* _publisher;
     CxTimer * _checkChannelTm;
+    int _timers;
     int _autoOpenInterval;
     std::string _channelName;
     std::string _infoReceived;
@@ -492,7 +495,7 @@ class CxChannelFactoryManager : public CxFactoryManagerTemplate<CxChannelBase>
 };
 
 
-class CxChannelManager
+class GM_CCXX_CORE_API CxChannelManager
 {
 public:
     static CxChannelBase* createChannel(const std::string& sTypeSimpleName);

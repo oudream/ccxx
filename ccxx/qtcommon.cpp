@@ -685,20 +685,20 @@ void QtCommonDialog::ShowError(const QString& sText){
 
 
 bool QtCommonDialog::ShowQuery(const QString& sQuery){
-    int ret = QMessageBox::warning(0, GM_QString_TR("请选择"),
+    int ret = QMessageBox::warning(0, GM_QString_TR("Please Option"),
                                    sQuery,
-                                   GM_QString_TR("是"),
-                                   GM_QString_TR("否"));
+                                   GM_QString_TR("Yes"),
+                                   GM_QString_TR("No"));
     return ret == 0;
 }
 
 
 int QtCommonDialog::ShowQuery3(const QString& sQuery){
-    int ret = QMessageBox::warning(0, GM_QString_TR("请选择"),
+    int ret = QMessageBox::warning(0, GM_QString_TR("Please Option"),
                                    sQuery,
-                                   GM_QString_TR("是"),
-                                   GM_QString_TR("否"),
-                                   GM_QString_TR("取消"));
+                                   GM_QString_TR("Yes"),
+                                   GM_QString_TR("No"),
+                                   GM_QString_TR("Cancel"));
     switch (ret) {
     case 0:
         return 1;
@@ -745,7 +745,7 @@ QString QtCommonDialog::DialogDir(const QString &sRootDir, const QString &sTitle
 
 bool QtCommonDialog::DialogInput(const QString& sPrompt, QString& sVaule){
     bool ok;
-    QString text = QInputDialog::getText(0, GM_QString_TR("输入框"),
+    QString text = QInputDialog::getText(0, GM_QString_TR("Input Box"),
                                          sPrompt, QLineEdit::Normal,
                                          sVaule, &ok);
     if (ok){
@@ -767,6 +767,7 @@ bool QtCommonDialog::DialogInput2(const QString &sTitle, const QString &sValue1T
     value2Ed->setEchoMode( (QLineEdit::EchoMode)iValue2EchoMode );
 
     value1Ed->setText(sValue1);
+    value2Ed->setText(sValue1);
 
     QGridLayout* gridLayout = new QGridLayout;
     gridLayout->addWidget( value1Label, 0, 0, 1, 1);

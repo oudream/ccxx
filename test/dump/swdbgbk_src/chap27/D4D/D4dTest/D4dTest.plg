@@ -1,0 +1,52 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: D4dTest - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/D4dTest.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap27\D4D\D4dTest\D4dTest.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP50B.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/D4dTest.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap27\D4D\D4dTest\D4dTest.cpp"
+"C:\dig\dbg\author\code\chap27\D4D\D4dTest\D4dTestDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP50B.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP50C.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/D4dTest.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap27\D4D\D4dTest\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP50C.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP50D.tmp" with contents
+[
+../../../bin/debug/d4d.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/D4dTest.pdb" /debug /machine:I386 /out:"../../../bin/Debug/D4dTest.exe" /pdbtype:sept 
+.\Debug\D4dTest.obj
+.\Debug\D4dTestDlg.obj
+.\Debug\StdAfx.obj
+.\Debug\D4dTest.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP50D.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+D4dTest.cpp
+D4dTestDlg.cpp
+Generating Code...
+Linking...
+LINK : warning LNK4076: invalid incremental status file "../../../bin/Debug/D4dTest.ilk"; linking nonincrementally
+Creating command line "bscmake.exe /nologo /o"Debug/D4dTest.bsc"  .\Debug\StdAfx.sbr .\Debug\D4dTest.sbr .\Debug\D4dTestDlg.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+D4dTest.exe - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

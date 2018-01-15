@@ -1,5 +1,5 @@
 #include "cxstring.h"
-
+#include "cxcontainer.h"
 
 using namespace std;
 
@@ -10,38 +10,36 @@ const char f_cHexChar16[16] = {
 const bool f_cPathChar[128] = {
     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-    false, true , false, true , true , true , true , true , true , true , false, true , true , true , true , false,
-    true , true , true , true , true , true , true , true , true , true , false, true , false, true , false, false,
-    true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , true ,
-    true , true , true , true , true , true , true , true , true , true , true , true , false, true , true , true ,
-    true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , true ,
-    true , true , true , true , true , true , true , true , true , true , true , true , false, true , true , false
+    false, true, false, true, true, true, true, true, true, true, false, true, true, true, true, false,
+    true, true, true, true, true, true, true, true, true, true, false, true, false, true, false, false,
+    true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+    true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true,
+    true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
+    true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, false
 };
-
-
 
 /**
  * *** std::string begin ********************************************************
  */
 
-string CxString::toString(const bool& b)
+string CxString::toString(const bool &b)
 {
-    char str[1+1];
+    char str[1 + 1];
     sprintf(str, "%d", b);
     return string(str);
 }
 
 string CxString::toString(const int &i)
 {
-    char str[10+1];
+    char str[10 + 1];
     sprintf(str, "%d", i);
     return string(str);
 }
 
 string CxString::toString(const uint32 &n)
 {
-    char str[10+1];
-    sprintf(str, "%d", n);
+    char str[10 + 1];
+    sprintf(str, "%u", n);
     return string(str);
 }
 
@@ -75,16 +73,24 @@ string CxString::toString(const uint64 &n)
 
 string CxString::toString(const float &f)
 {
-    stringstream ss;
-    ss << f;
-    return ss.str();
+    ostringstream outSs;
+    outSs.precision(6);
+    outSs<<f;
+    return outSs.str();
+//    stringstream ss;
+//    ss << f;
+//    return ss.str();
 }
 
 string CxString::toString(const double &d)
 {
-    stringstream ss;
-    ss << d;
-    return ss.str();
+    ostringstream outSs;
+    outSs.precision(15);
+    outSs<<d;
+    return outSs.str();
+//    stringstream ss;
+//    ss << d;
+//    return ss.str();
 //    char str[256];
 //    sprintf(str, "%lf", d);
 //    return string(str);
@@ -102,7 +108,7 @@ bool CxString::toBoolean(const string &sSource)
 
 int CxString::toInt32(const string &sSource)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         int n;
         sscanf(sSource.data(), "%x", &n);
@@ -116,7 +122,7 @@ int CxString::toInt32(const string &sSource)
 
 uint CxString::toUint32(const string &sSource)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         uint n;
         sscanf(sSource.data(), "%x", &n);
@@ -132,10 +138,10 @@ uint CxString::toUint32(const string &sSource)
 
 int64 CxString::toInt64(const string &sSource)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int n;
-        sscanf(sSource.data(), "%lx", &n);
+        int64 n;
+        sscanf(sSource.data(), "%llx", &n);
         return n;
     }
     else
@@ -149,10 +155,10 @@ int64 CxString::toInt64(const string &sSource)
 
 uint64 CxString::toUint64(const string &sSource)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int n;
-        sscanf(sSource.data(), "%lx", &n);
+        uint64 n;
+        sscanf(sSource.data(), "%llx", &n);
         return n;
     }
     else
@@ -179,37 +185,37 @@ bool CxString::toBoolean(const string &sSource, bool *bOk)
     if (sSource.size() == 1)
     {
         bool r = sSource.at(0) != '0';
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         bool r = (sSource.size() == 5) && (toLower(sSource) == "false");
-        if (bOk) * bOk = true;
-        return ! r;
+        if (bOk) *bOk = true;
+        return !r;
     }
 }
 
 int CxString::toInt32(const string &sSource, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         int n;
         sscanf(sSource.data(), "%x", &n);
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return n;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
         {
             int i = atoi(sSource.data());
-            if (bOk) * bOk = i != 0;
+            if (bOk) *bOk = i != 0;
             return i;
         }
     }
@@ -217,24 +223,24 @@ int CxString::toInt32(const string &sSource, bool *bOk)
 
 uint CxString::toUint32(const string &sSource, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         uint n;
         sscanf(sSource.data(), "%x", &n);
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return n;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
         {
             uint i = atoi(sSource.data());
-            if (bOk) * bOk = i != 0;
+            if (bOk) *bOk = i != 0;
             return i;
         }
     }
@@ -242,18 +248,18 @@ uint CxString::toUint32(const string &sSource, bool *bOk)
 
 int64 CxString::toInt64(const string &sSource, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int n;
-        sscanf(sSource.data(), "%lx", &n);
-        if (bOk) * bOk = true;
+        int64 n;
+        sscanf(sSource.data(), "%llx", &n);
+        if (bOk) *bOk = true;
         return n;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
@@ -261,7 +267,7 @@ int64 CxString::toInt64(const string &sSource, bool *bOk)
             int64 n;
             stringstream ss(sSource);
             ss >> n;
-            if (bOk) * bOk = n != 0;
+            if (bOk) *bOk = n != 0;
             return n;
         }
     }
@@ -269,17 +275,17 @@ int64 CxString::toInt64(const string &sSource, bool *bOk)
 
 uint64 CxString::toUint64(const string &sSource, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int n;
-        sscanf(sSource.data(), "%lx", &n);
+        uint64 n;
+        sscanf(sSource.data(), "%llx", &n);
         return n;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
@@ -287,7 +293,7 @@ uint64 CxString::toUint64(const string &sSource, bool *bOk)
             uint64 n;
             stringstream ss(sSource);
             ss >> n;
-            if (bOk) * bOk = n != 0;
+            if (bOk) *bOk = n != 0;
             return n;
         }
     }
@@ -295,64 +301,64 @@ uint64 CxString::toUint64(const string &sSource, bool *bOk)
 
 double CxString::toDouble(const string &sSource, bool *bOk)
 {
-    double d= strtod(sSource.data(), NULL);
+    double d = strtod(sSource.data(), NULL);
     if (d != 0)
     {
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return d;
     }
     else
     {
-        if (bOk) * bOk = isvalidDouble(sSource);
+        if (bOk) *bOk = isvalidDouble(sSource);
         return 0;
     }
 }
 
 float CxString::toFloat(const string &sSource, bool *bOk)
 {
-    float d= strtod(sSource.data(), NULL);
+    float d = strtod(sSource.data(), NULL);
     if (d != 0)
     {
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return d;
     }
     else
     {
-        if (bOk) * bOk = isvalidFloat(sSource);
+        if (bOk) *bOk = isvalidFloat(sSource);
         return 0;
     }
 }
 
-bool CxString::fromString(const string &sSource, const bool &b, bool * bOk)
+bool CxString::fromString(const string &sSource, const bool &b, bool *bOk)
 {
     if (sSource.size() == 1)
     {
         bool r = sSource.at(0) != '0';
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         bool r = (sSource.size() == 5) && (toLower(sSource) == "false");
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return r;
     }
 }
 
-int CxString::fromString(const string &sSource, const int &i, bool * bOk)
+int CxString::fromString(const string &sSource, const int &i, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         int r;
         sscanf(sSource.data(), "%x", &r);
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
@@ -360,32 +366,32 @@ int CxString::fromString(const string &sSource, const int &i, bool * bOk)
             int r = atoi(sSource.data());
             if (r != 0)
             {
-                if (bOk) * bOk = true;
+                if (bOk) *bOk = true;
                 return r;
             }
             else
             {
-                if (bOk) * bOk = false;
+                if (bOk) *bOk = false;
                 return i;
             }
         }
     }
 }
 
-uint32 CxString::fromString(const string &sSource, const uint32 &n, bool * bOk)
+uint32 CxString::fromString(const string &sSource, const uint32 &n, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         uint32 r;
         sscanf(sSource.data(), "%x", &r);
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
@@ -393,32 +399,32 @@ uint32 CxString::fromString(const string &sSource, const uint32 &n, bool * bOk)
             uint32 r = atoi(sSource.data());
             if (r != 0)
             {
-                if (bOk) * bOk = true;
+                if (bOk) *bOk = true;
                 return r;
             }
             else
             {
-                if (bOk) * bOk = false;
+                if (bOk) *bOk = false;
                 return n;
             }
         }
     }
 }
 
-int64 CxString::fromString(const string &sSource, const int64 &n, bool * bOk)
+int64 CxString::fromString(const string &sSource, const int64 &n, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int r;
-        sscanf(sSource.data(), "%lx", &r);
-        if (bOk) * bOk = true;
+        int64 r;
+        sscanf(sSource.data(), "%llx", &r);
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
@@ -428,32 +434,32 @@ int64 CxString::fromString(const string &sSource, const int64 &n, bool * bOk)
             ss >> r;
             if (r != 0)
             {
-                if (bOk) * bOk = true;
+                if (bOk) *bOk = true;
                 return r;
             }
             else
             {
-                if (bOk) * bOk = false;
+                if (bOk) *bOk = false;
                 return n;
             }
         }
     }
 }
 
-uint64 CxString::fromString(const string &sSource, const uint64 &n, bool * bOk)
+uint64 CxString::fromString(const string &sSource, const uint64 &n, bool *bOk)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int r;
-        sscanf(sSource.data(), "%lx", &r);
-        if (bOk) * bOk = true;
+        uint64 r;
+        sscanf(sSource.data(), "%llx", &r);
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         if (sSource.size() == 1 && sSource.at(0) == '0')
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
@@ -463,67 +469,67 @@ uint64 CxString::fromString(const string &sSource, const uint64 &n, bool * bOk)
             ss >> r;
             if (r != 0)
             {
-                if (bOk) * bOk = true;
+                if (bOk) *bOk = true;
                 return r;
             }
             else
             {
-                if (bOk) * bOk = false;
+                if (bOk) *bOk = false;
                 return n;
             }
         }
     }
 }
 
-double CxString::fromString(const string &sSource, const double &d, bool * bOk)
+double CxString::fromString(const string &sSource, const double &d, bool *bOk)
 {
-    double r= strtod(sSource.data(), NULL);
+    double r = strtod(sSource.data(), NULL);
     if (r != 0)
     {
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         if (isvalidDouble(sSource))
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
         {
-            if (bOk) * bOk = false;
+            if (bOk) *bOk = false;
             return d;
         }
     }
 }
 
-float CxString::fromString(const string &sSource, const float &f, bool * bOk)
+float CxString::fromString(const string &sSource, const float &f, bool *bOk)
 {
     float r = strtod(sSource.data(), NULL);
     if (r != 0)
     {
-        if (bOk) * bOk = true;
+        if (bOk) *bOk = true;
         return r;
     }
     else
     {
         if (isvalidFloat(sSource))
         {
-            if (bOk) * bOk = true;
+            if (bOk) *bOk = true;
             return 0;
         }
         else
         {
-            if (bOk) * bOk = false;
+            if (bOk) *bOk = false;
             return f;
         }
     }
 }
 
-string CxString::fromString(const string &sSource, const string &s, bool * bOk)
+string CxString::fromString(const string &sSource, const string &s, bool *bOk)
 {
-    if (bOk) * bOk = true;
+    if (bOk) *bOk = true;
     return sSource;
 }
 
@@ -543,7 +549,7 @@ bool CxString::setFromString(const string &sSource, bool &b)
 
 bool CxString::setFromString(const string &sSource, int &i)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         sscanf(sSource.data(), "%x", &i);
         return true;
@@ -573,7 +579,7 @@ bool CxString::setFromString(const string &sSource, int &i)
 
 bool CxString::setFromString(const string &sSource, uint32 &n)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         sscanf(sSource.data(), "%x", &n);
         return true;
@@ -603,10 +609,10 @@ bool CxString::setFromString(const string &sSource, uint32 &n)
 
 bool CxString::setFromString(const string &sSource, int64 &n)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int r;
-        sscanf(sSource.data(), "%lx", &r);
+        int64 r;
+        sscanf(sSource.data(), "%llx", &r);
         n = r;
         return true;
     }
@@ -637,10 +643,10 @@ bool CxString::setFromString(const string &sSource, int64 &n)
 
 bool CxString::setFromString(const string &sSource, uint64 &n)
 {
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
-        long unsigned int r;
-        sscanf(sSource.data(), "%lx", &r);
+        uint64 r;
+        sscanf(sSource.data(), "%llx", &r);
         n = r;
         return true;
     }
@@ -671,7 +677,7 @@ bool CxString::setFromString(const string &sSource, uint64 &n)
 
 bool CxString::setFromString(const string &sSource, double &d)
 {
-    double r= strtod(sSource.data(), NULL);
+    double r = strtod(sSource.data(), NULL);
     if (r != 0)
     {
         d = r;
@@ -725,16 +731,16 @@ bool CxString::isvalidBoolean(const string &sSource)
 }
 
 bool CxString::isvalidInteger(const string &sSource)
-{   
-    if (sSource.size()>2 && (sSource[1] == 'x' || sSource[1] == 'X'))
+{
+    if (sSource.size() > 2 && (sSource[1] == 'x' || sSource[1] == 'X'))
     {
         if (sSource.size() > 2 && sSource.size() < 11)
         {
-            char const * pchEnd = sSource.data() + sSource.size();
-            const char* pch = sSource.data()+2;
+            char const *pchEnd = sSource.data() + sSource.size();
+            const char *pch = sSource.data() + 2;
             while (pch < pchEnd)
             {
-                if ( (*pch >= '0' && *pch <= '9') || (*pch >= 'a' && *pch <= 'f') || (*pch >= 'A' && *pch <= 'F') )
+                if ((*pch >= '0' && *pch <= '9') || (*pch >= 'a' && *pch <= 'f') || (*pch >= 'A' && *pch <= 'F'))
                 {
                     pch++;
                     continue;
@@ -766,7 +772,7 @@ bool CxString::isvalidInteger(const string &sSource)
 bool CxString::isvalidLong(const string &sSource)
 {
     bool r = sSource.size() > 0 && sSource.size() < 19;
-    if (! r)
+    if (!r)
         return r;
     for (size_t i = 0; i < sSource.size(); ++i)
     {
@@ -781,14 +787,14 @@ bool CxString::isvalidLong(const string &sSource)
 bool CxString::isvalidFloat(const string &sSource)
 {
     bool r = sSource.size() > 0 && sSource.size() < 9;
-    if (! r)
+    if (!r)
         return r;
     int iDot = 0;
     for (size_t i = 0; i < sSource.size(); ++i)
     {
         if (sSource[i] == 0x2E)
         {
-            ++ iDot;
+            ++iDot;
             if (iDot > 1)
                 return false;
         }
@@ -803,14 +809,14 @@ bool CxString::isvalidFloat(const string &sSource)
 bool CxString::isvalidDouble(const string &sSource)
 {
     bool r = sSource.size() > 0 && sSource.size() < 17;
-    if (! r)
+    if (!r)
         return r;
     int iDot = 0;
     for (size_t i = 0; i < sSource.size(); ++i)
     {
         if (sSource[i] == 0x2E)
         {
-            ++ iDot;
+            ++iDot;
             if (iDot > 1)
                 return false;
         }
@@ -827,39 +833,41 @@ string CxString::toHexstring(const char *pData, int iLength, bool bHasEmptyChar)
     if (bHasEmptyChar)
     {
         string sHex(iLength * 3, 0);
-        char *hexData = const_cast<char *>( sHex.data() );
-        const uchar *data = (const uchar *)pData;
-        for (int i = 0; i < iLength; ++i) {
+        char *hexData = const_cast<char *>( sHex.data());
+        const uchar *data = (const uchar *) pData;
+        for (int i = 0; i < iLength; ++i)
+        {
             int j = (data[i] >> 4) & 0xf;
             if (j <= 9)
-                hexData[i*3] = (j + '0');
+                hexData[i * 3] = (j + '0');
             else
-                hexData[i*3] = (j + 'A' - 10);
+                hexData[i * 3] = (j + 'A' - 10);
             j = data[i] & 0xf;
             if (j <= 9)
-                hexData[i*3+1] = (j + '0');
+                hexData[i * 3 + 1] = (j + '0');
             else
-                hexData[i*3+1] = (j + 'A' - 10);
-            hexData[i*3+2] = 0x20;
+                hexData[i * 3 + 1] = (j + 'A' - 10);
+            hexData[i * 3 + 2] = 0x20;
         }
         return sHex;
     }
     else
     {
         string sHex(iLength * 2, 0);
-        char *hexData = const_cast<char *>( sHex.data() );
-        const uchar *data = (const uchar *)pData;
-        for (int i = 0; i < iLength; ++i) {
+        char *hexData = const_cast<char *>( sHex.data());
+        const uchar *data = (const uchar *) pData;
+        for (int i = 0; i < iLength; ++i)
+        {
             int j = (data[i] >> 4) & 0xf;
             if (j <= 9)
-                hexData[i*2] = (j + '0');
+                hexData[i * 2] = (j + '0');
             else
-                hexData[i*2] = (j + 'A' - 10);
+                hexData[i * 2] = (j + 'A' - 10);
             j = data[i] & 0xf;
             if (j <= 9)
-                hexData[i*2+1] = (j + '0');
+                hexData[i * 2 + 1] = (j + '0');
             else
-                hexData[i*2+1] = (j + 'A' - 10);
+                hexData[i * 2 + 1] = (j + 'A' - 10);
         }
         return string(sHex.data(), sHex.size());
     }
@@ -870,48 +878,50 @@ string CxString::toHexstring(const uchar *pData, int iLength, bool bHasEmptyChar
     if (bHasEmptyChar)
     {
         string sHex(iLength * 3, 0);
-        char *hexData = const_cast<char *>( sHex.data() );
-        const uchar *data = (const uchar *)pData;
-        for (int i = 0; i < iLength; ++i) {
+        char *hexData = const_cast<char *>( sHex.data());
+        const uchar *data = (const uchar *) pData;
+        for (int i = 0; i < iLength; ++i)
+        {
             int j = (data[i] >> 4) & 0xf;
             if (j <= 9)
-                hexData[i*3] = (j + '0');
+                hexData[i * 3] = (j + '0');
             else
-                hexData[i*3] = (j + 'A' - 10);
+                hexData[i * 3] = (j + 'A' - 10);
             j = data[i] & 0xf;
             if (j <= 9)
-                hexData[i*3+1] = (j + '0');
+                hexData[i * 3 + 1] = (j + '0');
             else
-                hexData[i*3+1] = (j + 'A' - 10);
-            hexData[i*3+2] = 0x20;
+                hexData[i * 3 + 1] = (j + 'A' - 10);
+            hexData[i * 3 + 2] = 0x20;
         }
         return sHex;
     }
     else
     {
         string sHex(iLength * 2, 0);
-        char *hexData = const_cast<char *>( sHex.data() );
-        const uchar *data = (const uchar *)pData;
-        for (int i = 0; i < iLength; ++i) {
+        char *hexData = const_cast<char *>( sHex.data());
+        const uchar *data = (const uchar *) pData;
+        for (int i = 0; i < iLength; ++i)
+        {
             int j = (data[i] >> 4) & 0xf;
             if (j <= 9)
-                hexData[i*2] = (j + '0');
+                hexData[i * 2] = (j + '0');
             else
-                hexData[i*2] = (j + 'A' - 10);
+                hexData[i * 2] = (j + 'A' - 10);
             j = data[i] & 0xf;
             if (j <= 9)
-                hexData[i*2+1] = (j + '0');
+                hexData[i * 2 + 1] = (j + '0');
             else
-                hexData[i*2+1] = (j + 'A' - 10);
+                hexData[i * 2 + 1] = (j + 'A' - 10);
         }
         return string(sHex.data(), sHex.size());
     }
 }
 
-string CxString::toHexstring(const vector<char> & data, bool bHasEmptyChar)
+string CxString::toHexstring(const vector<char> &data, bool bHasEmptyChar)
 {
     if (data.size() > 0)
-        return toHexstring((& data.front()), data.size(), bHasEmptyChar);
+        return toHexstring((&data.front()), data.size(), bHasEmptyChar);
     else
         return std::string();
 }
@@ -919,15 +929,15 @@ string CxString::toHexstring(const vector<char> & data, bool bHasEmptyChar)
 string CxString::toHexstring(const vector<uchar> &data, bool bHasEmptyChar)
 {
     if (data.size() > 0)
-        return toHexstring((& data.front()), data.size(), bHasEmptyChar);
+        return toHexstring((&data.front()), data.size(), bHasEmptyChar);
     else
         return std::string();
 }
 
-string CxString::toHexstring(const char& v)
+string CxString::toHexstring(const char &v)
 {
     string s = "0x00";
-    char* data =  const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 4) & 0xf;
     data[2] = f_cHexChar16[j];
     j = v & 0xf;
@@ -935,10 +945,10 @@ string CxString::toHexstring(const char& v)
     return s;
 }
 
-string CxString::toHexstring(const uchar& v)
+string CxString::toHexstring(const uchar &v)
 {
     string s = "0x00";
-    char* data = const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 4) & 0xf;
     data[2] = f_cHexChar16[j];
     j = v & 0xf;
@@ -946,10 +956,10 @@ string CxString::toHexstring(const uchar& v)
     return s;
 }
 
-string CxString::toHexstring(const short& v)
+string CxString::toHexstring(const short &v)
 {
     string s = "0x0000";
-    char* data = const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 12) & 0xf;
     data[2] = f_cHexChar16[j];
     j = (v >> 8) & 0xf;
@@ -961,10 +971,10 @@ string CxString::toHexstring(const short& v)
     return s;
 }
 
-string CxString::toHexstring(const ushort& v)
+string CxString::toHexstring(const ushort &v)
 {
     string s = "0x0000";
-    char* data = const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 12) & 0xf;
     data[2] = f_cHexChar16[j];
     j = (v >> 8) & 0xf;
@@ -976,10 +986,10 @@ string CxString::toHexstring(const ushort& v)
     return s;
 }
 
-string CxString::toHexstring(const int& v)
+string CxString::toHexstring(const int &v)
 {
     string s = "0x00000000";
-    char* data = const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 28) & 0xf;
     data[2] = f_cHexChar16[j];
     j = (v >> 24) & 0xf;
@@ -999,10 +1009,10 @@ string CxString::toHexstring(const int& v)
     return s;
 }
 
-string CxString::toHexstring(const uint32& v)
+string CxString::toHexstring(const uint32 &v)
 {
     string s = "0x00000000";
-    char* data = const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 28) & 0xf;
     data[2] = f_cHexChar16[j];
     j = (v >> 24) & 0xf;
@@ -1022,14 +1032,92 @@ string CxString::toHexstring(const uint32& v)
     return s;
 }
 
-string CxString::toHexstring(const float& v)
+string CxString::toHexstring(const int64 &v)
+{
+    string s = "0x0000000000000000";
+    char *data = const_cast<char *>( s.data());
+    int64 j = (v >> 60) & 0xf;
+    data[2] = f_cHexChar16[j];
+    j = (v >> 56) & 0xf;
+    data[3] = f_cHexChar16[j];
+    j = (v >> 52) & 0xf;
+    data[4] = f_cHexChar16[j];
+    j = (v >> 48) & 0xf;
+    data[5] = f_cHexChar16[j];
+    j = (v >> 44) & 0xf;
+    data[6] = f_cHexChar16[j];
+    j = (v >> 40) & 0xf;
+    data[7] = f_cHexChar16[j];
+    j = (v >> 36) & 0xf;
+    data[8] = f_cHexChar16[j];
+    j = (v >> 32) & 0xf;
+    data[9] = f_cHexChar16[j];
+    j = (v >> 28) & 0xf;
+    data[10] = f_cHexChar16[j];
+    j = (v >> 24) & 0xf;
+    data[11] = f_cHexChar16[j];
+    j = (v >> 20) & 0xf;
+    data[12] = f_cHexChar16[j];
+    j = (v >> 16) & 0xf;
+    data[13] = f_cHexChar16[j];
+    j = (v >> 12) & 0xf;
+    data[14] = f_cHexChar16[j];
+    j = (v >> 8) & 0xf;
+    data[15] = f_cHexChar16[j];
+    j = (v >> 4) & 0xf;
+    data[16] = f_cHexChar16[j];
+    j = v & 0xf;
+    data[17] = f_cHexChar16[j];
+    return s;
+}
+
+string CxString::toHexstring(const uint64 &v)
+{
+    string s = "0x0000000000000000";
+    char *data = const_cast<char *>( s.data());
+    int64 j = (v >> 60) & 0xf;
+    data[2] = f_cHexChar16[j];
+    j = (v >> 56) & 0xf;
+    data[3] = f_cHexChar16[j];
+    j = (v >> 52) & 0xf;
+    data[4] = f_cHexChar16[j];
+    j = (v >> 48) & 0xf;
+    data[5] = f_cHexChar16[j];
+    j = (v >> 44) & 0xf;
+    data[6] = f_cHexChar16[j];
+    j = (v >> 40) & 0xf;
+    data[7] = f_cHexChar16[j];
+    j = (v >> 36) & 0xf;
+    data[8] = f_cHexChar16[j];
+    j = (v >> 32) & 0xf;
+    data[9] = f_cHexChar16[j];
+    j = (v >> 28) & 0xf;
+    data[10] = f_cHexChar16[j];
+    j = (v >> 24) & 0xf;
+    data[11] = f_cHexChar16[j];
+    j = (v >> 20) & 0xf;
+    data[12] = f_cHexChar16[j];
+    j = (v >> 16) & 0xf;
+    data[13] = f_cHexChar16[j];
+    j = (v >> 12) & 0xf;
+    data[14] = f_cHexChar16[j];
+    j = (v >> 8) & 0xf;
+    data[15] = f_cHexChar16[j];
+    j = (v >> 4) & 0xf;
+    data[16] = f_cHexChar16[j];
+    j = v & 0xf;
+    data[17] = f_cHexChar16[j];
+    return s;
+}
+
+string CxString::toHexstring(const float &v)
 {
     char fData[4];
     memcpy(fData, &v, 4);
     return toHexstring(fData, 4);
 }
 
-string CxString::toHexstring(const double& v)
+string CxString::toHexstring(const double &v)
 {
     char fData[8];
     memcpy(fData, &v, 8);
@@ -1039,7 +1127,7 @@ string CxString::toHexstring(const double& v)
 string CxString::toHexstring(const int &v, bool bHasHead)
 {
     string s = "00000000";
-    char* data = const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 28) & 0xf;
     data[0] = f_cHexChar16[j];
     j = (v >> 24) & 0xf;
@@ -1064,7 +1152,7 @@ string CxString::toHexstring(const int &v, bool bHasHead)
 string CxString::toHexstring(const uint32 &v, bool bHasHead)
 {
     string s = "00000000";
-    char* data = const_cast<char *>( s.data() );
+    char *data = const_cast<char *>( s.data());
     int j = (v >> 28) & 0xf;
     data[0] = f_cHexChar16[j];
     j = (v >> 24) & 0xf;
@@ -1094,11 +1182,12 @@ vector<TType> f_fromHexstring(const string &s)
     {
         string s2 = s;
         CxString::remove(s2, ' ');
-        vector<TType> res((s2.size() + 1)/ 2);
-        TType * result = (& res.front()) + res.size();
+        vector<TType> res((s2.size() + 1) / 2);
+        TType *result = (&res.front()) + res.size();
 
         bool odd_digit = true;
-        for (int i = s2.size() - 1; i >= 0; --i) {
+        for (int i = s2.size() - 1; i >= 0; --i)
+        {
             int ch = s2[i];
             int tmp;
             if (ch >= '0' && ch <= '9')
@@ -1109,18 +1198,22 @@ vector<TType> f_fromHexstring(const string &s)
                 tmp = ch - 'A' + 10;
             else
                 continue;
-            if (odd_digit) {
+            if (odd_digit)
+            {
                 --result;
                 *result = tmp;
                 odd_digit = false;
-            } else {
+            }
+            else
+            {
                 *result |= tmp << 4;
                 odd_digit = true;
             }
         }
 
-        rData.resize((& res.front()) + res.size() - result);
-        ::copy(result, (& res.front()) + res.size(), rData.begin());
+        TType *p = (&res.front());
+        rData.resize(p + res.size() - result);
+        ::copy(result, (&res.front()) + res.size(), rData.begin());
         //    res.remove(0, result - res.data());
     }
     return rData;
@@ -1136,7 +1229,7 @@ std::vector<char> CxString::hexToData(const string &s)
     return f_fromHexstring<char>(s);
 }
 
-int CxString::hexToInt32(const string &s, bool * bOk)
+int CxString::hexToInt32(const string &s, bool *bOk)
 {
     int r;
     int iCount = sscanf(s.data(), "%x", &r);
@@ -1144,7 +1237,7 @@ int CxString::hexToInt32(const string &s, bool * bOk)
     return r;
 }
 
-uint CxString::hexToUint32(const string &s, bool * bOk)
+uint CxString::hexToUint32(const string &s, bool *bOk)
 {
     uint r;
     int iCount = sscanf(s.data(), "%x", &r);
@@ -1152,18 +1245,18 @@ uint CxString::hexToUint32(const string &s, bool * bOk)
     return r;
 }
 
-int64 CxString::hexToInt64(const string &s, bool * bOk)
+int64 CxString::hexToInt64(const string &s, bool *bOk)
 {
-    long unsigned int r;
-    int iCount = sscanf(s.data(), "%lx", &r);
+    int64 r;
+    int iCount = sscanf(s.data(), "%llx", &r);
     if (bOk) *bOk = (iCount == 1);
     return r;
 }
 
-uint64 CxString::hexToUint64(const string &s, bool * bOk)
+uint64 CxString::hexToUint64(const string &s, bool *bOk)
 {
-    long unsigned int r;
-    int iCount = sscanf(s.data(), "%lx", &r);
+    uint64 r;
+    int iCount = sscanf(s.data(), "%llx", &r);
     if (bOk) *bOk = (iCount == 1);
     return r;
 }
@@ -1204,12 +1297,30 @@ vector<string> CxString::split(const string &ss, char cSplitCharacter, bool bHas
     return list;
 }
 
+std::vector<string> CxString::splitByDelimiters(const string &ss, const string &sDelimiters, bool bHasEmptyString)
+{
+    vector<string> r;
+    size_t start = 0;
+    size_t end;
+    while ((end = ss.find_first_of(sDelimiters.c_str(), start)) != string::npos)
+    {
+        if (start != end)
+            r.push_back(ss.substr(start, end - start));
+        else if (bHasEmptyString)
+            r.push_back("");
+        start = end + 1;
+    }
+    if (start != ss.size())
+        r.push_back(ss.substr(start));
+    return r;
+}
+
 vector<string> fn_split(const string &s, const string &sSplitString)
 {
     vector<string> ss;
-    char const * pchEnd = s.data() + s.size() - 1;
-    const char* pch = s.data();
-    const char* pchStart = s.data();
+    char const *pchEnd = s.data() + s.size() - 1;
+    const char *pch = s.data();
+    const char *pchStart = s.data();
     while (pch <= pchEnd)
     {
         if (sSplitString.find(*pch) == string::npos)
@@ -1217,34 +1328,34 @@ vector<string> fn_split(const string &s, const string &sSplitString)
             pchStart = pch;
             break;
         }
-        pch ++;
+        pch++;
     }
     pch = pchStart + 1;
-    const char* pchOldStart;
+    const char *pchOldStart;
     while (pch <= pchEnd)
     {
         size_t i = sSplitString.find(*pch);
         if (i != string::npos && pch > pchStart)
         {
-            ss.push_back(string(pchStart, pch-pchStart));
+            ss.push_back(string(pchStart, pch - pchStart));
             pchOldStart = pchStart;
             while (pch <= pchEnd)
             {
-                pch ++;
+                pch++;
                 if (sSplitString.find(*pch) == string::npos)
                 {
                     pchStart = pch;
                     break;
                 }
             }
-            if ( pchOldStart == pchStart )
+            if (pchOldStart == pchStart)
                 pchStart = pchEnd + 1;
         }
-        pch ++;
+        pch++;
     }
     if (pchStart <= pchEnd)
     {
-        ss.push_back(string(pchStart, pch-pchStart));
+        ss.push_back(string(pchStart, pch - pchStart));
     }
     return ss;
 }
@@ -1270,11 +1381,12 @@ vector<string> CxString::split(const string &ss, const string &sSplitString, boo
 std::vector<string> CxString::split(const std::vector<string> &ss, const string &sSplitString, bool bHasEmptyString)
 {
     string r(sizeOf(ss), 0);
-    char * pch = (char*)r.data();
+    char *pch = (char *) r.data();
     for (size_t i = 0; i < ss.size(); ++i)
     {
-        const string & s = ss.at(i);
-        memcpy(pch, s.data(), s.size()); pch += s.size();
+        const string &s = ss.at(i);
+        memcpy(pch, s.data(), s.size());
+        pch += s.size();
     }
     return split(r, sSplitString, bHasEmptyString);
 }
@@ -1302,35 +1414,35 @@ vector<string> CxString::splitCase(const string &ss, const string &sSplitString,
 
 void CxString::splitCase(int mode, char *pBuf, int num, string &sVal, string &split)
 {
-    if(pBuf==NULL) return;
-    if(sVal.length()>0)
+    if (pBuf == NULL) return;
+    if (sVal.length() > 0)
     {
-        std::vector<string> v = splitCase(sVal,split);
+        std::vector<string> v = splitCase(sVal, split);
 
-        if(v.size()==num)
+        if (v.size() == num)
         {
-            switch(mode)
+            switch (mode)
             {
-            case 0://整形
-            {
-                int *pw = (int*)pBuf;
-                for(int i=0;i<num;i++)
+                case 0://整形
                 {
-                  pw[i] = CxString::toInt32(v.at(i));
+                    int *pw = (int *) pBuf;
+                    for (int i = 0; i < num; i++)
+                    {
+                        pw[i] = CxString::toInt32(v.at(i));
+                    }
                 }
-            }
-                break;
-            case 1://双精度
-            {
-                double *pd = (double *)pBuf;
-                for(int i=0;i<num;i++)
+                    break;
+                case 1://双精度
                 {
-                    pd[i] =  CxString::toDouble(v.at(i));
+                    double *pd = (double *) pBuf;
+                    for (int i = 0; i < num; i++)
+                    {
+                        pd[i] = CxString::toDouble(v.at(i));
+                    }
                 }
-            }
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -1338,15 +1450,65 @@ void CxString::splitCase(int mode, char *pBuf, int num, string &sVal, string &sp
 
 void CxString::splitCase(std::vector<std::vector<char> > &v, string &sVal, string &split)
 {
-    if(sVal.length()>0)
+    if (sVal.length() > 0)
     {
-        vector<string> v1 = splitCase(sVal,split);
-        for(size_t i=0;i<v1.size();i++)
+        vector<string> v1 = splitCase(sVal, split);
+        for (size_t i = 0; i < v1.size(); i++)
         {
-           vector<char> v2 = hexToData(v1.at(i));
-           if(v2.size()>0) v.push_back(v2);
+            vector<char> v2 = hexToData(v1.at(i));
+            if (v2.size() > 0) v.push_back(v2);
         }
     }
+}
+
+map<string, string> CxString::splitToMap(const vector<string> &ss, char cSplitCharacter, bool bTrim)
+{
+    std::map<string, string> r;
+    if (bTrim)
+    {
+        for (size_t i = 0; i < ss.size(); ++i)
+        {
+            const string &sContent = ss.at(i);
+            size_t endSplit = sContent.find(cSplitCharacter);
+            if (endSplit != string::npos)
+            {
+                string sKey = sContent.substr(0, endSplit);
+                sKey = trim(sKey);
+                string sValue = sContent.substr(endSplit + 1);
+                sValue = trim(sValue);
+                if (sKey.length() > 0)
+                {
+                    r[sKey] = sValue;
+                }
+            }
+            else
+            {
+                r[sContent] = string();
+            }
+        }
+    }
+    else
+    {
+        for (size_t i = 0; i < ss.size(); ++i)
+        {
+            const string &sContent = ss.at(i);
+            size_t endSplit = sContent.find(cSplitCharacter);
+            if (endSplit != string::npos)
+            {
+                string sKey = sContent.substr(0, endSplit);
+                string sValue = sContent.substr(endSplit + 1);
+                if (sKey.length() > 0)
+                {
+                    r[sKey] = sValue;
+                }
+            }
+            else
+            {
+                r[sContent] = string();
+            }
+        }
+    }
+    return r;
 }
 
 std::map<string, string> CxString::splitToMap(const string &ss, char cMid, char cSplitCharacter, bool bTrim)
@@ -1360,25 +1522,26 @@ std::map<string, string> CxString::splitToMap(const string &ss, char cMid, char 
 std::map<string, string> CxString::splitToMap_mix(const string &ss, char cMid, char cSplitCharacter)
 {
     std::map<string, string> r;
-    const char * pchBeing = ss.data();
-    const char * pchEnd = pchBeing+ss.size();
-    const char * pchIndex = pchBeing;
+    if (ss.empty()) return r;
+    const char *pchBeing = ss.data();
+    const char *pchEnd = pchBeing + ss.size();
+    const char *pchIndex = pchBeing;
     while ((*pchIndex == cMid) || (*pchIndex == cSplitCharacter))
     {
         pchIndex++;
     }
-    const char * pchMid = pchIndex-1;
-    const char * pchSplit = pchIndex-1;
-    const char * pchKeyBeing;
-    const char * pchKeyEnd;
-    const char * pchValueBeing;
-    const char * pchValueEnd;
+    const char *pchMid = pchIndex - 1;
+    const char *pchSplit = pchIndex - 1;
+    const char *pchKeyBeing;
+    const char *pchKeyEnd;
+    const char *pchValueBeing;
+    const char *pchValueEnd;
 //    bool bHasShift = false;
     while (pchIndex < pchEnd)
     {
         if (*pchIndex == cMid)
         {
-            if ( (pchMid <= pchSplit) )
+            if ((pchMid <= pchSplit))
                 pchMid = pchIndex;
 //            if ( (*(pchIndex+1) == '\\') )
 //            {
@@ -1390,7 +1553,7 @@ std::map<string, string> CxString::splitToMap_mix(const string &ss, char cMid, c
         }
         else if (*pchIndex == cSplitCharacter)
         {
-            if ((*(pchIndex+1) == '\\'))
+            if ((*(pchIndex + 1) == '\\'))
             {
 //                bHasShift = true;
             }
@@ -1398,9 +1561,9 @@ std::map<string, string> CxString::splitToMap_mix(const string &ss, char cMid, c
             {
                 if (pchMid > pchSplit)
                 {
-                    pchKeyBeing = pchSplit+1;
+                    pchKeyBeing = pchSplit + 1;
                     pchKeyEnd = pchMid;
-                    pchValueBeing = pchMid+1;
+                    pchValueBeing = pchMid + 1;
                     pchValueEnd = pchIndex;
                     if (pchKeyEnd > pchKeyBeing)
                     {
@@ -1413,7 +1576,7 @@ std::map<string, string> CxString::splitToMap_mix(const string &ss, char cMid, c
                 }
                 else
                 {
-                    pchKeyBeing = pchSplit+1;
+                    pchKeyBeing = pchSplit + 1;
                     pchKeyEnd = pchIndex;
                     if (pchKeyEnd > pchKeyBeing)
                     {
@@ -1426,13 +1589,13 @@ std::map<string, string> CxString::splitToMap_mix(const string &ss, char cMid, c
         }
         pchIndex++;
     }
-    if (pchSplit != pchEnd-1)
+    if (pchSplit != pchEnd - 1)
     {
         if (pchMid > pchSplit)
         {
-            pchKeyBeing = pchSplit+1;
+            pchKeyBeing = pchSplit + 1;
             pchKeyEnd = pchMid;
-            pchValueBeing = pchMid+1;
+            pchValueBeing = pchMid + 1;
             pchValueEnd = pchIndex;
             if (pchKeyEnd > pchKeyBeing)
             {
@@ -1445,7 +1608,7 @@ std::map<string, string> CxString::splitToMap_mix(const string &ss, char cMid, c
         }
         else
         {
-            pchKeyBeing = pchSplit+1;
+            pchKeyBeing = pchSplit + 1;
             pchKeyEnd = pchIndex;
             if (pchKeyEnd > pchKeyBeing)
             {
@@ -1471,14 +1634,14 @@ std::map<string, string> CxString::splitToMap_reverse(const string &ss, char cMi
         if (endMid != string::npos)
         {
             sKey = ss.substr(start, endMid - start);
-            sKey = trim(sKey,CxGlobal::spaceChar);
+            sKey = trim(sKey, CxGlobal::spaceChar);
             start = endMid + 1;
 
             endSplit = ss.find(cSplitCharacter, start);
             if (endSplit != string::npos)
             {
                 sValue = ss.substr(start, endSplit - start);
-                sValue = trim(sValue,CxGlobal::spaceChar);
+                sValue = trim(sValue, CxGlobal::spaceChar);
                 start = endSplit + 1;
                 r[sValue] = sKey;
             }
@@ -1487,7 +1650,7 @@ std::map<string, string> CxString::splitToMap_reverse(const string &ss, char cMi
                 if (start != ss.size())
                 {
                     sValue = ss.substr(start);
-                    sValue = trim(sValue,CxGlobal::spaceChar);
+                    sValue = trim(sValue, CxGlobal::spaceChar);
                     r[sValue] = sKey;
                 }
                 break;
@@ -1507,18 +1670,19 @@ std::vector<std::vector<string> > CxString::splitToLines(const string &ss, char 
     std::vector<std::vector<string> > r;
     for (size_t i = 0; i < rs.size(); ++i)
     {
-        const string & line = rs.at(i);
+        const string &line = rs.at(i);
         r.push_back(split(line, cMid));
     }
     return r;
 }
 
-std::vector<std::map<string, string> > CxString::splitToLines(const std::vector<string> &ss, char cMid, char cSplitCharacter)
+std::vector<std::map<string, string> >
+CxString::splitToLines(const std::vector<string> &ss, char cMid, char cSplitCharacter)
 {
     std::vector<std::map<string, string> > r;
     for (size_t i = 0; i < ss.size(); ++i)
     {
-        const std::string & sRow = ss.at(i);
+        const std::string &sRow = ss.at(i);
         r.push_back(splitToMap(sRow, cMid, cSplitCharacter));
     }
     return r;
@@ -1535,7 +1699,7 @@ std::vector<std::map<string, string> > CxString::sortToLines(const std::map<stri
     std::vector<std::map<string, string> > sRows;
     for (size_t i = 0; i < sSorts.size(); ++i)
     {
-        const string & sSort = sSorts.at(i);
+        const string &sSort = sSorts.at(i);
         std::map<string, std::map<string, string> >::const_iterator it = ss.find(sSort);
         if (it != ss.end())
             sRows.push_back(it->second);
@@ -1548,27 +1712,30 @@ string CxString::join(const std::vector<string> &ss, char cJoin)
     if (cJoin == 0)
     {
         string r(sizeOf(ss), 0);
-        char * pch = (char*)r.data();
+        char *pch = (char *) r.data();
         for (size_t i = 0; i < ss.size(); ++i)
         {
-            const string & s = ss.at(i);
-            memcpy(pch, s.data(), s.size()); pch += s.size();
+            const string &s = ss.at(i);
+            memcpy(pch, s.data(), s.size());
+            pch += s.size();
         }
         return r;
     }
     else
     {
         string r(sizeOf(ss) + ss.size(), 0);
-        char * pch = (char*)r.data();
+        char *pch = (char *) r.data();
         for (size_t i = 0; i < ss.size(); ++i)
         {
-            const string & s = ss.at(i);
-            memcpy(pch, s.data(), s.size()); pch += s.size();
-            * pch = cJoin; ++ pch;
+            const string &s = ss.at(i);
+            memcpy(pch, s.data(), s.size());
+            pch += s.size();
+            *pch = cJoin;
+            ++pch;
         }
         if (r.size() > 0)
         {
-            return r.substr(0, r.size()-1);
+            return r.substr(0, r.size() - 1);
         }
         return r;
     }
@@ -1590,14 +1757,25 @@ string CxString::join(const vector<string> &ss, const string &sJoin)
     return r;
 }
 
-string CxString::join(const map<string, string> &pairs, const string &sMid, const string &sJoin)
+string CxString::join(const map<string, string> &pairs, const string &sMid, const string &sSplit)
 {
     string r;
     for (map<string, string>::const_iterator it = pairs.begin(); it != pairs.end(); ++it)
     {
-        r.append(it->first + sMid + it->second + sJoin);
+        r.append(it->first + sMid + it->second + sSplit);
     }
-    if (r.size()>0) r.resize(r.size()-sJoin.size());
+    if (r.size() > 0) r.resize(r.size() - sSplit.size());
+    return r;
+}
+
+std::string CxString::join(const std::map<std::string, std::string> &pairs, char cMid, char cSplit)
+{
+    string r;
+    for (map<string, string>::const_iterator it = pairs.begin(); it != pairs.end(); ++it)
+    {
+        r.append(it->first + cMid + it->second + cSplit);
+    }
+    if (r.size() > 0) r.resize(r.size() - 1);
     return r;
 }
 
@@ -1616,7 +1794,7 @@ string CxString::join(const std::vector<std::vector<string> > &lines, char cMid,
     vector<string> rs;
     for (size_t i = 0; i < lines.size(); ++i)
     {
-        const vector<string> & line = lines.at(i);
+        const vector<string> &line = lines.at(i);
         rs.push_back(join(line, cMid));
     }
     return join(rs, cSplitCharacter);
@@ -1624,15 +1802,16 @@ string CxString::join(const std::vector<std::vector<string> > &lines, char cMid,
 
 string CxString::replace(const string &strBase, char cSrc, char cDes)
 {
+    if (strBase.empty()) return string();
     string r(strBase.data(), strBase.size());
-    uchar * first = (uchar *)r.data();
-    uchar * end = first + r.size() - 1;
+    uchar *first = (uchar *) r.data();
+    uchar *end = first + r.size();
 
-    uchar * pch = first;
+    uchar *pch = first;
     while (pch < end)
     {
-        if (* pch == cSrc)
-            * pch = cDes;
+        if (*pch == cSrc)
+            *pch = cDes;
         ++pch;
     }
     return r;
@@ -1640,21 +1819,25 @@ string CxString::replace(const string &strBase, char cSrc, char cDes)
 
 string CxString::replace(const string &strBase, const string &strSrc, const string &strDes)
 {
+    if (strBase.empty()) return string();
     string sResult(strBase.data(), strBase.size());
+    if (strSrc.empty()) return sResult;
     string::size_type pos = 0;
     string::size_type srcLen = strSrc.size();
     string::size_type desLen = strDes.size();
-    pos=sResult.find(strSrc, pos);
+    pos = sResult.find(strSrc, pos);
     while ((pos != string::npos))
     {
         sResult.replace(pos, srcLen, strDes);
-        pos=sResult.find(strSrc, (pos+desLen));
+        pos = sResult.find(strSrc, (pos + desLen));
     }
     return sResult;
 }
 
 string CxString::replaceCase(const string &strBase, const string &strSrc, const string &strDes)
 {
+    if (strBase.empty()) return string();
+    if (strSrc.empty()) return string(strBase.data(), strBase.size());
     vector<string> ss = splitCase(strBase, strSrc);
     if (ss.size() > 0)
         return join(ss, strDes);
@@ -1664,34 +1847,39 @@ string CxString::replaceCase(const string &strBase, const string &strSrc, const 
 
 string CxString::trim(const string &s)
 {
-    string r(s.data(), s.size());
-    if (r.empty()) return r;
-    uchar * first = (uchar *)r.data();
-    uchar * end = first + r.size() - 1;
-
-    uchar * pchFirst = first;
-    uchar * pchEnd = end;
+    if (s.empty()) return s;
+    uchar *first = (uchar *) s.data();
+    uchar *end = first + s.size() - 1;
+    uchar *pchFirst = first;
+    uchar *pchEnd = end;
+    if (s.size() == 1)
+    {
+        if (*first < '!')
+            return string();
+        else
+            return s;
+    }
     while (pchFirst < end)
     {
-        if (* pchFirst < '!')
-            pchFirst ++;
+        if (*pchFirst < '!')
+            pchFirst++;
         else
             break;
     }
     while (pchEnd > first)
     {
-        if (* pchEnd < '!')
-            pchEnd --;
+        if (*pchEnd < '!')
+            pchEnd--;
         else
             break;
     }
     if (pchFirst == first && pchEnd == end)
     {
-        return r;
+        return s;
     }
     else if (pchEnd >= pchFirst)
     {
-        return string((char*)pchFirst, pchEnd - pchFirst + 1);
+        return string((char *) pchFirst, pchEnd - pchFirst + 1);
     }
     else
     {
@@ -1701,23 +1889,73 @@ string CxString::trim(const string &s)
 
 string CxString::trim(const string &s, const char cDelete)
 {
-    if (s.empty()) return std::string();
-    char* first = const_cast<char *>( s.data() );
-    char* end = first + s.size() - 1;
-
-    char * pchFirst = first;
-    char * pchEnd = end;
+    if (s.empty()) return s;
+    uchar cDelete2 = uchar(cDelete);
+    uchar *first = (uchar *) s.data();
+    uchar *end = first + s.size() - 1;
+    uchar *pchFirst = first;
+    uchar *pchEnd = end;
+    if (s.size() == 1)
+    {
+        if (*first == cDelete2)
+            return string();
+        else
+            return s;
+    }
     while (pchFirst < end)
     {
-        if (* pchFirst == cDelete)
-            pchFirst ++;
+        if (*pchFirst == cDelete2)
+            pchFirst++;
         else
             break;
     }
     while (pchEnd > first)
     {
-        if (* pchEnd == cDelete)
-            pchEnd --;
+        if (*pchEnd == cDelete2)
+            pchEnd--;
+        else
+            break;
+    }
+    if (pchFirst == first && pchEnd == end)
+    {
+        return s;
+    }
+    else if (pchEnd >= pchFirst)
+    {
+        return string((char *) pchFirst, pchEnd - pchFirst + 1);
+    }
+    else
+    {
+        return string("");
+    }
+}
+
+string CxString::trim(const string &s, const string &sDelete)
+{
+    if (s.empty()) return s;
+    char *first = const_cast<char *>( s.data());
+    char *end = first + s.size() - 1;
+    int iSize = sDelete.size();
+    char *pchFirst = first;
+    char *pchEnd = end;
+    if (s.size() == 1)
+    {
+        if (s == sDelete)
+            return string();
+        else
+            return s;
+    }
+    while (pchFirst < end)
+    {
+        if (pchFirst + iSize <= end && strncmp(pchFirst, sDelete.data(), iSize) == 0)
+            pchFirst += iSize;
+        else
+            break;
+    }
+    while (pchEnd > first)
+    {
+        if (pchEnd - iSize >= first && strncmp(pchEnd - iSize, sDelete.data(), iSize) == 0)
+            pchEnd -= iSize;
         else
             break;
     }
@@ -1735,104 +1973,76 @@ string CxString::trim(const string &s, const char cDelete)
     }
 }
 
-string CxString::trim(const string &s, const string &sDelete)
-{
-    if (s.empty()) return std::string();
-    char* first = const_cast<char *>( s.data() );
-    char* end = first + s.size() - 1;
-    int iSize = sDelete.size();
-    char * pchFirst = first;
-    char * pchEnd = end;
-    while (pchFirst < end)
-    {
-        if (pchFirst + iSize <= end && strncmp(pchFirst, sDelete.data(), iSize) == 0)
-            pchFirst += iSize;
-        else
-            break;
-    }
-    while (pchEnd > first)
-    {
-        if (pchEnd - iSize >= first && strncmp(pchEnd-iSize, sDelete.data(), iSize) == 0)
-            pchEnd -= iSize;
-        else
-            break;
-    }
-    if (pchEnd >= pchFirst)
-        return string(pchFirst, pchEnd - pchFirst + 1);
-    else
-        return string("");
-}
-
 void fn_lower(char *str)
 {
-    while(str && *str)
+    while (str && *str)
     {
         *str = ::tolower(*str);
         ++str;
     }
 }
 
-void CxString::toLowerSelf( string & r )
+void CxString::toLowerSelf(string &r)
 {
-    char * pchBegin = const_cast<char *>( r.data() );
-    char * pchEnd = pchBegin + r.size();
-    char * pch = pchBegin;
-    while ( pch < pchEnd )
+    char *pchBegin = const_cast<char *>( r.data());
+    char *pchEnd = pchBegin + r.size();
+    char *pch = pchBegin;
+    while (pch < pchEnd)
     {
-        if ( * pch >= 0x41 && * pch <= 0x5A )
-            * pch += 0x20;
-        pch ++;
+        if (*pch >= 0x41 && *pch <= 0x5A)
+            *pch += 0x20;
+        pch++;
     }
 }
 
-string CxString::toLower( const string & s )
+string CxString::toLower(const string &s)
 {
     string r(s.data(), s.size());
-    char * pchBegin = const_cast<char *>( r.data() );
-    char * pchEnd = pchBegin + r.size();
-    char * pch = pchBegin;
-    while ( pch < pchEnd )
+    char *pchBegin = const_cast<char *>( r.data());
+    char *pchEnd = pchBegin + r.size();
+    char *pch = pchBegin;
+    while (pch < pchEnd)
     {
-        if ( * pch >= 0x41 && * pch <= 0x5A )
-            * pch += 0x20;
-        pch ++;
+        if (*pch >= 0x41 && *pch <= 0x5A)
+            *pch += 0x20;
+        pch++;
     }
     return r;
 }
 
 void fn_upper(char *str)
 {
-    while(str && *str)
+    while (str && *str)
     {
         *str = ::toupper(*str);
         ++str;
     }
 }
 
-void CxString::toUpperSelf( string & r )
+void CxString::toUpperSelf(string &r)
 {
-    char * pchBegin = const_cast<char *>( r.data() );
-    char * pchEnd = pchBegin + r.size();
-    char * pch = pchBegin;
-    while ( pch < pchEnd )
+    char *pchBegin = const_cast<char *>( r.data());
+    char *pchEnd = pchBegin + r.size();
+    char *pch = pchBegin;
+    while (pch < pchEnd)
     {
-        if ( * pch >= 0x61 && * pch <= 0x7A )
-            * pch -= 0x20;
-        pch ++;
+        if (*pch >= 0x61 && *pch <= 0x7A)
+            *pch -= 0x20;
+        pch++;
     }
 }
 
-string CxString::toUpper( const string& s )
+string CxString::toUpper(const string &s)
 {
     string r(s.data(), s.size());
-    char * pchBegin = const_cast<char *>( r.data() );
-    char * pchEnd = pchBegin + r.size();
-    char * pch = pchBegin;
-    while ( pch < pchEnd )
+    char *pchBegin = const_cast<char *>( r.data());
+    char *pchEnd = pchBegin + r.size();
+    char *pch = pchBegin;
+    while (pch < pchEnd)
     {
-        if ( * pch >= 0x61 && * pch <= 0x7A )
-            * pch -= 0x20;
-        pch ++;
+        if (*pch >= 0x61 && *pch <= 0x7A)
+            *pch -= 0x20;
+        pch++;
     }
     return r;
 }
@@ -1873,6 +2083,35 @@ size_t CxString::findLeftCase(const string &sMaster, const std::vector<string> &
     return string::npos;
 }
 
+size_t CxString::findLeftCase(const std::vector<std::string> &sMaster, const std::string &sSubs)
+{
+    string str1 = toLower(sSubs);
+    for (size_t i = 0; i < sMaster.size(); ++i)
+    {
+        string str2 = toLower(sMaster.at(i));
+        size_t iPos = str2.find(str1);
+        if (iPos != string::npos)
+        {
+            return iPos;
+        }
+    }
+    return string::npos;
+}
+
+size_t CxString::findEqualCase(const std::vector<std::string> &sMaster, const std::string &sSubs)
+{
+    string str1 = toLower(sSubs);
+    for (size_t i = 0; i < sMaster.size(); ++i)
+    {
+        string str2 = toLower(sMaster.at(i));
+        if (str1 == str2)
+        {
+            return i;
+        }
+    }
+    return string::npos;
+}
+
 size_t CxString::findRightCase(const string &sMaster, const string &sSub)
 {
     string str1 = toLower(sMaster);
@@ -1895,6 +2134,16 @@ bool CxString::existCase(const string &sMaster, const std::vector<string> &sSubs
     return findLeftCase(sMaster, sSubs) != string::npos;
 }
 
+bool CxString::existCase(const std::vector<std::string> &sMaster, const std::string &sSubs)
+{
+    return findLeftCase(sMaster, sSubs) != string::npos;
+}
+
+bool CxString::existEqualCase(const std::vector<std::string> &sMaster, const std::string &sSubs)
+{
+    return findEqualCase(sMaster, sSubs) != string::npos;
+}
+
 bool CxString::beginWith(const string &sMaster, const string &sSub)
 {
     return sMaster.find(sSub) == 0;
@@ -1907,8 +2156,8 @@ bool CxString::beginWithCase(const string &sMaster, const string &sSub)
 
 bool CxString::endWith(const string &sMaster, const string &sSub)
 {
-    int nPos = sMaster.rfind(sSub);
-    if(nPos!= string::npos)
+    size_t nPos = sMaster.rfind(sSub);
+    if (nPos != string::npos)
     {
         return nPos == (sMaster.size() - sSub.size());
     }
@@ -1918,7 +2167,7 @@ bool CxString::endWith(const string &sMaster, const string &sSub)
 bool CxString::endWithCase(const string &sMaster, const string &sSub)
 {
     size_t nPos = findRightCase(sMaster, sSub);
-    if(nPos!= string::npos)
+    if (nPos != string::npos)
     {
         return nPos == (sMaster.size() - sSub.size());
     }
@@ -1927,12 +2176,11 @@ bool CxString::endWithCase(const string &sMaster, const string &sSub)
 
 string CxString::format(const char *sFormat, ...)
 {
-    char buffer[512];
+    char buffer[4096];
     va_list args;
     va_start (args, sFormat);
 //    vsprintf (buffer, sFormat, args); //会有内存溢出 llb 20140427
-    vsnprintf(buffer,sizeof(buffer),sFormat, args);
-
+    vsnprintf(buffer, sizeof(buffer), sFormat, args);
 //    perror (buffer);
     va_end (args);
     return buffer;
@@ -1945,7 +2193,7 @@ string CxString::token(string &s, char cToken, bool *ok)
     if (iIndex != string::npos)
     {
         r = s.substr(0, iIndex);
-        s = s.substr(iIndex+1);
+        s = s.substr(iIndex + 1);
         if (ok) *ok = true;
     }
     else
@@ -1962,7 +2210,7 @@ string CxString::token(string &s, const string &sToken, bool *ok)
     if (iIndex != string::npos)
     {
         r = s.substr(0, iIndex);
-        s = s.substr(iIndex+sToken.size());
+        s = s.substr(iIndex + sToken.size());
         if (ok) *ok = true;
     }
     else
@@ -1978,7 +2226,7 @@ string CxString::tokenLeft(string &s, char cToken, bool *ok)
     size_t iIndex = s.find(cToken);
     if (iIndex != string::npos)
     {
-        r = s.substr(iIndex+1);
+        r = s.substr(iIndex + 1);
         s = s.substr(0, iIndex);
         if (ok) *ok = true;
     }
@@ -1995,7 +2243,7 @@ string CxString::tokenLeft(string &s, const string &sToken, bool *ok)
     size_t iIndex = s.find(sToken);
     if (iIndex != string::npos)
     {
-        r = s.substr(iIndex+sToken.size());
+        r = s.substr(iIndex + sToken.size());
         s = s.substr(0, iIndex);
         if (ok) *ok = true;
     }
@@ -2012,7 +2260,7 @@ string CxString::tokenRight(string &s, char cToken, bool *ok)
     size_t iIndex = s.rfind(cToken);
     if (iIndex != string::npos)
     {
-        r = s.substr(iIndex+1);
+        r = s.substr(iIndex + 1);
         s.resize(iIndex);
         if (ok) *ok = true;
     }
@@ -2029,7 +2277,7 @@ string CxString::tokenRight(string &s, const string &sToken, bool *ok)
     size_t iIndex = s.rfind(sToken);
     if (iIndex != string::npos)
     {
-        r = s.substr(iIndex+sToken.size());
+        r = s.substr(iIndex + sToken.size());
         s.resize(iIndex);
         if (ok) *ok = true;
     }
@@ -2042,27 +2290,27 @@ string CxString::tokenRight(string &s, const string &sToken, bool *ok)
 
 string CxString::unquote(const string &s, char quote_l, char quote_r)
 {
-    uchar* first = (uchar *)s.data();
-    uchar* end = first + s.size() - 1;
+    uchar *first = (uchar *) s.data();
+    uchar *end = first + s.size() - 1;
 
-    uchar * pchFirst = first;
-    uchar * pchEnd = end;
+    uchar *pchFirst = first;
+    uchar *pchEnd = end;
     bool bHas = false;
     while (pchFirst < end)
     {
         if (bHas)
         {
-            if (* pchFirst > ' ')
+            if (*pchFirst > ' ')
                 break;
         }
         else
         {
-            if (* pchFirst == quote_l)
+            if (*pchFirst == quote_l)
                 bHas = true;
         }
-        pchFirst ++;
+        pchFirst++;
     }
-    if (! bHas)
+    if (!bHas)
     {
         return std::string();
     }
@@ -2071,23 +2319,23 @@ string CxString::unquote(const string &s, char quote_l, char quote_r)
     {
         if (bHas)
         {
-            if (* pchEnd > ' ')
+            if (*pchEnd > ' ')
                 break;
         }
         else
         {
-            if (* pchEnd == quote_r)
+            if (*pchEnd == quote_r)
                 bHas = true;
         }
-        pchEnd --;
+        pchEnd--;
     }
-    if (! bHas)
+    if (!bHas)
     {
         return std::string();
     }
     if (pchEnd >= pchFirst)
     {
-        return string((char*)pchFirst, pchEnd - pchFirst + 1);
+        return string((char *) pchFirst, pchEnd - pchFirst + 1);
     }
     else
     {
@@ -2106,7 +2354,7 @@ string CxString::unquote(const string &s, char c)
         {
             int iLength = iRIndex - iLIndex;
             if (iLength > 1)
-            r = string(s.data()+iLIndex+1, iLength-1);
+                r = string(s.data() + iLIndex + 1, iLength - 1);
         }
     }
     return r;
@@ -2122,24 +2370,62 @@ string CxString::unquote(const string &s, const string &quote_l, const string &q
     size_t iIndexLeft = s.find(quote_l);
     if (iIndexLeft != string::npos)
     {
-        size_t iPosLeft = iIndexLeft+quote_l.size();
+        size_t iPosLeft = iIndexLeft + quote_l.size();
         size_t iIndexRight = s.find(quote_r, iPosLeft);
         if (iIndexRight != string::npos)
         {
-            r = s.substr(iPosLeft, iIndexRight-iPosLeft);
+            r = s.substr(iPosLeft, iIndexRight - iPosLeft);
         }
     }
     return r;
+}
+
+string CxString::unquote(const string &s, size_t sPos, const string &quote_l, const string &quote_r, size_t *pPos)
+{
+    string r;
+    if (quote_l.empty() || quote_r.empty())
+    {
+        return r;
+    }
+    size_t iIndexLeft = s.find(quote_l, sPos);
+    if (iIndexLeft != string::npos)
+    {
+        size_t iPosLeft = iIndexLeft + quote_l.size();
+        size_t iIndexRight = s.find(quote_r, iPosLeft);
+        if (iIndexRight != string::npos)
+        {
+            if (pPos) *pPos = iIndexRight;
+            r = s.substr(iPosLeft, iIndexRight - iPosLeft);
+        }
+    }
+    return r;
+}
+
+bool CxString::find(const string &src, const string &start, const string &end, int &pos, int &len, string &des)
+{
+    bool bRet = false;
+
+    size_t ns = src.rfind(start);
+    size_t ne = src.rfind(end);
+
+    if (ns != string::npos && ne != string::npos && ne > (ns + start.length()))
+    {
+        pos = ns;
+        len = ne - ns + end.length();
+        des = src.substr(ns + start.length(), ne - ns - start.length());
+        bRet = true;
+    }
+    return bRet;
 }
 
 int CxString::lengthCString(int n, ...)
 {
     int rSize = 0;
     va_list vl;
-    va_start(vl,n);
+    va_start(vl, n);
     for (int i = 0; i < n; ++i)
     {
-        char * pch = va_arg(vl, char *);
+        char *pch = va_arg(vl, char *);
         rSize += strlen(pch);
     }
     va_end(vl);
@@ -2151,10 +2437,10 @@ int CxString::copyCString(char *dest, int n, ...)
     int rSize = 0;
     int iSize = 0;
     va_list vl;
-    va_start(vl,n);
+    va_start(vl, n);
     for (int i = 0; i < n; ++i)
     {
-        char * pch = va_arg(vl, char *);
+        char *pch = va_arg(vl, char *);
         iSize = strlen(pch) + 1;
         memcpy(dest, pch, iSize);
         dest += iSize;
@@ -2164,91 +2450,95 @@ int CxString::copyCString(char *dest, int n, ...)
     return rSize;
 }
 
-uint32 CxString::toUint32(char *pBuff,int iLenth,bool bInverse)
+uint32 CxString::toUint32(char *pBuff, int iLenth, bool bInverse)
 {
     uint32 val = 0;
-    if(bInverse)
+    if (bInverse)
     {
-        switch(iLenth)
+        switch (iLenth)
         {
-        case 1:
-            val = pBuff[0];
-            break;
-        case 2:
-            val = pBuff[0]|(pBuff[1]<<8);
-            break;
-        case 3:
-            val = pBuff[0]|(pBuff[1]<<8)|(pBuff[2]<<16);
-            break;
-        case 4:
-            val = pBuff[0]|(pBuff[1]<<8)|(pBuff[2]<<16)|(pBuff[4]<<24);
-            break;
-        default:
-            break;
+            case 1:
+                val = pBuff[0];
+                break;
+            case 2:
+                val = pBuff[0] | (pBuff[1] << 8);
+                break;
+            case 3:
+                val = pBuff[0] | (pBuff[1] << 8) | (pBuff[2] << 16);
+                break;
+            case 4:
+                val = pBuff[0] | (pBuff[1] << 8) | (pBuff[2] << 16) | (pBuff[4] << 24);
+                break;
+            default:
+                break;
         }
 
-    }else{
-        switch(iLenth)
+    }
+    else
+    {
+        switch (iLenth)
         {
-        case 1:
-            val = pBuff[0];
-            break;
-        case 2:
-            val = (pBuff[0]<<8)|(pBuff[1]);
-            break;
-        case 3:
-            val = (pBuff[0]<<16)|(pBuff[1]<<8)|(pBuff[2]);
-            break;
-        case 4:
-            val = (pBuff[0]<<24)|(pBuff[1]<<16)|(pBuff[2]<<8)|(pBuff[4]);
-            break;
-        default:
-            break;
+            case 1:
+                val = pBuff[0];
+                break;
+            case 2:
+                val = (pBuff[0] << 8) | (pBuff[1]);
+                break;
+            case 3:
+                val = (pBuff[0] << 16) | (pBuff[1] << 8) | (pBuff[2]);
+                break;
+            case 4:
+                val = (pBuff[0] << 24) | (pBuff[1] << 16) | (pBuff[2] << 8) | (pBuff[4]);
+                break;
+            default:
+                break;
         }
     }
     return val;
 }
 
-uint32 CxString::toUint32(uchar *pBuff,int iLenth,bool bInverse)
+uint32 CxString::toUint32(uchar *pBuff, int iLenth, bool bInverse)
 {
     uint32 val = 0;
-    if(bInverse)
+    if (bInverse)
     {
-        switch(iLenth)
+        switch (iLenth)
         {
-        case 1:
-            val = pBuff[0];
-            break;
-        case 2:
-            val = pBuff[0]|(pBuff[1]<<8);
-            break;
-        case 3:
-            val = pBuff[0]|(pBuff[1]<<8)|(pBuff[2]<<16);
-            break;
-        case 4:
-            val = pBuff[0]|(pBuff[1]<<8)|(pBuff[2]<<16)|(pBuff[4]<<24);
-            break;
-        default:
-            break;
+            case 1:
+                val = pBuff[0];
+                break;
+            case 2:
+                val = pBuff[0] | (pBuff[1] << 8);
+                break;
+            case 3:
+                val = pBuff[0] | (pBuff[1] << 8) | (pBuff[2] << 16);
+                break;
+            case 4:
+                val = pBuff[0] | (pBuff[1] << 8) | (pBuff[2] << 16) | (pBuff[4] << 24);
+                break;
+            default:
+                break;
         }
 
-    }else{
-        switch(iLenth)
+    }
+    else
+    {
+        switch (iLenth)
         {
-        case 1:
-            val = pBuff[0];
-            break;
-        case 2:
-            val = (pBuff[0]<<8)|(pBuff[1]);
-            break;
-        case 3:
-            val = (pBuff[0]<<16)|(pBuff[1]<<8)|(pBuff[2]);
-            break;
-        case 4:
-            val = (pBuff[0]<<24)|(pBuff[1]<<16)|(pBuff[2]<<8)|(pBuff[4]);
-            break;
-        default:
-            break;
+            case 1:
+                val = pBuff[0];
+                break;
+            case 2:
+                val = (pBuff[0] << 8) | (pBuff[1]);
+                break;
+            case 3:
+                val = (pBuff[0] << 16) | (pBuff[1] << 8) | (pBuff[2]);
+                break;
+            case 4:
+                val = (pBuff[0] << 24) | (pBuff[1] << 16) | (pBuff[2] << 8) | (pBuff[4]);
+                break;
+            default:
+                break;
         }
     }
     return val;
@@ -2308,18 +2598,18 @@ uint32 CxString::toUint32(std::string szBuf)
 
 bool CxString::isValidIp(const std::string &sIp)
 {
-   vector<string> v = split(sIp,'.');
-   if(v.size()<4 || v.size() > 6) return false;
+    vector<string> v = split(sIp, '.');
+    if (v.size() < 4 || v.size() > 6) return false;
 
-   int n[6];
-   bool bOk;
-   for(size_t i=0;i<v.size();i++)
-   {
-      n[i] = toInt32(v.at(i),&bOk);
-      if(n[i]>255 || ! bOk) return false;
-   }
+    int n[6];
+    bool bOk;
+    for (size_t i = 0; i < v.size(); i++)
+    {
+        n[i] = toInt32(v.at(i), &bOk);
+        if (n[i] > 255 || !bOk) return false;
+    }
 
-   return true;
+    return true;
 }
 
 bool CxString::isValidPort(int iPort)
@@ -2332,13 +2622,13 @@ bool CxString::isValidPath(const string &sPath)
     string s = trim(sPath);
     if (s.empty())
         return false;
-    if (s[0] == '/' || (s.size()>1 && s[1]==':'))
+    if (s[0] == '/' || (s.size() > 1 && s[1] == ':'))
         return isValidFullPath(sPath);
-    const char* pch = s.data();
-    const char* pchEnd = s.data() + s.size();
+    const char *pch = s.data();
+    const char *pchEnd = s.data() + s.size();
     while (pch < pchEnd)
     {
-        if (*pch=='/' || *pch=='\\')
+        if (*pch == '/' || *pch == '\\')
         {
             ++pch;
             continue;
@@ -2357,32 +2647,32 @@ bool CxString::isValidFullPath(const string &sPath)
     if (s.empty())
         return false;
     char cRoot = s[0];
-    const char* pch;
-    const char* pchEnd = s.data() + s.size();
+    const char *pch;
+    const char *pchEnd = s.data() + s.size();
     if (cRoot != '/')
     {
-        if (s.size()<2)
+        if (s.size() < 2)
             return false;
         if (s[1] == ':')
         {
-             bool r = (cRoot>'a' && cRoot<'z') || (cRoot>'A' && cRoot<'Z');
-             if (! r)
-                 return false;
+            bool r = (cRoot > 'a' && cRoot < 'z') || (cRoot > 'A' && cRoot < 'Z');
+            if (!r)
+                return false;
         }
         else
         {
             return false;
         }
-        pch = s.data()+2;
+        pch = s.data() + 2;
     }
     else
     {
-        pch = s.data()+1;
+        pch = s.data() + 1;
     }
 
     while (pch < pchEnd)
     {
-        if (*pch=='/' || *pch=='\\')
+        if (*pch == '/' || *pch == '\\')
         {
             ++pch;
             continue;
@@ -2397,8 +2687,8 @@ bool CxString::isValidFullPath(const string &sPath)
 
 bool CxString::isValidFileName(const string &sPath)
 {
-    const char* pch = sPath.data();
-    const char* pchEnd = sPath.data() + sPath.size();
+    const char *pch = sPath.data();
+    const char *pchEnd = sPath.data() + sPath.size();
     while (pch < pchEnd)
     {
         if (*pch > 0x20 && f_cPathChar[*pch])
@@ -2411,8 +2701,8 @@ bool CxString::isValidFileName(const string &sPath)
 
 bool CxString::isValidPathName(const string &sPath)
 {
-    const char* pch = sPath.data();
-    const char* pchEnd = sPath.data() + sPath.size();
+    const char *pch = sPath.data();
+    const char *pchEnd = sPath.data() + sPath.size();
     while (pch < pchEnd)
     {
         if (*pch > 0x20 && f_cPathChar[*pch])
@@ -2425,14 +2715,29 @@ bool CxString::isValidPathName(const string &sPath)
 
 bool CxString::isValidCodeName(const string &sName)
 {
-    const char* pch = sName.data();
-    const char* pchEnd = sName.data() + sName.size();
+    const char *pch = sName.data();
+    const char *pchEnd = sName.data() + sName.size();
     while (pch < pchEnd)
     {
-        if ((*pch >= 'a' && *pch <= 'z') || (*pch >= 'A' && *pch <= 'Z') || (*pch >= '0' && *pch <= '9') || *pch == '-' || *pch == '_')
+        if ((*pch >= 'a' && *pch <= 'z') || (*pch >= 'A' && *pch <= 'Z') || (*pch >= '0' && *pch <= '9') || *pch == '-'
+            || *pch == '_')
             ++pch;
         else
             return false;
+    }
+    return true;
+}
+
+bool CxString::isValidHexCharater(const std::string &s)
+{
+    const char *pchBegin = s.data();
+    const char *pchEnd = pchBegin + s.size();
+    const char *pch = pchBegin;
+    while (pch < pchEnd)
+    {
+        if (!((*pch >= '0' && *pch <= '9') || (*pch >= 'a' && *pch <= 'f') || (*pch >= 'A' && *pch <= 'F')))
+            return false;
+        pch++;
     }
     return true;
 }
@@ -2445,9 +2750,11 @@ int CxString::copyTo(const std::vector<string> &sLines, char *dest, int iLength)
     memset(dest, 0, iLength);
     for (size_t i = 0; i < sLines.size(); ++i)
     {
-        const string & sLine = sLines.at(i);
-        memcpy(dest, sLine.data(), sLine.size()); dest += sLine.size();
-        * dest = '\n'; ++ dest;
+        const string &sLine = sLines.at(i);
+        memcpy(dest, sLine.data(), sLine.size());
+        dest += sLine.size();
+        *dest = '\n';
+        ++dest;
     }
     return iSize;
 }
@@ -2457,27 +2764,33 @@ int CxString::sizeOf(const std::vector<string> &sLines)
     int r = 0;
     for (size_t i = 0; i < sLines.size(); ++i)
     {
-        const string & sLine = sLines.at(i);
+        const string &sLine = sLines.at(i);
         r += sLine.size();
     }
     return r;
 }
 
-bool CxString::find(const string &src, const string &start, const string &end, int &pos, int &len, string &des)
+std::vector<string> CxString::newStrings(const std::vector<string> &ss)
 {
-    bool bRet = false;
-
-    size_t ns = src.rfind(start);
-    size_t ne = src.rfind(end);
-
-    if(ns!=string::npos && ne!=string::npos && ne>(ns+start.length()))
+    std::vector<string> r;
+    for (size_t i = 0; i < ss.size(); ++i)
     {
-        pos = ns;
-        len = ne-ns+end.length();
-        des = src.substr(ns+start.length(),ne-ns-start.length());
-        bRet = true;
+        const string &s = ss.at(i);
+        r.push_back(std::string(s.data(), s.size()));
     }
-    return bRet;
+    return r;
+}
+
+std::map<string, string> CxString::newStrings(const std::map<string, string> &ss)
+{
+    std::map<string, string> r;
+    for (std::map<string, string>::const_iterator it = ss.begin(); it != ss.end(); ++it)
+    {
+        const string &sKey = it->first;
+        const string &sValue = it->second;
+        r[std::string(sKey.data(), sKey.size())] = std::string(sValue.data(), sValue.size());
+    }
+    return r;
 }
 
 int CxString::countOfString(const string &s, const string &sSplitString)
@@ -2496,8 +2809,8 @@ int CxString::countOfString(const string &s, const string &sSplitString)
 int CxString::countOfString(const string &s, char sub)
 {
     int iCount = 0;
-    const char* pch = s.data();
-    const char* pchEnd = s.data() + s.size();
+    const char *pch = s.data();
+    const char *pchEnd = s.data() + s.size();
     while (pch < pchEnd)
     {
         if (*pch == sub)
@@ -2507,9 +2820,10 @@ int CxString::countOfString(const string &s, char sub)
     return iCount;
 }
 
-std::map<string, string> CxString::doSplitToMap_trim(const string &s, char cMid, char cSplitCharacter)
+std::map<string, string> CxString::doSplitToMap_trim(const string &ss, char cMid, char cSplitCharacter)
 {
     std::map<string, string> r;
+    if (ss.empty()) return r;
     size_t start = 0;
     size_t endMid;
     size_t endSplit;
@@ -2517,27 +2831,27 @@ std::map<string, string> CxString::doSplitToMap_trim(const string &s, char cMid,
     {
         string sKey;
         string sValue;
-        endMid = s.find(cMid, start);
+        endMid = ss.find(cMid, start);
         if (endMid != string::npos)
         {
-            sKey = s.substr(start, endMid - start);
-            sKey = trim(sKey,CxGlobal::spaceChar);
+            sKey = ss.substr(start, endMid - start);
+            sKey = trim(sKey, CxGlobal::spaceChar);
             start = endMid + 1;
 
-            endSplit = s.find(cSplitCharacter, start);
+            endSplit = ss.find(cSplitCharacter, start);
             if (endSplit != string::npos)
             {
-                sValue = s.substr(start, endSplit - start);
-                sValue = trim(sValue,CxGlobal::spaceChar);
+                sValue = ss.substr(start, endSplit - start);
+                sValue = trim(sValue, CxGlobal::spaceChar);
                 start = endSplit + 1;
                 r[sKey] = sValue;
             }
             else
             {
-                if (start != s.size())
+                if (start != ss.size())
                 {
-                    sValue = s.substr(start);
-                    sValue = trim(sValue,CxGlobal::spaceChar);
+                    sValue = ss.substr(start);
+                    sValue = trim(sValue, CxGlobal::spaceChar);
                     r[sKey] = sValue;
                 }
                 break;
@@ -2551,9 +2865,10 @@ std::map<string, string> CxString::doSplitToMap_trim(const string &s, char cMid,
     return r;
 }
 
-std::map<string, string> CxString::doSplitToMap_notrim(const string &s, char cMid, char cSplitCharacter)
+std::map<string, string> CxString::doSplitToMap_notrim(const string &ss, char cMid, char cSplitCharacter)
 {
     std::map<string, string> r;
+    if (ss.empty()) return r;
     size_t start = 0;
     size_t endMid;
     size_t endSplit;
@@ -2561,24 +2876,24 @@ std::map<string, string> CxString::doSplitToMap_notrim(const string &s, char cMi
     {
         string sKey;
         string sValue;
-        endMid = s.find(cMid, start);
+        endMid = ss.find(cMid, start);
         if (endMid != string::npos)
         {
-            sKey = s.substr(start, endMid - start);
+            sKey = ss.substr(start, endMid - start);
             start = endMid + 1;
 
-            endSplit = s.find(cSplitCharacter, start);
+            endSplit = ss.find(cSplitCharacter, start);
             if (endSplit != string::npos)
             {
-                sValue = s.substr(start, endSplit - start);
+                sValue = ss.substr(start, endSplit - start);
                 start = endSplit + 1;
                 r[sKey] = sValue;
             }
             else
             {
-                if (start != s.size())
+                if (start != ss.size())
                 {
-                    sValue = s.substr(start);
+                    sValue = ss.substr(start);
                     r[sKey] = sValue;
                 }
                 break;
@@ -2592,9 +2907,10 @@ std::map<string, string> CxString::doSplitToMap_notrim(const string &s, char cMi
     return r;
 }
 
-std::map<string, string> CxString::doSplitToMap_reverse_trim(const string &s, char cMid, char cSplitCharacter)
+std::map<string, string> CxString::doSplitToMap_reverse_trim(const string &ss, char cMid, char cSplitCharacter)
 {
     std::map<string, string> r;
+    if (ss.empty()) return r;
     size_t start = 0;
     size_t endMid;
     size_t endSplit;
@@ -2602,27 +2918,27 @@ std::map<string, string> CxString::doSplitToMap_reverse_trim(const string &s, ch
     {
         string sKey;
         string sValue;
-        endMid = s.find(cMid, start);
+        endMid = ss.find(cMid, start);
         if (endMid != string::npos)
         {
-            sKey = s.substr(start, endMid - start);
-            sKey = trim(sKey,CxGlobal::spaceChar);
+            sKey = ss.substr(start, endMid - start);
+            sKey = trim(sKey, CxGlobal::spaceChar);
             start = endMid + 1;
 
-            endSplit = s.find(cSplitCharacter, start);
+            endSplit = ss.find(cSplitCharacter, start);
             if (endSplit != string::npos)
             {
-                sValue = s.substr(start, endSplit - start);
-                sValue = trim(sValue,CxGlobal::spaceChar);
+                sValue = ss.substr(start, endSplit - start);
+                sValue = trim(sValue, CxGlobal::spaceChar);
                 start = endSplit + 1;
                 r[sValue] = sKey;
             }
             else
             {
-                if (start != s.size())
+                if (start != ss.size())
                 {
-                    sValue = s.substr(start);
-                    sValue = trim(sValue,CxGlobal::spaceChar);
+                    sValue = ss.substr(start);
+                    sValue = trim(sValue, CxGlobal::spaceChar);
                     r[sValue] = sKey;
                 }
                 break;
@@ -2636,9 +2952,10 @@ std::map<string, string> CxString::doSplitToMap_reverse_trim(const string &s, ch
     return r;
 }
 
-std::map<string, string> CxString::doSplitToMap_reverse_notrim(const string &s, char cMid, char cSplitCharacter)
+std::map<string, string> CxString::doSplitToMap_reverse_notrim(const string &ss, char cMid, char cSplitCharacter)
 {
     std::map<string, string> r;
+    if (ss.empty()) return r;
     size_t start = 0;
     size_t endMid;
     size_t endSplit;
@@ -2646,24 +2963,24 @@ std::map<string, string> CxString::doSplitToMap_reverse_notrim(const string &s, 
     {
         string sKey;
         string sValue;
-        endMid = s.find(cMid, start);
+        endMid = ss.find(cMid, start);
         if (endMid != string::npos)
         {
-            sKey = s.substr(start, endMid - start);
+            sKey = ss.substr(start, endMid - start);
             start = endMid + 1;
 
-            endSplit = s.find(cSplitCharacter, start);
+            endSplit = ss.find(cSplitCharacter, start);
             if (endSplit != string::npos)
             {
-                sValue = s.substr(start, endSplit - start);
+                sValue = ss.substr(start, endSplit - start);
                 start = endSplit + 1;
                 r[sValue] = sKey;
             }
             else
             {
-                if (start != s.size())
+                if (start != ss.size())
                 {
-                    sValue = s.substr(start);
+                    sValue = ss.substr(start);
                     r[sValue] = sKey;
                 }
                 break;
@@ -2677,8 +2994,133 @@ std::map<string, string> CxString::doSplitToMap_reverse_notrim(const string &s, 
     return r;
 }
 
+/*
+连字符解析 0x0100200~0x0100300,0x100300,0x0100400,
+ */
+std::vector<int> CxString::parseToInts(const string &sSrc, char cJoin, char cSplit)
+{
+    vector<int> vRet;
+    vRet.clear();
 
+    vector<string> v = split(sSrc, cSplit);
+    for (size_t i = 0; i < v.size(); ++i)
+    {
+        string s = v[i];
+        //更新带 ‘~' 段式
+        string sub = format("%c", cJoin);
+        if (contain(s, sub))
+        {
+            string sBegin = token(s, cJoin);
+            string sEnd = s;
+            int iBegin = CxString::toInt32(sBegin);
+            int iEnd = CxString::toInt32(sEnd);
+            for (int j = iBegin; j <= iEnd; ++j)
+            {
+                vRet.push_back(j);
+            }
+        }
+            //更新单个
+        else
+        {
+            vRet.push_back(CxString::toInt32(s));
+        }
+    }
+    return vRet;
+}
 
+std::wstring CxString::toWstring(const std::string &sSrc)
+{
+    std::wstring r;
+    int nLen = (int) sSrc.length();
+    r.resize(nLen, L' ');
+
+    size_t nResult = mbstowcs((wchar_t *) r.c_str(), (const char *) sSrc.c_str(), nLen);
+    if (nResult<=0) r = std::wstring();
+    //MultiByteToWideChar(CP_ACP,0,(LPCSTR)sSrc.c_str(),nLen,(LPWSTR)r.c_str(),nLen);
+    return r;
+}
+
+std::string CxString::fromWstring(const std::wstring &sSrc)
+{
+    std::string r;
+    int nLen = (int) sSrc.length();
+    r.resize(nLen, ' ');
+
+    size_t nResult = wcstombs((char *) r.c_str(), (wchar_t *) sSrc.c_str(), nLen);
+    //WideCharToMultiByte(CP_ACP,0,(LPCWSTR)sSrc.c_str(),nLen,(LPSTR)r.c_str(),nLen,NULL,NULL);
+    if(nResult<=0) r = std::string();
+    return r;
+}
+
+bool
+CxString::equal(const std::vector<std::string> &ss1, const std::vector<std::string> &ss2, bool bIgnoreOrder, bool bIgnoreCase, bool bTrim)
+{
+    if (ss1.size() != ss2.size())
+        return false;
+    if (ss1.empty())
+        return true;
+    if (bIgnoreOrder)
+    {
+        vector<string> ss3;
+        for (int i = 0; i < ss2.size(); ++i)
+        {
+            string s2 = ss2.at(i);
+            if (bIgnoreCase)
+            {
+                s2 = toLower(s2);
+            }
+            if (bTrim)
+            {
+                s2 = trim(s2);
+            }
+            ss3.push_back(s2);
+        }
+        for (int i = 0; i < ss1.size(); ++i)
+        {
+            string s1 = ss1.at(i);
+            if (bIgnoreCase)
+            {
+                s1 = toLower(s1);
+            }
+            if (bTrim)
+            {
+                s1 = trim(s1);
+            }
+            vector<string>::iterator it = std::find(ss3.begin(), ss3.end(), s1);
+            if (it != ss3.end())
+            {
+                ss3.erase(it);
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < ss1.size(); ++i)
+        {
+            string s1 = ss1.at(i);
+            string s2 = ss2.at(i);
+            if (bIgnoreCase)
+            {
+                s1 = toLower(s1);
+                s2 = toLower(s2);
+            }
+            if (bTrim)
+            {
+                s1 = trim(s1);
+                s2 = trim(s2);
+            }
+            if (s1 != s2)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 /**
  * --- std::string end --------------------------------------------------------
@@ -2690,53 +3132,54 @@ std::map<string, string> CxString::doSplitToMap_reverse_notrim(const string &s, 
  * *** c string begin *********************************************************
  */
 
-char * CxStringC::create(const char *cp)
+char *CxStringC::create(const char *cp)
 {
     char *mem;
 
-    if(!cp)
+    if (!cp)
         return NULL;
 
     size_t len = strlen(cp) + 1;
-    mem = (char *)malloc(len);
-    GM_ASSERT_IFNOT( mem != NULL, "string dup allocation error");
+    mem = (char *) malloc(len);
+    GM_ASSERT_IFNOT(mem != NULL, "string dup allocation error");
     set(mem, len, cp);
     return mem;
 }
 
-char * CxStringC::createLeft(const char *cp, size_t size)
+char *CxStringC::createLeft(const char *cp, size_t size)
 {
     char *mem;
 
-    if(!cp)
+    if (!cp)
         return NULL;
 
-    if(!size)
+    if (!size)
         size = strlen(cp);
 
-    mem = (char *)malloc(++size);
-    GM_ASSERT_IFNOT( mem != NULL, "string dup allocation error" );
+    mem = (char *) malloc(++size);
+    GM_ASSERT_IFNOT(mem != NULL, "string dup allocation error");
     set(mem, size, cp);
     return mem;
 }
 
-char * CxStringC::set(char *str, size_t size, const char *s)
+char *CxStringC::set(char *str, size_t size, const char *s)
 {
-    if(!str)
+    if (!str)
         return NULL;
 
-    if(size < 2)
+    if (size < 2)
         return str;
 
-    if(!s)
+    if (!s)
         s = "";
 
     size_t l = strlen(s);
 
-    if(l >= size)
+    if (l >= size)
         l = size - 1;
 
-    if(!l) {
+    if (!l)
+    {
         *str = 0;
         return str;
     }
@@ -2746,25 +3189,26 @@ char * CxStringC::set(char *str, size_t size, const char *s)
     return str;
 }
 
-char * CxStringC::set(char *str, size_t size, const char *s, size_t len)
+char *CxStringC::set(char *str, size_t size, const char *s, size_t len)
 {
-    if(!str)
+    if (!str)
         return NULL;
 
-    if(size < 2)
+    if (size < 2)
         return str;
 
-    if(!s)
+    if (!s)
         s = "";
 
     size_t l = strlen(s);
-    if(l >= size)
+    if (l >= size)
         l = size - 1;
 
-    if(l > len)
+    if (l > len)
         l = len;
 
-    if(!l) {
+    if (!l)
+    {
         *str = 0;
         return str;
     }
@@ -2774,62 +3218,70 @@ char * CxStringC::set(char *str, size_t size, const char *s, size_t len)
     return str;
 }
 
-char * CxStringC::token(char *text, char **token, const char *clist, const char *quote, const char *eol)
+char *CxStringC::token(char *text, char **token, const char *clist, const char *quote, const char *eol)
 {
     char *result;
 
-    if(!eol)
+    if (!eol)
         eol = "";
 
-    if(!token || !clist)
+    if (!token || !clist)
         return NULL;
 
-    if(!*token)
+    if (!*token)
         *token = text;
 
-    if(!**token) {
+    if (!**token)
+    {
         *token = text;
         return NULL;
     }
 
-    while(**token && strchr(clist, **token))
+    while (**token && strchr(clist, **token))
         ++*token;
 
     result = *token;
 
-    if(*result && *eol && NULL != (eol = strchr(eol, *result))) {
-        if(eol[0] != eol[1] || *result == eol[1]) {
+    if (*result && *eol && NULL != (eol = strchr(eol, *result)))
+    {
+        if (eol[0] != eol[1] || *result == eol[1])
+        {
             *token = text;
             return NULL;
         }
     }
 
-    if(!*result) {
+    if (!*result)
+    {
         *token = text;
         return NULL;
     }
 
-    while(quote && *quote && *result != *quote) {
+    while (quote && *quote && *result != *quote)
+    {
         quote += 2;
     }
 
-    if(quote && *quote) {
+    if (quote && *quote)
+    {
         ++result;
         ++quote;
         *token = strchr(result, *quote);
-        if(!*token)
+        if (!*token)
             *token = result + strlen(result);
-        else {
+        else
+        {
             **token = 0;
             ++(*token);
         }
         return result;
     }
 
-    while(**token && !strchr(clist, **token))
+    while (**token && !strchr(clist, **token))
         ++(*token);
 
-    if(**token) {
+    if (**token)
+    {
         **token = 0;
         ++(*token);
     }
@@ -2842,11 +3294,13 @@ char *CxStringC::unquote(char *str, const char *clist)
     assert(clist != NULL);
 
     size_t len = strlen(str);
-    if(!len || !str)
+    if (!len || !str)
         return NULL;
 
-    while(clist[0]) {
-        if(*str == clist[0] && str[len - 1] == clist[1]) {
+    while (clist[0])
+    {
+        if (*str == clist[0] && str[len - 1] == clist[1])
+        {
             str[len - 1] = 0;
             return ++str;
         }
@@ -2857,10 +3311,10 @@ char *CxStringC::unquote(char *str, const char *clist)
 
 int CxStringC::compareCase(const char *s1, const char *s2)
 {
-    if(!s1)
+    if (!s1)
         s1 = "";
 
-    if(!s2)
+    if (!s2)
         s2 = "";
 
 #ifdef GM_OS_WIN
@@ -2870,35 +3324,35 @@ int CxStringC::compareCase(const char *s1, const char *s2)
 #endif
 }
 
-char * CxStringC::trimLeft(char *str, const char *clist)
+char *CxStringC::trimLeft(char *str, const char *clist)
 {
-    if(!str)
+    if (!str)
         return NULL;
 
-    if(!clist)
+    if (!clist)
         return str;
 
-    while(*str && strchr(clist, *str))
+    while (*str && strchr(clist, *str))
         ++str;
 
     return str;
 }
 
-char * CxStringC::trimRight(char *str, const char *clist)
+char *CxStringC::trimRight(char *str, const char *clist)
 {
-    if(!str)
+    if (!str)
         return NULL;
 
-    if(!clist)
+    if (!clist)
         return str;
 
     size_t offset = strlen(str);
-    while(offset && strchr(clist, str[offset - 1]))
+    while (offset && strchr(clist, str[offset - 1]))
         str[--offset] = 0;
     return str;
 }
 
-char * CxStringC::trim(char *str, const char *clist)
+char *CxStringC::trim(char *str, const char *clist)
 {
     str = trimLeft(str, clist);
     trimRight(str, clist);
@@ -2909,71 +3363,75 @@ size_t CxStringC::strcspnRight(char *str, const char *clist)
 {
     size_t size = strlen(str);
 
-    if(!str)
+    if (!str)
         return 0;
 
-    if(!clist)
+    if (!clist)
         return size;
 
     size_t pos = size - 1;
-    while(str[pos]) {
-        if(strchr(clist, str[pos]))
+    while (str[pos])
+    {
+        if (strchr(clist, str[pos]))
             return pos;
         --pos;
     }
     return size;
 }
 
-char * CxStringC::inside(char *str, const char *clist)
+char *CxStringC::inside(char *str, const char *clist)
 {
-    if(!str || !clist)
+    if (!str || !clist)
         return NULL;
 
-    while(* str) {
-        if(strchr(clist, *str))
+    while (*str)
+    {
+        if (strchr(clist, *str))
             return str;
         ++str;
     }
     return NULL;
 }
 
-char * CxStringC::insideRight(char *str, const char *clist)
+char *CxStringC::insideRight(char *str, const char *clist)
 {
-    if(!str || !clist)
+    if (!str || !clist)
         return NULL;
 
     str += strlen(str) - 1;
-    while(* str) {
-        if(strchr(clist, *str))
+    while (*str)
+    {
+        if (strchr(clist, *str))
             return str;
         --str;
     }
     return NULL;
 }
 
-char * CxStringC::skip(char *str, const char *clist)
+char *CxStringC::skip(char *str, const char *clist)
 {
-    if(!str || !clist)
+    if (!str || !clist)
         return NULL;
 
-    while(*str && strchr(clist, *str))
+    while (*str && strchr(clist, *str))
         ++str;
 
-    if(*str)
+    if (*str)
         return str;
 
     return NULL;
 }
 
-char * CxStringC::skipRight(char *str, const char *clist)
+char *CxStringC::skipRight(char *str, const char *clist)
 {
     size_t len = strlen(str);
 
-    if(!len || !clist)
+    if (!len || !clist)
         return NULL;
 
-    while(len > 0) {
-        if(!strchr(clist, str[--len]))
+    while (len > 0)
+    {
+        if (!strchr(clist, str[--len]))
             return str;
     }
     return NULL;
@@ -2985,13 +3443,16 @@ unsigned CxStringC::hexsize(const char *format)
     char *ep;
     unsigned skip;
 
-    while(format && *format) {
-        while(*format && !isdigit(*format)) {
+    while (format && *format)
+    {
+        while (*format && !isdigit(*format))
+        {
             ++format;
             ++count;
         }
-        if(isdigit(*format)) {
-            skip = (unsigned)strtol(format, &ep, 10);
+        if (isdigit(*format))
+        {
+            skip = (unsigned) strtol(format, &ep, 10);
             format = ep;
             count += skip * 2;
         }
@@ -3005,16 +3466,20 @@ unsigned CxStringC::hexdump(const unsigned char *binary, char *string, const cha
     char *ep;
     unsigned skip;
 
-    while(format && *format) {
-        while(*format && !isdigit(*format)) {
+    while (format && *format)
+    {
+        while (*format && !isdigit(*format))
+        {
             *(string++) = *(format++);
             ++count;
         }
-        if(isdigit(*format)) {
-            skip = (unsigned)strtol(format, &ep, 10);
+        if (isdigit(*format))
+        {
+            skip = (unsigned) strtol(format, &ep, 10);
             format = ep;
             count += skip * 2;
-            while(skip--) {
+            while (skip--)
+            {
                 snprintf(string, 3, "%02x", *(binary++));
                 string += 2;
             }
@@ -3026,7 +3491,7 @@ unsigned CxStringC::hexdump(const unsigned char *binary, char *string, const cha
 
 static unsigned hex(char ch)
 {
-    if(ch >= '0' && ch <= '9')
+    if (ch >= '0' && ch <= '9')
         return ch - '0';
     else
         return toupper(ch) - 'A' + 10;
@@ -3038,17 +3503,21 @@ unsigned CxStringC::hexpack(unsigned char *binary, const char *string, const cha
     char *ep;
     unsigned skip;
 
-    while(format && *format) {
-        while(*format && !isdigit(*format)) {
-            if(*(string++) != *(format++))
+    while (format && *format)
+    {
+        while (*format && !isdigit(*format))
+        {
+            if (*(string++) != *(format++))
                 return count;
             ++count;
         }
-        if(isdigit(*format)) {
-            skip = (unsigned)strtol(format, &ep, 10);
+        if (isdigit(*format))
+        {
+            skip = (unsigned) strtol(format, &ep, 10);
             format = ep;
             count += skip * 2;
-            while(skip--) {
+            while (skip--)
+            {
                 *(binary++) = hex(string[0]) * 16 + hex(string[1]);
                 string += 2;
             }
@@ -3056,7 +3525,6 @@ unsigned CxStringC::hexpack(unsigned char *binary, const char *string, const cha
     }
     return count;
 }
-
 
 static const unsigned char alphabet[65] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -3067,7 +3535,7 @@ size_t CxStringC::b64encode(char *dest, const uint8 *bin, size_t size, size_t ds
 
     size_t count = 0;
 
-    if(!dsize)
+    if (!dsize)
         dsize = (size * 4 / 3) + 1;
 
     if (!dsize || !size)
@@ -3075,9 +3543,10 @@ size_t CxStringC::b64encode(char *dest, const uint8 *bin, size_t size, size_t ds
 
     unsigned bits;
 
-    while(size >= 3 && dsize > 4) {
-        bits = (((unsigned)bin[0])<<16) | (((unsigned)bin[1])<<8)
-            | ((unsigned)bin[2]);
+    while (size >= 3 && dsize > 4)
+    {
+        bits = (((unsigned) bin[0]) << 16) | (((unsigned) bin[1]) << 8)
+               | ((unsigned) bin[2]);
         bin += 3;
         size -= 3;
         count += 3;
@@ -3088,24 +3557,27 @@ size_t CxStringC::b64encode(char *dest, const uint8 *bin, size_t size, size_t ds
         dsize -= 4;
     }
 
-    if (size && dsize > 4) {
-        bits = ((unsigned)bin[0])<<16;
+    if (size && dsize > 4)
+    {
+        bits = ((unsigned) bin[0]) << 16;
         *(dest++) = alphabet[bits >> 18];
         ++count;
-        if (size == 1) {
+        if (size == 1)
+        {
             *(dest++) = alphabet[(bits >> 12) & 0x3f];
             *(dest++) = '=';
         }
-        else {
+        else
+        {
             ++count;
-            bits |= ((unsigned)bin[1])<<8;
+            bits |= ((unsigned) bin[1]) << 8;
             *(dest++) = alphabet[(bits >> 12) & 0x3f];
             *(dest++) = alphabet[(bits >> 6) & 0x3f];
         }
         *(dest++) = '=';
     }
 
-end:
+    end:
     *dest = 0;
     return count;
 }
@@ -3121,24 +3593,28 @@ size_t CxStringC::b64decode(uint8 *dest, const char *src, size_t size)
     for (i = 0; i < 256; ++i)
         decoder[i] = 64;
 
-    for (i = 0; i < 64 ; ++i)
+    for (i = 0; i < 64; ++i)
         decoder[alphabet[i]] = i;
 
     bits = 1;
 
-    while(*src) {
-        c = (uint8)(*(src++));
-        if (c == '=') {
-            if (bits & 0x40000) {
+    while (*src)
+    {
+        c = (uint8) (*(src++));
+        if (c == '=')
+        {
+            if (bits & 0x40000)
+            {
                 if (size < 2)
                     break;
-                *(dest++) = (uint8)((bits >> 10) & 0xff);
-                *(dest++) = (uint8)((bits >> 2) & 0xff);
+                *(dest++) = (uint8) ((bits >> 10) & 0xff);
+                *(dest++) = (uint8) ((bits >> 2) & 0xff);
                 count += 2;
                 break;
             }
-            if ((bits & 0x1000) && size) {
-                *(dest++) = (uint8)((bits >> 4) & 0xff);
+            if ((bits & 0x1000) && size)
+            {
+                *(dest++) = (uint8) ((bits >> 4) & 0xff);
                 ++count;
             }
             break;
@@ -3147,12 +3623,13 @@ size_t CxStringC::b64decode(uint8 *dest, const char *src, size_t size)
         if (decoder[c] == 64)
             break;
         bits = (bits << 6) + decoder[c];
-        if (bits & 0x1000000) {
+        if (bits & 0x1000000)
+        {
             if (size < 3)
                 break;
-            *(dest++) = (uint8)((bits >> 16) & 0xff);
-            *(dest++) = (uint8)((bits >> 8) & 0xff);
-            *(dest++) = (uint8)((bits & 0xff));
+            *(dest++) = (uint8) ((bits >> 16) & 0xff);
+            *(dest++) = (uint8) ((bits >> 8) & 0xff);
+            *(dest++) = (uint8) ((bits & 0xff));
             bits = 1;
             size -= 3;
             count += 3;
@@ -3161,23 +3638,24 @@ size_t CxStringC::b64decode(uint8 *dest, const char *src, size_t size)
     return count;
 }
 
-const char * CxStringC::pos(const char *cp, ssize_t offset)
+const char *CxStringC::pos(const char *cp, ssize_t offset)
 {
-    if(!cp)
+    if (!cp)
         return NULL;
 
     size_t len = strlen(cp);
-    if(!len)
+    if (!len)
         return cp;
 
-    if(offset >= 0) {
-        if((size_t)offset > len)
+    if (offset >= 0)
+    {
+        if ((size_t) offset > len)
             offset = len;
         return cp + offset;
     }
 
     offset = -offset;
-    if((size_t)offset >= len)
+    if ((size_t) offset >= len)
         return cp;
 
     return cp + len - offset;

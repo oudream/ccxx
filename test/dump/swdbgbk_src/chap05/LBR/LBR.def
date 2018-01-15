@@ -1,0 +1,25 @@
+;--------------------------------------------------------------------
+;    Copyright (c) 2000  Microsoft Corporation
+; 
+; Module:
+;    simple.def
+;--------------------------------------------------------------------
+
+EXPORTS
+
+;--------------------------------------------------------------------
+; These are the extensions exported by dll
+;--------------------------------------------------------------------
+    lbr
+    help
+
+;--------------------------------------------------------------------
+;
+; these are the extension service functions provided for the debugger
+;
+;--------------------------------------------------------------------
+
+
+    CheckVersion
+    WinDbgExtensionDllInit
+    ExtensionApiVersion

@@ -1,4 +1,10 @@
-要做的：
+﻿
+要做的 needtodo：
+增加：
+11)bus在有10.99.3.48时会把自己实时值改变
+10)退出时不保存配置
+9)MeasureShareMemoryAll::setAfterLoadCallback 改成支持多个回调
+8)怎么样中断此 stdin in CxConsoleInputThread
 7)return code
 6)ICS SHELL
 5)GM_INVALID_RETURE 只用在 debug 中
@@ -19,12 +25,16 @@
  */
 
 
+
+
+
 /***
 * 简称
 g 共创 远光
 inter center => giic ( rtdb )
 inter p         girc
 */
+
 
 
 
@@ -40,6 +50,18 @@ inter p         girc
  SIGSEGV - 无效内存访问。
  SIGTERM - 程序的中止请求。
  */
+
+
+
+
+
+/***
+ * oledb connection
+
+    packet size=4096;user id=sa;data source='.';Initial Catalog =AcmData;persist security info=True;password=1234
+
+ */
+
 
 
 
@@ -66,6 +88,8 @@ inter p         girc
  DdsHeartJumpInterval=5000
  DdsHeartJumpSql=select count(*) from t_mj_rt_evt
  */
+
+
 
 
 
@@ -114,8 +138,10 @@ inter p         girc
 
  rank=1
 
-
  */
+
+
+
 
 
 /***
@@ -123,6 +149,8 @@ inter p         girc
  C标准中空白字符有：空格0x20（‘ ’）、换页0x12（‘\f’）、换行0x10（‘\n’）、回车0x0D（‘\r’）、水平制表符0x09（‘\t’）、垂直制表符0x11（‘\v’）六个
 
  */
+
+
 
 
 
@@ -152,6 +180,8 @@ inter p         girc
 
 
 
+
+
 /***
  * 全局命名
  变量种类              前缀要求           示例
@@ -162,8 +192,9 @@ inter p         girc
  对象级私有层变量         m_p               m_number 或 m_pNumber
  对象级保护层变量         m_p               m_number 或 m_pNumber
  文件作用                f_p                f_number 或 f_pNumber
-
  */
+
+
 
 
 
@@ -185,6 +216,7 @@ thread
 
 /***
  * cxSocket.h
+ms-help://MS.MSDNQTR.v90.chs/winsock/winsock/getting_started_with_winsock.htm
 
 htonl()--"Host to Network Long"
 ntohl()--"Network to Host Long"
@@ -251,7 +283,6 @@ IP_MULTICAST_LOOP   禁止组播数据回送
  */
 
 
-
 /***
  * re2 regexp 正规表达式
 
@@ -262,144 +293,80 @@ IP_MULTICAST_LOOP   禁止组播数据回送
 */
 
 
-/***
-* window message
 
-#include <stdio.h>
-
-#undef UNICODE
-#include <Windows.h>
-
-LRESULT CALLBACK MainWndProc ( HWND hwnd , UINT msg , WPARAM wParam, LPARAM lParam )
-{
-    FILE* fp=fopen("c:\\mainwndproc.txt","a+");
-    fprintf(fp,"Received window message %d \n",msg);
-    switch(msg)
-    {
-    case WM_QUERYENDSESSION:
-        MessageBox(NULL,"Received WM_QUERYENDSESSION","MainWndProc",MB_OK);
-        fprintf(fp,"Received WM_QUERYENDSESSION\n");
-        fclose(fp);
-        return TRUE;
-
-    case WM_ENDSESSION:
-        MessageBox(NULL,"Received WM_ENDSESSION","MainWndProc",MB_OK);
-        fprintf(fp,"Received WM_ENDSESSION\n");
-        fclose(fp);
-    {
-        if (wParam)
-            MessageBox(hwnd, "ConsoleWaWindow", "WM_ENDSESSION at any TIME!!", MB_OK);
-        else
-            MessageBox(hwnd, "ConsoleWaWindow", "WM_ENDSESSION aNO!!", MB_OK);
-
-    }
-        return TRUE;
-
-    case WM_DESTROY:
-    {
-        fprintf(fp,"WM_DESTROY received\n");
-        PostQuitMessage(0);
-    }
-        break;
-
-    case WM_CLOSE:
-        fprintf(fp,"WM_CLOSE received\n");
-        break;
-    default:
-        return DefWindowProc(hwnd, msg, wParam, lParam);
-        break;
-    }
-    fclose(fp);
-    return TRUE;
-}
-
-void CreateInvisibleWindow()
-{
-    HWND hwnd;
-    WNDCLASS wc={0};
-    wc.lpfnWndProc=(WNDPROC)MainWndProc;
-    wc.hInstance=GetModuleHandle(NULL);
-    wc.hIcon=LoadIcon(GetModuleHandle(NULL), "TestWClass");
-    wc.lpszClassName="TestWClass";
-    RegisterClass(&wc);
-
-    hwnd=CreateWindowEx(0,"TestWClass","TestWClass",WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,(HWND) NULL, (HMENU) NULL, GetModuleHandle(NULL), (LPVOID) NULL);
-    if(!hwnd)
-        printf("FAILED to create window!!!  %d\n",GetLastError());
-}
-
-DWORD WINAPI RunInvisibleWindowThread(LPVOID lpParam)
-{
-    MSG msg;
-    CreateInvisibleWindow();
-    printf(" Thread and window created ..whoa!!\n");
-    while (GetMessage(&msg,(HWND) NULL , 0 , 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-    return 0;
-}
-
-int main(int argc,char* argv)
-{
-
-    DWORD tid;
-    HANDLE hInvisiblethread=CreateThread(NULL, 0, RunInvisibleWindowThread, NULL, 0, &tid);
-
-    while(TRUE)
-    {
-        printf(" Iam running ..whoa!!\n");
-        Sleep(3000);
-    }
-
-    printf("Finished\n");
-    CloseHandle(hInvisiblethread);
-}
-
-*/
+ICS 目录
+|--- deploy        发布目录
+    |--- unix
+    |--- solaris
+    |--- win64
+    |--- win32
+        |--- bin        exe / dll 文件目录， Release版本，不依赖大型第三方库（如，QT，Boost等）
+        |--- bin_d      exe / dll 文件目录， Debug版本，不依赖大型第三方库（如，QT，Boost等）
+        |--- bin_qt     exe / dll 文件目录， Debug版本，依赖QT库
+        |--- doc        分子目录，存放总体和子模块的需求、设计、测试用例、测试方案文档
+        |--- config     模块配置文件
+        |--- data       本地运行产生的数据，可以存放到单机DB或相应目录的文件中
+        |--- log        分子目录
+        |--- script     本工程依赖或使用到的脚本目录
+        |--- temp       临时使用、生成的文件，些目录的文件可随时删除的
+        |--- res        resource、图片、UI、样式
 
 
-/**
-//单个字符异或运算
-char MakecodeChar(char c,int key)
-{
-    return c=c^key;
-}
-//单个字符解密
-char CutcodeChar(char c,int key)
-{
-    return c^key;
-}
-//加密
-void Encode(char *pstr,int *pkey)
-{
-    int len=strlen(pstr);//获取长度
-    for(int i=0;i<len;i++)
-        *(pstr+i)=MakecodeChar(*(pstr+i),pkey[i%5]);
-}
-//解密
-void Decode(char *pstr,int *pkey)
-{
-    int len=strlen(pstr);
-    for(int i=0;i<len;i++)
-        *(pstr+i)=CutcodeChar(*(pstr+i),pkey[i%5]);
-}
+|--- cc4000
+    |--- build    makefile、project等文件（如果单个程序的构建文件在三个以上，要以文件夹方式出现）windows 上 vs 编译器对应的 sln ncb 等文件
+        |--- vcpro  windows 上 vs 编译器对应的 sln ncb 等文件
+        |--- linux  linux 上 makefile 文件
+    |--- src       源代码，是否按照细节再分子目录依据担当，但是最多按照子模块加以区分
+        //以下为模块实现代码
+        |--- db      数据库一致访问接口
+        |--- softbus 软总线实现
+        |--- rtdb    实时库
+        |--- 图形
+        |--- ......
+    |--- test      代码测试
+        |--- db      数据库一致访问接口的测试
+        |--- SoftBus 软总线实现
+        |--- RTDB    实时库
+        |--- 图形
+        |--- ......
+    |--- temp       此目录下文件不上传
+    |--- res        resource
+    |--- example    对于所有的基础模块库，提供使用例子，强制使用
+    |--- out        编译中的临时文件，修改 vs 中的设置，可以将输出的 exe / dll / lib / 中间文件导向到不同的文件夹
+    |--- doc        分子目录，存放总体和子模块的需求、设计、测试用例、测试方案文档
+    |--- lib        lib
+    |--- basic      基础的源码库，例如字符串处理、文件处理、时间处理、协议封包/解包、log库 这些都不会封装成单独的 dll 或者 so 了，
+    |--- include    所有外部引用库的头文件，第三方库一旦引用，和自己编写的库同等对待
+       |--- db        数据库一致访问接口头文件
+       |--- softbus   软总线头文件
 
-int main(void)
-{
-    printf("Hello World!\n");
 
-    //示例代码
-    int key[]={1,2,3,4,5};//加密字符 5位
-    char s[]="www.xiaozhuanggushi.com";
-    char *p=s;
-    cout<<"Encode before:"<<p<<endl;
-    Encode(s,key);//加密
-    cout<<"Encode after:"<<p<<endl;
-    Decode(s,key);//解密
-    cout<<"Decode:"<<p<<endl;
 
-    return 0;
-}
- */
+
+
+select ID,Name,1 as Level from tblCity where ParentID=0
+union all
+select a.ID,a.Name,c.RowID as Level from tblCity a
+inner join tblCity b on a.ParentID=b.ID
+inner join
+(
+select ParentID from tblCity group by ParentID
+) c on a.ParentID=c.ParentID
+
+表结构：tblCity(ID, ParentID, Name)
+
+因为sqlite 没有row_number函数，也不能递归查询，所幸它有RowID 这个字段。只好采用这种 笨方法
+
+
+
+
+
+static pid_os_t exec(const std::string & sProgram,
+                     const std::vector<std::string> & arguments = std::vector<std::string>(),
+                     const std::string & sWorkingDirectory = std::string(),
+                     const std::vector<std::string> & environments = std::vector<std::string>());
+
+static pid_os_t exec(const std::string & sProgram,
+                     const std::string & sArguments = std::string(),
+                     const std::string & sWorkingDirectory = std::string(),
+                     const std::string & sEnvironments = std::string());

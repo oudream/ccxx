@@ -1,0 +1,41 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: UEF - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP72.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../temp/Debug/" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UEF.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP72.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP73.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/UEF.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP73.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP74.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"../../bin/Debug/UEF.pdb" /debug /machine:I386 /out:"../../bin/Debug/UEF.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\UEF.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP74.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+UEF.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UEF.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

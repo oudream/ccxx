@@ -1,4 +1,4 @@
-#include <ccxx.h>
+#include <ccxx/ccxx.h>
 
 using namespace std;
 
@@ -33,7 +33,7 @@ public:
     }
 };
 
-int main(int argc, char *argv[])
+int main(int argc,const char *argv[])
 {
     cout << "begin" << endl;
 

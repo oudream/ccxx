@@ -4,9 +4,14 @@
 /* ---------------------------------------------------------------------------
 list:
 part001 platform dist
-part002 data type : define
-part003 lib dll   : define
+part002 data type           : define data type
+part003 lib dll             : define lib dll
 part004 platform func
+part005 endian functions
+part006 CxGlobal            : string resource
+part007 CxValueType
+part008 CxException
+part009 CxFactory
 --------------------------------------------------------------------------- */
 
 //stl
@@ -68,20 +73,17 @@ part004 platform func
 #  define GM_OS_WIN
 #endif
 
-
-
 //-----------------------------------------------------------------------------------------
 //
 //part002 data type : define
 //
 //-----------------------------------------------------------------------------------------
-
-typedef signed char         int8        ;   /* 8 bit signed */
-typedef unsigned char       uint8       ;   /* 8 bit unsigned */
-typedef short               int16       ;   /* 16 bit signed */
-typedef unsigned short      uint16      ;   /* 16 bit unsigned */
-typedef int                 int32       ;   /* 32 bit signed */
-typedef unsigned int        uint32      ;   /* 32 bit unsigned */
+typedef signed char int8;   /* 8 bit signed */
+typedef unsigned char uint8;   /* 8 bit unsigned */
+typedef short int16;   /* 16 bit signed */
+typedef unsigned short uint16;   /* 16 bit unsigned */
+typedef int int32;   /* 32 bit signed */
+typedef unsigned int uint32;   /* 32 bit unsigned */
 
 #ifdef _MSC_VER
 #  define GM_INT64_C(c) c ## i64    /* signed 64 bit constant */
@@ -94,62 +96,51 @@ typedef unsigned __int64 uint64;  /* 64 bit unsigned */
 typedef long long int64;           /* 64 bit signed */
 typedef unsigned long long uint64; /* 64 bit unsigned */
 #endif
-
 #ifndef QT_BEGIN_INCLUDE_NAMESPACE
-typedef unsigned char       uchar       ;   /* 8 bit unsigned */
-typedef unsigned short      ushort      ;   /* 16 bit unsigned */
-typedef unsigned int        uint        ;   /* 32 bit unsigned */
+typedef unsigned char uchar;   /* 8 bit unsigned */
+typedef unsigned short ushort;   /* 16 bit unsigned */
+typedef unsigned int uint;   /* 32 bit unsigned */
 #endif
-
-typedef unsigned long       ulong       ;   /* 32 bit unsigned */
-
-typedef long long           longlong    ;   /* 64 bit signed */
-typedef unsigned long long  ulonglong   ;   /* 64 bit unsigned */
-
-typedef unsigned char       byte        ;   /* 8 bit unsigned */
-typedef unsigned short      word        ;   /* 16 bit unsigned */
-typedef unsigned int        dword       ;   /* 32 bit unsigned */
-
-typedef    void* 			pvoid;
-
-
+typedef unsigned long ulong;   /* 32 bit unsigned */
+typedef long long longlong;   /* 64 bit signed */
+typedef unsigned long long ulonglong;   /* 64 bit unsigned */
+typedef unsigned char byte;   /* 8 bit unsigned */
+typedef unsigned short word;   /* 16 bit unsigned */
+typedef unsigned int dword;   /* 32 bit unsigned */
+typedef void *pvoid;
 
 //1970.1.1 0:0:0:00
-//second
-typedef time_t sepoch_t;
-//millisecond
-typedef long long msepoch_t;
-//microsecond
-typedef long long usepoch_t;
-//time size millisecond
-typedef unsigned long timems_t;
-
-
+//second do not use time_t , _USE_32BIT_TIME_T
+typedef int sepoch_t;
+typedef long long msepoch_t;//millisecond
+typedef long long usepoch_t;//microsecond
+typedef long long nsepoch_t;//nanosecond
+typedef unsigned long timems_t;//time size millisecond
+typedef long long mslong_t;//time size millisecond
+typedef long long secondlong_t;//time size second
 
 typedef void (*fn_void_t)(void);
 typedef void (*fn_void_int_t)(int);
-typedef void (*fn_void_pchar_t)(const char*, int);
-typedef void (*fn_void_tlv_t)(int, const void*, int);
-typedef void (*fn_void_msg_tlv_t)(int, int, const void*, int, void*, void*);
+typedef void (*fn_void_pchar_t)(const char *, int);
+typedef void (*fn_void_tlv_t)(int, const void *, int);
+typedef void (*fn_void_msg_tlv_t)(int, int, const void *, int, void *, void *);
 typedef int (*fn_int_void_t)(void);
 typedef int (*fn_int_int_t)(int);
-typedef int (*fn_int_pchar_t)(const char*, int);
-typedef int (*fn_int_tlv_t)(int, const void*, int);
-typedef int (*fn_int_object_tlv_t)(void*, int, int, const void*);
-
+typedef int (*fn_int_pchar_t)(const char *, int);
+typedef int (*fn_int_tlv_t)(int, const void *, int);
+typedef int (*fn_int_object_tlv_t)(void *, int, int, const void *);
+typedef void (*fn_void_queue_msg_tlv_t)(fn_void_msg_tlv_t, int, int, const void *, int, void *, void *, bool); //bool bHandleOnce  = false
 
 
 #ifndef    TRUE
-#define    TRUE	1
+#define    TRUE    1
 #endif
 #ifndef    FALSE
-#define	   FALSE 0
+#define    FALSE 0
 #endif
 #ifndef    NULL
 #define	   NULL 0
 #endif
-
-
 
 //*complier define
 #ifndef __SCHAR_MAX__
@@ -221,7 +212,6 @@ typedef int (*fn_int_object_tlv_t)(void*, int, int, const void*);
 //UTC  : 1969-12-12 23:59:999
 #define GM_MSEPOCH_MAX_AGO (371085172732839000LL)
 
-
 #define cb_bool_true ((bool)true)
 #define cb_bool_false ((bool)false)
 #define ci_int_zero ((int)0)
@@ -242,28 +232,23 @@ typedef int (*fn_int_object_tlv_t)(void*, int, int, const void*);
 //
 //-----------------------------------------------------------------------------------------
 #ifndef GM_DECL_EXPORT
-#  if defined(GM_OS_WIN)
-#    define GM_DECL_EXPORT extern "C" __declspec(dllexport)
-#  else
-#    define GM_DECL_EXPORT __attribute__((visibility("default")))
-#    define GM_DECL_HIDDEN __attribute__((visibility("hidden")))
-#    define GM_CALL_MODE
-#  endif
-#  ifndef GM_DECL_EXPORT
-#    define GM_DECL_EXPORT
-#  endif
+# if defined (__SUNPRO_C) && (__SUNPRO_C >= 0x550)
+#  define GM_DECL_EXPORT __global
+# elif defined __GNUC__
+#  define GM_DECL_EXPORT __attribute__((visibility("default")))
+# elif defined(_MSC_VER)
+#  define GM_DECL_EXPORT __declspec(dllexport)
+# else
+#  define GM_DECL_EXPORT /* unknown compiler */
+# endif
 #endif
 
 #ifndef GM_DECL_IMPORT
-#  if defined(GM_OS_WIN)
-#    define GM_DECL_IMPORT extern "C" __declspec(dllimport)
-#  else
-#    define GM_DECL_IMPORT
-#  endif
-#endif
-
-#ifndef GM_DECL_HIDDEN
-#  define GM_DECL_HIDDEN
+# if defined(_MSC_VER)
+#  define GM_DECL_IMPORT __declspec(dllimport)
+# else
+#  define GM_DECL_IMPORT
+# endif
 #endif
 
 #ifndef GM_CALL_MODE
@@ -274,13 +259,14 @@ typedef int (*fn_int_object_tlv_t)(void*, int, int, const void*);
 #  endif
 #endif
 
-#ifdef GM_BUILD_LIB
-#define GM_CORE_API  GM_DECL_EXPORT
+#if defined(GM_BUILD_CCXX_CORE_LIB)
+#define GM_CCXX_CORE_API  GM_DECL_EXPORT
+#elif defined(GM_BUILD_CCXX_CORE_CODE)
+#define GM_CCXX_CORE_API
 #else
-#define GM_CORE_API  GM_DECL_IMPORT
+#define GM_CCXX_CORE_API  GM_DECL_IMPORT
+// GM_BUILD_CCXX_CORE_INCLUDE
 #endif
-
-
 
 //-----------------------------------------------------------------------------------------
 //
@@ -298,7 +284,7 @@ typedef int (*fn_int_object_tlv_t)(void*, int, int, const void*);
 #endif
 
 #if __GNUC__ > 3 || (__GNUC__ == 3 && (__GNU_MINOR__ > 3))
-#define __PRINTF(x,y)   __attribute__ ((format (printf, x, y)))
+#define __PRINTF(x, y)   __attribute__ ((format (printf, x, y)))
 #define __SCANF(x, y) __attribute__ ((format (scanf, x, y)))
 #define __MALLOC      __attribute__ ((malloc))
 #endif
@@ -312,8 +298,6 @@ typedef int (*fn_int_object_tlv_t)(void*, int, int, const void*);
 
 //*win32
 #ifdef GM_OS_WIN
-
-
 
 #if defined(__BORLANDC__) && !defined(__MT__)
 #error Please enable multithreading
@@ -348,63 +332,67 @@ typedef int (*fn_int_object_tlv_t)(void*, int, int, const void*);
 
 typedef DWORD cx_pthread_t;
 typedef CRITICAL_SECTION cx_pthread_mutex_t;
-typedef char* caddr_t;
+typedef char *caddr_t;
 typedef HANDLE fd_t;
 typedef SOCKET socket_t;
 typedef PROCESS_INFORMATION pid_os_t;
 
+#if !defined(_MSC_VER) || (_MSC_VER < 1900)
 #ifndef _TIMESPEC_DEFINED
 #define _TIMESPEC_DEFINED
-struct timespec {
-  time_t  tv_sec;	/* Seconds */
-  long    tv_nsec;	/* Nanoseconds */
-};
+// #define _CRT_NO_TIME_T
+typedef struct timespec {
+    time_t  tv_sec;	/* Seconds */
+    long    tv_nsec;	/* Nanoseconds */
+} timespec;
 
 struct itimerspec {
-  struct timespec  it_interval;	/* Timer period */
-  struct timespec  it_value;	/* Timer expiration */
+    struct timespec  it_interval;	/* Timer period */
+    struct timespec  it_value;	/* Timer expiration */
 };
+#endif
 #endif
 
 extern "C" {
 
-    #define SERVICE_MAIN(id, argc, argv) void WINAPI service_##id(DWORD argc, LPSTR *argv)
+#define SERVICE_MAIN(id, argc, argv) void WINAPI service_##id(DWORD argc, LPSTR *argv)
 
-    typedef LPSERVICE_MAIN_FUNCTION cpr_service_t;
+#if (_WIN32_WINNT > 0x0500)
+#define cpr_service_t LPSERVICE_MAIN_FUNCTION
+#endif
 
-    inline void cx_pthread_exit(void *p)
-        {_endthreadex((DWORD)0);}
+inline void cx_pthread_exit(void *p)
+{ _endthreadex((DWORD) 0); }
 
-    inline cx_pthread_t cx_pthread_self(void)
-        {return (cx_pthread_t)GetCurrentThreadId();}
+inline cx_pthread_t cx_pthread_self(void)
+{ return (cx_pthread_t) GetCurrentThreadId(); }
 
-    inline int cx_pthread_mutex_init(cx_pthread_mutex_t *mutex, void *x)
-        {InitializeCriticalSection(mutex); return 0;}
-
-    inline void cx_pthread_mutex_destroy(cx_pthread_mutex_t *mutex)
-        {DeleteCriticalSection(mutex);}
-
-    inline void cx_pthread_mutex_lock(cx_pthread_mutex_t *mutex)
-        {EnterCriticalSection(mutex);}
-
-    inline void cx_pthread_mutex_unlock(cx_pthread_mutex_t *mutex)
-        {LeaveCriticalSection(mutex);}
-
-    inline char *cx_strdup(const char *s)
-        {return _strdup(s);}
-
-    inline int cx_stricmp(const char *s1, const char *s2)
-        {return _stricmp(s1, s2);}
-
-    inline int cx_strnicmp(const char *s1, const char *s2, size_t l)
-        {return _strnicmp(s1, s2, l);}
+inline int cx_pthread_mutex_init(cx_pthread_mutex_t *mutex, void *x)
+{
+    InitializeCriticalSection(mutex);
+    return 0;
 }
 
+inline void cx_pthread_mutex_destroy(cx_pthread_mutex_t *mutex)
+{ DeleteCriticalSection(mutex); }
 
+inline void cx_pthread_mutex_lock(cx_pthread_mutex_t *mutex)
+{ EnterCriticalSection(mutex); }
+
+inline void cx_pthread_mutex_unlock(cx_pthread_mutex_t *mutex)
+{ LeaveCriticalSection(mutex); }
+
+inline char *cx_strdup(const char *s)
+{ return _strdup(s); }
+
+inline int cx_stricmp(const char *s1, const char *s2)
+{ return _stricmp(s1, s2); }
+
+inline int cx_strnicmp(const char *s1, const char *s2, size_t l)
+{ return _strnicmp(s1, s2, l); }
+}
 
 #elif defined(__PTH__)
-
-
 
 #include <pth.h>
 
@@ -451,19 +439,13 @@ inline void cx_pthread_cond_signal(pthread_cond_t *cond)
 inline void cx_pthread_cond_broadcast(pthread_cond_t *cond)
     {pth_cond_notify(cond, TRUE);};
 
-
 #define cx_strdup                   strdup
 #define cx_stricmp                  stricmp
 #define cx_strnicmp                 strnicmp
 
-
-
 #else
 
-
-
 #include <pthread.h>
-
 #define cx_pthread_t pthread_t
 #define cx_pthread_mutex_t pthread_mutex_t
 
@@ -489,8 +471,7 @@ typedef pid_t pid_os_t;
 #define cx_stricmp                  stricmp
 #define cx_strnicmp                 strnicmp
 
-
-
+#include <byteswap.h>
 #endif
 
 //*error id
@@ -547,18 +528,22 @@ typedef pid_t pid_os_t;
 
 #ifdef _MSC_VER
 typedef signed long ssize_t;
+#if _MSC_VER < 1900
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
+#endif
 //*warning
 #pragma once
 #pragma warning(push)
-#pragma warning(disable: 4251)
-#pragma warning(disable: 4996)
-#pragma warning(disable: 4355)
-#pragma warning(disable: 4290)
-#pragma warning(disable: 4291)
-#pragma warning(disable: 4100) /* -- Disable warning 'unreferenced formal parameter' -- */
-#pragma warning(disable: 4661)
+#pragma warning(disable : 4005)
+#pragma warning(disable : 4100) /* -- Disable warning 'unreferenced formal parameter' -- */
+#pragma warning(disable : 4251)
+#pragma warning(disable : 4355)
+#pragma warning(disable : 4290)
+#pragma warning(disable : 4291)
+#pragma warning(disable : 4661)
+#pragma warning(disable : 4819)
+#pragma warning(disable : 4996)
 #pragma warning(pop)
 #else
 #ifndef GM_OS_WIN
@@ -570,8 +555,6 @@ typedef signed long ssize_t;
 #include <stdint.h>
 #include <unistd.h>
 #endif // _MSC_VER
-
-
 
 #ifdef GM_DEBUG
 #ifndef DEBUG
@@ -615,60 +598,305 @@ typedef signed long ssize_t;
 #endif
 #endif
 
+//-----------------------------------------------------------------------------------------
+//
+//part005 endian functions
+//
+//-----------------------------------------------------------------------------------------
+inline void gfn_bswap_helper(const uchar *src, uchar *dest, int size)
+{ for (int i = 0; i < size; ++i) dest[i] = src[size - 1 - i]; }
 
+/*
+ * gfn_bswap(const T src, const uchar *dest);
+ * Changes the byte order of \a src from big endian to little endian or vice versa
+ * and stores the result in \a dest.
+ * There is no alignment requirements for \a dest.
+*/
+template<typename T>
+inline void gfn_bswap(const T src, uchar *dest)
+{ gfn_bswap_helper(reinterpret_cast<const uchar *>(&src), dest, sizeof(T)); }
 
-class CxGlobal
+// Used to implement a type-safe and alignment-safe copy operation
+// If you want to avoid the memcopy, you must write specializations for this function
+template<typename T>
+inline void gfn_toUnaligned(const T src, uchar *dest)
+{ memcpy(dest, &src, sizeof(T)); }
+
+/* T gfn_fromLittleEndian(const uchar *src)
+ * This function will read a little-endian encoded value from \a src
+ * and return the value in host-endian encoding.
+ * There is no requirement that \a src must be aligned.
+*/
+#if defined GM_CC_SUN
+inline uint64 gfn_fromLittleEndian(const uchar *src, uint64 *dest)
 {
+    return 0
+        | src[0]
+        | src[1] * GM_UINT64_C(0x0000000000000100)
+        | src[2] * GM_UINT64_C(0x0000000000010000)
+        | src[3] * GM_UINT64_C(0x0000000001000000)
+        | src[4] * GM_UINT64_C(0x0000000100000000)
+        | src[5] * GM_UINT64_C(0x0000010000000000)
+        | src[6] * GM_UINT64_C(0x0001000000000000)
+        | src[7] * GM_UINT64_C(0x0100000000000000);
+}
+
+inline uint32 gfn_fromLittleEndian(const uchar *src, uint32 *dest)
+{ return 0 | src[0] | src[1] * uint32(0x00000100) | src[2] * uint32(0x00010000) | src[3] * uint32(0x01000000); }
+
+inline uint16 gfn_fromLittleEndian(const uchar *src, uint16 *dest)
+{ return 0 | src[0] | src[1] * 0x0100; }
+
+inline int64 gfn_fromLittleEndian(const uchar *src, int64 * dest)
+{ return static_cast<int64>(gfn_fromLittleEndian(src, reinterpret_cast<uint64*>(0))); }
+inline int32 gfn_fromLittleEndian(const uchar *src, int32 * dest)
+{ return static_cast<int32>(gfn_fromLittleEndian(src, reinterpret_cast<uint32*>(0))); }
+inline int16 gfn_fromLittleEndian(const uchar *src, int16 * dest)
+{ return static_cast<int16>(gfn_fromLittleEndian(src, reinterpret_cast<uint16*>(0))); }
+template <class T> inline T gfn_fromLittleEndian(const uchar *src)
+{ return gfn_fromLittleEndian(src, reinterpret_cast<T*>(0)); }
+
+#else
+template<typename T>
+inline T gfn_fromLittleEndian(const uchar *src);
+template<>
+inline uint64 gfn_fromLittleEndian<uint64>(const uchar *src)
+{
+    return 0
+           | src[0]
+           | src[1] * GM_UINT64_C(0x0000000000000100)
+           | src[2] * GM_UINT64_C(0x0000000000010000)
+           | src[3] * GM_UINT64_C(0x0000000001000000)
+           | src[4] * GM_UINT64_C(0x0000000100000000)
+           | src[5] * GM_UINT64_C(0x0000010000000000)
+           | src[6] * GM_UINT64_C(0x0001000000000000)
+           | src[7] * GM_UINT64_C(0x0100000000000000);
+}
+
+template<>
+inline uint32 gfn_fromLittleEndian<uint32>(const uchar *src)
+{ return 0 | src[0] | src[1] * uint32(0x00000100) | src[2] * uint32(0x00010000) | src[3] * uint32(0x01000000); }
+
+template<>
+inline uint16 gfn_fromLittleEndian<uint16>(const uchar *src)
+{ return uint16(0 | src[0] | src[1] * 0x0100); }
+
+// signed specializations
+template<>
+inline int64 gfn_fromLittleEndian<int64>(const uchar *src)
+{ return static_cast<int64>(gfn_fromLittleEndian<uint64>(src)); }
+
+template<>
+inline int32 gfn_fromLittleEndian<int32>(const uchar *src)
+{ return static_cast<int32>(gfn_fromLittleEndian<uint32>(src)); }
+
+template<>
+inline int16 gfn_fromLittleEndian<int16>(const uchar *src)
+{ return static_cast<int16>(gfn_fromLittleEndian<uint16>(src)); }
+#endif
+
+/* This function will read a big-endian (also known as network order) encoded value from \a src
+ * and return the value in host-endian encoding.
+ * There is no requirement that \a src must be aligned.
+*/
+#if defined GM_CC_SUN
+inline uint64 gfn_fromBigEndian(const uchar *src, uint64 *dest)
+{
+    return 0
+        | src[7]
+        | src[6] * GM_UINT64_C(0x0000000000000100)
+        | src[5] * GM_UINT64_C(0x0000000000010000)
+        | src[4] * GM_UINT64_C(0x0000000001000000)
+        | src[3] * GM_UINT64_C(0x0000000100000000)
+        | src[2] * GM_UINT64_C(0x0000010000000000)
+        | src[1] * GM_UINT64_C(0x0001000000000000)
+        | src[0] * GM_UINT64_C(0x0100000000000000);
+}
+
+inline uint32 gfn_fromBigEndian(const uchar *src, uint32 * dest)
+{
+    return 0 | src[3] | src[2] * uint32(0x00000100) | src[1] * uint32(0x00010000)
+              | src[0] * uint32(0x01000000);
+}
+
+inline uint16 gfn_fromBigEndian(const uchar *src, uint16 * des)
+{ return 0 | src[1] | src[0] * 0x0100; }
+
+inline int64 gfn_fromBigEndian(const uchar *src, int64 * dest)
+{ return static_cast<int64>(gfn_fromBigEndian(src, reinterpret_cast<uint64*>(0))); }
+inline int32 gfn_fromBigEndian(const uchar *src, int32 * dest)
+{ return static_cast<int32>(gfn_fromBigEndian(src, reinterpret_cast<uint32*>(0))); }
+inline int16 gfn_fromBigEndian(const uchar *src, int16 * dest)
+{ return static_cast<int16>(gfn_fromBigEndian(src, reinterpret_cast<uint16*>(0))); }
+template <class T> inline T gfn_fromBigEndian(const uchar *src)
+{ return gfn_fromBigEndian(src, reinterpret_cast<T*>(0)); }
+
+#else
+template<class T>
+inline T gfn_fromBigEndian(const uchar *src);
+template<>
+inline uint64 gfn_fromBigEndian<uint64>(const uchar *src)
+{
+    return 0
+           | src[7]
+           | src[6] * GM_UINT64_C(0x0000000000000100)
+           | src[5] * GM_UINT64_C(0x0000000000010000)
+           | src[4] * GM_UINT64_C(0x0000000001000000)
+           | src[3] * GM_UINT64_C(0x0000000100000000)
+           | src[2] * GM_UINT64_C(0x0000010000000000)
+           | src[1] * GM_UINT64_C(0x0001000000000000)
+           | src[0] * GM_UINT64_C(0x0100000000000000);
+}
+
+template<>
+inline uint32 gfn_fromBigEndian<uint32>(const uchar *src)
+{ return 0 | src[3] | src[2] * uint32(0x00000100) | src[1] * uint32(0x00010000) | src[0] * uint32(0x01000000); }
+
+template<>
+inline uint16 gfn_fromBigEndian<uint16>(const uchar *src)
+{ return uint16(0 | src[1] | src[0] * uint16(0x0100)); }
+
+// signed specializations
+template<>
+inline int64 gfn_fromBigEndian<int64>(const uchar *src)
+{ return static_cast<int64>(gfn_fromBigEndian<uint64>(src)); }
+
+template<>
+inline int32 gfn_fromBigEndian<int32>(const uchar *src)
+{ return static_cast<int32>(gfn_fromBigEndian<uint32>(src)); }
+
+template<>
+inline int16 gfn_fromBigEndian<int16>(const uchar *src)
+{ return static_cast<int16>(gfn_fromBigEndian<uint16>(src)); }
+#endif
+/*
+ * T gfn_bswap(T source).
+ * Changes the byte order of a value from big endian to little endian or vice versa.
+ * This function can be used if you are not concerned about alignment issues,
+ * and it is therefore a bit more convenient and in most cases more efficient.
+*/
+template<typename T>
+T gfn_bswap(T source);
+
+#ifdef __GLIBC__
+template <> inline uint64 gfn_bswap<uint64>(uint64 source)
+{ return bswap_64(source); }
+template <> inline uint32 gfn_bswap<uint32>(uint32 source)
+{ return bswap_32(source); }
+template <> inline uint16 gfn_bswap<uint16>(uint16 source)
+{ return bswap_16(source); }
+#else
+template<>
+inline uint64 gfn_bswap<uint64>(uint64 source)
+{
+    return 0
+           | ((source & GM_UINT64_C(0x00000000000000ff)) << 56)
+           | ((source & GM_UINT64_C(0x000000000000ff00)) << 40)
+           | ((source & GM_UINT64_C(0x0000000000ff0000)) << 24)
+           | ((source & GM_UINT64_C(0x00000000ff000000)) << 8)
+           | ((source & GM_UINT64_C(0x000000ff00000000)) >> 8)
+           | ((source & GM_UINT64_C(0x0000ff0000000000)) >> 24)
+           | ((source & GM_UINT64_C(0x00ff000000000000)) >> 40)
+           | ((source & GM_UINT64_C(0xff00000000000000)) >> 56);
+}
+
+template<>
+inline uint32 gfn_bswap<uint32>(uint32 source)
+{
+    return 0 | ((source & 0x000000ff) << 24) | ((source & 0x0000ff00) << 8) | ((source & 0x00ff0000) >> 8)
+           | ((source & 0xff000000) >> 24);
+}
+
+template<>
+inline uint16 gfn_bswap<uint16>(uint16 source)
+{ return uint16(0 | ((source & 0x00ff) << 8) | ((source & 0xff00) >> 8)); }
+#endif // __GLIBC__
+
+// signed specializations
+template<>
+inline int64 gfn_bswap<int64>(int64 source)
+{ return gfn_bswap<uint64>(uint64(source)); }
+
+template<>
+inline int32 gfn_bswap<int32>(int32 source)
+{ return gfn_bswap<uint32>(uint32(source)); }
+
+template<>
+inline int16 gfn_bswap<int16>(int16 source)
+{ return gfn_bswap<uint16>(uint16(source)); }
+
+#if GM_BYTE_ORDER == GM_BIG_ENDIAN
+
+template<typename T>
+inline T gfn_toBigEndian(T source)
+{ return source; }
+template<typename T>
+inline T gfn_fromBigEndian(T source)
+{ return source; }
+template<typename T>
+inline T gfn_toLittleEndian(T source)
+{ return gfn_bswap<T>(source); }
+template<typename T>
+inline T gfn_fromLittleEndian(T source)
+{ return gfn_bswap<T>(source); }
+template<typename T>
+inline void gfn_toBigEndian(T src, uchar *dest)
+{ gfn_toUnaligned<T>(src, dest); }
+template<typename T>
+inline void gfn_toLittleEndian(T src, uchar *dest)
+{ gfn_bswap<T>(src, dest); }
+#else // GM_LITTLE_ENDIAN
+
+template <typename T> inline T gfn_toBigEndian(T source)
+{ return gfn_bswap<T>(source); }
+template <typename T> inline T gfn_fromBigEndian(T source)
+{ return gfn_bswap<T>(source); }
+template <typename T> inline T gfn_toLittleEndian(T source)
+{ return source; }
+template <typename T> inline T gfn_fromLittleEndian(T source)
+{ return source; }
+template <typename T> inline void gfn_toBigEndian(T src, uchar *dest)
+{ gfn_bswap<T>(src, dest); }
+template <typename T> inline void gfn_toLittleEndian(T src, uchar *dest)
+{ gfn_toUnaligned<T>(src, dest); }
+
+#endif // GM_BYTE_ORDER == GM_BIG_ENDIAN
+
+template<>
+inline uint8 gfn_bswap<uint8>(uint8 source)
+{ return source; }
+
+//-----------------------------------------------------------------------------------------
+//
+//part006 CxGlobal
+//
+//-----------------------------------------------------------------------------------------
+class GM_CCXX_CORE_API CxGlobal {
 public:
     static const timems_t inf; /**< A value to use for infinite time */
-
     static const msepoch_t invalidMsepoch;
-
     static const msepoch_t invalidUsepoch;
-
-//目前std::string不支持多线程
-//    static const std::string emptyString;
-//    static const std::string spaceString;
-//    static const std::string  midString;
-//    static const std::string  splitString;
-
     static const double deadZone;
-    //空格
-    static const char  spaceChar;
-    static const char * spaceString;
-    //等号
-    static const char  equalChar;
-    //分号
-    static const char  colonChar;
-    //逗号
-    static const char  commaChar;
-
-    //键值对的中间字符
-    static const char  middleChar;
-    static const char * middleString;
-    //多个字符串的分隔字符（多键值对的分隔字符）
-    static const char  splitChar;
-    static const char * splitString;
-
+    static const char spaceChar;//空格
+    static const char *spaceString;
+    static const char equalChar;//等号
+    static const char colonChar;//分号
+    static const char commaChar;//逗号
+    static const char middleChar;//键值对的中间字符
+    static const char *middleString;
+    static const char splitChar;//多个字符串的分隔字符（多键值对的分隔字符）
+    static const char *splitString;
     static const std::map<std::string, std::string> emptyMapString;
-
     static const char pathCharacter;
-
     static const char lineCharacter;
-
-    static const char argumentCharacter;    
-
+    static const char argumentCharacter;
     static const size_t npos;
-
-    static const char * lineString;
-
-    static const char * warningString;
-
-    static const char * promptString;
-
-    static const char * debugString;
-
-    static const char * trackString;
+    static const char *lineString;
+    static const char *warningString;
+    static const char *promptString;
+    static const char *debugString;
+    static const char *trackString;
+    static fn_void_msg_tlv_t assertCallBack;
 
 };
 #define cs_line_string (std::string(CxGlobal::lineString))
@@ -676,42 +904,460 @@ public:
 #define cs_split_string (std::string(CxGlobal::splitString))
 #define cs_space_string (std::string(CxGlobal::spaceString))
 
+#define GM_CHECK_TO_STRING(p) ( std::string( #p ) + (p ? " = true" : " = false") )
+#define GM_VALID_RETURE(p)          if (p) { return; }
+#define GM_VALID_RETURE_(p, r)      if (p) { return r; }
+#define GM_VALID_BREAK(p)           if (p) { break; }
+#define GM_VALID_CONTINUE(p)        if (p) { continue; }
+#define GM_INVALID_RETURE(p)        if (! (p)) { return; }
+#define GM_INVALID_RETURE_(p, r)    if (! (p)) { return r; }
+#define GM_INVALID_BREAK(p)         if (! (p)) { break; }
+#define GM_INVALID_CONTINUE(p)      if (! (p)) { continue; }
 
-#define GM_CHECK_TO_STRING( p ) ( std::string( #p ) + (p ? " = true" : " = false") )
+#ifdef GM_DEBUG
+#undef assert
+#define assert(_Expression) \
+    (void) \
+    ((!!(_Expression)) || \
+     ( \
+      ((!(CxGlobal::assertCallBack)) || (CxGlobal::assertCallBack(0,0,#_Expression,__LINE__,(void *)__FILE__,0),1)) \
+     ) \
+    )
+#endif
 
-#define GM_INVALID_RETURE( p ) \
-    if (! (p)) { return; }
-
-#define GM_INVALID_RETURE_( p , r ) \
-    if (! (p)) { return r; }
-
-#define GM_VALID_RETURE( p ) \
-    if (p) { return; }
-
-#define GM_VALID_RETURE_( p , r ) \
-    if (p) { return r; }
-
-#define GM_INVALID_BREAK( p ) \
-    if (! (p)) { break; }
-
-#define GM_VALID_BREAK( p ) \
-    if (p) { break; }
-
-#define GM_INVALID_CONTINUE( p ) \
-    if (! (p)) { continue; }
-
-#define GM_VALID_CONTINUE( p ) \
-    if (p) { continue; }
-
-#define GM_ASSER( x ) assert(x)
-
-#define GM_ASSERT_IFNOT( x , text ) if (!(x)) assert(text);
-
-#define GM_ASSER_POINTER( x ) assert(x != 0)
-
-#define GM_ASSER_OBJECT( x ) assert(x != NULL)
+#define GM_ASSER(x)                 assert(x)
+#define GM_ASSERT_IFNOT(x, text)    if (!(x)) assert(text);
+#define GM_ASSER_POINTER(x)         assert(x != 0)
+#define GM_ASSER_OBJECT(x)          assert(x != NULL)
+#define GM_ASSERT_EQ(a, b)          assert((a) == (b))
+#define GM_ASSERT_GE(a, b)          assert((a) >= (b))
+#define GM_ASSERT_GT(a, b)          assert((a) > (b))
+#define GM_ASSERT_LE(a, b)          assert((a) <= (b))
+#define GM_ASSERT_LT(a, b)          assert((a) < (b))
+#define GM_ASSERT_NE(a, b)          assert((a) != (b))
 
 
+//-----------------------------------------------------------------------------------------
+//
+//part007 CxValueType
+//
+//-----------------------------------------------------------------------------------------
+class CxValueType {
+public:
+    enum ValueTypeEnum {
+        ValueType_Integer, ValueType_Enum, ValueType_Boolean,
+        ValueType_Double, ValueType_DateTime, ValueType_String
+    };
+
+    template<typename T>
+    static ValueTypeEnum id();
+
+    template<typename T>
+    static std::string simpleName();
+
+    template<typename T>
+    static T defaultValue();
+
+    //std::numeric_limits<T>::min()
+    template<typename T>
+    static T minValue();
+
+    //std::numeric_limits<T>::max()
+    template<typename T>
+    static T maxValue();
+
+    template<typename T>
+    static T originalValue();
+
+    template<typename T1, typename T2>
+    static T2 valueTo(const T1 &t1, const T2 &defaultT2);
+
+};
+
+template<typename T>
+inline CxValueType::ValueTypeEnum CxValueType::id()
+{ return ValueType_Enum; }
+template<>
+inline CxValueType::ValueTypeEnum CxValueType::id<int>()
+{ return ValueType_Integer; }
+template<>
+inline CxValueType::ValueTypeEnum CxValueType::id<bool>()
+{ return ValueType_Boolean; }
+template<>
+inline CxValueType::ValueTypeEnum CxValueType::id<double>()
+{ return ValueType_Double; }
+template<>
+inline CxValueType::ValueTypeEnum CxValueType::id<std::string>()
+{ return ValueType_String; }
+template<>
+inline CxValueType::ValueTypeEnum CxValueType::id<msepoch_t>()
+{ return ValueType_DateTime; }
+
+template<typename T>
+inline std::string CxValueType::simpleName()
+{ return std::string(); }
+template<>
+inline std::string CxValueType::simpleName<int>()
+{ return "Integer"; }
+template<>
+inline std::string CxValueType::simpleName<bool>()
+{ return "Boolean"; }
+template<>
+inline std::string CxValueType::simpleName<double>()
+{ return "Double"; }
+template<>
+inline std::string CxValueType::simpleName<std::string>()
+{ return "String"; }
+template<>
+inline std::string CxValueType::simpleName<msepoch_t>()
+{ return "DateTime"; }
+//                                                                             "Enum";
+
+template<typename T>
+inline T CxValueType::defaultValue()
+{
+    T t;
+    return t;
+}
+template<>
+inline int CxValueType::defaultValue<int>()
+{ return 0; }
+template<>
+inline bool CxValueType::defaultValue<bool>()
+{ return false; }
+template<>
+inline uchar CxValueType::defaultValue<uchar>()
+{ return 0x00; }
+template<>
+inline double CxValueType::defaultValue<double>()
+{ return 0; }
+template<>
+inline msepoch_t CxValueType::defaultValue<msepoch_t>()
+{ return 0; }
+template<>
+inline std::string CxValueType::defaultValue<std::string>()
+{ return std::string(); }
+template<>
+inline void *CxValueType::defaultValue<void *>()
+{ return NULL; }
+
+template<typename T>
+inline T CxValueType::minValue()
+{
+    T t;
+    return t;
+}
+template<>
+inline bool CxValueType::minValue<bool>()
+{ return false; }
+template<>
+inline char CxValueType::minValue<char>()
+{ return (std::numeric_limits<char>::min)(); }
+template<>
+inline uchar CxValueType::minValue<uchar>()
+{ return (std::numeric_limits<unsigned char>::min)(); }
+template<>
+inline short CxValueType::minValue<short>()
+{ return (std::numeric_limits<short>::min)(); }
+template<>
+inline ushort CxValueType::minValue<ushort>()
+{ return (std::numeric_limits<unsigned short>::min)(); }
+template<>
+inline int CxValueType::minValue<int>()
+{ return (std::numeric_limits<int>::min)(); }
+template<>
+inline uint CxValueType::minValue<uint>()
+{ return (std::numeric_limits<unsigned int>::min)(); }
+template<>
+inline float CxValueType::minValue<float>()
+{ return (std::numeric_limits<float>::min)(); }
+template<>
+inline double CxValueType::minValue<double>()
+{ return (std::numeric_limits<double>::min)(); }
+template<>
+inline msepoch_t CxValueType::minValue<msepoch_t>()
+{ return GM_MSEPOCH_MIN; }
+template<>
+inline std::string CxValueType::minValue<std::string>()
+{ return std::string(); }
+
+template<typename T>
+inline T CxValueType::maxValue()
+{
+    T t;
+    return t;
+}
+template<>
+inline bool CxValueType::maxValue<bool>()
+{ return false; }
+template<>
+inline char CxValueType::maxValue<char>()
+{ return (std::numeric_limits<char>::max)(); }
+template<>
+inline uchar CxValueType::maxValue<uchar>()
+{ return (std::numeric_limits<unsigned char>::max)(); }
+template<>
+inline short CxValueType::maxValue<short>()
+{ return (std::numeric_limits<short>::max)(); }
+template<>
+inline ushort CxValueType::maxValue<ushort>()
+{ return (std::numeric_limits<unsigned short>::max)(); }
+template<>
+inline int CxValueType::maxValue<int>()
+{ return (std::numeric_limits<int>::max)(); }
+template<>
+inline uint CxValueType::maxValue<uint>()
+{ return (std::numeric_limits<unsigned int>::max)(); }
+template<>
+inline float CxValueType::maxValue<float>()
+{ return (std::numeric_limits<float>::max)(); }
+template<>
+inline double CxValueType::maxValue<double>()
+{ return (std::numeric_limits<double>::max)(); }
+template<>
+inline msepoch_t CxValueType::maxValue<msepoch_t>()
+{ return GM_MSEPOCH_MAX; }
+template<>
+inline std::string CxValueType::maxValue<std::string>()
+{ return std::string(); }
+
+template<typename T>
+inline T CxValueType::originalValue()
+{
+    T t;
+    return t;
+}
+template<>
+inline int CxValueType::originalValue<int>()
+{ return -1; }
+template<>
+inline bool CxValueType::originalValue<bool>()
+{ return false; }
+template<>
+inline uchar CxValueType::originalValue<uchar>()
+{ return 0x00; }
+template<>
+inline double CxValueType::originalValue<double>()
+{ return -1; }
+template<>
+inline msepoch_t CxValueType::originalValue<msepoch_t>()
+{ return 0; }
+template<>
+inline std::string CxValueType::originalValue<std::string>()
+{ return std::string(); }
+
+//-----------------------------------------------------------------------------------------
+//
+//part008 CxException
+//
+//-----------------------------------------------------------------------------------------
+class CxException : public std::exception {
+public:
+    CxException(const std::string &message = "",
+                long lineNumber = -1,
+                const std::string &fileName = "<unknown>");
+    CxException(const std::string &message,
+                long lineNumber,
+                long data1lineNumber,
+                const std::string &fileName);
+    CxException(const std::string &message,
+                long lineNumber,
+                long data1lineNumber,
+                long data2lineNumber,
+                const std::string &fileName);
+    CxException(const CxException &other);
+    virtual ~CxException() throw();
+    CxException &operator=(const CxException &other);
+    const char *what() const throw();
+    long lineNumber() const;
+    long data1LineNumber() const;
+    long data2LineNumber() const;
+    const std::string &fileName() const;
+
+private:
+    std::string _message;
+    long _lineNumber;
+    long _data1lineNumber;
+    long _data2lineNumber;
+    std::string _fileName;
+
+};
+
+inline CxException::CxException(const CxException &other) : exception(other)
+{
+    _message = other._message;
+    _lineNumber = other._lineNumber;
+    _data1lineNumber = other._data1lineNumber;
+    _data2lineNumber = other._data2lineNumber;
+    _fileName = other._fileName;
+}
+inline CxException::CxException(const std::string &message, long lineNumber, const std::string &fileName)
+    : _message(message), _lineNumber(lineNumber), _data1lineNumber(-1), _data2lineNumber(-1), _fileName(fileName)
+{}
+inline CxException::CxException(const std::string &message, long lineNumber, long data1lineNumber, const std::string &fileName)
+    : _message(message), _lineNumber(lineNumber), _data1lineNumber(data1lineNumber), _data2lineNumber(-1), _fileName(fileName)
+{}
+inline CxException::CxException(const std::string &message, long lineNumber, long data1lineNumber, long data2lineNumber, const std::string &fileName)
+    : _message(message), _lineNumber(lineNumber), _data1lineNumber(data1lineNumber), _data2lineNumber(data2lineNumber), _fileName(fileName)
+{}
+inline CxException::~CxException() throw()
+{}
+inline CxException &CxException::operator=(const CxException &other)
+{
+    exception::operator=(other);
+    if (&other != this)
+    {
+        _message = other._message;
+        _lineNumber = other._lineNumber;
+        _data1lineNumber = other._data1lineNumber;
+        _data2lineNumber = other._data2lineNumber;
+        _fileName = other._fileName;
+    }
+    return *this;
+}
+inline const char *CxException::what() const throw()
+{ return _message.c_str(); }
+inline long CxException::lineNumber() const
+{ return _lineNumber; }
+inline long CxException::data1LineNumber() const
+{ return _data1lineNumber; }
+inline long CxException::data2LineNumber() const
+{ return _data2lineNumber; }
+// The file in which the error occurred
+inline const std::string &CxException::fileName() const
+{ return _fileName; }
+
+//-----------------------------------------------------------------------------------------
+//
+//part009 CxFactory
+//
+//-----------------------------------------------------------------------------------------
+template<class ClassBase>
+class CxFactoryTemplate {
+public:
+    CxFactoryTemplate()
+    {}
+
+    virtual ~CxFactoryTemplate()
+    {}
+
+    virtual std::string factoryName() =0;
+
+    virtual ClassBase *createObject() = 0;
+
+};
+
+template<class ClassBase>
+class CxFactoryManagerTemplate {
+public:
+    typedef CxFactoryTemplate<ClassBase> CxFactoryBase;
+
+    template<class FactorySon>
+    static FactorySon *createAndRegister()
+    {
+        FactorySon *oNewFactory = new FactorySon();
+        CxFactoryBase *oFactory = NULL;
+        std::vector<CxFactoryBase *> *oFactorys = ClassBase::factoriesContainer();
+        for (size_t i = 0; i < oFactorys->size(); ++i)
+        {
+            CxFactoryBase *o = oFactorys->at(i);
+            if (o->factoryName() == oNewFactory->factoryName())
+            {
+                oFactory = o;
+                break;
+            }
+        }
+        if (oFactory)
+        {
+            delete oNewFactory;
+            return reinterpret_cast<FactorySon *>(oFactory);
+        }
+        else
+        {
+            ClassBase::factoriesContainer()->push_back(oNewFactory);
+            return oNewFactory;
+        }
+    }
+
+    static const std::vector<CxFactoryBase *> *factorys()
+    {
+        ClassBase::factoriesCreateAndRegister();
+        return ClassBase::factoriesContainer();
+    }
+
+    static std::vector<std::string> factoryNames()
+    {
+        ClassBase::factoriesCreateAndRegister();
+
+        std::vector<std::string> slResult;
+        std::vector<CxFactoryBase *> *oFactorys = ClassBase::factoriesContainer();
+        for (size_t i = 0; i < oFactorys->size(); ++i)
+        {
+            CxFactoryBase *o = oFactorys->at(i);
+            slResult.push_back(o->factoryName());
+        }
+        return slResult;
+    }
+    static std::string toLower(const std::string &s)
+    {
+        std::string r(s.data(), s.size());
+        char *pchBegin = const_cast<char *>( r.data());
+        char *pchEnd = pchBegin + r.size();
+        char *pch = pchBegin;
+        while (pch < pchEnd)
+        {
+            if (*pch >= 0x41 && *pch <= 0x5A)
+                *pch += 0x20;
+            pch++;
+        }
+        return r;
+    }
+
+    static CxFactoryBase *factory(const std::string &sFactoryName)
+    {
+        ClassBase::factoriesCreateAndRegister();
+
+        std::vector<CxFactoryBase *> *oFactorys = ClassBase::factoriesContainer();
+        std::string sName2 = toLower(sFactoryName);
+        for (size_t i = 0; i < oFactorys->size(); ++i)
+        {
+            CxFactoryBase *o = oFactorys->at(i);
+            std::string sName1 = toLower(o->factoryName());
+            if (sName1 == sName2)
+                return o;
+        }
+        return NULL;
+    }
+
+    template<class ClassSon>
+    static ClassSon *createInstance(const std::string &sFactoryName)
+    {
+        ClassBase::factoriesCreateAndRegister();
+
+        CxFactoryBase *oFactoryBase = factory(sFactoryName);
+        if (oFactoryBase)
+        {
+            return reinterpret_cast<ClassSon *>(oFactoryBase->createObject());
+        }
+        return NULL;
+    }
+
+    static ClassBase *createObject(const std::string &sFactoryName)
+    {
+        ClassBase::factoriesCreateAndRegister();
+
+        CxFactoryBase *oFactoryBase = factory(sFactoryName);
+        if (oFactoryBase)
+        {
+            return oFactoryBase->createObject();
+        }
+        return NULL;
+    }
+};
+//template<class ClassBase>
+//void* CxFactoryManagerTemplate<ClassBase>::s_factorys = NULL;
+
+//***type full name : use in class
 #define GM_TYPEFULLNAME(BaseClass, sTypeFirstName) \
     public: \
         static std::string TYPESIMPLENAME() { return sTypeFirstName; } \
@@ -731,8 +1377,6 @@ public:
         virtual std::string typeFirstName() const = 0 ; \
         virtual std::string typeLastName() const = 0 ;
 
-
-
 #define GM_SINGLETON_DECLARATION(ClassName) \
     public: \
     static ClassName* singleton() { \
@@ -745,8 +1389,6 @@ public:
 
 #define GM_SINGLETON_REALIZATION(ClassName) \
     ClassName* ClassName::s_instance = NULL;
-
-
 
 #define GM_DELETEANDNULL_OBJECT(oObject) \
     if (oObject) { delete oObject; oObject = NULL; }

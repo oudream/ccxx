@@ -21,7 +21,7 @@
  * shared memory access templates.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxShareMemory
+class GM_CCXX_CORE_API CxShareMemory
 {
 protected:
     size_t mapsize;

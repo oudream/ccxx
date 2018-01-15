@@ -17,24 +17,28 @@ public:
 
 };
 
-class CxLogManager
-{
-public:
-    static void setLogFileTactics(const CxLogFileTactics_I * oLogFileTactics);
-
-    static std::string fileName(int type, int reason, int source, int target, int tag);
-
-    static FILE * fileByFileName(const std::string& sFileName);
-
-};
-
-class CxLogRealtime : public CxInterinfoOut_I
+class GM_CCXX_CORE_API CxLogManager
 {
 public:
     static void startLog();
 
     static void stopLog();
 
+    static void loadLogConfig();
+
+    static void setLogFileTactics(const CxLogFileTactics_I * oLogFileTactics);
+
+    static std::string fileName(int type, int reason, int source, int target, int tag);
+
+    static FILE * fileByFileName(const std::string& sFileName);
+
+    static void outLog( const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int tag = 0 );
+
+};
+
+class GM_CCXX_CORE_API CxLogRealtime : public CxInterinfoOut_I
+{
+public:
     CxLogRealtime();
 
     ~CxLogRealtime();
@@ -52,31 +56,32 @@ private:
     int64 _fileCountRt;
     int64 _fileSizeRt;
 
+    friend class CxLogManager;
+
 };
 
-class CxLogThread : public CxJoinableThread , public CxInterinfoOut_I
+class GM_CCXX_CORE_API CxLogThread : public CxJoinableThread , public CxInterinfoOut_I
 {
 public:
-    static void startLog();
-
-    static void stopLog();
-
     CxLogThread();
 
     ~CxLogThread();
 
+    inline void stop() { _isStarted = false; join(); }
+
 protected:
     void run();
-
-    inline void waitExit() { join(); }
 
     void interinfo_out( const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int tag = 0 );
 
     CxInterinfo::PlatformEnum platformValue() { return CxInterinfo::Platform_Log; }
 
 private:
-    volatile bool _stop;
-    CxMutex _lockTh;
+    void doSaveLog();
+
+private:
+    volatile bool _isStarted;
+    CxMutex * _lockTh;
     std::vector<std::string> * volatile _logStringsPush;
     std::vector<std::string> * volatile _logStringsPop;
     std::vector<std::string> _logStrings1;
@@ -92,6 +97,65 @@ private:
     int64 _fileCountTh;
     int64 _fileSizeTh;
 
+    friend class CxLogManager;
+
 };
+
+class CxLogOutStream : public CxOutStreamBase {
+public:
+    inline ~CxLogOutStream()
+    {
+        if (!--stream->ref)
+        {
+            if ((! stream->end) && (stream->enable))
+            {
+                stream->ts << '\n';
+                CxLogManager::outLog(stream->ts.str(), stream->title, stream->type, stream->reason, stream->source, stream->target, stream->tag);
+            }
+            delete stream;
+        }
+    }
+
+    inline CxLogOutStream &operator=(const CxLogOutStream &other)
+    {
+        if (this != &other)
+        {
+            CxLogOutStream outStream(other);
+            std::swap(stream, outStream.stream);
+        }
+        return *this;
+    }
+
+protected:
+    virtual inline CxOutStreamBase &output()
+    {
+        if (stream->end)
+        {
+            if (stream->enable)
+            {
+                CxLogManager::outLog(stream->ts.str(), stream->title, stream->type, stream->reason, stream->source, stream->target, stream->tag);
+            }
+        }
+        else
+        {
+            if (stream->space) stream->ts << ' ';
+            if (stream->lf) stream->ts << '\n';
+        }
+        return *this;
+    }
+
+};
+
+class CxLogNoOutStream : public CxNoOutStreamBase {
+
+};
+
+
+inline CxLogOutStream cxLog(CxInterinfo::LevelEnum eLevel=CxInterinfo::LevelDebug) { CxLogOutStream r; r.noend(); r.level(eLevel); return r; }
+inline CxLogOutStream cxLogDebug() { CxLogOutStream r; r.noend(); r.level(CxInterinfo::LevelDebug); return r; }
+inline CxLogOutStream cxLogInfo() { CxLogOutStream r; r.noend(); r.level(CxInterinfo::LevelInfo); return r; }
+inline CxLogOutStream cxLogWarn() { CxLogOutStream r; r.noend(); r.level(CxInterinfo::LevelWarn); return r; }
+inline CxLogOutStream cxLogError() { CxLogOutStream r; r.noend(); r.level(CxInterinfo::LevelError); return r; }
+inline CxLogOutStream cxLogFatal() { CxLogOutStream r; r.noend(); r.level(CxInterinfo::LevelFatal); return r; }
 
 #endif // CXLOG_H

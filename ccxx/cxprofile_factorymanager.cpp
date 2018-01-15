@@ -1,8 +1,12 @@
+#include "cxprofile.h"
 
+#ifndef GM_PROJECT_JSON_NULL
+#include "cxprofile_skv_json.h"
+#endif
 
-#include "cxprofile_skv_ini.h"
-#include "cxprofile_skv_txt.h"
+#ifndef GM_PROJECT_XML_NULL
 #include "cxprofile_skv_xml.h"
+#endif
 
 std::vector<CxFactoryTemplate<CxSkverBase> *> *CxSkverBase::factoriesContainer()
 {
@@ -18,9 +22,12 @@ void CxSkverBase::factoriesCreateAndRegister()
     {
         CxSkverFactoryManager::createAndRegister<CxSkverIniFactory>();
         CxSkverFactoryManager::createAndRegister<CxSkverTxtFactory>();
-        CxSkverFactoryManager::createAndRegister<CxSkverXmlFactory>();
+#ifndef GM_PROJECT_JSON_NULL
+        CxSkverFactoryManager::createAndRegister<CxSkverJsonFactory>();
+#endif
+#ifndef GM_PROJECT_XML_NULL
+		CxSkverFactoryManager::createAndRegister<CxSkverXmlFactory>();
+#endif
         bNotInit = false;
     }
 }
-
-

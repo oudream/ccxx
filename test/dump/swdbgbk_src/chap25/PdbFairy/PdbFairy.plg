@@ -1,0 +1,98 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: PdbFairy - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/PdbFairy.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap25\PdbFairy\PdbFairy.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP526.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/PdbFairy.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap25\PdbFairy\PdbFairy.cpp"
+"C:\dig\dbg\author\code\chap25\PdbFairy\PdbFairyDlg.cpp"
+"C:\dig\dbg\author\code\chap25\PdbFairy\PdbMaster.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP526.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP527.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/PdbFairy.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap25\PdbFairy\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP527.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP528.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/PdbFairy.pdb" /machine:I386 /out:"../../bin/Release/PdbFairy.exe" 
+\dig\dbg\author\code\temp\Release\PdbFairy.obj
+\dig\dbg\author\code\temp\Release\PdbFairy.res
+\dig\dbg\author\code\temp\Release\PdbFairyDlg.obj
+\dig\dbg\author\code\temp\Release\PdbMaster.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP528.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+PdbFairy.cpp
+PdbFairyDlg.cpp
+PdbMaster.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+PdbFairy.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: PdbFairy - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/PdbFairy.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap25\PdbFairy\PdbFairy.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP52A.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/PdbFairy.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap25\PdbFairy\PdbFairy.cpp"
+"C:\dig\dbg\author\code\chap25\PdbFairy\PdbFairyDlg.cpp"
+"C:\dig\dbg\author\code\chap25\PdbFairy\PdbMaster.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP52A.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP52B.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/PdbFairy.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap25\PdbFairy\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP52B.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP52C.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/PdbFairy.pdb" /debug /machine:I386 /out:"../../bin/Debug/PdbFairy.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\PdbFairy.obj
+\dig\dbg\author\code\temp\Debug\PdbFairy.res
+\dig\dbg\author\code\temp\Debug\PdbFairyDlg.obj
+\dig\dbg\author\code\temp\Debug\PdbMaster.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP52C.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+PdbFairy.cpp
+PdbFairyDlg.cpp
+PdbMaster.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"../../bin/Debug/PdbFairy.bsc"  \dig\dbg\author\code\temp\Debug\StdAfx.sbr \dig\dbg\author\code\temp\Debug\PdbFairy.sbr \dig\dbg\author\code\temp\Debug\PdbFairyDlg.sbr \dig\dbg\author\code\temp\Debug\PdbMaster.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+PdbFairy.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

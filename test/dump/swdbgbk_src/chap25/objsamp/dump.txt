@@ -1,0 +1,476 @@
+Microsoft (R) COFF/PE Dumper Version 8.00.50727.42
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file symoption.obj
+
+File Type: COFF OBJECT
+
+FILE HEADER VALUES
+             14C machine (x86)
+               5 number of sections
+        460FA061 time date stamp Sun Apr 01 16:06:57 2007
+             F21 file pointer to symbol table
+              4C number of symbols
+               0 size of optional header
+               0 characteristics
+
+SECTION HEADER #1
+.drectve name
+       0 physical address
+       0 virtual address
+      27 size of raw data
+      DC file pointer to raw data (000000DC to 00000102)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+  100A00 flags
+         Info
+         Remove
+         1 byte align
+
+RAW DATA #1
+  00000000: 2D 64 65 66 61 75 6C 74 6C 69 62 3A 4C 49 42 43  -defaultlib:LIBC
+  00000010: 44 20 2D 64 65 66 61 75 6C 74 6C 69 62 3A 4F 4C  D -defaultlib:OL
+  00000020: 44 4E 41 4D 45 53 20                             DNAMES 
+
+   Linker Directives
+   -----------------
+   -defaultlib:LIBCD
+   -defaultlib:OLDNAMES
+
+SECTION HEADER #2
+.debug$S name
+       0 physical address
+       0 virtual address
+     3F4 size of raw data
+     103 file pointer to raw data (00000103 to 000004F6)
+     4F7 file pointer to relocation table
+       0 file pointer to line numbers
+      12 number of relocations
+       0 number of line numbers
+42100048 flags
+         No Pad
+         Initialized Data
+         Discardable
+         1 byte align
+         Read Only
+
+RAW DATA #2
+  00000000: 02 00 00 00 54 00 09 00 00 00 00 00 4D 43 3A 5C  ....T.......MC:\
+  00000010: 64 69 67 5C 64 62 67 5C 61 75 74 68 6F 72 5C 63  dig\dbg\author\c
+  00000020: 6F 64 65 5C 63 68 61 70 32 35 5C 53 79 6D 4F 70  ode\chap25\SymOp
+  00000030: 74 69 6F 6E 5C 53 79 6D 4F 70 74 69 6F 6E 5F 5F  tion\SymOption__
+  00000040: 5F 57 69 6E 33 32 5F 5A 69 50 44 42 5C 53 79 6D  _Win32_ZiPDB\Sym
+  00000050: 4F 70 74 69 6F 6E 2E 6F 62 6A 4A 00 01 00 05 01  Option.objJ.....
+  00000060: 00 00 43 4D 69 63 72 6F 73 6F 66 74 20 28 52 29  ..CMicrosoft (R)
+  00000070: 20 33 32 2D 62 69 74 20 43 2F 43 2B 2B 20 4F 70   32-bit C/C++ Op
+  00000080: 74 69 6D 69 7A 69 6E 67 20 43 6F 6D 70 69 6C 65  timizing Compile
+  00000090: 72 20 56 65 72 73 69 6F 6E 20 31 32 2E 30 30 2E  r Version 12.00.
+  000000A0: 38 39 36 36 2E 30 2D 00 0B 10 00 00 00 00 00 00  8966.0-.........
+  000000B0: 00 00 00 00 00 00 10 01 00 00 24 00 00 00 FF 00  ..........$...?.
+  000000C0: 00 00 0F 1B 00 00 00 00 00 00 00 00 01 07 57 69  ..............Wi
+  000000D0: 6E 4D 61 69 6E 14 00 06 10 08 00 00 00 35 11 00  nMain........5..
+  000000E0: 00 09 68 49 6E 73 74 61 6E 63 65 18 00 06 10 0C  ..hInstance.....
+  000000F0: 00 00 00 35 11 00 00 0D 68 50 72 65 76 49 6E 73  ...5....hPrevIns
+  00000100: 74 61 6E 63 65 14 00 06 10 10 00 00 00 70 04 00  tance........p..
+  00000110: 00 09 6C 70 43 6D 64 4C 69 6E 65 13 00 06 10 14  ..lpCmdLine.....
+  00000120: 00 00 00 74 00 00 00 08 6E 43 6D 64 53 68 6F 77  ...t....nCmdShow
+  00000130: 16 00 06 10 E0 FF FF FF 1B 1A 00 00 0B 68 41 63  ....ид???.....hAc
+  00000140: 63 65 6C 54 61 62 6C 65 0E 00 06 10 E4 FF FF FF  celTable....????
+  00000150: 8E 11 00 00 03 6D 73 67 02 00 06 00 35 00 0B 10  .....msg....5...
+  00000160: 00 00 00 00 00 00 00 00 00 00 00 00 C1 00 00 00  ............ив...
+  00000170: 17 00 00 00 B1 00 00 00 11 1B 00 00 00 00 00 00  ....б└...........
+  00000180: 00 00 01 0F 4D 79 52 65 67 69 73 74 65 72 43 6C  ....MyRegisterCl
+  00000190: 61 73 73 14 00 06 10 08 00 00 00 35 11 00 00 09  ass........5....
+  000001A0: 68 49 6E 73 74 61 6E 63 65 0F 00 06 10 D0 FF FF  hInstance....D??
+  000001B0: FF FA 12 00 00 04 77 63 65 78 02 00 06 00 32 00  ?и▓....wcex....2.
+  000001C0: 0B 10 00 00 00 00 00 00 00 00 00 00 00 00 97 00  ................
+  000001D0: 00 00 0C 00 00 00 88 00 00 00 13 1B 00 00 00 00  ................
+  000001E0: 00 00 00 00 01 0C 49 6E 69 74 49 6E 73 74 61 6E  ......InitInstan
+  000001F0: 63 65 14 00 06 10 08 00 00 00 35 11 00 00 09 68  ce........5....h
+  00000200: 49 6E 73 74 61 6E 63 65 13 00 06 10 0C 00 00 00  Instance........
+  00000210: 74 00 00 00 08 6E 43 6D 64 53 68 6F 77 0F 00 06  t....nCmdShow...
+  00000220: 10 FC FF FF FF 74 10 00 00 04 68 57 6E 64 02 00  .и╣???t....hWnd..
+  00000230: 06 00 2D 00 0B 10 00 00 00 00 00 00 00 00 00 00  ..-.............
+  00000240: 00 00 E2 01 00 00 1D 00 00 00 CD 01 00 00 F5 12  ..a.......ик...?.
+  00000250: 00 00 00 00 00 00 00 00 01 07 57 6E 64 50 72 6F  ..........WndPro
+  00000260: 63 0F 00 06 10 08 00 00 00 74 10 00 00 04 68 57  c........t....hW
+  00000270: 6E 64 12 00 06 10 0C 00 00 00 75 00 00 00 07 6D  nd........u....m
+  00000280: 65 73 73 61 67 65 11 00 06 10 10 00 00 00 75 00  essage........u.
+  00000290: 00 00 06 77 50 61 72 61 6D 11 00 06 10 14 00 00  ...wParam.......
+  000002A0: 00 12 00 00 00 06 6C 50 61 72 61 6D 12 00 06 10  ......lParam....
+  000002B0: 50 FF FF FF 74 00 00 00 07 77 6D 45 76 65 6E 74  P???t....wmEvent
+  000002C0: 0E 00 06 10 54 FF FF FF E1 13 00 00 03 68 64 63  ....T???ив....hdc
+  000002D0: 0D 00 06 10 58 FF FF FF E3 13 00 00 02 70 73 12  ....X????....ps.
+  000002E0: 00 06 10 98 FF FF FF 0D 1B 00 00 07 73 7A 48 65  ....???.....szHe
+  000002F0: 6C 6C 6F 0F 00 06 10 FC FF FF FF 74 00 00 00 04  llo....и╣???t....
+  00000300: 77 6D 49 64 15 00 07 02 00 00 00 00 00 00 00 00  wmId............
+  00000310: 5C 01 00 00 6F 00 00 00 00 00 00 0D 00 06 10 40  \...o..........@
+  00000320: FF FF FF 5B 10 00 00 02 72 74 02 00 06 00 02 00  ???[....rt......
+  00000330: 06 00 2B 00 0B 10 00 00 00 00 00 00 00 00 00 00  ..+.............
+  00000340: 00 00 90 00 00 00 0C 00 00 00 7F 00 00 00 F5 12  ..............?.
+  00000350: 00 00 00 00 00 00 00 00 01 05 41 62 6F 75 74 0F  ..........About.
+  00000360: 00 06 10 08 00 00 00 74 10 00 00 04 68 44 6C 67  .......t....hDlg
+  00000370: 12 00 06 10 0C 00 00 00 75 00 00 00 07 6D 65 73  ........u....mes
+  00000380: 73 61 67 65 11 00 06 10 10 00 00 00 75 00 00 00  sage........u...
+  00000390: 06 77 50 61 72 61 6D 11 00 06 10 14 00 00 00 12  .wParam.........
+  000003A0: 00 00 00 06 6C 50 61 72 61 6D 02 00 06 00 12 00  ....lParam......
+  000003B0: 08 10 35 11 00 00 00 00 00 00 00 00 05 68 49 6E  ..5..........hIn
+  000003C0: 73 74 14 00 08 10 0D 1B 00 00 00 00 00 00 00 00  st..............
+  000003D0: 07 73 7A 54 69 74 6C 65 1A 00 08 10 0D 1B 00 00  .szTitle........
+  000003E0: 00 00 00 00 00 00 0D 73 7A 57 69 6E 64 6F 77 43  .......szWindowC
+  000003F0: 6C 61 73 73                                      lass
+
+RELOCATIONS #2
+                                                Symbol    Symbol
+ Offset    Type              Applied To         Index     Name
+ --------  ----------------  -----------------  --------  ------
+ 000000C6  SECREL                     00000000        10  _WinMain@16
+ 000000CA  SECTION                        0000        10  _WinMain@16
+ 0000017C  SECREL                     00000000        1E  ?MyRegisterClass@@YAGPAUHINSTANCE__@@@Z (unsigned short __cdecl MyRegisterClass(struct HINSTANCE__ *))
+ 00000180  SECTION                        0000        1E  ?MyRegisterClass@@YAGPAUHINSTANCE__@@@Z (unsigned short __cdecl MyRegisterClass(struct HINSTANCE__ *))
+ 000001DE  SECREL                     00000000        28  ?InitInstance@@YAHPAUHINSTANCE__@@H@Z (int __cdecl InitInstance(struct HINSTANCE__ *,int))
+ 000001E2  SECTION                        0000        28  ?InitInstance@@YAHPAUHINSTANCE__@@H@Z (int __cdecl InitInstance(struct HINSTANCE__ *,int))
+ 00000252  SECREL                     00000000        32  ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000256  SECTION                        0000        32  ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000314  SECREL                     0000006F        32  ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000318  SECTION                        0000        32  ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000352  SECREL                     00000000        42  ?About@@YGJPAUHWND__@@IIJ@Z (long __stdcall About(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000356  SECTION                        0000        42  ?About@@YGJPAUHWND__@@IIJ@Z (long __stdcall About(struct HWND__ *,unsigned int,unsigned int,long))
+ 000003B6  SECREL                     00000000         B  ?hInst@@3PAUHINSTANCE__@@A (struct HINSTANCE__ * hInst)
+ 000003BA  SECTION                        0000         B  ?hInst@@3PAUHINSTANCE__@@A (struct HINSTANCE__ * hInst)
+ 000003CA  SECREL                     00000000         C  ?szTitle@@3PADA (char * szTitle)
+ 000003CE  SECTION                        0000         C  ?szTitle@@3PADA (char * szTitle)
+ 000003E0  SECREL                     00000000         D  ?szWindowClass@@3PADA (char * szWindowClass)
+ 000003E4  SECTION                        0000         D  ?szWindowClass@@3PADA (char * szWindowClass)
+
+SECTION HEADER #3
+    .bss name
+       0 physical address
+       0 virtual address
+      CC size of raw data
+       0 file pointer to raw data
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0300080 flags
+         Uninitialized Data
+         4 byte align
+         Read Write
+
+SECTION HEADER #4
+   .text name
+       0 physical address
+       0 virtual address
+     4DA size of raw data
+     5AB file pointer to raw data (000005AB to 00000A84)
+     A85 file pointer to relocation table
+     D2D file pointer to line numbers
+      44 number of relocations
+      44 number of line numbers
+60500020 flags
+         Code
+         16 byte align
+         Execute Read
+
+RAW DATA #4
+  00000000: 55 8B EC 83 EC 20 56 B8 CC CC CC CC 89 45 E0 89  U.им.им V?имимимим.Eид.
+  00000010: 45 E4 89 45 E8 89 45 EC 89 45 F0 89 45 F4 89 45  E?.Eии.Eим.Ee.E?.E
+  00000020: F8 89 45 FC 8B F4 6A 64 68 00 00 00 00 6A 67 8B  ?.Eи╣.?jdh....jg.
+  00000030: 45 08 50 FF 15 00 00 00 00 3B F4 E8 00 00 00 00  E.P?.....;?ии....
+  00000040: 8B F4 6A 64 68 00 00 00 00 6A 6D 8B 4D 08 51 FF  .?jdh....jm.M.Q?
+  00000050: 15 00 00 00 00 3B F4 E8 00 00 00 00 8B 55 08 52  .....;?ии.....U.R
+  00000060: E8 00 00 00 00 83 C4 04 8B 45 14 50 8B 4D 08 51  ии.....?..E.P.M.Q
+  00000070: E8 00 00 00 00 83 C4 08 85 C0 75 04 33 C0 EB 7F  ии.....?..идu.3ид?.
+  00000080: 8B F4 6A 6D 8B 55 08 52 FF 15 00 00 00 00 3B F4  .?jm.U.R?.....;?
+  00000090: E8 00 00 00 00 89 45 E0 8B F4 6A 00 6A 00 6A 00  ии.....Eид.?j.j.j.
+  000000A0: 8D 45 E4 50 FF 15 00 00 00 00 3B F4 E8 00 00 00  .E?P?.....;?ии...
+  000000B0: 00 85 C0 74 47 8B F4 8D 4D E4 51 8B 55 E0 52 8B  ..идtG.?.M?Q.UидR.
+  000000C0: 45 E4 50 FF 15 00 00 00 00 3B F4 E8 00 00 00 00  E?P?.....;?ии....
+  000000D0: 85 C0 75 26 8B F4 8D 4D E4 51 FF 15 00 00 00 00  .идu&.?.M?Q?.....
+  000000E0: 3B F4 E8 00 00 00 00 8B F4 8D 55 E4 52 FF 15 00  ;?ии.....?.U?R?..
+  000000F0: 00 00 00 3B F4 E8 00 00 00 00 EB 9C 8B 45 EC 5E  ...;?ии....?..Eим^
+  00000100: 83 C4 20 3B EC E8 00 00 00 00 8B E5 5D C2 10 00  .? ;имии.....?]?..
+  00000110: 55 8B EC 83 EC 30 56 57 8D 7D D0 B9 0C 00 00 00  U.им.им0VW.}D1....
+  00000120: B8 CC CC CC CC F3 AB C7 45 D0 30 00 00 00 C7 45  ?имимимимио??ED0...?E
+  00000130: D4 03 00 00 00 C7 45 D8 00 00 00 00 C7 45 DC 00  ?....?E?....?Eи╣.
+  00000140: 00 00 00 C7 45 E0 00 00 00 00 8B 45 08 89 45 E4  ...?Eид.....E..E?
+  00000150: 8B F4 6A 6B 8B 4D 08 51 FF 15 00 00 00 00 3B F4  .?jk.M.Q?.....;?
+  00000160: E8 00 00 00 00 89 45 E8 8B F4 68 00 7F 00 00 6A  ии.....Eии.?h....j
+  00000170: 00 FF 15 00 00 00 00 3B F4 E8 00 00 00 00 89 45  .?.....;?ии.....E
+  00000180: EC C7 45 F0 06 00 00 00 C7 45 F4 6D 00 00 00 C7  им?Ee....?E?m...?
+  00000190: 45 F8 00 00 00 00 8B F4 6A 6C 8B 55 E4 52 FF 15  E?.....?jl.U?R?.
+  000001A0: 00 00 00 00 3B F4 E8 00 00 00 00 89 45 FC 8B F4  ....;?ии.....Eи╣.?
+  000001B0: 8D 45 D0 50 FF 15 00 00 00 00 3B F4 E8 00 00 00  .EDP?.....;?ии...
+  000001C0: 00 5F 5E 83 C4 30 3B EC E8 00 00 00 00 8B E5 5D  ._^.?0;имии.....?]
+  000001D0: C3 55 8B EC 51 56 C7 45 FC CC CC CC CC 8B 45 08  ?U.имQV?Eи╣имимимим.E.
+  000001E0: A3 00 00 00 00 8B F4 6A 00 8B 4D 08 51 6A 00 6A  бъ.....?j..M.Qj.j
+  000001F0: 00 6A 00 68 00 00 00 80 6A 00 68 00 00 00 80 68  .j.h....j.h....h
+  00000200: 00 00 CF 00 68 00 00 00 00 68 00 00 00 00 6A 00  ..?.h....h....j.
+  00000210: FF 15 00 00 00 00 3B F4 E8 00 00 00 00 89 45 FC  ?.....;?ии.....Eи╣
+  00000220: 83 7D FC 00 75 04 33 C0 EB 2F 8B F4 8B 55 0C 52  .}и╣.u.3ид?/.?.U.R
+  00000230: 8B 45 FC 50 FF 15 00 00 00 00 3B F4 E8 00 00 00  .Eи╣P?.....;?ии...
+  00000240: 00 8B F4 8B 4D FC 51 FF 15 00 00 00 00 3B F4 E8  ..?.Mи╣Q?.....;?ии
+  00000250: 00 00 00 00 B8 01 00 00 00 5E 83 C4 04 3B EC E8  ....?....^.?.;имии
+  00000260: 00 00 00 00 8B E5 5D C3 55 8B EC 81 EC C8 00 00  .....?]?U.им.имии..
+  00000270: 00 56 57 8D BD 38 FF FF FF B9 32 00 00 00 B8 CC  .VW.?8???12...?им
+  00000280: CC CC CC F3 AB 8B F4 6A 64 8D 45 98 50 6A 6A 8B  имимимио?.?jd.E.Pjj.
+  00000290: 0D 00 00 00 00 51 FF 15 00 00 00 00 3B F4 E8 00  .....Q?.....;?ии.
+  000002A0: 00 00 00 8B 55 0C 89 95 3C FF FF FF 83 BD 3C FF  ....U...<???.?<?
+  000002B0: FF FF 02 0F 84 46 01 00 00 83 BD 3C FF FF FF 0F  ??...F....?<???.
+  000002C0: 0F 84 B3 00 00 00 81 BD 3C FF FF FF 11 01 00 00  ..3....?<???....
+  000002D0: 74 05 E9 3B 01 00 00 8B 45 10 25 FF FF 00 00 25  t.иж;....E.%??..%
+  000002E0: FF FF 00 00 89 45 FC 8B 4D 10 C1 E9 10 81 E1 FF  ??...Eи╣.M.ивиж..ив?
+  000002F0: FF 00 00 89 8D 50 FF FF FF 8B 55 FC 89 95 38 FF  ?....P???.Uи╣..8?
+  00000300: FF FF 83 BD 38 FF FF FF 68 74 0B 83 BD 38 FF FF  ??.?8???ht..?8??
+  00000310: FF 69 74 27 EB 3A 8B F4 6A 00 68 00 00 00 00 8B  ?it'?:.?j.h.....
+  00000320: 45 08 50 6A 67 8B 0D 00 00 00 00 51 FF 15 00 00  E.Pjg......Q?...
+  00000330: 00 00 3B F4 E8 00 00 00 00 EB 39 8B F4 8B 55 08  ..;?ии....?9.?.U.
+  00000340: 52 FF 15 00 00 00 00 3B F4 E8 00 00 00 00 EB 24  R?.....;?ии....?$
+  00000350: 8B F4 8B 45 14 50 8B 4D 10 51 8B 55 0C 52 8B 45  .?.E.P.M.Q.U.R.E
+  00000360: 08 50 FF 15 00 00 00 00 3B F4 E8 00 00 00 00 E9  .P?.....;?ии....иж
+  00000370: C1 00 00 00 E9 BA 00 00 00 8B F4 8D 8D 58 FF FF  ив...ижo....?..X??
+  00000380: FF 51 8B 55 08 52 FF 15 00 00 00 00 3B F4 E8 00  ?Q.U.R?.....;?ии.
+  00000390: 00 00 00 89 85 54 FF FF FF 8B F4 8D 85 40 FF FF  .....T???.?..@??
+  000003A0: FF 50 8B 4D 08 51 FF 15 00 00 00 00 3B F4 E8 00  ?P.M.Q?.....;?ии.
+  000003B0: 00 00 00 8B F4 6A 01 8D 95 40 FF FF FF 52 8D 45  ....?j...@???R.E
+  000003C0: 98 50 E8 00 00 00 00 83 C4 04 50 8D 4D 98 51 8B  .Pии.....?.P.M.Q.
+  000003D0: 95 54 FF FF FF 52 FF 15 00 00 00 00 3B F4 E8 00  .T???R?.....;?ии.
+  000003E0: 00 00 00 8B F4 8D 85 58 FF FF FF 50 8B 4D 08 51  ....?..X???P.M.Q
+  000003F0: FF 15 00 00 00 00 3B F4 E8 00 00 00 00 EB 34 8B  ?.....;?ии....?4.
+  00000400: F4 6A 00 FF 15 00 00 00 00 3B F4 E8 00 00 00 00  ?j.?.....;?ии....
+  00000410: EB 21 8B F4 8B 55 14 52 8B 45 10 50 8B 4D 0C 51  ?!.?.U.R.E.P.M.Q
+  00000420: 8B 55 08 52 FF 15 00 00 00 00 3B F4 E8 00 00 00  .U.R?.....;?ии...
+  00000430: 00 EB 02 33 C0 5F 5E 81 C4 C8 00 00 00 3B EC E8  .?.3ид_^.?ии...;имии
+  00000440: 00 00 00 00 8B E5 5D C2 10 00 55 8B EC 51 56 C7  .....?]?..U.имQV?
+  00000450: 45 FC CC CC CC CC 8B 45 0C 89 45 FC 81 7D FC 10  Eи╣имимимим.E..Eи╣.}и╣.
+  00000460: 01 00 00 74 0B 81 7D FC 11 01 00 00 74 09 EB 57  ...t..}и╣....t.?W
+  00000470: B8 01 00 00 00 EB 52 8B 4D 10 81 E1 FF FF 00 00  ?....?R.M..ив??..
+  00000480: 81 E1 FF FF 00 00 83 F9 01 74 14 8B 55 10 81 E2  .ив??...и┤.t..U..a
+  00000490: FF FF 00 00 81 E2 FF FF 00 00 83 FA 02 75 28 8B  ??...a??...и▓.u(.
+  000004A0: 45 10 25 FF FF 00 00 25 FF FF 00 00 8B F4 50 8B  E.%??..%??...?P.
+  000004B0: 4D 08 51 FF 15 00 00 00 00 3B F4 E8 00 00 00 00  M.Q?.....;?ии....
+  000004C0: B8 01 00 00 00 EB 02 33 C0 5E 83 C4 04 3B EC E8  ?....?.3ид^.?.;имии
+  000004D0: 00 00 00 00 8B E5 5D C2 10 00                    .....?]?..
+
+RELOCATIONS #4
+                                                Symbol    Symbol
+ Offset    Type              Applied To         Index     Name
+ --------  ----------------  -----------------  --------  ------
+ 00000029  DIR32                      00000000         C  ?szTitle@@3PADA (char * szTitle)
+ 00000035  DIR32                      00000000        17  __imp__LoadStringA@16
+ 0000003C  REL32                      00000000        18  __chkesp
+ 00000045  DIR32                      00000000         D  ?szWindowClass@@3PADA (char * szWindowClass)
+ 00000051  DIR32                      00000000        17  __imp__LoadStringA@16
+ 00000058  REL32                      00000000        18  __chkesp
+ 00000061  REL32                      00000000        1E  ?MyRegisterClass@@YAGPAUHINSTANCE__@@@Z (unsigned short __cdecl MyRegisterClass(struct HINSTANCE__ *))
+ 00000071  REL32                      00000000        28  ?InitInstance@@YAHPAUHINSTANCE__@@H@Z (int __cdecl InitInstance(struct HINSTANCE__ *,int))
+ 0000008A  DIR32                      00000000        16  __imp__LoadAcceleratorsA@8
+ 00000091  REL32                      00000000        18  __chkesp
+ 000000A6  DIR32                      00000000        15  __imp__GetMessageA@16
+ 000000AD  REL32                      00000000        18  __chkesp
+ 000000C5  DIR32                      00000000        14  __imp__TranslateAcceleratorA@12
+ 000000CC  REL32                      00000000        18  __chkesp
+ 000000DC  DIR32                      00000000        13  __imp__TranslateMessage@4
+ 000000E3  REL32                      00000000        18  __chkesp
+ 000000EF  DIR32                      00000000        12  __imp__DispatchMessageA@4
+ 000000F6  REL32                      00000000        18  __chkesp
+ 00000106  REL32                      00000000        18  __chkesp
+ 00000138  DIR32                      00000000        32  ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+ 0000015A  DIR32                      00000000        22  __imp__LoadIconA@8
+ 00000161  REL32                      00000000        18  __chkesp
+ 00000173  DIR32                      00000000        21  __imp__LoadCursorA@8
+ 0000017A  REL32                      00000000        18  __chkesp
+ 00000192  DIR32                      00000000         D  ?szWindowClass@@3PADA (char * szWindowClass)
+ 000001A0  DIR32                      00000000        22  __imp__LoadIconA@8
+ 000001A7  REL32                      00000000        18  __chkesp
+ 000001B6  DIR32                      00000000        20  __imp__RegisterClassExA@4
+ 000001BD  REL32                      00000000        18  __chkesp
+ 000001C9  REL32                      00000000        18  __chkesp
+ 000001E1  DIR32                      00000000         B  ?hInst@@3PAUHINSTANCE__@@A (struct HINSTANCE__ * hInst)
+ 00000205  DIR32                      00000000         C  ?szTitle@@3PADA (char * szTitle)
+ 0000020A  DIR32                      00000000         D  ?szWindowClass@@3PADA (char * szWindowClass)
+ 00000212  DIR32                      00000000        2C  __imp__CreateWindowExA@48
+ 00000219  REL32                      00000000        18  __chkesp
+ 00000236  DIR32                      00000000        2B  __imp__ShowWindow@8
+ 0000023D  REL32                      00000000        18  __chkesp
+ 00000249  DIR32                      00000000        2A  __imp__UpdateWindow@4
+ 00000250  REL32                      00000000        18  __chkesp
+ 00000260  REL32                      00000000        18  __chkesp
+ 00000291  DIR32                      00000000         B  ?hInst@@3PAUHINSTANCE__@@A (struct HINSTANCE__ * hInst)
+ 00000298  DIR32                      00000000        17  __imp__LoadStringA@16
+ 0000029F  REL32                      00000000        18  __chkesp
+ 0000031B  DIR32                      00000000        42  ?About@@YGJPAUHWND__@@IIJ@Z (long __stdcall About(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000327  DIR32                      00000000         B  ?hInst@@3PAUHINSTANCE__@@A (struct HINSTANCE__ * hInst)
+ 0000032E  DIR32                      00000000        3C  __imp__DialogBoxParamA@20
+ 00000335  REL32                      00000000        18  __chkesp
+ 00000343  DIR32                      00000000        3B  __imp__DestroyWindow@4
+ 0000034A  REL32                      00000000        18  __chkesp
+ 00000364  DIR32                      00000000        3A  __imp__DefWindowProcA@16
+ 0000036B  REL32                      00000000        18  __chkesp
+ 00000388  DIR32                      00000000        39  __imp__BeginPaint@8
+ 0000038F  REL32                      00000000        18  __chkesp
+ 000003A8  DIR32                      00000000        38  __imp__GetClientRect@8
+ 000003AF  REL32                      00000000        18  __chkesp
+ 000003C3  REL32                      00000000        37  _strlen
+ 000003D8  DIR32                      00000000        36  __imp__DrawTextA@20
+ 000003DF  REL32                      00000000        18  __chkesp
+ 000003F2  DIR32                      00000000        35  __imp__EndPaint@8
+ 000003F9  REL32                      00000000        18  __chkesp
+ 00000405  DIR32                      00000000        34  __imp__PostQuitMessage@4
+ 0000040C  REL32                      00000000        18  __chkesp
+ 00000426  DIR32                      00000000        3A  __imp__DefWindowProcA@16
+ 0000042D  REL32                      00000000        18  __chkesp
+ 00000440  REL32                      00000000        18  __chkesp
+ 000004B5  DIR32                      00000000        44  __imp__EndDialog@8
+ 000004BC  REL32                      00000000        18  __chkesp
+ 000004D0  REL32                      00000000        18  __chkesp
+
+LINENUMBERS #4
+
+ Symbol index:       10 Base line number:    24
+ Symbol name = _WinMain@16
+ 00000024(   30)  00000040(   31)  0000005C(   32)  00000068(   35)
+ 0000007C(   37)  00000080(   40)  00000098(   43)  000000B5(   45)
+ 000000D4(   47)  000000E7(   48)  000000FA(   50)  000000FC(   52)
+ 000000FF(   53)
+
+ Symbol index:       1E Base line number:    71
+ Symbol name = ?MyRegisterClass@@YAGPAUHINSTANCE__@@@Z (unsigned short __cdecl MyRegisterClass(struct HINSTANCE__ *))
+ 00000127(   74)  0000012E(   76)  00000135(   77)  0000013C(   78)
+ 00000143(   79)  0000014A(   80)  00000150(   81)  00000168(   82)
+ 00000181(   83)  00000188(   84)  0000018F(   85)  00000196(   86)
+ 000001AE(   88)  000001C1(   89)
+
+ Symbol index:       28 Base line number:   102
+ Symbol name = ?InitInstance@@YAHPAUHINSTANCE__@@H@Z (int __cdecl InitInstance(struct HINSTANCE__ *,int))
+ 000001DD(  105)  000001E5(  108)  00000220(  110)  00000226(  112)
+ 0000022A(  115)  00000241(  116)  00000254(  118)  00000259(  119)
+
+ Symbol index:       32 Base line number:   132
+ Symbol name = ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000285(  137)  000002A3(  140)  000002D7(  142)  000002E7(  143)
+ 000002F9(  146)  00000316(  148)  00000339(  149)  0000033B(  151)
+ 0000034E(  152)  00000350(  154)  00000374(  156)  00000379(  158)
+ 00000399(  161)  000003B3(  162)  000003E3(  163)  000003FD(  164)
+ 000003FF(  166)  00000410(  167)  00000412(  169)  00000433(  171)
+ 00000435(  172)
+
+ Symbol index:       42 Base line number:   176
+ Symbol name = ?About@@YGJPAUHWND__@@IIJ@Z (long __stdcall About(struct HWND__ *,unsigned int,unsigned int,long))
+ 00000456(  178)  00000470(  180)  00000477(  183)  0000049F(  185)
+ 000004C0(  186)  000004C7(  190)  000004C9(  191)
+
+SECTION HEADER #5
+.debug$T name
+       0 physical address
+       0 virtual address
+      5C size of raw data
+     EC5 file pointer to raw data (00000EC5 to 00000F20)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+42100048 flags
+         No Pad
+         Initialized Data
+         Discardable
+         1 byte align
+         Read Only
+
+RAW DATA #5
+  00000000: 02 00 00 00 56 00 16 00 61 A0 0F 46 02 00 00 00  ....V...a?.F....
+  00000010: 48 63 3A 5C 64 69 67 5C 64 62 67 5C 61 75 74 68  Hc:\dig\dbg\auth
+  00000020: 6F 72 5C 63 6F 64 65 5C 63 68 61 70 32 35 5C 73  or\code\chap25\s
+  00000030: 79 6D 6F 70 74 69 6F 6E 5C 73 79 6D 6F 70 74 69  ymoption\symopti
+  00000040: 6F 6E 5F 5F 5F 77 69 6E 33 32 5F 7A 69 70 64 62  on___win32_zipdb
+  00000050: 5C 76 63 36 30 2E 70 64 62 F3 F2 F1              \vc60.pdbиои░?
+
+COFF SYMBOL TABLE
+000 00000000 DEBUG  notype       Filename     | .file
+    C:\dig\dbg\author\code\chap25\SymOption\SymOption.cpp
+004 000B2306 ABS    notype       Static       | @comp.id
+005 00000000 SECT1  notype       Static       | .drectve
+    Section length   27, #relocs    0, #linenums    0, checksum        0
+007 00000000 SECT2  notype       Static       | .debug$S
+    Section length  3F4, #relocs   12, #linenums    0, checksum E9AFC280
+009 00000000 SECT3  notype       Static       | .bss
+    Section length   CC, #relocs    0, #linenums    0, checksum        0
+00B 000000C8 SECT3  notype       External     | ?hInst@@3PAUHINSTANCE__@@A (struct HINSTANCE__ * hInst)
+00C 00000064 SECT3  notype       External     | ?szTitle@@3PADA (char * szTitle)
+00D 00000000 SECT3  notype       External     | ?szWindowClass@@3PADA (char * szWindowClass)
+00E 00000000 SECT4  notype       Static       | .text
+    Section length  4DA, #relocs   44, #linenums   44, checksum 3E89ABBB
+010 00000000 SECT4  notype ()    External     | _WinMain@16
+    tag index 00000019 size 00000110 lines 00000D2D next function 0000001E
+012 00000000 UNDEF  notype ()    External     | __imp__DispatchMessageA@4
+013 00000000 UNDEF  notype ()    External     | __imp__TranslateMessage@4
+014 00000000 UNDEF  notype ()    External     | __imp__TranslateAcceleratorA@12
+015 00000000 UNDEF  notype ()    External     | __imp__GetMessageA@16
+016 00000000 UNDEF  notype ()    External     | __imp__LoadAcceleratorsA@8
+017 00000000 UNDEF  notype ()    External     | __imp__LoadStringA@16
+018 00000000 UNDEF  notype ()    External     | __chkesp
+019 00000000 SECT4  notype       BeginFunction | .bf
+    line# 0018 end 00000023
+01B 0000000E SECT4  notype       .bf or.ef    | .lf
+01C 00000110 SECT4  notype       EndFunction  | .ef
+    line# 0035
+01E 00000110 SECT4  notype ()    External     | ?MyRegisterClass@@YAGPAUHINSTANCE__@@@Z (unsigned short __cdecl MyRegisterClass(struct HINSTANCE__ *))
+    tag index 00000023 size 000000C1 lines 00000D81 next function 00000028
+020 00000000 UNDEF  notype ()    External     | __imp__RegisterClassExA@4
+021 00000000 UNDEF  notype ()    External     | __imp__LoadCursorA@8
+022 00000000 UNDEF  notype ()    External     | __imp__LoadIconA@8
+023 00000110 SECT4  notype       BeginFunction | .bf
+    line# 0047 end 0000002D
+025 0000000F SECT4  notype       .bf or.ef    | .lf
+026 000001D1 SECT4  notype       EndFunction  | .ef
+    line# 0059
+028 000001D1 SECT4  notype ()    External     | ?InitInstance@@YAHPAUHINSTANCE__@@H@Z (int __cdecl InitInstance(struct HINSTANCE__ *,int))
+    tag index 0000002D size 00000097 lines 00000DDB next function 00000032
+02A 00000000 UNDEF  notype ()    External     | __imp__UpdateWindow@4
+02B 00000000 UNDEF  notype ()    External     | __imp__ShowWindow@8
+02C 00000000 UNDEF  notype ()    External     | __imp__CreateWindowExA@48
+02D 000001D1 SECT4  notype       BeginFunction | .bf
+    line# 0066 end 0000003D
+02F 00000009 SECT4  notype       .bf or.ef    | .lf
+030 00000268 SECT4  notype       EndFunction  | .ef
+    line# 0077
+032 00000268 SECT4  notype ()    External     | ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+    tag index 0000003D size 000001E2 lines 00000E11 next function 00000042
+034 00000000 UNDEF  notype ()    External     | __imp__PostQuitMessage@4
+035 00000000 UNDEF  notype ()    External     | __imp__EndPaint@8
+036 00000000 UNDEF  notype ()    External     | __imp__DrawTextA@20
+037 00000000 UNDEF  notype ()    External     | _strlen
+038 00000000 UNDEF  notype ()    External     | __imp__GetClientRect@8
+039 00000000 UNDEF  notype ()    External     | __imp__BeginPaint@8
+03A 00000000 UNDEF  notype ()    External     | __imp__DefWindowProcA@16
+03B 00000000 UNDEF  notype ()    External     | __imp__DestroyWindow@4
+03C 00000000 UNDEF  notype ()    External     | __imp__DialogBoxParamA@20
+03D 00000268 SECT4  notype       BeginFunction | .bf
+    line# 0084 end 00000045
+03F 00000016 SECT4  notype       .bf or.ef    | .lf
+040 0000044A SECT4  notype       EndFunction  | .ef
+    line# 00ac
+042 0000044A SECT4  notype ()    External     | ?About@@YGJPAUHWND__@@IIJ@Z (long __stdcall About(struct HWND__ *,unsigned int,unsigned int,long))
+    tag index 00000045 size 00000090 lines 00000E95 next function 00000000
+044 00000000 UNDEF  notype ()    External     | __imp__EndDialog@8
+045 0000044A SECT4  notype       BeginFunction | .bf
+    line# 00b0 end 00000000
+047 00000008 SECT4  notype       .bf or.ef    | .lf
+048 000004DA SECT4  notype       EndFunction  | .ef
+    line# 00bf
+04A 00000000 SECT5  notype       Static       | .debug$T
+    Section length   5C, #relocs    0, #linenums    0, checksum        0
+
+String Table Size = 0x2C1 bytes
+
+  Summary
+
+          CC .bss
+         3F4 .debug$S
+          5C .debug$T
+          27 .drectve
+         4DA .text

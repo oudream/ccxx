@@ -218,8 +218,6 @@ void CxChannelTcpclient::ReceiverThread::exit()
     CxJoinableThread::exit();
 }
 
-
-
 void CxChannelTcpclient::ConnecterThread::run()
 {
     //create socket

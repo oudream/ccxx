@@ -12,6 +12,8 @@
 #include <sys/mman.h>
 #endif
 #include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 #endif
 
 //have in win32(vc,gcc) linux
@@ -27,52 +29,6 @@
 
 #ifndef INSERT_OFFSET
 #define INSERT_OFFSET   0
-#endif
-
-#ifdef __FreeBSD__
-#include <sys/ipc.h>
-#include <sys/shm.h>
-
-static void ftok_name(const char *name, char *buf, size_t max)
-{
-    assert(name != NULL && *name != 0);
-    assert(buf != NULL);
-    assert(max > 0);
-
-    struct stat ino;
-    if(*name == '/')
-        ++name;
-
-    if(!stat("/var/run/ipc", &ino) && S_ISDIR(ino.st_mode))
-        snprintf(buf, max, "/var/run/ipc/%s", name);
-    else
-        snprintf(buf, max, "/tmp/.%s.ipc", name);
-}
-
-static key_t createipc(const char *name, char mode)
-{
-    assert(name != NULL && *name != 0);
-
-    char buf[65];
-    int fd;
-
-    ftok_name(name, buf, sizeof(buf));
-    fd = ::open(buf, O_CREAT | O_EXCL | O_WRONLY, 0664);
-    if(fd > -1)
-        ::close(fd);
-    return ftok(buf, mode);
-}
-
-static key_t accessipc(const char *name, char mode)
-{
-    assert(name != NULL && *name != 0);
-
-    char buf[65];
-
-    ftok_name(name, buf, sizeof(buf));
-    return ftok(buf, mode);
-}
-
 #endif
 
 static  bool use_mapping = true;
@@ -197,6 +153,147 @@ void CxShareMemory::release(void)
 #elif defined(__FreeBSD__)
 
 
+static void ftok_name(const char *name, char *buf, size_t max)
+{
+    assert(name != NULL && *name != 0);
+    assert(buf != NULL);
+    assert(max > 0);
+
+    struct stat ino;
+    if(*name == '/')
+        ++name;
+
+    if(!stat("/var/run/ipc", &ino) && S_ISDIR(ino.st_mode))
+        snprintf(buf, max, "/var/run/ipc/%s", name);
+    else
+        snprintf(buf, max, "/tmp/.%s.ipc", name);
+}
+
+static key_t createipc(const char *name, char mode)
+{
+    assert(name != NULL && *name != 0);
+
+    char buf[65];
+    int fd;
+
+    ftok_name(name, buf, sizeof(buf));
+    fd = ::open(buf, O_CREAT | O_EXCL | O_WRONLY, 0664);
+    if(fd > -1)
+        ::close(fd);
+    return ftok(buf, mode);
+}
+
+static key_t accessipc(const char *name, char mode)
+{
+    assert(name != NULL && *name != 0);
+
+    char buf[65];
+
+    ftok_name(name, buf, sizeof(buf));
+    return ftok(buf, mode);
+}
+
+void CxShareMemory::remove(const char *name)
+{
+    assert(name != NULL && *name != 0);
+
+    key_t key;
+    fd_t fd;
+
+    if(!use_mapping)
+        return;
+
+    key = accessipc(name, 'S');
+    if(key) {
+        fd = shmget(key, 0, 0);
+        if(fd > -1)
+            shmctl(fd, IPC_RMID, NULL);
+    }
+}
+
+void CxShareMemory::create(const char *name, size_t len)
+{
+    assert(name != NULL && *name != 0);
+
+    struct shmid_ds stat;
+    size = 0;
+    used = 0;
+    key_t key;
+
+    if(!use_mapping) {
+        assert(len > 0);
+        map = (caddr_t)malloc(len);
+        if(!map)
+            fault();
+        size = len;
+        return;
+    }
+
+    if(len) {
+        key = createipc(name, 'S');
+remake:
+        fd = shmget(key, len, IPC_CREAT | IPC_EXCL | 0664);
+        if(fd == -1 && errno == EEXIST) {
+            fd = shmget(key, 0, 0);
+            if(fd > -1) {
+                shmctl(fd, IPC_RMID, NULL);
+                goto remake;
+            }
+        }
+    }
+    else {
+        key = accessipc(name, 'S');
+        fd = shmget(key, 0, 0);
+    }
+
+    if(fd > -1) {
+        if(len)
+            size = len;
+        else if(shmctl(fd, IPC_STAT, &stat) == 0)
+            size = stat.shm_segsz;
+        else
+            fd = -1;
+    }
+    map = (caddr_t)shmat(fd, NULL, 0);
+    if(!map)
+        fault();
+#ifdef  SHM_LOCK
+    if(fd > -1)
+        shmctl(fd, SHM_LOCK, NULL);
+#endif
+}
+
+CxShareMemory::~CxShareMemory()
+{
+    release();
+}
+
+void CxShareMemory::release(void)
+{
+    if(size > 0) {
+        if(use_mapping) {
+#ifdef  SHM_UNLOCK
+            shmctl(fd, SHM_UNLOCK, NULL);
+#endif
+            shmdt(map);
+            fd = -1;
+        }
+        else
+            free(map);
+        size = 0;
+    }
+    if(erase) {
+        remove(idname);
+        erase = false;
+    }
+    size = 0;
+    used = 0;
+}
+
+
+#else
+
+
 bool CxShareMemory::create(const char *fn, size_t len)
 {
     assert(fn != NULL && *fn != 0);
@@ -308,106 +405,6 @@ void CxShareMemory::remove(const char *fn)
     shm_unlink(fn);
 }
 
-
-#else
-
-
-void CxShareMemory::remove(const char *name)
-{
-    assert(name != NULL && *name != 0);
-
-    key_t key;
-    fd_t fd;
-
-    if(!use_mapping)
-        return;
-
-    key = accessipc(name, 'S');
-    if(key) {
-        fd = shmget(key, 0, 0);
-        if(fd > -1)
-            shmctl(fd, IPC_RMID, NULL);
-    }
-}
-
-void CxShareMemory::create(const char *name, size_t len)
-{
-    assert(name != NULL && *name != 0);
-
-    struct shmid_ds stat;
-    size = 0;
-    used = 0;
-    key_t key;
-
-    if(!use_mapping) {
-        assert(len > 0);
-        map = (caddr_t)malloc(len);
-        if(!map)
-            fault();
-        size = len;
-        return;
-    }
-
-    if(len) {
-        key = createipc(name, 'S');
-remake:
-        fd = shmget(key, len, IPC_CREAT | IPC_EXCL | 0664);
-        if(fd == -1 && errno == EEXIST) {
-            fd = shmget(key, 0, 0);
-            if(fd > -1) {
-                shmctl(fd, IPC_RMID, NULL);
-                goto remake;
-            }
-        }
-    }
-    else {
-        key = accessipc(name, 'S');
-        fd = shmget(key, 0, 0);
-    }
-
-    if(fd > -1) {
-        if(len)
-            size = len;
-        else if(shmctl(fd, IPC_STAT, &stat) == 0)
-            size = stat.shm_segsz;
-        else
-            fd = -1;
-    }
-    map = (caddr_t)shmat(fd, NULL, 0);
-    if(!map)
-        fault();
-#ifdef  SHM_LOCK
-    if(fd > -1)
-        shmctl(fd, SHM_LOCK, NULL);
-#endif
-}
-
-CxShareMemory::~CxShareMemory()
-{
-    release();
-}
-
-void CxShareMemory::release(void)
-{
-    if(size > 0) {
-        if(use_mapping) {
-#ifdef  SHM_UNLOCK
-            shmctl(fd, SHM_UNLOCK, NULL);
-#endif
-            shmdt(map);
-            fd = -1;
-        }
-        else
-            free(map);
-        size = 0;
-    }
-    if(erase) {
-        remove(idname);
-        erase = false;
-    }
-    size = 0;
-    used = 0;
-}
 
 #endif
 

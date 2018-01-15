@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="UefCSharp">
+</Property><Property Name="Solution File" Value="C:\dig\dbg\author\code\chap12\UefCSharp\UefCSharp.sln">
+</Property><Property Name="Date" Value="2008年4月8日">
+</Property><Property Name="Time" Value="21:07">
+</Property></Properties><Event ErrorLevel="1" Project="c:\dig\dbg\author\code\chap12\UefCSharp\UefCSharp\UefCSharp.csproj" Source="UefCSharp\UefCSharp.csproj" Description="MSB2016: Found an empty .RESX file in the project (Form1.resx).  Removing it from the converted project.">
+</Event><Event ErrorLevel="0" Project="UefCSharp" Source="UefCSharp\UefCSharp.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="UefCSharp" Source="UefCSharp\UefCSharp.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="UefCSharp.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="UefCSharp.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="UefCSharp" Source="UefCSharp\UefCSharp.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

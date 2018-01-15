@@ -1,0 +1,93 @@
+Microsoft (R) COFF/PE Dumper Version 8.00.50727.42
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file symoption.obj
+
+File Type: COFF OBJECT
+
+COFF SYMBOL TABLE
+000 00000000 DEBUG  notype       Filename     | .file
+    C:\dig\dbg\author\code\chap25\SymOption\SymOption.cpp
+004 000B2306 ABS    notype       Static       | @comp.id
+005 00000000 SECT1  notype       Static       | .drectve
+    Section length   27, #relocs    0, #linenums    0, checksum        0
+007 00000000 SECT2  notype       Static       | .debug$S
+    Section length  3F4, #relocs   12, #linenums    0, checksum E9AFC280
+009 00000000 SECT3  notype       Static       | .bss
+    Section length   CC, #relocs    0, #linenums    0, checksum        0
+00B 000000C8 SECT3  notype       External     | ?hInst@@3PAUHINSTANCE__@@A (struct HINSTANCE__ * hInst)
+00C 00000064 SECT3  notype       External     | ?szTitle@@3PADA (char * szTitle)
+00D 00000000 SECT3  notype       External     | ?szWindowClass@@3PADA (char * szWindowClass)
+00E 00000000 SECT4  notype       Static       | .text
+    Section length  4DA, #relocs   44, #linenums   44, checksum 3E89ABBB
+010 00000000 SECT4  notype ()    External     | _WinMain@16
+    tag index 00000019 size 00000110 lines 00000D2D next function 0000001E
+012 00000000 UNDEF  notype ()    External     | __imp__DispatchMessageA@4
+013 00000000 UNDEF  notype ()    External     | __imp__TranslateMessage@4
+014 00000000 UNDEF  notype ()    External     | __imp__TranslateAcceleratorA@12
+015 00000000 UNDEF  notype ()    External     | __imp__GetMessageA@16
+016 00000000 UNDEF  notype ()    External     | __imp__LoadAcceleratorsA@8
+017 00000000 UNDEF  notype ()    External     | __imp__LoadStringA@16
+018 00000000 UNDEF  notype ()    External     | __chkesp
+019 00000000 SECT4  notype       BeginFunction | .bf
+    line# 0018 end 00000023
+01B 0000000E SECT4  notype       .bf or.ef    | .lf
+01C 00000110 SECT4  notype       EndFunction  | .ef
+    line# 0035
+01E 00000110 SECT4  notype ()    External     | ?MyRegisterClass@@YAGPAUHINSTANCE__@@@Z (unsigned short __cdecl MyRegisterClass(struct HINSTANCE__ *))
+    tag index 00000023 size 000000C1 lines 00000D81 next function 00000028
+020 00000000 UNDEF  notype ()    External     | __imp__RegisterClassExA@4
+021 00000000 UNDEF  notype ()    External     | __imp__LoadCursorA@8
+022 00000000 UNDEF  notype ()    External     | __imp__LoadIconA@8
+023 00000110 SECT4  notype       BeginFunction | .bf
+    line# 0047 end 0000002D
+025 0000000F SECT4  notype       .bf or.ef    | .lf
+026 000001D1 SECT4  notype       EndFunction  | .ef
+    line# 0059
+028 000001D1 SECT4  notype ()    External     | ?InitInstance@@YAHPAUHINSTANCE__@@H@Z (int __cdecl InitInstance(struct HINSTANCE__ *,int))
+    tag index 0000002D size 00000097 lines 00000DDB next function 00000032
+02A 00000000 UNDEF  notype ()    External     | __imp__UpdateWindow@4
+02B 00000000 UNDEF  notype ()    External     | __imp__ShowWindow@8
+02C 00000000 UNDEF  notype ()    External     | __imp__CreateWindowExA@48
+02D 000001D1 SECT4  notype       BeginFunction | .bf
+    line# 0066 end 0000003D
+02F 00000009 SECT4  notype       .bf or.ef    | .lf
+030 00000268 SECT4  notype       EndFunction  | .ef
+    line# 0077
+032 00000268 SECT4  notype ()    External     | ?WndProc@@YGJPAUHWND__@@IIJ@Z (long __stdcall WndProc(struct HWND__ *,unsigned int,unsigned int,long))
+    tag index 0000003D size 000001E2 lines 00000E11 next function 00000042
+034 00000000 UNDEF  notype ()    External     | __imp__PostQuitMessage@4
+035 00000000 UNDEF  notype ()    External     | __imp__EndPaint@8
+036 00000000 UNDEF  notype ()    External     | __imp__DrawTextA@20
+037 00000000 UNDEF  notype ()    External     | _strlen
+038 00000000 UNDEF  notype ()    External     | __imp__GetClientRect@8
+039 00000000 UNDEF  notype ()    External     | __imp__BeginPaint@8
+03A 00000000 UNDEF  notype ()    External     | __imp__DefWindowProcA@16
+03B 00000000 UNDEF  notype ()    External     | __imp__DestroyWindow@4
+03C 00000000 UNDEF  notype ()    External     | __imp__DialogBoxParamA@20
+03D 00000268 SECT4  notype       BeginFunction | .bf
+    line# 0084 end 00000045
+03F 00000016 SECT4  notype       .bf or.ef    | .lf
+040 0000044A SECT4  notype       EndFunction  | .ef
+    line# 00ac
+042 0000044A SECT4  notype ()    External     | ?About@@YGJPAUHWND__@@IIJ@Z (long __stdcall About(struct HWND__ *,unsigned int,unsigned int,long))
+    tag index 00000045 size 00000090 lines 00000E95 next function 00000000
+044 00000000 UNDEF  notype ()    External     | __imp__EndDialog@8
+045 0000044A SECT4  notype       BeginFunction | .bf
+    line# 00b0 end 00000000
+047 00000008 SECT4  notype       .bf or.ef    | .lf
+048 000004DA SECT4  notype       EndFunction  | .ef
+    line# 00bf
+04A 00000000 SECT5  notype       Static       | .debug$T
+    Section length   5C, #relocs    0, #linenums    0, checksum        0
+
+String Table Size = 0x2C1 bytes
+
+  Summary
+
+          CC .bss
+         3F4 .debug$S
+          5C .debug$T
+          27 .drectve
+         4DA .text

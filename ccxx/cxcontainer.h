@@ -3,7 +3,6 @@
 
 
 #include "cxglobal.h"
-#include "cxvalue.h"
 #include "cxstring.h"
 
 #define GM_PLISTO_DELETEALL(oList, ClassName) \
@@ -111,10 +110,12 @@ public:
         {
             if (std::find(vector2.begin(), vector2.end(), * it) != vector2.end())
             {
-                vector1.erase(it);
-                continue;
+                it = vector1.erase(it);
             }
-            ++it;
+            else
+            {
+                ++it;
+            }
         }
         return r - vector1.size();
     }
@@ -141,11 +142,7 @@ public:
     template<typename _Tp>
     static void remove(std::vector<_Tp> & vector1, const _Tp & value)
     {
-        typename std::vector<_Tp>::iterator itRemove = std::remove(vector1.begin(), vector1.end(), value);
-        if (itRemove != vector1.end())
-        {
-            vector1.erase(itRemove, vector1.end());
-        }
+        vector1.erase(std::remove(vector1.begin(), vector1.end(), value), vector1.end());
     }
 
     //vector - delete clear
@@ -187,12 +184,12 @@ public:
 
     //vector - index
     template<typename _Tp>
-    static size_t index( std::vector<_Tp> & vector1 , const _Tp & value1 )
+    static size_t index( const std::vector<_Tp> & vector1 , const _Tp & value1 )
     {
-        typename std::vector<_Tp>::const_iterator it = std::find(vector1.begin(), vector1.end(), value);
+        typename std::vector<_Tp>::const_iterator it = std::find(vector1.begin(), vector1.end(), value1);
         if (it != vector1.end())
         {
-            return vector1.end() - it - 1;
+            return it - vector1.begin();
         }
         return CxGlobal::npos;
     }

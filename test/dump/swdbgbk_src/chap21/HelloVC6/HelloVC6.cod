@@ -1,0 +1,585 @@
+	TITLE	C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+	.386P
+include listing.inc
+if @Version gt 510
+.model FLAT
+else
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+_BSS	SEGMENT DWORD USE32 PUBLIC 'BSS'
+_BSS	ENDS
+$$SYMBOLS	SEGMENT BYTE USE32 'DEBSYM'
+$$SYMBOLS	ENDS
+$$TYPES	SEGMENT BYTE USE32 'DEBTYP'
+$$TYPES	ENDS
+_TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
+_TLS	ENDS
+;	COMDAT ??_C@_00A@?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_05FACI@Cat?$CI?$CJ?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_08EPBA@PreMain1?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BI@EL@First?5Pre?9Main?5Function?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_08LAKJ@PreMain2?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BJ@MFBP@Second?5Pre?9Main?5Function?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_09CGCI@PostMain1?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BJ@DDOK@First?5Post?9Main?5Function?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_09NJJB@PostMain2?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BK@PPN@Second?5Post?9Main?5function?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0L@IDPL@_initterm?5?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BG@KODG@my?5init?5function?5test?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+CRT$XPU	SEGMENT DWORD USE32 PUBLIC ''
+CRT$XPU	ENDS
+CRT$XIU	SEGMENT DWORD USE32 PUBLIC ''
+CRT$XIU	ENDS
+CRT$XCA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+CRT$XCA	ENDS
+CRT$XCU	SEGMENT DWORD USE32 PUBLIC 'DATA'
+CRT$XCU	ENDS
+CRT$XCL	SEGMENT DWORD USE32 PUBLIC 'DATA'
+CRT$XCL	ENDS
+CRT$XCC	SEGMENT DWORD USE32 PUBLIC 'DATA'
+CRT$XCC	ENDS
+CRT$XCZ	SEGMENT DWORD USE32 PUBLIC 'DATA'
+CRT$XCZ	ENDS
+;	COMDAT _IsEqualGUID
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _==
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ??0Cat@@QAE@XZ
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _$E1
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _$E2
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _main
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ?PreMain1@@YAHXZ
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ?PreMain2@@YAHXZ
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ?PostMain1@@YAHXZ
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ?PostMain2@@YAHXZ
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ?myinit@@YAHXZ
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+FLAT	GROUP _DATA, CONST, _BSS, CRT$XPU, CRT$XIU, CRT$XCA, CRT$XCU, CRT$XCL, CRT$XCC, CRT$XCZ
+	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
+endif
+PUBLIC	?c@@3VCat@@A					; c
+PUBLIC	?PostMain1@@YAHXZ				; PostMain1
+PUBLIC	?PostMain2@@YAHXZ				; PostMain2
+PUBLIC	?myinit@@YAHXZ					; myinit
+_BSS	SEGMENT
+?c@@3VCat@@A DB	01H DUP (?)				; c
+_BSS	ENDS
+CRT$XCU	SEGMENT
+_$S3	DD	FLAT:_$E2
+CRT$XCU	ENDS
+CRT$XIU	SEGMENT
+_autostart DD	FLAT:?myinit@@YAHXZ
+CRT$XIU	ENDS
+CRT$XPU	SEGMENT
+_autoexit DD	FLAT:?PostMain1@@YAHXZ
+	DD	FLAT:?PostMain2@@YAHXZ
+CRT$XPU	ENDS
+EXTRN	__chkesp:NEAR
+;	COMDAT _$E2
+_TEXT	SEGMENT
+_$E2	PROC NEAR					; COMDAT
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+  00018	e8 00 00 00 00	 call	 _$E1
+  0001d	5f		 pop	 edi
+  0001e	5e		 pop	 esi
+  0001f	5b		 pop	 ebx
+  00020	83 c4 40	 add	 esp, 64			; 00000040H
+  00023	3b ec		 cmp	 ebp, esp
+  00025	e8 00 00 00 00	 call	 __chkesp
+  0002a	8b e5		 mov	 esp, ebp
+  0002c	5d		 pop	 ebp
+  0002d	c3		 ret	 0
+_$E2	ENDP
+_TEXT	ENDS
+PUBLIC	??0Cat@@QAE@XZ					; Cat::Cat
+;	COMDAT _$E1
+_TEXT	SEGMENT
+_$E1	PROC NEAR					; COMDAT
+
+; 14   : Cat c;
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+  00018	b9 00 00 00 00	 mov	 ecx, OFFSET FLAT:?c@@3VCat@@A ; c
+  0001d	e8 00 00 00 00	 call	 ??0Cat@@QAE@XZ		; Cat::Cat
+  00022	5f		 pop	 edi
+  00023	5e		 pop	 esi
+  00024	5b		 pop	 ebx
+  00025	83 c4 40	 add	 esp, 64			; 00000040H
+  00028	3b ec		 cmp	 ebp, esp
+  0002a	e8 00 00 00 00	 call	 __chkesp
+  0002f	8b e5		 mov	 esp, ebp
+  00031	5d		 pop	 ebp
+  00032	c3		 ret	 0
+_$E1	ENDP
+_TEXT	ENDS
+PUBLIC	??_C@_00A@?$AA@					; `string'
+PUBLIC	??_C@_05FACI@Cat?$CI?$CJ?$AA@			; `string'
+EXTRN	__imp__MessageBoxA@16:NEAR
+;	COMDAT ??_C@_00A@?$AA@
+; File C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+CONST	SEGMENT
+??_C@_00A@?$AA@ DB 00H					; `string'
+CONST	ENDS
+;	COMDAT ??_C@_05FACI@Cat?$CI?$CJ?$AA@
+CONST	SEGMENT
+??_C@_05FACI@Cat?$CI?$CJ?$AA@ DB 'Cat()', 00H		; `string'
+CONST	ENDS
+;	COMDAT ??0Cat@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -4
+??0Cat@@QAE@XZ PROC NEAR				; Cat::Cat, COMDAT
+
+; 9    : 	Cat()
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 44	 sub	 esp, 68			; 00000044H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	51		 push	 ecx
+  0000a	8d 7d bc	 lea	 edi, DWORD PTR [ebp-68]
+  0000d	b9 11 00 00 00	 mov	 ecx, 17			; 00000011H
+  00012	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00017	f3 ab		 rep stosd
+  00019	59		 pop	 ecx
+  0001a	89 4d fc	 mov	 DWORD PTR _this$[ebp], ecx
+
+; 10   : 	{
+; 11   : 		MessageBox(NULL,"Cat()", "", MB_OK);
+
+  0001d	8b f4		 mov	 esi, esp
+  0001f	6a 00		 push	 0
+  00021	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_00A@?$AA@ ; `string'
+  00026	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_05FACI@Cat?$CI?$CJ?$AA@ ; `string'
+  0002b	6a 00		 push	 0
+  0002d	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__MessageBoxA@16
+  00033	3b f4		 cmp	 esi, esp
+  00035	e8 00 00 00 00	 call	 __chkesp
+
+; 12   : 	}
+
+  0003a	8b 45 fc	 mov	 eax, DWORD PTR _this$[ebp]
+  0003d	5f		 pop	 edi
+  0003e	5e		 pop	 esi
+  0003f	5b		 pop	 ebx
+  00040	83 c4 44	 add	 esp, 68			; 00000044H
+  00043	3b ec		 cmp	 ebp, esp
+  00045	e8 00 00 00 00	 call	 __chkesp
+  0004a	8b e5		 mov	 esp, ebp
+  0004c	5d		 pop	 ebp
+  0004d	c3		 ret	 0
+??0Cat@@QAE@XZ ENDP					; Cat::Cat
+_TEXT	ENDS
+PUBLIC	_main
+PUBLIC	??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@		; `string'
+EXTRN	_printf:NEAR
+;	COMDAT ??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@
+; File C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+CONST	SEGMENT
+??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@ DB 'Hello World!', 0aH, 00H ; `string'
+CONST	ENDS
+;	COMDAT _main
+_TEXT	SEGMENT
+_main	PROC NEAR					; COMDAT
+
+; 16   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+
+; 17   : 	printf("Hello World!\n");
+
+  00018	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@ ; `string'
+  0001d	e8 00 00 00 00	 call	 _printf
+  00022	83 c4 04	 add	 esp, 4
+
+; 18   : 	return 0;
+
+  00025	33 c0		 xor	 eax, eax
+
+; 19   : }
+
+  00027	5f		 pop	 edi
+  00028	5e		 pop	 esi
+  00029	5b		 pop	 ebx
+  0002a	83 c4 40	 add	 esp, 64			; 00000040H
+  0002d	3b ec		 cmp	 ebp, esp
+  0002f	e8 00 00 00 00	 call	 __chkesp
+  00034	8b e5		 mov	 esp, ebp
+  00036	5d		 pop	 ebp
+  00037	c3		 ret	 0
+_main	ENDP
+_TEXT	ENDS
+PUBLIC	?PreMain1@@YAHXZ				; PreMain1
+PUBLIC	??_C@_08EPBA@PreMain1?$AA@			; `string'
+PUBLIC	??_C@_0BI@EL@First?5Pre?9Main?5Function?$AA@	; `string'
+;	COMDAT ??_C@_08EPBA@PreMain1?$AA@
+; File C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+CONST	SEGMENT
+??_C@_08EPBA@PreMain1?$AA@ DB 'PreMain1', 00H		; `string'
+CONST	ENDS
+;	COMDAT ??_C@_0BI@EL@First?5Pre?9Main?5Function?$AA@
+CONST	SEGMENT
+??_C@_0BI@EL@First?5Pre?9Main?5Function?$AA@ DB 'First Pre-Main Function', 00H ; `string'
+CONST	ENDS
+;	COMDAT ?PreMain1@@YAHXZ
+_TEXT	SEGMENT
+?PreMain1@@YAHXZ PROC NEAR				; PreMain1, COMDAT
+
+; 21   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+
+; 22   :    MessageBox(NULL, TEXT("First Pre-Main Function"),
+; 23   :                     TEXT("PreMain1"), 0);
+
+  00018	8b f4		 mov	 esi, esp
+  0001a	6a 00		 push	 0
+  0001c	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_08EPBA@PreMain1?$AA@ ; `string'
+  00021	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BI@EL@First?5Pre?9Main?5Function?$AA@ ; `string'
+  00026	6a 00		 push	 0
+  00028	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__MessageBoxA@16
+  0002e	3b f4		 cmp	 esi, esp
+  00030	e8 00 00 00 00	 call	 __chkesp
+
+; 24   :    return 0;
+
+  00035	33 c0		 xor	 eax, eax
+
+; 25   : }
+
+  00037	5f		 pop	 edi
+  00038	5e		 pop	 esi
+  00039	5b		 pop	 ebx
+  0003a	83 c4 40	 add	 esp, 64			; 00000040H
+  0003d	3b ec		 cmp	 ebp, esp
+  0003f	e8 00 00 00 00	 call	 __chkesp
+  00044	8b e5		 mov	 esp, ebp
+  00046	5d		 pop	 ebp
+  00047	c3		 ret	 0
+?PreMain1@@YAHXZ ENDP					; PreMain1
+_TEXT	ENDS
+PUBLIC	?PreMain2@@YAHXZ				; PreMain2
+PUBLIC	??_C@_08LAKJ@PreMain2?$AA@			; `string'
+PUBLIC	??_C@_0BJ@MFBP@Second?5Pre?9Main?5Function?$AA@	; `string'
+;	COMDAT ??_C@_08LAKJ@PreMain2?$AA@
+; File C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+CONST	SEGMENT
+??_C@_08LAKJ@PreMain2?$AA@ DB 'PreMain2', 00H		; `string'
+CONST	ENDS
+;	COMDAT ??_C@_0BJ@MFBP@Second?5Pre?9Main?5Function?$AA@
+CONST	SEGMENT
+??_C@_0BJ@MFBP@Second?5Pre?9Main?5Function?$AA@ DB 'Second Pre-Main Funct'
+	DB	'ion', 00H					; `string'
+CONST	ENDS
+;	COMDAT ?PreMain2@@YAHXZ
+_TEXT	SEGMENT
+?PreMain2@@YAHXZ PROC NEAR				; PreMain2, COMDAT
+
+; 28   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+
+; 29   :    MessageBox(NULL, TEXT("Second Pre-Main Function"),
+; 30   :                     TEXT("PreMain2"), 0);
+
+  00018	8b f4		 mov	 esi, esp
+  0001a	6a 00		 push	 0
+  0001c	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_08LAKJ@PreMain2?$AA@ ; `string'
+  00021	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BJ@MFBP@Second?5Pre?9Main?5Function?$AA@ ; `string'
+  00026	6a 00		 push	 0
+  00028	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__MessageBoxA@16
+  0002e	3b f4		 cmp	 esi, esp
+  00030	e8 00 00 00 00	 call	 __chkesp
+
+; 31   :    return 0;
+
+  00035	33 c0		 xor	 eax, eax
+
+; 32   : }
+
+  00037	5f		 pop	 edi
+  00038	5e		 pop	 esi
+  00039	5b		 pop	 ebx
+  0003a	83 c4 40	 add	 esp, 64			; 00000040H
+  0003d	3b ec		 cmp	 ebp, esp
+  0003f	e8 00 00 00 00	 call	 __chkesp
+  00044	8b e5		 mov	 esp, ebp
+  00046	5d		 pop	 ebp
+  00047	c3		 ret	 0
+?PreMain2@@YAHXZ ENDP					; PreMain2
+_TEXT	ENDS
+PUBLIC	??_C@_09CGCI@PostMain1?$AA@			; `string'
+PUBLIC	??_C@_0BJ@DDOK@First?5Post?9Main?5Function?$AA@	; `string'
+;	COMDAT ??_C@_09CGCI@PostMain1?$AA@
+; File C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+CONST	SEGMENT
+??_C@_09CGCI@PostMain1?$AA@ DB 'PostMain1', 00H		; `string'
+CONST	ENDS
+;	COMDAT ??_C@_0BJ@DDOK@First?5Post?9Main?5Function?$AA@
+CONST	SEGMENT
+??_C@_0BJ@DDOK@First?5Post?9Main?5Function?$AA@ DB 'First Post-Main Funct'
+	DB	'ion', 00H					; `string'
+CONST	ENDS
+;	COMDAT ?PostMain1@@YAHXZ
+_TEXT	SEGMENT
+?PostMain1@@YAHXZ PROC NEAR				; PostMain1, COMDAT
+
+; 35   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+
+; 36   :    MessageBox(NULL, TEXT("First Post-Main Function"),
+; 37   :                     TEXT("PostMain1"), 0);
+
+  00018	8b f4		 mov	 esi, esp
+  0001a	6a 00		 push	 0
+  0001c	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_09CGCI@PostMain1?$AA@ ; `string'
+  00021	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BJ@DDOK@First?5Post?9Main?5Function?$AA@ ; `string'
+  00026	6a 00		 push	 0
+  00028	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__MessageBoxA@16
+  0002e	3b f4		 cmp	 esi, esp
+  00030	e8 00 00 00 00	 call	 __chkesp
+
+; 38   :    return 0;
+
+  00035	33 c0		 xor	 eax, eax
+
+; 39   : }
+
+  00037	5f		 pop	 edi
+  00038	5e		 pop	 esi
+  00039	5b		 pop	 ebx
+  0003a	83 c4 40	 add	 esp, 64			; 00000040H
+  0003d	3b ec		 cmp	 ebp, esp
+  0003f	e8 00 00 00 00	 call	 __chkesp
+  00044	8b e5		 mov	 esp, ebp
+  00046	5d		 pop	 ebp
+  00047	c3		 ret	 0
+?PostMain1@@YAHXZ ENDP					; PostMain1
+_TEXT	ENDS
+PUBLIC	??_C@_09NJJB@PostMain2?$AA@			; `string'
+PUBLIC	??_C@_0BK@PPN@Second?5Post?9Main?5function?$AA@	; `string'
+;	COMDAT ??_C@_09NJJB@PostMain2?$AA@
+; File C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+CONST	SEGMENT
+??_C@_09NJJB@PostMain2?$AA@ DB 'PostMain2', 00H		; `string'
+CONST	ENDS
+;	COMDAT ??_C@_0BK@PPN@Second?5Post?9Main?5function?$AA@
+CONST	SEGMENT
+??_C@_0BK@PPN@Second?5Post?9Main?5function?$AA@ DB 'Second Post-Main func'
+	DB	'tion', 00H					; `string'
+CONST	ENDS
+;	COMDAT ?PostMain2@@YAHXZ
+_TEXT	SEGMENT
+?PostMain2@@YAHXZ PROC NEAR				; PostMain2, COMDAT
+
+; 42   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+
+; 43   :    MessageBox(NULL, TEXT("Second Post-Main function"),
+; 44   :                     TEXT("PostMain2"), 0);
+
+  00018	8b f4		 mov	 esi, esp
+  0001a	6a 00		 push	 0
+  0001c	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_09NJJB@PostMain2?$AA@ ; `string'
+  00021	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BK@PPN@Second?5Post?9Main?5function?$AA@ ; `string'
+  00026	6a 00		 push	 0
+  00028	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__MessageBoxA@16
+  0002e	3b f4		 cmp	 esi, esp
+  00030	e8 00 00 00 00	 call	 __chkesp
+
+; 45   :    return 0;
+
+  00035	33 c0		 xor	 eax, eax
+
+; 46   : }
+
+  00037	5f		 pop	 edi
+  00038	5e		 pop	 esi
+  00039	5b		 pop	 ebx
+  0003a	83 c4 40	 add	 esp, 64			; 00000040H
+  0003d	3b ec		 cmp	 ebp, esp
+  0003f	e8 00 00 00 00	 call	 __chkesp
+  00044	8b e5		 mov	 esp, ebp
+  00046	5d		 pop	 ebp
+  00047	c3		 ret	 0
+?PostMain2@@YAHXZ ENDP					; PostMain2
+_TEXT	ENDS
+PUBLIC	??_C@_0L@IDPL@_initterm?5?$AA@			; `string'
+PUBLIC	??_C@_0BG@KODG@my?5init?5function?5test?$AA@	; `string'
+;	COMDAT ??_C@_0L@IDPL@_initterm?5?$AA@
+; File C:\dig\dbg\author\code\chap21\HelloVC6\HelloVC6.cpp
+CONST	SEGMENT
+??_C@_0L@IDPL@_initterm?5?$AA@ DB '_initterm ', 00H	; `string'
+CONST	ENDS
+;	COMDAT ??_C@_0BG@KODG@my?5init?5function?5test?$AA@
+CONST	SEGMENT
+??_C@_0BG@KODG@my?5init?5function?5test?$AA@ DB 'my init function test', 00H ; `string'
+CONST	ENDS
+;	COMDAT ?myinit@@YAHXZ
+_TEXT	SEGMENT
+?myinit@@YAHXZ PROC NEAR				; myinit, COMDAT
+
+; 48   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 40	 sub	 esp, 64			; 00000040H
+  00006	53		 push	 ebx
+  00007	56		 push	 esi
+  00008	57		 push	 edi
+  00009	8d 7d c0	 lea	 edi, DWORD PTR [ebp-64]
+  0000c	b9 10 00 00 00	 mov	 ecx, 16			; 00000010H
+  00011	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  00016	f3 ab		 rep stosd
+
+; 49   :    MessageBox(NULL, "my init function test", "_initterm ", 0);
+
+  00018	8b f4		 mov	 esi, esp
+  0001a	6a 00		 push	 0
+  0001c	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0L@IDPL@_initterm?5?$AA@ ; `string'
+  00021	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BG@KODG@my?5init?5function?5test?$AA@ ; `string'
+  00026	6a 00		 push	 0
+  00028	ff 15 00 00 00
+	00		 call	 DWORD PTR __imp__MessageBoxA@16
+  0002e	3b f4		 cmp	 esi, esp
+  00030	e8 00 00 00 00	 call	 __chkesp
+
+; 50   :    return 0;
+
+  00035	33 c0		 xor	 eax, eax
+
+; 51   : }
+
+  00037	5f		 pop	 edi
+  00038	5e		 pop	 esi
+  00039	5b		 pop	 ebx
+  0003a	83 c4 40	 add	 esp, 64			; 00000040H
+  0003d	3b ec		 cmp	 ebp, esp
+  0003f	e8 00 00 00 00	 call	 __chkesp
+  00044	8b e5		 mov	 esp, ebp
+  00046	5d		 pop	 ebp
+  00047	c3		 ret	 0
+?myinit@@YAHXZ ENDP					; myinit
+_TEXT	ENDS
+END

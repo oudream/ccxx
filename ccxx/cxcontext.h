@@ -53,7 +53,7 @@ public:
 };
 
 
-class CxGetSkvMap : public CxIGetSkv
+class GM_CCXX_CORE_API CxGetSkvMap : public CxIGetSkv
 {
 public:
     CxGetSkvMap(const std::map<std::string, std::string> & sEntryValues);

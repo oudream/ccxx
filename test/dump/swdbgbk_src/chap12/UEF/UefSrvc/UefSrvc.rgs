@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		{FA54DC90-4E26-42B7-8D92-8EFE28557E42} = s 'UefSrvc'
+		'UefSrvc.EXE'
+		{
+			val AppID = s {FA54DC90-4E26-42B7-8D92-8EFE28557E42}
+		}
+	}
+}

@@ -1,0 +1,3 @@
+
+SOURCES += \
+        $$PWD/main.cpp \

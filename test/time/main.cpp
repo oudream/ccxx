@@ -77,7 +77,7 @@ void testTime5()
     }
 }
 
-int main(int argc, char * argv[])
+int main(int argc,const char * argv[])
 {
 //    CxApplication::init(argc, argv);
 

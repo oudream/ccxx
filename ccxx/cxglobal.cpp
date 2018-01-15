@@ -59,8 +59,8 @@ const char * CxGlobal::middleString = f_sMiddleString;
 const char f_sSplitString[] = ";";
 const char * CxGlobal::splitString = f_sSplitString;
 
-
 const char f_sSpaceString[] = " ";
 const char * CxGlobal::spaceString = f_sSpaceString;
 
+fn_void_msg_tlv_t CxGlobal::assertCallBack = 0;
 

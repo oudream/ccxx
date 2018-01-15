@@ -1,0 +1,98 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: EvtLog - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/EvtLog.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap15\EvtLog\EvtLog.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP556.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/EvtLog.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap15\EvtLog\EventLog.cpp"
+"C:\dig\dbg\author\code\chap15\EvtLog\EvtLog.cpp"
+"C:\dig\dbg\author\code\chap15\EvtLog\EvtLogDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP556.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP557.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/EvtLog.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap15\EvtLog\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP557.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP558.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/EvtLog.pdb" /debug /machine:I386 /out:"../../bin/Release/EvtLog.exe" 
+\dig\dbg\author\code\temp\Release\EventLog.obj
+\dig\dbg\author\code\temp\Release\EvtLog.obj
+\dig\dbg\author\code\temp\Release\EvtLogDlg.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\EvtLog.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP558.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+EventLog.cpp
+EvtLog.cpp
+EvtLogDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+EvtLog.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: EvtLog - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/EvtLog.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap15\EvtLog\EvtLog.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP55A.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/EvtLog.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap15\EvtLog\EventLog.cpp"
+"C:\dig\dbg\author\code\chap15\EvtLog\EvtLog.cpp"
+"C:\dig\dbg\author\code\chap15\EvtLog\EvtLogDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP55A.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP55B.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/EvtLog.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap15\EvtLog\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP55B.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP55C.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/EvtLog.pdb" /debug /machine:I386 /out:"../../bin/Debug/EvtLog.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\EventLog.obj
+\dig\dbg\author\code\temp\Debug\EvtLog.obj
+\dig\dbg\author\code\temp\Debug\EvtLogDlg.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\EvtLog.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP55C.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+EventLog.cpp
+EvtLog.cpp
+EvtLogDlg.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"../../bin/Debug/EvtLog.bsc"  \dig\dbg\author\code\temp\Debug\StdAfx.sbr \dig\dbg\author\code\temp\Debug\EventLog.sbr \dig\dbg\author\code\temp\Debug\EvtLog.sbr \dig\dbg\author\code\temp\Debug\EvtLogDlg.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+EvtLog.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

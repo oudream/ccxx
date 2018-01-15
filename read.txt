@@ -1,4 +1,0 @@
-原始20140401前的在oudreamn机器的SVN地址：https://oudreamn:8443/svn/ccxx
-
-20140401移到SVN地址：https://10.31.58.2/svn/YGCT_2014/project/01研发项目/3party/ccxx
-

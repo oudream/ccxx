@@ -3,7 +3,7 @@
 
 #include "cxglobal.h"
 
-class CxCrc
+class GM_CCXX_CORE_API CxCrc
 {
 public:
     //8位和校验
@@ -31,6 +31,16 @@ public:
     static std::vector<char> md5(const std::vector<std::string>& sLines);
 
     static std::vector<char> md5(const char* pData, int iLength);
+
+    /**
+     * @brief md5
+     * @param sFilePath
+     * @param iCodeType : 0=data ; 1=hex
+     * @return : empty=file is empty or error
+     */
+    static std::string file2md5(const std::string &sFilePath, int iCodeType = 1);
+
+    static bool isSameMd5FileData(const std::string &sFilePath1, const std::string &sFilePath2);
 
     //异或校验
     static uchar calcXOR(const uchar* pData, int iLength);

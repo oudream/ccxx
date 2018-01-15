@@ -1,4 +1,4 @@
-#include <cxmain.h>
+#include <ccxx/ccxx.h>
 
 #include "testPacket1.cpp"
 #include "testPacket2.cpp"
@@ -120,9 +120,9 @@ void testPacket02()
         0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39
     };
 
-    typedef CxPacket5<uint, ushort, ushort, psm_packet_body_t, ushort>::PacketData PacketData;
-    typedef CxPacket5<uint, ushort, ushort, psm_packet_body_t, ushort>::ReceivePacket ReceivePacket;
-    typedef CxPacket5<uint, ushort, ushort, psm_packet_body_t, ushort>::SendPacket SendPacket;
+    typedef CxPacket5<uint, ushort, ushort, psm_packet_body_t, short>::PacketData PacketData;
+    typedef CxPacket5<uint, ushort, ushort, psm_packet_body_t, short>::ReceivePacket ReceivePacket;
+    typedef CxPacket5<uint, ushort, ushort, psm_packet_body_t, short>::SendPacket SendPacket;
 
     uint head = 0x5aa55aa5;
 
@@ -132,23 +132,18 @@ void testPacket02()
     body.command = 11;
     body.paramType = 12;
     body.sourceType = 13;
-    packet.setpack(body, (char *)buffer, sizeof(buffer));
+    packet.setPack(body, (char *)buffer, sizeof(buffer));
 
-    const std::vector<string> & packets = packet.packets();
-    for (size_t i = 0; i < packets.size(); ++i)
-    {
-        const string & packet = packets[i];
-        string sHex = CxString::toHexstring(packet.data(), packet.size());
-        CxFile::save("c:/0.txt", sHex);
-        cout << sHex << endl;
-    }
+    string sHex = CxString::toHexstring(packet.data(), packet.size());
+    CxFile::save("c:/0.txt", sHex);
+    cout << sHex << endl;
 
 //a5 5a a5 5a 01 00 09 00 e0 b0 0d 00 00 00 00 00 a0 fe 22 00 0b 00 00 00 c0 04 6a 77 ac fe 22 00 45 f3 60 77 0c 00 00 00 a9 fa 22 00 31 32 33 34 35 36 37 38 39 12 58
     cout << "" << endl;
 }
 
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
     cout << "begin" << endl;
 

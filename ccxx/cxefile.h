@@ -8,7 +8,7 @@
 #include "cxdatabase.h"
 
 //E文件数据元素
-class EFileElement
+class GM_CCXX_CORE_API EFileElement
 {
 public:
     enum ee_type_enum {ee_type_none=0, ee_type_row, ee_type_column_s, ee_type_column_m};
@@ -91,7 +91,7 @@ private:
 };
 
 //E文件解析
-class ExplainEfile
+class GM_CCXX_CORE_API ExplainEfile
 {
 public:
     ExplainEfile();
@@ -140,7 +140,7 @@ public:
 
 };
 
-class CxEfile
+class GM_CCXX_CORE_API CxEfile
 {
 public:
     static std::vector<std::string> toEfileBuffer(const std::string & sClassName, const std::string & sInstanceName, const std::vector<std::string> & sFields, const std::vector<std::vector<std::string> > & sRec);

@@ -193,28 +193,28 @@ int CxBuffer::toBuf(uint8 *pBuf, float val, int mode)
     switch(mode)
     {
     case 0:
-//        nVal = (data[0]|(data[1]<<8)|(data[2]<<16)|(data[3]<<24));
+        //        nVal = (data[0]|(data[1]<<8)|(data[2]<<16)|(data[3]<<24));
         *pBuf++ = p[0];
         *pBuf++ = p[1];
         *pBuf++ = p[2];
         *pBuf   = p[3];
         break;
     case 1://IEEE 454 单精度浮点 小端模式
-//        nVal = (data[1]|(data[0]<<8)|(data[3]<<16)|(data[2]<<24));
+        //        nVal = (data[1]|(data[0]<<8)|(data[3]<<16)|(data[2]<<24));
         *pBuf++ = p[1];
         *pBuf++ = p[0];
         *pBuf++ = p[3];
         *pBuf   = p[2];
         break;
     case 2:
-//        nVal = (data[3]|(data[2]<<8)|(data[1]<<16)|(data[0]<<24));
+        //        nVal = (data[3]|(data[2]<<8)|(data[1]<<16)|(data[0]<<24));
         *pBuf++ = p[3];
         *pBuf++ = p[2];
         *pBuf++ = p[1];
         *pBuf   = p[0];
         break;
     case 3:
-//        nVal = (data[2]|(data[3]<<8)|(data[0]<<16)|(data[1]<<24));
+        //        nVal = (data[2]|(data[3]<<8)|(data[0]<<16)|(data[1]<<24));
         *pBuf++ = p[3];
         *pBuf++ = p[2];
         *pBuf++ = p[1];
@@ -240,12 +240,19 @@ bool CxBuffer::fromBuf(uint8 *pBuf, int len, uint16 &val, int mode)
     uchar * data = (uchar *)pBuf;
     if((data==NULL)||len<(sizeof(uint16))) return false;
 
-    if(mode)
+    switch(mode)
     {
-        val = ((data[0] & 0xFF) | (data[1]<<8));
-     }else{
-        val = ((data[1] & 0xFF) | (data[0]<<8));
+        case 0:
+            val = ((data[1] & 0xFF) | (data[0]<<8));
+            break;
+        case 1:
+            val = ((data[0] & 0xFF) | (data[1]<<8));
+            break;
+        default:
+            val = ((data[0] & 0xFF) | (data[1]<<8));
+            break;
     }
+
     return true;
 }
 
@@ -254,11 +261,17 @@ bool CxBuffer::fromBuf(uint8 *pBuf, int len, int16 &val, int mode)
     uchar * data = (uchar *)pBuf;
     if((data==NULL)||len<(sizeof(int16))) return false;
 
-    if(mode)
+    switch(mode)
     {
-        val = (data[0] | (data[1]<<8));
-    }else{
-        val = (data[1] | (data[0]<<8));
+        case 0:
+            val = (data[1]& 0xFF) | (data[0]<<8);
+            break;
+        case 1:
+            val = (data[0]& 0xFF) | (data[1]<<8);
+            break;
+        default:
+            val = (data[1]& 0xFF) | (data[0]<<8);
+            break;
     }
     return true;
 }
@@ -268,11 +281,23 @@ bool CxBuffer::fromBuf(uint8 *pBuf, int len, uint32 &val, int mode)
     uchar * data = (uchar *)pBuf;
     if((data==NULL)||len<(sizeof(uint32))) return false;
 
-    if(mode)
+    switch(mode)
     {
-        val = (data[0]|(data[1]<<8)|(data[2]<<16)|(data[3]<<24));
-    }else{
-        val = (data[3]|(data[2]<<8)|(data[1]<<16)|(data[0]<<24));
+        case 0:
+            val = ((data[0]&0xFF)|(data[1]<<8))|((data[2]|(data[3]<<8))<<16);
+            break;
+        case 1:
+            val = ((data[1]&0xFF)|(data[0]<<8))|((data[3]|(data[2]<<8))<<16);
+            break;
+        case 2:
+            val = ((data[2]&0xFF)|(data[3]<<8))|((data[0]|(data[1]<<8))<<16);
+            break;
+        case 3:
+            val = ((data[3]&0xFF)|(data[2]<<8))|((data[1]|(data[0]<<8))<<16);
+            break;
+        default:
+            val = ((data[0]&0xFF)|(data[1]<<8))|((data[2]|(data[3]<<8))<<16);
+            break;
     }
     return true;
 }
@@ -282,11 +307,24 @@ bool CxBuffer::fromBuf(uint8 *pBuf, int len, int32 &val, int mode)
     uchar * data = (uchar *)pBuf;
     if((data==NULL)||len<(sizeof(int32))) return false;
 
-    if(mode)
+
+    switch(mode)
     {
-        val = (data[0]|(data[1]<<8)|(data[2]<<16)|(data[3]<<24));
-    }else{
-        val = (data[3]|(data[2]<<8)|(data[1]<<16)|(data[0]<<24));
+        case 0:
+            val = ((data[0]&0xFF)|(data[1]<<8))|((data[2]|(data[3]<<8))<<16);
+            break;
+        case 1:
+            val = ((data[1]&0xFF)|(data[0]<<8))|((data[3]|(data[2]<<8))<<16);
+            break;
+        case 2:
+            val = ((data[2]&0xFF)|(data[3]<<8))|((data[0]|(data[1]<<8))<<16);
+            break;
+        case 3:
+            val = ((data[3]&0xFF)|(data[2]<<8))|((data[1]|(data[0]<<8))<<16);
+            break;
+        default:
+            val = ((data[0]&0xFF)|(data[1]<<8))|((data[2]|(data[3]<<8))<<16);
+            break;
     }
     return true;
 }
@@ -337,6 +375,46 @@ bool CxBuffer::fromBuf(uint8 *pBuf, int len, float &val, int mode)
 
 bool CxBuffer::fromBuf(uint8 *pBuf, int len, double &val, int mode)
 {
-    bool bRet = false;
+    uchar * data = (uchar *)pBuf;
+    if((data==NULL)||len<(sizeof(double))) return false;
+
+    bool bRet = true;
+
+    typedef union u{
+        double v;
+        unsigned char s[8];
+    } U;
+
+    int64 nVal=0;
+    switch(mode)
+    {
+    case 0:
+    {
+        u a;
+        memcpy(&a.s[0],pBuf,8);
+        val = a.v;
+//        printf("%f",val);
+    }
+        break;
+    case 1://标准字节序
+    {
+        u a;
+        a.s[0] = pBuf[1];
+        a.s[1] = pBuf[0];
+        a.s[2] = pBuf[3];
+        a.s[3] = pBuf[2];
+        a.s[4] = pBuf[5];
+        a.s[5] = pBuf[4];
+        a.s[6] = pBuf[7];
+        a.s[7] = pBuf[6];
+        val = a.v;
+//        printf("%f",val);
+    }
+        break;
+    default:
+        val = *(double*)pBuf;
+        break;
+    }
+
     return bRet;
 }

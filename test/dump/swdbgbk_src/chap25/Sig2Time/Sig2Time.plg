@@ -1,0 +1,89 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Sig2Time - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/Sig2Time.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap25\Sig2Time\Sig2Time.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP537.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/Sig2Time.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap25\Sig2Time\Sig2Time.cpp"
+"C:\dig\dbg\author\code\chap25\Sig2Time\Sig2TimeDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP537.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP538.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/Sig2Time.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap25\Sig2Time\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP538.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP539.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/Sig2Time.pdb" /machine:I386 /out:"../../bin/Release/Sig2Time.exe" 
+\dig\dbg\author\code\temp\Release\Sig2Time.obj
+\dig\dbg\author\code\temp\Release\Sig2TimeDlg.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\Sig2Time.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP539.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+Sig2Time.cpp
+Sig2TimeDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+Sig2Time.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: Sig2Time - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/Sig2Time.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap25\Sig2Time\Sig2Time.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP53B.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Debug/Sig2Time.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap25\Sig2Time\Sig2Time.cpp"
+"C:\dig\dbg\author\code\chap25\Sig2Time\Sig2TimeDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP53B.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP53C.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Debug/Sig2Time.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap25\Sig2Time\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP53C.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP53D.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/Sig2Time.pdb" /debug /machine:I386 /out:"../../bin/Debug/Sig2Time.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\Sig2Time.obj
+\dig\dbg\author\code\temp\Debug\Sig2TimeDlg.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\Sig2Time.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP53D.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+Sig2Time.cpp
+Sig2TimeDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+Sig2Time.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

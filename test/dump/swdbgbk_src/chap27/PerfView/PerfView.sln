@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PerfView", "PerfView.vcproj", "{AA8ED0E6-5BD3-41EC-9D51-BE861EE82F3C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA8ED0E6-5BD3-41EC-9D51-BE861EE82F3C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA8ED0E6-5BD3-41EC-9D51-BE861EE82F3C}.Debug|Win32.Build.0 = Debug|Win32
+		{AA8ED0E6-5BD3-41EC-9D51-BE861EE82F3C}.Release|Win32.ActiveCfg = Release|Win32
+		{AA8ED0E6-5BD3-41EC-9D51-BE861EE82F3C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

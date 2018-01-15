@@ -15686,3 +15686,406 @@ unsigned short searchCodeTable(unsigned short unicodeKey)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------
+//*base64---------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------
+
+
+
+static const char base64_table[] = {
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '\0'
+};
+
+static const char base64_pad = '=';
+
+static const short base64_reverse_table[256] = {
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -1, -1, -2, -2, -1, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -1, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 62, -2, -2, -2, 63,
+    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -2, -2, -2, -2, -2, -2,
+    -2,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -2, -2, -2, -2, -2,
+    -2, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+    -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2
+};
+
+
+char* fn_base64_encode(const unsigned char *str, int length, int *ret_length) /* {{{ */
+{
+    const unsigned char *current = str;
+    char *p;
+    char *result;
+
+    if ((length + 2) < 0 || ((length + 2) / 3) >= (1 << (sizeof(int) * 8 - 2))) {
+        if (ret_length != NULL) {
+            *ret_length = 0;
+        }
+        return NULL;
+    }
+
+    result = (char *)malloc((((length + 2) / 3) * 4)*(sizeof(char))+(1));
+    if (result == NULL) {
+        fprintf(stderr, "out of memory!\n");
+        exit(1);
+    }
+    p = result;
+
+    while (length > 2) {
+        *p++ = base64_table[current[0] >> 2];
+        *p++ = base64_table[((current[0] & 0x03) << 4) + (current[1] >> 4)];
+        *p++ = base64_table[((current[1] & 0x0f) << 2) + (current[2] >> 6)];
+        *p++ = base64_table[current[2] & 0x3f];
+
+        current += 3;
+        length -= 3;
+    }
+
+    if (length != 0) {
+        *p++ = base64_table[current[0] >> 2];
+        if (length > 1) {
+            *p++ = base64_table[((current[0] & 0x03) << 4) + (current[1] >> 4)];
+            *p++ = base64_table[(current[1] & 0x0f) << 2];
+            *p++ = base64_pad;
+        } else {
+            *p++ = base64_table[(current[0] & 0x03) << 4];
+            *p++ = base64_pad;
+            *p++ = base64_pad;
+        }
+    }
+    if (ret_length != NULL) {
+        *ret_length = (int)(p - result);
+    }
+    *p = '\0';
+    return result;
+}
+
+
+char *fn_base64_decode(const unsigned char *str, int length, int *ret_length)
+{
+    const unsigned char *current = str;
+    int ch, i = 0, j = 0, k;
+    char *result;
+
+    result = (char *)malloc(length+1);
+    if (result == NULL) {
+        fprintf(stderr, "out of memory!\n");
+        exit(1);
+    }
+
+    while ((ch = *current++) != '\0' && length-- > 0) {
+        if (ch == base64_pad) {
+            if (*current != '=' && (i % 4) == 1) {
+                free(result);
+                return NULL;
+            }
+            continue;
+        }
+
+        ch = base64_reverse_table[ch];
+        if ((1 && ch < 0) || ch == -1) {
+            continue;
+        } else if (ch == -2) {
+            free(result);
+            return NULL;
+        }
+
+        switch(i % 4) {
+        case 0:
+            result[j] = ch << 2;
+            break;
+        case 1:
+            result[j++] |= ch >> 4;
+            result[j] = (ch & 0x0f) << 4;
+            break;
+        case 2:
+            result[j++] |= ch >>2;
+            result[j] = (ch & 0x03) << 6;
+            break;
+        case 3:
+            result[j++] |= ch;
+            break;
+        }
+        i++;
+    }
+
+    k = j;
+
+    if (ch == base64_pad) {
+        switch(i % 4) {
+        case 1:
+            free(result);
+            return NULL;
+        case 2:
+            k++;
+        case 3:
+            result[k] = 0;
+        }
+    }
+    if(ret_length) {
+        *ret_length = j;
+    }
+    result[j] = '\0';
+    return result;
+}
+
+
+
+std::string CxEncoding::base64Encode(const unsigned char *str, int length)
+{
+    std::string r;
+
+    const unsigned char *current = str;
+    char *p;
+    char *result;
+
+    if ((length + 2) < 0 || ((length + 2) / 3) >= (1 << (sizeof(int) * 8 - 2)))
+    {
+        return std::string();
+    }
+
+    std::string::size_type iRsize = (((length + 2) / 3) * 4)*(sizeof(char))+(1);
+    r.resize(iRsize);
+    //resize fail
+    if (r.size()<iRsize) return std::string();
+
+    result = (char *)r.data();
+    p = result;
+
+    while (length > 2)
+    {
+        *p++ = base64_table[current[0] >> 2];
+        *p++ = base64_table[((current[0] & 0x03) << 4) + (current[1] >> 4)];
+        *p++ = base64_table[((current[1] & 0x0f) << 2) + (current[2] >> 6)];
+        *p++ = base64_table[current[2] & 0x3f];
+
+        current += 3;
+        length -= 3;
+    }
+
+    if (length != 0)
+    {
+        *p++ = base64_table[current[0] >> 2];
+        if (length > 1)
+        {
+            *p++ = base64_table[((current[0] & 0x03) << 4) + (current[1] >> 4)];
+            *p++ = base64_table[(current[1] & 0x0f) << 2];
+            *p++ = base64_pad;
+        }
+        else
+        {
+            *p++ = base64_table[(current[0] & 0x03) << 4];
+            *p++ = base64_pad;
+            *p++ = base64_pad;
+        }
+    }
+    iRsize = (int)(p - result);
+    *p = '\0';
+    r.resize(iRsize);
+    return r;
+}
+
+std::string CxEncoding::base64Decode(const unsigned char *str, int length)
+{
+    std::string r;
+
+    const unsigned char *current = str;
+    int ch, i = 0, j = 0, k;
+    char *result;
+
+    std::string::size_type iRsize = length+1;
+    r.resize(iRsize);
+    //resize fail
+    if (r.size()<iRsize) return std::string();
+    result = (char *)r.data();
+
+    while ((ch = *current++) != '\0' && length-- > 0)
+    {
+        if (ch == base64_pad)
+        {
+            if (*current != '=' && (i % 4) == 1)
+            {
+                return std::string();
+            }
+            continue;
+        }
+
+        ch = base64_reverse_table[ch];
+        if ((1 && ch < 0) || ch == -1)
+        {
+            continue;
+        }
+        else if (ch == -2)
+        {
+            return std::string();
+        }
+
+        switch(i % 4)
+        {
+        case 0:
+            result[j] = ch << 2;
+            break;
+        case 1:
+            result[j++] |= ch >> 4;
+            result[j] = (ch & 0x0f) << 4;
+            break;
+        case 2:
+            result[j++] |= ch >>2;
+            result[j] = (ch & 0x03) << 6;
+            break;
+        case 3:
+            result[j++] |= ch;
+            break;
+        }
+        i++;
+    }
+
+    k = j;
+
+    if (ch == base64_pad)
+    {
+        switch(i % 4)
+        {
+        case 1:
+            return std::string();
+        case 2:
+            k++;
+        case 3:
+            result[k] = 0;
+        }
+    }
+    iRsize = j;
+    result[j] = '\0';
+    r.resize(iRsize);
+    return r;
+}
+
+std::string CxEncoding::base64Encode(const std::string &sSource)
+{
+    return base64Encode((const unsigned char *)sSource.data(), sSource.size());
+}
+
+std::string CxEncoding::base64Decode(const std::string &sSource)
+{
+    return base64Decode((const unsigned char *)sSource.data(), sSource.size());
+}
+
+bool CxEncoding::hasChinese(const std::string &sSource)
+{
+    bool bRet = false;
+    //判断是否含有中文
+    int len = sSource.length();
+    for(int i=0;i<len;++i)
+    {
+        if((byte)(sSource.at(i))>0x7F)
+        {
+            bRet = true;
+            break;
+        }
+    }
+    return bRet;
+}
+
+bool CxEncoding::isUtf8(const void* pBuffer, long size)
+{
+    bool IsUTF8 = true;
+    unsigned char* start = (unsigned char*)pBuffer;
+    unsigned char* end = (unsigned char*)pBuffer + size;
+    while (start < end)
+    {
+        if (*start < 0x80) // (10000000): 值小于0x80的为ASCII字符
+        {
+            start++;
+        }
+        else if (*start < (0xC0)) // (11000000): 值介于0x80与0xC0之间的为无效UTF-8字符
+        {
+            IsUTF8 = false;
+            break;
+        }
+        else if (*start < (0xE0)) // (11100000): 此范围内为2字节UTF-8字符
+        {
+            if (start >= end - 1)
+            {
+                break;
+            }
+
+            if ((start[1] & (0xC0)) != 0x80)
+            {
+                IsUTF8 = false;
+                break;
+            }
+
+            start += 2;
+        }
+        else if (*start < (0xF0)) // (11110000): 此范围内为3字节UTF-8字符
+        {
+            if (start >= end - 2)
+            {
+                break;
+            }
+
+            if ((start[1] & (0xC0)) != 0x80 || (start[2] & (0xC0)) != 0x80)
+            {
+                IsUTF8 = false;
+                break;
+            }
+
+            start += 3;
+        }
+        else
+        {
+            IsUTF8 = false;
+            break;
+        }
+    }
+
+    return IsUTF8;
+}
+
+
+
+
+
+

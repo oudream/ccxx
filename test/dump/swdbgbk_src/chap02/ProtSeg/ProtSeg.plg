@@ -1,0 +1,75 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ProtSeg - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D1.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../temp/Release/ProtSeg.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap02\ProtSeg\ProtSeg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D1.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D2.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../temp/Release/ProtSeg.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap02\ProtSeg\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D2.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D3.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/ProtSeg.pdb" /machine:I386 /out:"../../bin/Release/ProtSeg.exe" 
+\dig\dbg\author\code\temp\Release\ProtSeg.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D3.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+ProtSeg.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+ProtSeg.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: ProtSeg - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D5.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../temp/Debug/ProtSeg.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap02\ProtSeg\ProtSeg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D5.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D6.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../temp/Debug/ProtSeg.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap02\ProtSeg\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D6.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D7.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/ProtSeg.pdb" /debug /machine:I386 /out:"../../bin/Debug/ProtSeg.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\ProtSeg.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1D7.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+ProtSeg.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+ProtSeg.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

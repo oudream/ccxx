@@ -203,7 +203,7 @@ int EFileElement::loadTable(const string &sql)
     CxDatabase * oDb = CxDatabase::getDefaultDb();
     if (oDb)
     {
-        vRecs = oDb->queryValueToMapVector(sql);
+        vRecs = oDb->queryToMapVector(sql);
     }
     if(vRecs.size()>0)
     {
@@ -217,7 +217,7 @@ int EFileElement::loadTable2(const string &sql)
     vector<map<string, string> > vRecs;
     if (oDb)
     {
-        vRecs = oDb->queryValueToMapVector(sql);
+        vRecs = oDb->queryToMapVector(sql);
     }
     if(vRecs.size()>0)
     {

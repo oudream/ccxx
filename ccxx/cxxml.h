@@ -3,9 +3,9 @@
 
 #include "cxglobal.h"
 
-#include "tinyxml.h"
+#include "tinyxml/tinyxml.h"
 
-class CxXml
+class GM_CCXX_CORE_API CxXml
 {
 public:
     inline static std::string attribute(const TiXmlElement * element, const std::string & sName) {
@@ -143,6 +143,11 @@ public:
     //*save
     static bool saveTable4Level(const std::string & sFilePath, const std::vector<std::map<std::string, std::string> > & rows, const std::string & sDataBaseName = std::string(), const std::string & sTableName = std::string()) ;
 
+    //</row field1=value1 field2=value2 ...>
+    static std::string toXmlBuffer1(const std::vector<std::string> & sFields, const std::vector<std::vector<std::string> > & sRows, const std::string & sLevel1Name = "db", const std::string & sLevel2Name = "table", const std::string & sLevel3Name = "row");
+
+    //<row><field1>value1<\field1><field2>value2<\field2></row>
+    static std::string toXmlBuffer2(const std::vector<std::string> & sFields, const std::vector<std::vector<std::string> > & sRows, const std::string & sLevel1Name = "db", const std::string & sLevel2Name = "table", const std::string & sLevel3Name = "row");
 
 };
 

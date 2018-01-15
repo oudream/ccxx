@@ -16,7 +16,7 @@ long   __stdcall   callback(_EXCEPTION_POINTERS*   excp)
   return   EXCEPTION_EXECUTE_HANDLER;
   }
 
-int main(int argc, char * argv[])
+int main(int argc,const char * argv[])
 {
     ::SetUnhandledExceptionFilter(callback);
 

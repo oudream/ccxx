@@ -1,26 +1,27 @@
 #include "cxapplication.h"
 
 #include "cxprocess.h"
-#include "cxfile.h"
-#include "cxprofile_skv_ini.h"
 #include "cxinterinfo.h"
-
+#include "cxlog.h"
+#include "cxsystem.h"
 
 using namespace std;
 
-
 struct ProcessCallBack
 {
-    ProcessCallBack(fn_void_msg_tlv_t fn1) : fn(fn1), msg(0), tag(0), source(0), target(0), data() {}
-    ProcessCallBack(fn_void_msg_tlv_t fn1, int iMsg, int iTag, void * oSource, void * oTarget) : fn(fn1), msg(iMsg), tag(iTag), source(oSource), target(oTarget), data() {}
-    ProcessCallBack(fn_void_msg_tlv_t fn1, int iMsg, int iTag, int iLength, const void * pData, void * oSource, void * oTarget) :
-        fn(fn1), msg(iMsg), tag(iTag), source(oSource), target(oTarget), data((char*)pData, (char*)pData+iLength) { }
+    ProcessCallBack(fn_void_msg_tlv_t fn1)
+        : fn(fn1), msg(0), tag(0), source(0), target(0), data(), hadRun(false) {}
+    ProcessCallBack(fn_void_msg_tlv_t fn1, int iMsg, int iTag, void * oSource, void * oTarget)
+        : fn(fn1), msg(iMsg), tag(iTag), source(oSource), target(oTarget), data(), hadRun(false) {}
+    ProcessCallBack(fn_void_msg_tlv_t fn1, int iMsg, int iTag, int iLength, const void * pData, void * oSource, void * oTarget)
+        : fn(fn1), msg(iMsg), tag(iTag), source(oSource), target(oTarget), data((char*)pData, (char*)pData+iLength), hadRun(false) { }
     fn_void_msg_tlv_t fn;
     int msg;
     int tag;
     void * source;
     void * target;
     vector<char> data;
+    volatile bool hadRun;
 };
 
 #define f_iProcessCallBackCount (1024 * 5)
@@ -42,24 +43,12 @@ static ProcessCallBack * * const f_oProcessCallBackEnd = fn_oProcessCallBacks()+
 static CxMutex * f_oProcessCallBackPushLock = fn_oProcessCallBackPushLock();
 static int f_iProcessCallBackIndexPush = 0;
 static int f_iProcessCallBackIndexPop = 0;
-
+static int f_iProcessCallBackIndexClear = 0;
+static ProcessCallBack * f_oRunningProcessCallBack = NULL;
 
 static int f_iProjectType = 0;
 static int volatile f_iApplicationStatus = 0;
-
-static string f_sApplicationFilePath = "";
-static string f_sApplicationFileName = "";
-static string f_sApplicationTargetName = "";
-static string f_sApplicationPath = "";
-static string f_sApplicationDeployPath = "";
-static string f_sApplicationConfigPath = "";
-static string f_sApplicationConfigTargetFilePath = "";
-static string f_sDefaultConfigFilePath = "";
-static string f_sApplicationConfigFilePath = "";
-static string f_sApplicationConfigExtendFilePath = "";
-
-static map<string, string> f_arguments;
-static map<string, map<string, string> > f_appsConfigs;
+static bool f_bApplicationHasStop = false;
 
 static int f_iProcessEventsSleep = -1;
 
@@ -75,24 +64,46 @@ static msepoch_t f_dtApplicationExecute = 0;
 
 
 #ifdef GM_OS_WIN
-
-long   __stdcall   fn_Windows_Exception_callback(_EXCEPTION_POINTERS*   excp)
+long   __stdcall   fn_Windows_Exception_callback(EXCEPTION_POINTERS* excp)
 {
     string sMsg = "Windows_Exception(Unhandled) : [CxApplication will exit]";
     sMsg += "\nException_Time= " + CxTime::currentMsepochString();
     sMsg += CxString::format("\nException_Address= %x" , excp->ExceptionRecord->ExceptionAddress);
     sMsg += "\nCPU_Register: " + CxTime::currentMsepochString();
-    sMsg += CxString::format("\nException_Time=eax   %x   ebx   %x   ecx   %x   edx   %x" + excp->ContextRecord->Eax,
-                             excp->ContextRecord->Ebx,excp->ContextRecord->Ecx,
-                             excp->ContextRecord->Edx);
+    sMsg += CxString::format("\nException_Time=eax   %x   ebx   %x   ecx   %x   edx   %x",
+        excp->ContextRecord->Eax,
+        excp->ContextRecord->Ebx,
+		excp->ContextRecord->Ecx,
+        excp->ContextRecord->Edx);
     cxPrompt() << sMsg;
 
-    CxApplication::exit();
+#ifdef _MSC_VER
+	CxThread::createMiniDump(excp);
+#endif
 
+    CxApplication::exit();
     return   EXCEPTION_EXECUTE_HANDLER;
 }
 
+#ifdef _MSC_VER
+int fn_vc_exec(int iTag)
+{
+    int iResult = 0;
+    __try
+    {
+        CxApplication::doLoopEvents(iTag);
+        iResult = TRUE;
+    }
+    __except (CxThread::createMiniDump(GetExceptionInformation()), EXCEPTION_EXECUTE_HANDLER)
+    {
+        iResult = -1;
+    }
+    return iResult;
+}
 #endif
+
+#endif
+
 
 void fn_app_SIGABRT (int param)
 {
@@ -133,144 +144,6 @@ void fn_app_SIGTERM (int param)
 
 
 
-
-const string &CxApplication::applicationFilePath()
-{
-    return f_sApplicationFilePath;
-}
-
-const string &CxApplication::applicationFileName()
-{
-    return f_sApplicationFileName;
-}
-
-const string &CxApplication::applicationTargetName()
-{
-    return f_sApplicationTargetName;
-}
-
-const string &CxApplication::applicationPath()
-{
-    return f_sApplicationPath;
-}
-
-const string &CxApplication::applicationDeployPath()
-{
-    return f_sApplicationDeployPath;
-}
-
-void CxApplication::setApplicationDeployPath(const string &value)
-{
-    if (f_sApplicationDeployPath.empty())
-        f_sApplicationDeployPath = value;
-}
-
-string CxApplication::applicationRelativePath(const string &sDirName)
-{
-    return CxFileSystem::mergeFilePath(f_sApplicationDeployPath, sDirName);
-}
-
-const string &CxApplication::configPath()
-{
-    return f_sApplicationConfigPath;
-}
-
-const string &CxApplication::configTargetFilePath()
-{
-    return f_sApplicationConfigTargetFilePath;
-}
-
-const string &CxApplication::configDefaultFilePath()
-{
-    return f_sDefaultConfigFilePath;
-}
-
-const string &CxApplication::configFilePath()
-{
-    return f_sApplicationConfigFilePath;
-}
-
-const string &CxApplication::configExtendFilePath()
-{
-    return f_sApplicationConfigExtendFilePath;
-}
-
-const map<string, string> &CxApplication::getArguments()
-{
-    return f_arguments;
-}
-
-string CxApplication::findArgument(const string &sArgumentName)
-{
-    map<string, string>::const_iterator it = f_arguments.find(sArgumentName);
-    if (it != f_arguments.end())
-        return it->second;
-    else
-        return std::string();
-}
-
-string CxApplication::argumentsToString(const map<string, string> &sArguments)
-{
-    string r;
-    for (map<string, string>::const_iterator it=sArguments.begin(); it!=sArguments.end(); ++it)
-    {
-        r.push_back(CxGlobal::argumentCharacter);
-        r.append(it->first);
-        r.push_back(' ');
-        r.append(it->second);
-        r.push_back(' ');
-    }
-    if (r.size() > 0) r.resize(r.size()-1);
-    return r;
-}
-
-map<string, string> CxApplication::argumentsFromString(const string & sArg)
-{
-    vector<string> sArgs = CxString::split(sArg, ' ');
-    map<string, string> r;
-    size_t i = 0;
-    while (i < sArgs.size() && sArgs[i][0] == CxGlobal::argumentCharacter)
-    {
-        char * pc = const_cast<char *>(sArgs.at(i).c_str());
-        ++i;
-        ++pc;
-        string sName = pc;
-        string sValue;
-        while (i < sArgs.size() && sArgs[i][0] == CxGlobal::argumentCharacter)
-        {
-            sValue += sArgs[i];
-            ++i;
-            sValue.push_back(' ');
-        }
-        sValue.resize(sValue.size()-1);
-        r[sName] = sValue;
-    }
-    return r;
-}
-
-map<string, string> CxApplication::argumentsFromArgcv(int argc, char *argv[])
-{
-    map<string, string> r;
-    int i = 1;
-    while (i < argc && *argv[i] == CxGlobal::argumentCharacter)
-    {
-        char * pc = argv[i];
-        ++i;
-        ++pc;
-        string sName = pc;
-        string sValue;
-        while (i < argc && *argv[i] != CxGlobal::argumentCharacter)
-        {
-            sValue += argv[i];
-            ++i;
-            sValue.push_back(' ');
-        }
-        sValue.resize(sValue.size()-1);
-        r[sName] = sValue;
-    }
-    return r;
-}
-
 void CxApplication::restartSystem()
 {
 #ifdef GM_OS_WIN
@@ -310,52 +183,6 @@ void CxApplication::restartSystem()
 #endif
 }
 
-const std::string & CxApplication::doFindConfig(const string &sSection, const string &sKey, const std::string & sDefault, bool bSaveNew)
-{
-    for (map<string, map<string, string> >::iterator itSection = f_appsConfigs.begin(); itSection != f_appsConfigs.end(); ++itSection)
-    {
-        if ( CxString::equalCase(itSection->first ,sSection) )
-        {
-            map<string, string> & keys = itSection->second;
-            for (map<string, string>::const_iterator itKey = keys.begin(); itKey != keys.end() ; ++itKey)
-            {
-                if ( CxString::equalCase(itKey->first, sKey) )
-                {
-                    return itKey->second;
-                }
-            }
-            if (bSaveNew)
-            {
-                keys[sKey] = sDefault;
-                return sDefault;
-            }
-        }
-    }
-    if (bSaveNew)
-    {
-        map<string, string> keys;
-        keys[sKey] = sDefault;
-        f_appsConfigs[sSection] = keys;
-    }
-    return sDefault;
-}
-
-void CxApplication::saveConfig(const string &sSection, const string &sKey, const std::string & sValue)
-{
-    map<string, map<string, string> >::iterator itSection = f_appsConfigs.find(sSection);
-    if (itSection != f_appsConfigs.end())
-    {
-        map<string, string> & keys = itSection->second;
-        keys[sKey] = sValue;
-    }
-    else
-    {
-        map<string, string> keys;
-        keys[sKey] = sValue;
-        f_appsConfigs[sSection] = keys;
-    }
-}
-
 bool CxApplication::isApplicationThread()
 {
     return cx_pthread_self() == f_applicationThreadId;
@@ -376,120 +203,132 @@ int CxApplication::getCallBackCount()
     return f_iProcessCallBackIndexPush - f_iProcessCallBackIndexPop;
 }
 
-std::map<string, std::map<string, string> > CxApplication::toRelativePath(const std::map<string, std::map<string, string> > & sections)
+void CxApplication::pushProcessCallBack(fn_void_msg_tlv_t fn, int iMsg, int iTag, const void * pData, int iLength, void * oSource, void * oTarget, bool bOnlyOnePending)
 {
-    std::map<string, std::map<string, string> > r;
-    for (map<string, map<string, string> >::const_iterator itSection = sections.begin(); itSection != sections.end(); ++itSection)
+    if (f_iApplicationStatus)
     {
-        map<string, string> rKeys;
-        const map<string, string> & keys = itSection->second;
-        for (map<string, string>::const_iterator itKeys = keys.begin(); itKeys != keys.end(); ++itKeys)
+        CxMutexScope lock(f_oProcessCallBackPushLock);
+        ProcessCallBack * oProcessCallBack = NULL;
+        //*only one waiting run
+        if (bOnlyOnePending)
         {
-            const string & sValue = itKeys->second;
-            bool bOk;
-            string sFilePath = CxFileSystem::relativeFilePath(f_sApplicationPath, sValue, & bOk);
-            if (bOk && sFilePath.size()>0)
+            int iIndex = f_iProcessCallBackIndexClear;
+            while (iIndex != f_iProcessCallBackIndexPush)
             {
-                rKeys[itKeys->first] = sFilePath;
+                oProcessCallBack = f_oProcessCallBacks[iIndex];
+                if (!oProcessCallBack->hadRun && oProcessCallBack->fn == fn)
+                {
+                    //has one in waiting run
+                    return;
+                }
+                iIndex ++;
+                if (iIndex >= f_iProcessCallBackCount)
+                    iIndex = 0;
+            }
+        }
+        //*clear
+        while (f_iProcessCallBackIndexClear != f_iProcessCallBackIndexPush)
+        {
+            oProcessCallBack = f_oProcessCallBacks[f_iProcessCallBackIndexClear];
+            if (oProcessCallBack->hadRun)
+            {
+                delete oProcessCallBack;
+                f_oProcessCallBacks[f_iProcessCallBackIndexClear] = NULL;
+                f_iProcessCallBackIndexClear ++;
+                if (f_iProcessCallBackIndexClear >= f_iProcessCallBackCount)
+                    f_iProcessCallBackIndexClear = 0;
             }
             else
             {
-                rKeys[itKeys->first] = sValue;
+                break;
             }
         }
-        r[itSection->first] = rKeys;
-    }
-    return r;
-}
-
-const map<string, string> & CxApplication::findConfigs(const string &sSection)
-{
-    for (map<string, map<string, string> >::iterator itSection = f_appsConfigs.begin(); itSection != f_appsConfigs.end(); ++itSection)
-    {
-        if ( itSection->first == sSection )
+        //*push
+        if (f_oProcessCallBacks[f_iProcessCallBackIndexPush] != NULL)
         {
-            return itSection->second;
-        }
-    }
-    return CxGlobal::emptyMapString;
-}
-
-int CxApplication::saveConfig(const string &sFilePath)
-{
-    string sSaveFilePath = sFilePath;
-    if (sSaveFilePath.empty()) sSaveFilePath = configFilePath();
-    std::map<std::string, std::map<std::string, std::string> > sConfigs = toRelativePath(f_appsConfigs);
-    return CxSkverManager::save(sConfigs, sSaveFilePath);
-}
-
-void CxApplication::pushProcessCallBack(fn_void_msg_tlv_t fn, int iMsg, int iTag, const void * pData, int iLength, void * oSource, void * oTarget)
-{
-    CxMutexScope lock(f_oProcessCallBackPushLock);
-    if (f_oProcessCallBacks[f_iProcessCallBackIndexPush] != NULL)
-    {
-        cxWarning() << "error error error !!! CxApplication Cache Full (f_oProcessCallBacks[f_iProcessCallBackIndexPush] != NULL) , Can not receive push !!! reset();";
-        cout        << "error error error !!! CxApplication Cache Full (f_oProcessCallBacks[f_iProcessCallBackIndexPush] != NULL) , Can not receive push !!! reset();" << endl;
-        reset();
-    }
-    else
-    {
-        //有数据，并且少于 4 M
-        if (iLength>0 && iLength<1024*1024*4 && pData)
-        {
-            f_oProcessCallBacks[f_iProcessCallBackIndexPush] = new ProcessCallBack(fn, iMsg, iTag, iLength, pData, oSource, oTarget);
+            cxWarning() << "Error ! Error ! Error ! CxApplication Cache Full. f_iProcessCallBackIndexPush=" << f_iProcessCallBackIndexPush << "; f_iProcessCallBackIndexPop" << f_iProcessCallBackIndexPop;
+            cout        << "Error ! Error ! Error ! CxApplication Cache Full. f_iProcessCallBackIndexPush=" << f_iProcessCallBackIndexPush << "; f_iProcessCallBackIndexPop" << f_iProcessCallBackIndexPop << endl;
+            if (f_oRunningProcessCallBack)
+            {
+                cxWarning() << "Current CallBack : fn=" << (f_oRunningProcessCallBack->fn!=0) << "; msg=" << f_oRunningProcessCallBack->msg << "; tag=" << f_oRunningProcessCallBack->tag << "; source=" << (f_oRunningProcessCallBack->source!=0) << "; target=" << f_oRunningProcessCallBack->target
+                            << "; data_size=" << f_oRunningProcessCallBack->data.size() << "; data=" << CxString::toHexstring(f_oRunningProcessCallBack->data) << ".";
+            }
+            else
+            {
+                cxWarning() << "Current CallBack is NULL.";
+            }
+            CxApplication::exit();
+            return;
         }
         else
         {
-            f_oProcessCallBacks[f_iProcessCallBackIndexPush] = new ProcessCallBack(fn, iMsg, iTag, oSource, oTarget);
+            //有数据，并且少于 4 M
+            if (iLength>0)
+            {
+                if (iLength<1024*1024*4 && pData)
+                {
+                    f_oProcessCallBacks[f_iProcessCallBackIndexPush] = new ProcessCallBack(fn, iMsg, iTag, iLength, pData, oSource, oTarget);
+                }
+                else
+                {
+                    cxWarning() << "Error ! Error ! Error ! CxApplication::pushProcessCallBack, but iLength=" << iLength;
+                    cout        << "Error ! Error ! Error ! CxApplication::pushProcessCallBack, but iLength=" << iLength << endl;
+                    return;
+                }
+            }
+            else
+            {
+                f_oProcessCallBacks[f_iProcessCallBackIndexPush] = new ProcessCallBack(fn, iMsg, iTag, oSource, oTarget);
+            }
+            f_iProcessCallBackIndexPush ++;
+            if (f_iProcessCallBackIndexPush >= f_iProcessCallBackCount)
+                f_iProcessCallBackIndexPush = 0;
         }
-        f_iProcessCallBackIndexPush ++;
-        if (f_iProcessCallBackIndexPush >= f_iProcessCallBackCount)
-            f_iProcessCallBackIndexPush = 0;
     }
 }
 
 void CxApplication::nullProcessCallBackSource(void *oSource)
 {
-    //只能运行在 applicationThread
-    if (isApplicationThread())
+    CxMutexScope lock(f_oProcessCallBackPushLock);
+    ProcessCallBack * oProcessCallBack = NULL;
+    int iIndex = f_iProcessCallBackIndexClear;
+    while (iIndex != f_iProcessCallBackIndexPush)
     {
-        CxMutexScope lock(f_oProcessCallBackPushLock);
-        ProcessCallBack * * pOProcessCallBack = f_oProcessCallBacks;
-        ProcessCallBack * oProcessCallBack = NULL;
-        while (pOProcessCallBack < f_oProcessCallBackEnd)
+        oProcessCallBack = f_oProcessCallBacks[iIndex];
+        if (oProcessCallBack->source == oSource)
         {
-            oProcessCallBack = * pOProcessCallBack;
-            if (oProcessCallBack && oProcessCallBack->source == oSource)
-            {
-                oProcessCallBack->source = NULL;
-            }
-            pOProcessCallBack ++;
+            oProcessCallBack->source = NULL;
         }
+        iIndex ++;
+        if (iIndex >= f_iProcessCallBackCount)
+            iIndex = 0;
     }
 }
 
 void CxApplication::nullProcessCallBackTarget(void *oTarget)
 {
-    //只能运行在 applicationThread
-    if (isApplicationThread())
+    CxMutexScope lock(f_oProcessCallBackPushLock);
+    ProcessCallBack * oProcessCallBack = NULL;
+    int iIndex = f_iProcessCallBackIndexClear;
+    while (iIndex != f_iProcessCallBackIndexPush)
     {
-        CxMutexScope lock(f_oProcessCallBackPushLock);
-        ProcessCallBack * * pOProcessCallBack = f_oProcessCallBacks;
-        ProcessCallBack * oProcessCallBack = NULL;
-        while (pOProcessCallBack < f_oProcessCallBackEnd)
+        oProcessCallBack = f_oProcessCallBacks[iIndex];
+        if (oProcessCallBack->target == oTarget)
         {
-            oProcessCallBack = * pOProcessCallBack;
-            if (oProcessCallBack && oProcessCallBack->target == oTarget)
-            {
-                oProcessCallBack->target = NULL;
-            }
-            pOProcessCallBack ++;
+            oProcessCallBack->target = NULL;
         }
+        iIndex ++;
+        if (iIndex >= f_iProcessCallBackCount)
+            iIndex = 0;
     }
 }
 
-void CxApplication::init(int argc, char *argv[], int iProjectType)
+void CxApplication::init(int argc, const char *argv[], int iProjectType)
 {
+    CxGlobal::assertCallBack = CxApplication::assertDeal;
+
+    f_iProjectType = iProjectType;
+
 #ifdef GM_OS_WIN
     ::SetUnhandledExceptionFilter(fn_Windows_Exception_callback);
 #endif
@@ -501,48 +340,27 @@ void CxApplication::init(int argc, char *argv[], int iProjectType)
 
     f_dtApplicationInit = CxTime::currentMsepoch();
 
-    f_iProjectType = iProjectType;
+    f_applicationProcessId = CxProcess::getCurrentPid();
 
     f_applicationThreadId = cx_pthread_self();
 
-    if ( argc > 1 )
+    CxAppEnv::init(argc, argv);
+
+    if (iProjectType != GM_PROJECT_TYPE_LIB_DLL && iProjectType != GM_PROJECT_TYPE_LIB_STATIC)
     {
-        f_arguments = argumentsFromArgcv(argc, argv);
+        CxThread::setRunInTry(true);
+#ifdef _MSC_VER
+        CxThread::setMiniDumpFilePath(CxAppEnv::applicationFilePath() + ".MiniDump.dmp");
+#endif
     }
-    if ( argc > 0 )
+    f_iProcessEventsSleep = CxAppEnv::findConfig(CS_SectionProgramConfig, CS_EntryProcessEventsSleep, f_iProcessEventsSleep);
+
+    if (f_iProjectType == GM_PROJECT_TYPE_APP_CONSOLE)
     {
-        f_sApplicationFilePath = argv[0];
-        f_sApplicationPath = CxFileSystem::extractPath(f_sApplicationFilePath);
-        f_sApplicationFileName = CxFileSystem::extractFileName(f_sApplicationFilePath);
-        f_sApplicationTargetName = CxFileSystem::extractFilePrefixName(f_sApplicationFilePath);
-        if (f_sApplicationDeployPath.empty())
-        {
-            f_sApplicationDeployPath = CxFileSystem::parentPath( f_sApplicationPath );
-        }
-        f_sApplicationConfigPath = CxFileSystem::mergeFilePath( f_sApplicationDeployPath , "config" );
-        f_sApplicationConfigTargetFilePath = CxFileSystem::mergeFilePath( f_sApplicationConfigPath , f_sApplicationTargetName );
-        f_sDefaultConfigFilePath = CxFileSystem::mergeFilePath( f_sApplicationConfigPath, "apps.config.ini");
-        if (! CxFileSystem::isExist( f_sDefaultConfigFilePath ) &&
-                CxFileSystem::isExist( CxFileSystem::mergeFilePath( f_sApplicationConfigPath, "app.config.ini") ) )
-        {
-            f_sDefaultConfigFilePath = CxFileSystem::mergeFilePath( f_sApplicationConfigPath, "app.config.ini");
-        }
-        f_sApplicationConfigFilePath = findArgument("cfp");
-        if (f_sApplicationConfigFilePath.empty())
-        {
-            f_sApplicationConfigFilePath = CxFileSystem::mergeFilePath( f_sApplicationConfigPath, f_sApplicationTargetName + ".config.ini");
-        }
-        f_sApplicationConfigExtendFilePath = findArgument("sfp");
-        if (f_sApplicationConfigExtendFilePath.empty())
-        {
-            f_sApplicationConfigExtendFilePath = CxFileSystem::mergeFilePath( f_sApplicationConfigPath, f_sApplicationTargetName + ".extend.xml");
-        }
-        CxSkverIni skvDefault(f_sDefaultConfigFilePath);
-        CxSkverIni skvApps(f_sApplicationConfigFilePath);
-        skvDefault.updateSectionEntryValues(skvApps.getSectionEntryValues());
-        f_appsConfigs = skvDefault.getSectionEntryValues();
-        f_iProcessEventsSleep = findConfig(CS_SectionProgramConfig, CS_EntryProcessEventsSleep, f_iProcessEventsSleep);
+        CxInterinfo::startInterInfo(CxApplication::pushProcessCallBack, CxApplication::signalMainThread);
     }
+
+    CxLogManager::startLog();
 
     //every init function : do
     vector<fn_void_t> * oFnInits = getFnInits();
@@ -551,6 +369,8 @@ void CxApplication::init(int argc, char *argv[], int iProjectType)
         fn_void_t fn = oFnInits->at(i);
         fn();
     }
+
+    cxPrompt() << "ApplicationFilePath: " << CxAppEnv::applicationFilePath();
 
     f_iApplicationStatus = 1;
 }
@@ -609,17 +429,16 @@ int CxApplication::projectType()
 
 int CxApplication::exec(int iTag)
 {
+	int iResult = 0;
+
     if (f_iApplicationStatus != 1)
-        return false;
+		return iResult;
 
     f_dtApplicationStart = CxTime::currentMsepoch();
 
     f_applicationThreadId = cx_pthread_self();
-    f_applicationProcessId = CxProcess::getCurrentPid();
 
     //every init function : do
-    f_dtApplicationExecute = CxTime::currentMsepoch();
-
     vector<std::pair<fn_void_t, int> > * oFnStarts = getFnStarts();
     for (vector<std::pair<fn_void_t, int> >::const_iterator it = oFnStarts->begin(); it != oFnStarts->end(); ++it)
     {
@@ -628,10 +447,12 @@ int CxApplication::exec(int iTag)
         fn();
     }
 
+    f_dtApplicationExecute = CxTime::currentMsepoch();
+
     //*running
     f_iApplicationStatus = 2;
 
-    cxPrompt() << f_sApplicationTargetName << " begin :";
+    cxPrompt() << applicationTargetName() << " begin :";
 
     cxPrompt() << "init     datetime=" << CxTime::toString(f_dtApplicationInit);
     cxPrompt() << "start    datetime=" << CxTime::toString(f_dtApplicationStart);
@@ -639,12 +460,15 @@ int CxApplication::exec(int iTag)
 
     cxPrompt() << "..." << CxGlobal::lineString << CxGlobal::lineString << CxGlobal::lineString;
 
+
+//交给 CxApplication::assertDeal 来处理
+//交给 fn_Windows_Exception_callback 来处理
     fn_void_int_t fn_sig_handler;
-    fn_sig_handler = signal (SIGABRT, fn_app_SIGABRT);
-    if (fn_sig_handler == SIG_ERR)
-    {
-        std::cout << "error : signal (SIGINT , *)" << std::endl;
-    }
+//    fn_sig_handler = signal (SIGABRT, fn_app_SIGABRT);
+//    if (fn_sig_handler == SIG_ERR)
+//    {
+//        std::cout << "error : signal (SIGINT , *)" << std::endl;
+//    }
     fn_sig_handler = signal (SIGFPE, fn_app_SIGFPE);
     if (fn_sig_handler == SIG_ERR)
     {
@@ -673,20 +497,29 @@ int CxApplication::exec(int iTag)
 
     atexit(CxApplication::exit);
 
+#ifdef _MSC_VER
+	iResult = fn_vc_exec(iTag);
+#else
     try
     {
-        doLoopEvents(iTag);
+		iResult = doLoopEvents(iTag);
     }
     catch (...)
     {
-        cxPrompt() << "Unknow_Exception(by throw and catch) : [CxApplication will exit] at " << CxTime::currentMsepochString();
     }
-
-    vector<fn_void_t> * oFnStops = getFnStops();
-    for (size_t i = 0; i < oFnStops->size(); ++i)
+#endif
+	if (iResult > 0)
+	{
+		cxDebug() << "CxApplication::doLoopEvents end " << CxTime::currentMsepochString();
+	}
+	else
+	{
+		cxPrompt() << "Unknow_Exception(by throw and catch) : [CxApplication will exit] at " << CxTime::currentMsepochString();
+	}
+    if (! f_bApplicationHasStop)
     {
-        fn_void_t fn = oFnStops->at(i);
-        fn();
+        f_bApplicationHasStop = true;
+        raiseFnStops();
     }
 
     if (iTag & 0x00000001)
@@ -705,20 +538,20 @@ void CxApplication::runProcessCallBacks()
         if (f_oProcessCallBacks[f_iProcessCallBackIndexPop] != NULL)
         {
             //复制指针
-            ProcessCallBack * oProcessCallBack = f_oProcessCallBacks[f_iProcessCallBackIndexPop];
-            f_oProcessCallBacks[f_iProcessCallBackIndexPop] = NULL;
+            f_oRunningProcessCallBack = f_oProcessCallBacks[f_iProcessCallBackIndexPop];
             f_iProcessCallBackIndexPop ++;
             if (f_iProcessCallBackIndexPop >= f_iProcessCallBackCount)
                 f_iProcessCallBackIndexPop = 0;
 
-            if (oProcessCallBack->fn)
+            if (f_oRunningProcessCallBack->fn)
             {
-                if (oProcessCallBack->data.size() > 0)
-                    oProcessCallBack->fn(oProcessCallBack->msg, oProcessCallBack->tag, & oProcessCallBack->data.front(), oProcessCallBack->data.size(), oProcessCallBack->source, oProcessCallBack->target);
+                if (f_oRunningProcessCallBack->data.size() > 0)
+                    f_oRunningProcessCallBack->fn(f_oRunningProcessCallBack->msg, f_oRunningProcessCallBack->tag, & f_oRunningProcessCallBack->data.front(), f_oRunningProcessCallBack->data.size(), f_oRunningProcessCallBack->source, f_oRunningProcessCallBack->target);
                 else
-                    oProcessCallBack->fn(oProcessCallBack->msg, oProcessCallBack->tag, 0, 0, oProcessCallBack->source, oProcessCallBack->target);
+                    f_oRunningProcessCallBack->fn(f_oRunningProcessCallBack->msg, f_oRunningProcessCallBack->tag, 0, 0, f_oRunningProcessCallBack->source, f_oRunningProcessCallBack->target);
             }
-            delete oProcessCallBack;
+            f_oRunningProcessCallBack->hadRun = true;
+            f_oRunningProcessCallBack = NULL;
         }
         else
         {
@@ -799,19 +632,34 @@ void CxApplication::exit()
 {
     if (f_iApplicationStatus !=0)
     {
-        doExit();
         f_iApplicationStatus = 0;
+
+        CxInterinfo::stopInterInfo();
+        CxLogManager::stopLog();
+
+        std::cout << "CxApplication::doExit()." << std::endl;
+        doExit();
     }
+}
+
+msepoch_t CxApplication::applicationInitTime()
+{
+    return f_dtApplicationInit;
+}
+
+msepoch_t CxApplication::applicationStartTime()
+{
+    return f_dtApplicationStart;
+}
+
+msepoch_t CxApplication::applicationExecuteTime()
+{
+    return f_dtApplicationExecute;
 }
 
 int CxApplication::applicationStatus()
 {
     return f_iApplicationStatus;
-}
-
-CxMutex *CxApplication::processCallBacksLock()
-{
-    return f_oProcessCallBackPushLock;
 }
 
 std::vector<fn_void_t> * CxApplication::getFnInits()
@@ -832,92 +680,120 @@ std::vector<fn_void_t> * CxApplication::getFnStops()
     return & fnStops;
 }
 
-
-
-#ifdef CCXX_QT
-
-
-CxApplicationReceiver f_applicationReceiver;
-
-
-CxApplicationReceiver::CxApplicationReceiver(QObject *parent)
-    : QObject(parent)
+void CxApplication::assertDeal(int, int, const void *_Expression, int _line, void *_file, void *)
 {
+    string sFilePath = CxFileSystem::mergeFilePath( CxAppEnv::logPath(), "error.log" );
+    string dtNow = CxTime::currentMsepochString();
+    string sHead = CxString::format("assert\r\n%s\r\n%s\r\n", dtNow.c_str(), CxAppEnv::applicationFilePath().c_str());
+    FILE * pFile;
+    pFile = fopen (sFilePath.c_str(), "ab+");
+    if (pFile==NULL) return;
+    size_t iWrote = 0;
+    iWrote += fwrite (sHead.data() , 1, sHead.size(), pFile);
+    iWrote += fwrite (_Expression , 1, strlen((const char*)_Expression), pFile);
+    iWrote += fprintf (pFile, "\r\n%s\r\n%d\r\n\r\n",(const char*)_file,_line);
+    fclose (pFile);
 }
 
-CxApplicationReceiver::~CxApplicationReceiver()
+void CxApplication::raiseFnStops()
 {
+    vector<fn_void_t> * oFnStops = getFnStops();
+    cxDebug() << "CxApplication::stop >> " << "oFnStops.size=" << oFnStops->size();
+    cxDebug() << "CxApplication::stop >> " << CxTime::currentMsepochString();
+    for (size_t i = 0; i < oFnStops->size(); ++i)
+    {
+        fn_void_t fn = oFnStops->at(i);
+        fn();
+        cxDebug() << "CxApplication::stop >> " << i << " datetime=" << CxTime::currentMsepochString();
+    }
+    cxDebug() << "CxApplication::stop >> " << CxTime::currentMsepochString();
+    CxLogManager::stopLog();
+    CxInterinfo::stopInterInfo();
 }
 
-bool CxApplicationReceiver::event(QEvent * oEvent)
-{
-    CxApplication::runProcessCallBacks();
-    return true;
-}
-
-
-
-int CxApplication::doLoopEvents(int iTag)
-{
-    return QApplication::exec();
-}
-
-void CxApplication::signalMainThread()
-{
-    QApplication::postEvent(& f_applicationReceiver, new QEvent(QEvent::User));
-}
-
-void CxApplication::processEvents()
-{
-    QApplication::processEvents();
-}
-
-void CxApplication::doExit()
-{
-    QApplication::exit();
-}
-
-void CxApplication::reset()
-{
-}
-
-#else
-
+//*CxApplicationCustom
 static CxSingleWait * f_oSingleWait = new CxSingleWait();
 
-int CxApplication::doLoopEvents(int iTag)
+int fn_doLoopEvents_custom(int iTag)
 {
     while (f_iApplicationStatus)
     {
-        runProcessCallBacks();
+        CxApplication::runProcessCallBacks();
         f_oSingleWait->wait();
     }
     return true;
 }
 
-void CxApplication::signalMainThread()
+void fn_doSignalMainThread_custom()
 {
     f_oSingleWait->signal();
 }
 
-void CxApplication::processEvents()
+void fn_doProcessEvents_custom()
 {
-    runProcessCallBacks();
+    CxApplication::runProcessCallBacks();
     if (f_iProcessEventsSleep > -1)
     {
         CxThread::sleep(f_iProcessEventsSleep);
     }
 }
 
-void CxApplication::doExit()
+void fn_doExit_custom()
 {
-    signalMainThread();
+    CxApplication::signalMainThread();
 }
 
-void CxApplication::reset()
+void fn_doReset_custom()
 {
     delete f_oSingleWait;
     f_oSingleWait = new CxSingleWait();
 }
 
-#endif
+static fn_int_int_t f_fnLoopEvents = fn_doLoopEvents_custom;
+static fn_void_t f_fnSignalMainThread = fn_doSignalMainThread_custom;
+static fn_void_t f_fnProcessEvents = fn_doProcessEvents_custom;
+static fn_void_t f_fnExit = fn_doExit_custom;
+static fn_void_t f_fnReset = fn_doReset_custom;
+
+void CxApplication::setFnCore(fn_int_int_t fnDoLoopEvents, fn_void_t fnSignalMainThread, fn_void_t fnDoProcessEvents, fn_void_t fnDoExit, fn_void_t fnReset)
+{
+    f_fnLoopEvents = fnDoLoopEvents;
+    f_fnSignalMainThread = fnSignalMainThread;
+    f_fnProcessEvents = fnDoProcessEvents;
+    f_fnExit = fnDoExit;
+    f_fnReset = fnReset;
+}
+
+
+int CxApplication::doLoopEvents(int iTag)
+{
+    return f_fnLoopEvents(iTag);
+}
+
+void CxApplication::signalMainThread()
+{
+    f_fnSignalMainThread();
+}
+
+void CxApplication::processEvents()
+{
+    f_fnProcessEvents();
+}
+
+void CxApplication::doExit()
+{
+    f_fnExit();
+}
+
+void CxApplication::reset()
+{
+    f_fnReset();
+}
+
+void CxApplication::raiseExit()
+{
+    cxPrompt() << "CxApplication::raiseExit.";
+    cout << "CxApplication::raiseExit." << endl;
+    raise(SIGINT);
+}
+

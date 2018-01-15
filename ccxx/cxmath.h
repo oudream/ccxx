@@ -3,7 +3,7 @@
 
 #include "cxglobal.h"
 
-class CxMath
+class GM_CCXX_CORE_API CxMath
 {
 public:
     //最大公约数

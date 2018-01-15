@@ -12,7 +12,7 @@
 #define ServerAcceptStatus_Closing      (5)
 
 
-class CxChannelTcpserver : public CxChannelBase
+class GM_CCXX_CORE_API CxChannelTcpserver : public CxChannelBase
 {
 public:
     static int sendDataBySockets(CxChannelBase * oChannel, const char* pData, int iLength, void * oTarget, const std::vector<socket_t> & mSockets);
@@ -298,6 +298,7 @@ protected:
                     socket_t soMax = INVALID_SOCKET;
                     for (size_t i = 0; i < _sockets.size(); ++i)
                     {
+                        if (i >= FD_SETSIZE) break;
                         socket_t so = _sockets.at(i);
                         FD_SET(so, &inRecvs);
                         if (so > soMax) soMax = so;
@@ -449,7 +450,7 @@ private:
 
 };
 
-class CxChannelTcpserverFactory : public CxChannelFactoryBase
+class GM_CCXX_CORE_API CxChannelTcpserverFactory : public CxChannelFactoryBase
 {
 //    GM_SINGLETON_DECLARATION( CxChannelTcpserverFactory )
 public:

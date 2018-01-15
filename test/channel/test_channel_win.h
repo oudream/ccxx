@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QTimer>
-#include <ccxx/cxchannel_udp.h>
+#include <ccxx/ccxx.h>
 
 namespace Ui {
 class TestChannelWin;
@@ -73,6 +73,10 @@ private slots:
     void on_channelTypeCb_currentIndexChanged(int index);
 
     void on_testBn_clicked();
+
+    void on_xmlExplainBn1_clicked();
+
+    void on_xmlExplainBn2_clicked();
 
 private:
     Ui::TestChannelWin *ui;

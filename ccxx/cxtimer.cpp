@@ -49,20 +49,8 @@ struct CxTimerHost
 #define ci_timerhostes_size (100)
 static CxTimerHost f_mTimerHostes[ci_timerhostes_size];
 
-static volatile int f_iThreadTimerStatus = 1;
-
 static int f_timer_type_object = GM_TIMER_TYPE_OBJECT;
 static int f_timer_type_funtion = GM_TIMER_TYPE_FUNTION;
-
-
-CxTimerManager * fn_timerManagerStart()
-{
-    CxApplication::registStartFunction(CxTimerManager::start, 19000);
-    CxApplication::registStopFunction(CxTimerManager::stop);
-    static CxTimerManager timerManager;
-    return & timerManager;
-}
-static CxTimerManager * f_oTimerManager = fn_timerManagerStart();
 
 
 //
@@ -198,8 +186,8 @@ void fn_addTimer(void * timer, int iInterval, bool bObject)
         }
         else
         {
-            cxWarning() << "error error error !!! CxTimer Cache Full , Can not start timer !!!";
-            cout        << "error error error !!! CxTimer Cache Full , Can not start timer !!!";
+            cxWarning() << "Error ! Error ! Error ! CxTimer Cache Full , Can not start timer !!!";
+            cout        << "Error ! Error ! Error ! CxTimer Cache Full , Can not start timer !!!";
         }
     }
 }
@@ -265,7 +253,7 @@ void fn_updateTimers()
     }
     if (bHasTimeOut)
     {
-        CxApplication::pushProcessCallBack(fn_processTimers);
+        CxApplication::pushProcessCallBack(fn_processTimers, 0, 0, NULL, 0, NULL, NULL, true);
         CxApplication::signalMainThread();
     }
 }
@@ -273,9 +261,24 @@ void fn_updateTimers()
 class UpdateTimersThread : public CxJoinableThread
 {
 public:
+    static void startUpdateTimers();
+
+    static void stopUpdateTimers();
+
+    UpdateTimersThread()
+    {
+        _isStarted = false;
+    }
+    ~UpdateTimersThread()
+    {
+    }
+
+    inline void stop() { _isStarted=false; join(); }
+
+protected:
     void run()
     {
-        while ( f_iThreadTimerStatus )
+        while ( _isStarted )
         {
             fn_updateTimers();
             //besttodo : sleep 的毫秒数可以用最大公约数除10
@@ -283,11 +286,43 @@ public:
         }
     }
 
-    inline void waitExit() { f_iThreadTimerStatus = 0; join(); }
+private:
+    volatile bool _isStarted;
 
 };
 
-UpdateTimersThread f_threadTimer;
+UpdateTimersThread * fn_threadTimerInit()
+{
+    CxApplication::registStartFunction(UpdateTimersThread::startUpdateTimers, 19000);
+    CxApplication::registStopFunction(UpdateTimersThread::stopUpdateTimers);
+    static UpdateTimersThread m;
+    return & m;
+}
+static UpdateTimersThread * f_oThreadTimer = fn_threadTimerInit();
+
+void UpdateTimersThread::startUpdateTimers()
+{
+    if (f_oThreadTimer && ! f_oThreadTimer->_isStarted)
+    {
+#ifdef GM_OS_WIN
+        //THREAD_PRIORITY_TIME_CRITICAL
+        int iPriority = THREAD_PRIORITY_HIGHEST;
+#else
+        //SCHED_OTHER,SCHED_FIFO,SCHED_RR
+        int iPriority = 2;
+#endif
+        f_oThreadTimer->_isStarted = true;
+        f_oThreadTimer->start(iPriority);
+    }
+}
+
+void UpdateTimersThread::stopUpdateTimers()
+{
+    if (f_oThreadTimer && f_oThreadTimer->_isStarted)
+    {
+        f_oThreadTimer->stop();
+    }
+}
 
 void fn_doStopTimer(void *timer, int iInterval, bool bObject)
 {
@@ -389,13 +424,16 @@ void CxTimerManager::stopTimer(CxTimer *timer)
     }
     else
     {
-        CxApplication::pushProcessCallBack(fn_modifyTimer, GM_TIMER_EVENT_DELETE, 0, 0, 0, timer, & f_timer_type_object);
-        CxApplication::signalMainThread();
-        while ( 1 )
+        if (CxApplication::applicationStatus())
         {
-            CxThread::sleep(0);
-            if (! fn_getTimerHost(timer))
-                return;
+            CxApplication::pushProcessCallBack(fn_modifyTimer, GM_TIMER_EVENT_DELETE, 0, 0, 0, timer, & f_timer_type_object);
+            CxApplication::signalMainThread();
+            while ( 1 )
+            {
+                CxThread::sleep(0);
+                if (! fn_getTimerHost(timer))
+                    return;
+            }
         }
     }
 }
@@ -442,29 +480,6 @@ void CxTimerManager::stopTimer(fn_timer_timeout_t timer)
         CxApplication::signalMainThread();
     }
 }
-
-void CxTimerManager::start()
-{
-    static bool bNoStart = true;
-    if (bNoStart)
-    {
-#ifdef GM_OS_WIN
-        //THREAD_PRIORITY_TIME_CRITICAL
-        int iPriority = THREAD_PRIORITY_HIGHEST;
-#else
-        //SCHED_OTHER,SCHED_FIFO,SCHED_RR
-        int iPriority = 2;
-#endif
-        bNoStart = true;
-        f_threadTimer.start(iPriority);
-    }
-}
-
-void CxTimerManager::stop()
-{
-    f_threadTimer.waitExit();
-}
-
 
 
 //

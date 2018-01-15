@@ -1,0 +1,20 @@
+// UefSrvc.idl : IDL source for UefSrvc.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (UefSrvc.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(DA3F4361-6028-4950-8A90-D632E9B2C65E),
+	version(1.0),
+	helpstring("UefSrvc 1.0 Type Library")
+]
+library UEFSRVCLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+};

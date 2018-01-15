@@ -135,6 +135,19 @@ CxChannelRoad *CxChannelRoadManager::find(int iSourceId)
     return NULL;
 }
 
+CxChannelRoad *CxChannelRoadManager::find(void *oSource)
+{
+    for (size_t i = 0; i < f_oChannelRoads.size(); ++i)
+    {
+        CxChannelRoad * oChannelRoad = f_oChannelRoads.at(i);
+        if (oChannelRoad == oSource)
+        {
+            return oChannelRoad;
+        }
+    }
+    return NULL;
+}
+
 void CxChannelRoadManager::erase(CxChannelRoad *oChannelRoad)
 {
     CxContainer::remove(f_oChannelRoads, oChannelRoad);
@@ -195,6 +208,7 @@ int CxChannelRoadManager::updateRemote(int iSourceId, int iTargetPort)
     }
     return FALSE;
 }
+
 
 
 
@@ -271,6 +285,8 @@ CxChannelBase::CxChannelBase()
     _checkChannelTm = new CxTimer();
     _checkChannelTm->init(this, 1000);
     _checkChannelTm->start();
+
+    _timers = 0;
 
     _autoOpenInterval = 0;
     _channelId = 0;
@@ -420,15 +436,17 @@ void CxChannelBase::open()
     }
 }
 
-
 void CxChannelBase::close()
 {
-    if (_checkChannelTm && _checkChannelTm->isStarted()) _checkChannelTm->stop();
     closeChannelImpl();
     stopAndDeleteSenderThread();
     stopAndDeleteProcesserThread();
 }
 
+bool CxChannelBase::isOpen() const
+{
+    return getConnectedImpl();
+}
 
 bool CxChannelBase::connected() const
 {
@@ -451,7 +469,7 @@ void CxChannelBase::stopAndDeleteSenderThread()
 {
     if (! _sender) return;
     _senderStatus = ThreadStatus_Stop;
-    _sender->waitExit();
+    _sender->stop();
     delete _sender;
     _sender = NULL;
 }
@@ -460,7 +478,7 @@ void CxChannelBase::stopAndDeleteProcesserThread()
 {
     if (! _processer) return;
     _processerStatus = ThreadStatus_Stop;
-    _processer->waitExit();
+    _processer->stop();
     delete _processer;
     _processer = NULL;
 }
@@ -490,7 +508,7 @@ void CxChannelBase::processReceivedData(const char *pData, int iLength, void *oS
 {
     if (oSource)
     {
-        cxPromptReturn(iLength > CxSockAddrMaxSize);
+        cxPromptCheck(iLength > CxSockAddrMaxSize, return);
 
         const char * pRecData = pData + CxSockAddrMaxSize;
         int iRecLength = iLength - CxSockAddrMaxSize;
@@ -572,7 +590,7 @@ void CxChannelBase::processThreadNofity(int iChannelEvent, int iTag, const void 
         {
             oChannel->processReceivedData((const char*)pData, iLength, oSource, iTag);
         }
-        else if (iChannelEvent == ChannelEvent_Receive_Error || ChannelEvent_Receive_ShutdownR)
+        else if ((iChannelEvent == ChannelEvent_Receive_Error) || (iChannelEvent == ChannelEvent_Receive_ShutdownR))
         {
             string sError = (pData && iLength > 0) ? string((const char*)pData, iLength) : "";
             oChannel->outChannelPrompt() << "ChannelEvent_Receive_ShutdownR || ChannelEvent_Receive_Error - processError : " << sError << cxEndLine;
@@ -585,7 +603,7 @@ void CxChannelBase::processThreadNofity(int iChannelEvent, int iTag, const void 
         if (iChannelEvent == ChannelEvent_Send_Error)
         {
             string sError = (pData && iLength > 0) ? string((const char*)pData, iLength) : "";
-            oChannel->outChannelPrompt() << "ChannelEvent_Receive_ShutdownR || ChannelEvent_Receive_Error - processError : " << sError << cxEndLine;
+            oChannel->outChannelPrompt() << "ChannelEvent_Send_ShutdownR || ChannelEvent_Send_Error - processError : " << sError << cxEndLine;
             oChannel->processError(iChannelEvent, sError, iTag);
         }
         else
@@ -625,18 +643,17 @@ bool CxChannelBase::isSameChannel(const std::map<std::string, std::string>& para
 
 void CxChannelBase::timer_timeOut(const CxTimer *oTimer)
 {
-    static int iTimes = 0;
-    ++iTimes;
+    ++_timers;
 
     //3 second
-    if (iTimes % 3 == 0)
+    if (_timers % 3 == 0)
     {
         outReceiveInfo();
         checkChannel();
     }
 
     //_autoOpenInterval / 1000 second
-    if (_autoOpenInterval > 1000 && (iTimes % (_autoOpenInterval / 1000)) == 0)
+    if (_autoOpenInterval > 1000 && (_timers % (_autoOpenInterval / 1000)) == 0)
     {
         open();
     }
@@ -798,7 +815,7 @@ void CxChannelBase::SenderThread::init()
 
 void CxChannelBase::SenderThread::run()
 {
-    cxPromptReturn(_channel);
+    cxPromptCheck(_channel, return);
     * _status = ThreadStatus_Running;
     while (* _status == ThreadStatus_Running)
     {
@@ -862,7 +879,7 @@ void CxChannelBase::ProcesserThread::init()
 
 void CxChannelBase::ProcesserThread::run()
 {
-    cxPromptReturn(_channel);
+    cxPromptCheck(_channel, return);
     * _status = ThreadStatus_Running;
     while (* _status == ThreadStatus_Running)
     {

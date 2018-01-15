@@ -11,7 +11,7 @@ static const std::string CS_EntryResourceConfigFile = "ResourceConfigFile";
 static const std::string CS_SectionResourceStrings = "ResourceStrings";
 
 
-class CxResource
+class GM_CCXX_CORE_API CxResource
 {
 public:
     static void start( );

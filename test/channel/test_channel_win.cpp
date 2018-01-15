@@ -5,6 +5,7 @@
 #include <ccxx/ccxx.h>
 #include <ccxx/qtcommon.h>
 
+#include "general_psm_datatype.h"
 
 using namespace std;
 
@@ -302,4 +303,36 @@ void TestChannelWin::on_channelTypeCb_currentIndexChanged(int index)
 void TestChannelWin::on_testBn_clicked()
 {
     if (_channel) _channel->close();
+}
+
+void TestChannelWin::on_xmlExplainBn1_clicked()
+{
+    QString qs = ui->inInfoEd->toPlainText();
+    string sPostData = QtCommonString::gbkToStdString(qs);
+    std::vector<std::map<std::string, std::string> > rows;
+    CxXml::loadTable1Level(sPostData.data(), sPostData.size(), rows);
+    for (size_t i = 0; i < rows.size(); ++i)
+    {
+        std::map<std::string, std::string> & row = rows.at(i);
+        int iMid = CxContainer::valueTo(row, string("mid"), ci_int_zero);
+        int iCount = CxContainer::valueTo(row, string("count"), ci_int_zero);
+        cxPrompt() << "row" << i << ": mid=" << iMid << "; count=" << iCount;
+    }
+}
+
+void TestChannelWin::on_xmlExplainBn2_clicked()
+{
+    string sDataBaseName = QtCommonString::gbkToStdString( ui->lineEdit_1->text() );
+    string sTableName = QtCommonString::gbkToStdString( ui->lineEdit_2->text() );
+    QString qs = ui->inInfoEd->toPlainText();
+    string sPostData = QtCommonString::gbkToStdString(qs);
+    std::vector<std::map<std::string, std::string> > rows;
+    CxXml::loadTable2Level(sPostData.data(), sPostData.size(), rows, sDataBaseName, sTableName);
+    for (size_t i = 0; i < rows.size(); ++i)
+    {
+        std::map<std::string, std::string> & row = rows.at(i);
+        int iMid = CxContainer::valueTo(row, string("ADDRESS"), ci_int_zero);
+        int iCount = CxContainer::valueTo(row, string("VALUE"), ci_int_zero);
+        cxPrompt() << "row" << i << ": mid=" << iMid << "; count=" << iCount;
+    }
 }

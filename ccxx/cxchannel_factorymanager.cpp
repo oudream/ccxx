@@ -3,6 +3,8 @@
 #include "cxchannel_tcpserver.h"
 #include "cxchannel_udp.h"
 #include "cxchannel_serial.h"
+#include "cxchannel_none.h"
+
 
 std::vector<CxFactoryTemplate<CxChannelBase> *> *CxChannelBase::factoriesContainer()
 {
@@ -10,6 +12,10 @@ std::vector<CxFactoryTemplate<CxChannelBase> *> *CxChannelBase::factoriesContain
     return &m;
 }
 
+/**
+ * Channel Names
+ *  Serial
+ */
 void CxChannelBase::factoriesCreateAndRegister()
 {
     static bool bNotInit = true;
@@ -20,6 +26,8 @@ void CxChannelBase::factoriesCreateAndRegister()
         CxChannelFactoryManager::createAndRegister<CxChannelTcpserverFactory>();
         CxChannelFactoryManager::createAndRegister<CxChannelUdpFactory>();
         CxChannelFactoryManager::createAndRegister<CxChannelSerialFactory>();
+        CxChannelFactoryManager::createAndRegister<CxChannelNoneFactory>();
+
         bNotInit = false;
     }
 }

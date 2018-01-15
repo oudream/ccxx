@@ -1,0 +1,98 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ETW - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/ETW.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap16\ETW\ETW.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP548.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/ETW.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap16\ETW\ETW.cpp"
+"C:\dig\dbg\author\code\chap16\ETW\ETWDlg.cpp"
+"C:\dig\dbg\author\code\chap16\ETW\NKLMgr.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP548.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP549.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/ETW.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap16\ETW\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP549.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54A.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/ETW.pdb" /machine:I386 /out:"../../bin/Release/ETW.exe" 
+\dig\dbg\author\code\temp\Release\ETW.obj
+\dig\dbg\author\code\temp\Release\ETWDlg.obj
+\dig\dbg\author\code\temp\Release\NKLMgr.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\ETW.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54A.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+ETW.cpp
+ETWDlg.cpp
+NKLMgr.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+ETW.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: ETW - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/ETW.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap16\ETW\ETW.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54C.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/ETW.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap16\ETW\ETW.cpp"
+"C:\dig\dbg\author\code\chap16\ETW\ETWDlg.cpp"
+"C:\dig\dbg\author\code\chap16\ETW\NKLMgr.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54C.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54D.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/ETW.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap16\ETW\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54D.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54E.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/ETW.pdb" /debug /machine:I386 /out:"../../bin/Debug/ETW.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\ETW.obj
+\dig\dbg\author\code\temp\Debug\ETWDlg.obj
+\dig\dbg\author\code\temp\Debug\NKLMgr.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\ETW.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP54E.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+ETW.cpp
+ETWDlg.cpp
+NKLMgr.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"../../bin/Debug/ETW.bsc"  \dig\dbg\author\code\temp\Debug\StdAfx.sbr \dig\dbg\author\code\temp\Debug\ETW.sbr \dig\dbg\author\code\temp\Debug\ETWDlg.sbr \dig\dbg\author\code\temp\Debug\NKLMgr.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+ETW.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

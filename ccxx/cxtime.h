@@ -3,6 +3,8 @@
 
 #include "cxglobal.h"
 
+#include "cxstring.h"
+
 #define GM_TIME_UTC_MST (-7)
 #define GM_TIME_UTC_    (0)
 #define GM_TIME_UTC_CCT (+8)
@@ -18,7 +20,7 @@
 //2)dataTime string format : 2012/12/12 12:12:12:120
 //3)toString and fromString is local UTC
 //local VS current : local is system ( utc bejing ), current is the world
-class CxTime
+class GM_CCXX_CORE_API CxTime
 {
 public:
     /**
@@ -110,6 +112,16 @@ public:
     static tm toTm(const std::string& sDateTime);
 
     /**
+     *
+     * @param sDateTime
+     * @return
+     * @case1 : 30d, 30h, 30mi, 30se, 30ms
+     */
+    static mslong_t toMslong(const std::string& sTimeLong);
+
+    inline static secondlong_t toSecondlong(const std::string& sTimeLong) { return toMslong(sTimeLong) / 1000; }
+
+    /**
      * @brief decodeUtcTm
      * @param dt
      * @param y
@@ -123,11 +135,37 @@ public:
 
     static void decodeUtcTm(const msepoch_t& dt, int& y, int& m, int& d, int& h, int& mi, int& se, int& ms);
 
+    /**
+     * @brief decodeLocalTm GM_TIME_UTC_LOCAL (+8)
+     * @param dt
+     * @param y
+     * @param m
+     * @param d
+     * @param h
+     * @param mi
+     * @param se
+     * @param ms
+     */
     static void decodeLocalTm(const msepoch_t& dt, int& y, int& m, int& d, int& h, int& mi, int& se, int& ms);
 
+    /**
+     * @brief decodeDataTime
+     * @param sDateTime : "2012 12 12" , "2012 12 12 12 12 12" , "2012 12 12 12 12 12 122"
+     * @param sDateTime : "2012-12-12 12:12:12" , "2012-12-12 12:12:12:122"
+     * @param y
+     * @param m
+     * @param d
+     * @param h
+     * @param mi
+     * @param se
+     * @param ms
+     * @return
+     */
     static bool decodeDataTime(const std::string& sDateTime, int& y, int& m, int& d, int& h, int& mi, int& se, int& ms);
 
     static void decodeDataTime2(const std::string& sDateTime, int& y, int& m, int& d, int& h, int& mi, int& se, int& ms);
+
+    static void decodeTimeLong(const std::string& sTimeLong, int& y, int& m, int& d, int& h, int& mi, int& se, int& ms);
 
     /**
      * @brief encodeDateTime

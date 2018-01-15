@@ -1,0 +1,752 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: UEF - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B2.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"../../temp/Release/UEF.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B2.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B3.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UEF.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B3.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B4.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"../../bin/Release/UEF.pdb" /map:"../../temp/Release/UEF.map" /debug /machine:I386 /out:"../../bin/Release/UEF.exe" 
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\UEF.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B4.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+UEF.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UEF.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UEF - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B6.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/UEF.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B6.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B7.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../temp/Debug/" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UEF.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B7.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B8.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"../../bin/Debug/UEF.pdb" /debug /machine:I386 /out:"../../bin/Debug/UEF.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\UEF.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3B8.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+UEF.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UEF.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefSndThrd - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BA.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../../temp/Release/" /Fp"../../../temp/Release/UefSndThrd.pch" /Yc"stdafx.h" /Fo"../../../temp/Release/" /Fd"../../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSndThrd\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BA.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BB.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../../temp/Release/" /Fo"../../../temp/Release/" /Fd"../../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSndThrd\UefSndThrd.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BB.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BC.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"../../../bin/Release/UefSndThrd.pdb" /map:"../../../temp/Release/UefSndThrd.map" /debug /machine:I386 /out:"../../../bin/Release/UefSndThrd.exe" 
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\UefSndThrd.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BC.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSndThrd.cpp
+C:\dig\dbg\author\code\chap12\UEF\UefSndThrd\UefSndThrd.cpp(14) : warning C4723: potential divide by 0
+Linking...
+
+
+
+<h3>Results</h3>
+UefSndThrd.exe - 0 error(s), 1 warning(s)
+<h3>
+--------------------Configuration: UefSndThrd - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BE.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"../../../temp/Debug/UefSndThrd.pch" /Yc"stdafx.h" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSndThrd\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BE.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BF.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSndThrd\UefSndThrd.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3BF.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C0.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"../../../bin/Debug/UefSndThrd.pdb" /debug /machine:I386 /out:"../../../bin/Debug/UefSndThrd.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\UefSndThrd.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C0.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSndThrd.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UefSndThrd.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefSrvc - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "midl.exe /tlb ".\UefSrvc.tlb" /h "UefSrvc.h" /iid "UefSrvc_i.c" /Oicf "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl""
+Creating command line "rc.exe /l 0x804 /fo"../../../temp/Debug/UefSrvc.res" /d "_DEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C2.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../../temp/Debug/UefSrvc.pch" /Yu"stdafx.h" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C2.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C3.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../../temp/Debug/UefSrvc.pch" /Yc"stdafx.h" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C3.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C4.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../../bin/Debug/UefSrvc.pdb" /debug /machine:I386 /out:"../../../bin/Debug/UefSrvc.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\UefSrvc.obj
+\dig\dbg\author\code\temp\Debug\UefSrvc.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C4.tmp"
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C5.bat" with contents
+[
+@echo off
+"\dig\dbg\author\code\bin\Debug\UefSrvc.exe" /RegServer
+echo regsvr32 exec. time > ".\../../../bin/Debug\regsvr32.trg"
+echo Server registration done!
+]
+Creating command line "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3C5.bat"
+Creating Type Library...
+Microsoft (R) MIDL Compiler Version 5.01.0164  
+Copyright (c) Microsoft Corp 1991-1997. All rights reserved.
+Processing C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl
+UefSrvc.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.idl
+oaidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\objidl.idl
+objidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\unknwn.idl
+unknwn.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\wtypes.idl
+wtypes.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\basetsd.h
+basetsd.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\guiddef.h
+guiddef.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.idl
+ocidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oleidl.idl
+oleidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\servprov.idl
+servprov.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\urlmon.idl
+urlmon.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\msxml.idl
+msxml.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.acf
+oaidl.acf
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.acf
+ocidl.acf
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSrvc.cpp
+Linking...
+<h3>Output Window</h3>
+Performing registration
+Server registration done!
+
+
+
+<h3>Results</h3>
+UefSrvc.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefSrvc - Win32 Unicode Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "midl.exe /tlb ".\UefSrvc.tlb" /h "UefSrvc.h" /iid "UefSrvc_i.c" /Oicf "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl""
+Creating command line "rc.exe /l 0x804 /fo"DebugU/UefSrvc.res" /d "_DEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3D5.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_UNICODE" /Fp"DebugU/UefSrvc.pch" /Yu"stdafx.h" /Fo"DebugU/" /Fd"DebugU/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3D5.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3D6.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_UNICODE" /Fp"DebugU/UefSrvc.pch" /Yc"stdafx.h" /Fo"DebugU/" /Fd"DebugU/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3D6.tmp" 
+Creating command line "link.exe /nologo /entry:"wWinMainCRTStartup" /subsystem:windows /incremental:yes /pdb:"DebugU/UefSrvc.pdb" /debug /machine:I386 /out:"DebugU/UefSrvc.exe" /pdbtype:sept  .\DebugU\StdAfx.obj .\DebugU\UefSrvc.obj .\DebugU\UefSrvc.res "
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3D7.bat" with contents
+[
+@echo off
+if "%OS%"=="" goto NOTNT
+if not "%OS%"=="Windows_NT" goto NOTNT
+".\DebugU\UefSrvc.exe" /RegServer
+echo regsvr32 exec. time > ".\DebugU\regsvr32.trg"
+echo Server registration done!
+goto end
+:NOTNT
+echo Warning : Cannot register Unicode EXE on Windows 95
+:end
+]
+Creating command line "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3D7.bat"
+Creating Type Library...
+Microsoft (R) MIDL Compiler Version 5.01.0164  
+Copyright (c) Microsoft Corp 1991-1997. All rights reserved.
+Processing C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl
+UefSrvc.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.idl
+oaidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\objidl.idl
+objidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\unknwn.idl
+unknwn.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\wtypes.idl
+wtypes.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\basetsd.h
+basetsd.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\guiddef.h
+guiddef.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.idl
+ocidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oleidl.idl
+oleidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\servprov.idl
+servprov.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\urlmon.idl
+urlmon.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\msxml.idl
+msxml.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.acf
+oaidl.acf
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.acf
+ocidl.acf
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSrvc.cpp
+Linking...
+<h3>Output Window</h3>
+Performing registration
+Server registration done!
+
+
+
+<h3>Results</h3>
+UefSrvc.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefSrvc - Win32 Release MinSize--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "midl.exe /tlb ".\UefSrvc.tlb" /h "UefSrvc.h" /iid "UefSrvc_i.c" /Oicf "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl""
+Creating command line "rc.exe /l 0x804 /fo"ReleaseMinSize/UefSrvc.res" /d "NDEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3E7.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_ATL_DLL" /Fp"ReleaseMinSize/UefSrvc.pch" /Yu"stdafx.h" /Fo"ReleaseMinSize/" /Fd"ReleaseMinSize/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3E7.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3E8.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_ATL_DLL" /Fp"ReleaseMinSize/UefSrvc.pch" /Yc"stdafx.h" /Fo"ReleaseMinSize/" /Fd"ReleaseMinSize/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3E8.tmp" 
+Creating command line "link.exe /nologo /subsystem:windows /incremental:no /pdb:"ReleaseMinSize/UefSrvc.pdb" /machine:I386 /out:"ReleaseMinSize/UefSrvc.exe"  .\ReleaseMinSize\StdAfx.obj .\ReleaseMinSize\UefSrvc.obj .\ReleaseMinSize\UefSrvc.res "
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3E9.bat" with contents
+[
+@echo off
+".\ReleaseMinSize\UefSrvc.exe" /RegServer
+echo regsvr32 exec. time > ".\ReleaseMinSize\regsvr32.trg"
+echo Server registration done!
+]
+Creating command line "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3E9.bat"
+Creating Type Library...
+Microsoft (R) MIDL Compiler Version 5.01.0164  
+Copyright (c) Microsoft Corp 1991-1997. All rights reserved.
+Processing C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl
+UefSrvc.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.idl
+oaidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\objidl.idl
+objidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\unknwn.idl
+unknwn.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\wtypes.idl
+wtypes.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\basetsd.h
+basetsd.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\guiddef.h
+guiddef.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.idl
+ocidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oleidl.idl
+oleidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\servprov.idl
+servprov.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\urlmon.idl
+urlmon.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\msxml.idl
+msxml.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.acf
+oaidl.acf
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.acf
+ocidl.acf
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSrvc.cpp
+Linking...
+LINK : warning LNK4089: all references to "OLEAUT32.dll" discarded by /OPT:REF
+<h3>Output Window</h3>
+Performing registration
+Server registration done!
+
+
+
+<h3>Results</h3>
+UefSrvc.exe - 0 error(s), 1 warning(s)
+<h3>
+--------------------Configuration: UefSrvc - Win32 Release MinDependency--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "midl.exe /tlb ".\UefSrvc.tlb" /h "UefSrvc.h" /iid "UefSrvc_i.c" /Oicf "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl""
+Creating command line "rc.exe /l 0x804 /fo"ReleaseMinDependency/UefSrvc.res" /d "NDEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3F9.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /Fp"ReleaseMinDependency/UefSrvc.pch" /Yu"stdafx.h" /Fo"ReleaseMinDependency/" /Fd"ReleaseMinDependency/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3F9.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3FA.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /Fp"ReleaseMinDependency/UefSrvc.pch" /Yc"stdafx.h" /Fo"ReleaseMinDependency/" /Fd"ReleaseMinDependency/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3FA.tmp" 
+Creating command line "link.exe /nologo /subsystem:windows /incremental:no /pdb:"../../../bin/release/UefSrvc.pdb" /machine:I386 /out:"../../../bin/release/UefSrvc.exe"  .\ReleaseMinDependency\StdAfx.obj .\ReleaseMinDependency\UefSrvc.obj .\ReleaseMinDependency\UefSrvc.res "
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3FB.bat" with contents
+[
+@echo off
+"\dig\dbg\author\code\bin\release\UefSrvc.exe" /RegServer
+echo regsvr32 exec. time > ".\../../../bin/release\regsvr32.trg"
+echo Server registration done!
+]
+Creating command line "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP3FB.bat"
+Creating Type Library...
+Microsoft (R) MIDL Compiler Version 5.01.0164  
+Copyright (c) Microsoft Corp 1991-1997. All rights reserved.
+Processing C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl
+UefSrvc.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.idl
+oaidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\objidl.idl
+objidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\unknwn.idl
+unknwn.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\wtypes.idl
+wtypes.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\basetsd.h
+basetsd.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\guiddef.h
+guiddef.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.idl
+ocidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oleidl.idl
+oleidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\servprov.idl
+servprov.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\urlmon.idl
+urlmon.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\msxml.idl
+msxml.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.acf
+oaidl.acf
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.acf
+ocidl.acf
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSrvc.cpp
+Linking...
+<h3>Output Window</h3>
+Performing registration
+Server registration done!
+
+
+
+<h3>Results</h3>
+UefSrvc.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefSrvc - Win32 Unicode Release MinSize--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "midl.exe /tlb ".\UefSrvc.tlb" /h "UefSrvc.h" /iid "UefSrvc_i.c" /Oicf "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl""
+Creating command line "rc.exe /l 0x804 /fo"ReleaseUMinSize/UefSrvc.res" /d "NDEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP40B.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_ATL_DLL" /Fp"ReleaseUMinSize/UefSrvc.pch" /Yu"stdafx.h" /Fo"ReleaseUMinSize/" /Fd"ReleaseUMinSize/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP40B.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP40C.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_ATL_DLL" /Fp"ReleaseUMinSize/UefSrvc.pch" /Yc"stdafx.h" /Fo"ReleaseUMinSize/" /Fd"ReleaseUMinSize/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP40C.tmp" 
+Creating command line "link.exe /nologo /subsystem:windows /incremental:no /pdb:"ReleaseUMinSize/UefSrvc.pdb" /machine:I386 /out:"ReleaseUMinSize/UefSrvc.exe"  .\ReleaseUMinSize\StdAfx.obj .\ReleaseUMinSize\UefSrvc.obj .\ReleaseUMinSize\UefSrvc.res "
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP40D.bat" with contents
+[
+@echo off
+if "%OS%"=="" goto NOTNT
+if not "%OS%"=="Windows_NT" goto NOTNT
+".\ReleaseUMinSize\UefSrvc.exe" /RegServer
+echo regsvr32 exec. time > ".\ReleaseUMinSize\regsvr32.trg"
+echo Server registration done!
+goto end
+:NOTNT
+echo Warning : Cannot register Unicode EXE on Windows 95
+:end
+]
+Creating command line "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP40D.bat"
+Creating Type Library...
+Microsoft (R) MIDL Compiler Version 5.01.0164  
+Copyright (c) Microsoft Corp 1991-1997. All rights reserved.
+Processing C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl
+UefSrvc.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.idl
+oaidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\objidl.idl
+objidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\unknwn.idl
+unknwn.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\wtypes.idl
+wtypes.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\basetsd.h
+basetsd.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\guiddef.h
+guiddef.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.idl
+ocidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oleidl.idl
+oleidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\servprov.idl
+servprov.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\urlmon.idl
+urlmon.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\msxml.idl
+msxml.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.acf
+oaidl.acf
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.acf
+ocidl.acf
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSrvc.cpp
+Linking...
+LINK : warning LNK4089: all references to "OLEAUT32.dll" discarded by /OPT:REF
+<h3>Output Window</h3>
+Performing registration
+Server registration done!
+
+
+
+<h3>Results</h3>
+UefSrvc.exe - 0 error(s), 1 warning(s)
+<h3>
+--------------------Configuration: UefSrvc - Win32 Unicode Release MinDependency--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "midl.exe /tlb ".\UefSrvc.tlb" /h "UefSrvc.h" /iid "UefSrvc_i.c" /Oicf "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl""
+Creating command line "rc.exe /l 0x804 /fo"ReleaseUMinDependency/UefSrvc.res" /d "NDEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP41D.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_ATL_STATIC_REGISTRY" /Fp"ReleaseUMinDependency/UefSrvc.pch" /Yu"stdafx.h" /Fo"ReleaseUMinDependency/" /Fd"ReleaseUMinDependency/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP41D.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP41E.tmp" with contents
+[
+/nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_UNICODE" /D "_ATL_STATIC_REGISTRY" /Fp"ReleaseUMinDependency/UefSrvc.pch" /Yc"stdafx.h" /Fo"ReleaseUMinDependency/" /Fd"ReleaseUMinDependency/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSrvc\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP41E.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP41F.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"ReleaseUMinDependency/UefSrvc.pdb" /machine:I386 /out:"ReleaseUMinDependency/UefSrvc.exe" 
+.\ReleaseUMinDependency\StdAfx.obj
+.\ReleaseUMinDependency\UefSrvc.obj
+.\ReleaseUMinDependency\UefSrvc.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP41F.tmp"
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP420.bat" with contents
+[
+@echo off
+if "%OS%"=="" goto NOTNT
+if not "%OS%"=="Windows_NT" goto NOTNT
+".\ReleaseUMinDependency\UefSrvc.exe" /RegServer
+echo regsvr32 exec. time > ".\ReleaseUMinDependency\regsvr32.trg"
+echo Server registration done!
+goto end
+:NOTNT
+echo Warning : Cannot register Unicode EXE on Windows 95
+:end
+]
+Creating command line "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP420.bat"
+Creating Type Library...
+Microsoft (R) MIDL Compiler Version 5.01.0164  
+Copyright (c) Microsoft Corp 1991-1997. All rights reserved.
+Processing C:\dig\dbg\author\code\chap12\UEF\UefSrvc\UefSrvc.idl
+UefSrvc.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.idl
+oaidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\objidl.idl
+objidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\unknwn.idl
+unknwn.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\wtypes.idl
+wtypes.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\basetsd.h
+basetsd.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\guiddef.h
+guiddef.h
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.idl
+ocidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oleidl.idl
+oleidl.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\servprov.idl
+servprov.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\urlmon.idl
+urlmon.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\msxml.idl
+msxml.idl
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\oaidl.acf
+oaidl.acf
+Processing C:\PSDK01J\INCLUDE\PRERELEASE\ocidl.acf
+ocidl.acf
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSrvc.cpp
+Linking...
+<h3>Output Window</h3>
+Performing registration
+Server registration done!
+
+
+
+<h3>Results</h3>
+UefSrvc.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefWin32 - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../../temp/Release/UefWin32.res" /d "NDEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefWIn32\UefWin32.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP430.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../../temp/Release/UefWIn32.pch" /Yu"stdafx.h" /Fo"../../../temp/Release/" /Fd"../../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefWIn32\UefWin32.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP430.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP431.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"../../../temp/Release/UefWIn32.pch" /Yc"stdafx.h" /Fo"../../../temp/Release/" /Fd"../../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefWIn32\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP431.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP432.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"../../../bin/Release/UefWIn32.pdb" /machine:I386 /out:"../../../bin/Release/UefWIn32.exe" 
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\UefWin32.obj
+\dig\dbg\author\code\temp\Release\UefWin32.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP432.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefWin32.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UefWIn32.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefWin32 - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../../temp/Debug/UefWin32.res" /d "_DEBUG" "C:\dig\dbg\author\code\chap12\UEF\UefWIn32\UefWin32.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP434.tmp" with contents
+[
+/nologo /MLd /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"../../../temp/Debug/" /Fp"../../../temp/Debug/UefWIn32.pch" /Yu"stdafx.h" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefWIn32\UefWin32.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP434.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP435.tmp" with contents
+[
+/nologo /MLd /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"../../../temp/Debug/" /Fp"../../../temp/Debug/UefWIn32.pch" /Yc"stdafx.h" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefWIn32\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP435.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP436.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"../../../bin/Debug/UefWIn32.pdb" /debug /machine:I386 /out:"../../../bin/Debug/UefWIn32.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\UefWin32.obj
+\dig\dbg\author\code\temp\Debug\UefWin32.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP436.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+UefWin32.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UefWIn32.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefSilent - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP438.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"../../../temp/Release/UefSilent.pch" /Yu"stdafx.h" /Fo"../../../temp/Release/" /Fd"../../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSilent\UefSilent.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP438.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP439.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"../../../temp/Release/UefSilent.pch" /Yc"stdafx.h" /Fo"../../../temp/Release/" /Fd"../../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSilent\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP439.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43A.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"../../../bin/Release/UefSilent.pdb" /machine:I386 /out:"../../../bin/Release/UefSilent.exe" 
+\dig\dbg\author\code\temp\Release\UefSilent.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43A.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSilent.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UefSilent.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UefSilent - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43D.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../../temp/Debug/" /Fp"../../../temp/Debug/UefSilent.pch" /Yu"stdafx.h" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSilent\UefSilent.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43D.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43E.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"../../../temp/Debug/" /Fp"../../../temp/Debug/UefSilent.pch" /Yc"stdafx.h" /Fo"../../../temp/Debug/" /Fd"../../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UEF\UefSilent\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43E.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43F.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"../../../bin/Debug/UefSilent.pdb" /debug /machine:I386 /out:"../../../bin/Debug/UefSilent.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\UefSilent.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP43F.tmp"
+<h3>Output Window</h3>
+Compiling...
+StdAfx.cpp
+Compiling...
+UefSilent.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+UefSilent.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

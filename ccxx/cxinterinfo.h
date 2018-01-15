@@ -5,7 +5,7 @@
 #include "cxglobal.h"
 
 
-class CxInterinfo
+class GM_CCXX_CORE_API CxInterinfo
 {
 public:
     enum PlatformEnum {
@@ -14,7 +14,7 @@ public:
         Platform_Cmd,
         Platform_Log,
         Platform_Net,
-        Platform_11,
+        Platform_Tty,
         Platform_12,
         Platform_13,
         Platform_14,
@@ -39,6 +39,7 @@ public:
         Type_IO_Udp =       0x04000104,
         Type_IO_Icmp =      0x04000105,
         Type_IO_Serial =    0x04000106,
+        Type_IO_None =      0x04000107,
         Type_Protocol =     0x04000201,
         Type_Terminal =     0x04000301,
         Type_Business =     0x04000401,
@@ -54,6 +55,20 @@ public:
         InDeal_Lock
     };
 
+    enum LevelEnum {
+        LevelNone = 0x00000000,
+        LevelFatal = 0x00010000,
+        LevelError = 0x00020000,
+        LevelWarn = 0x00040000,
+        LevelInfo = 0x00080000,
+        LevelDebug = 0x00100000
+    };
+
+    //itc : inter thread communication
+    static void startInterInfo(fn_void_queue_msg_tlv_t fnITCPostDefault, fn_void_t fnITCSignalDefault, bool bRunInputThread=true);
+
+    static void stopInterInfo();
+
     static PlatformEnum platformFrom(const std::string & sPlatform);
 
     static std::string platformToString(PlatformEnum e);
@@ -62,13 +77,19 @@ public:
 
     static std::string typeToString(TypeEnum e);
 
+    static LevelEnum levelFrom(const std::string & sLevel);
+
+    static std::string levelToString(LevelEnum e);
+
+    static std::string levelUnmberToString(int eNum);
+
 };
 
 
 ///
 /// \brief The CxInterinfoFilter class
 /// outinfo control only : type source reason
-class CxInterinfoFilter
+class GM_CCXX_CORE_API CxInterinfoFilter
 {
 public:
     CxInterinfoFilter() : m_isReverse(false) {}
@@ -139,7 +160,7 @@ protected:
 };
 
 
-class CxInterinfoOut
+class GM_CCXX_CORE_API CxInterinfoOut
 {
 public:
     static void addObserver(CxInterinfoOut_I* oSubject);
@@ -148,6 +169,8 @@ public:
 
     //信息输出到所有IO端（包括命令行、日志、网络信息口等等）
     static void outInfo(const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int iTag = 0);
+
+    static void outLog(const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int iTag = 0);
 
     static int isEnable(CxInterinfo::PlatformEnum ePlatform, int type , int source , int reason);
 
@@ -167,24 +190,6 @@ public:
 
     static void disableType(int type , int source, int reason, CxInterinfo::PlatformEnum ePlatform = CxInterinfo::Platform_None);
 
-    //sFilePath is xml style :
-    /*
-<?xml version="1.0" encoding="utf-8"?>
-<xxx>
-    <interinfo>
-        <enable>
-            <a>
-                <prop platform="log" type="" source="" reason=""/>
-            </a>
-        </enable>
-    </interinfo>
-</xxx>
-*/
-    static void updateByXml(const std::string & sFilePath);
-
-    //pData is xml style
-    static void updateByXml(const char * pData, int iLength);
-
     static void update(const std::string & sContent);
 
     static void update(const std::vector<std::map<std::string, std::string> > & rows);
@@ -199,8 +204,7 @@ private:
 };
 
 
-
-class CxConsoleInterinfo : public CxInterinfoOut_I
+class GM_CCXX_CORE_API CxInterinfoIn
 {
 public:
     static void addObserver(CxInterinfoIn_I * oSubject);
@@ -215,23 +219,38 @@ public:
 
     static void removeObserver(fn_interinfo_in_cmd_t fn);
 
-    static void setFilterChannelInfo(bool value);
+};
 
-    static void start();
 
-    static void stop();
+class GM_CCXX_CORE_API CxConsoleInterinfo : public CxInterinfoOut_I
+{
+//*input
+public:
+    static std::string waitInputLine(fn_void_t fnProcessEvents, int iTimeOut = 0 , msepoch_t * pDtIn = NULL, int  * pSource = NULL, int * pInType = NULL, int * pTag = NULL);
 
+    static std::string waitInputCmd(fn_void_t fnProcessEvents, int iTimeOut = 0 , std::map<std::string, std::string> * oParams = NULL, msepoch_t * pDtIn = NULL, int  * pSource = NULL, int * pInType = NULL, int * pTag = NULL);
+
+//*output interface
 protected:
     void interinfo_out( const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int tag = 0 );
 
     inline CxInterinfo::PlatformEnum platformValue() { return CxInterinfo::Platform_Cmd; }
 
+//*input
 private:
-    static void updateInputString(const std::string & sLine);
+    /**
+     * input to public
+     * @param sLine
+     */
+    static void updateConsoleInputString(const std::string & sLine);
 
     static void processInputString(int, int, const void *, int, void *, void *);
 
-    friend class ThreadInputPrivate;
+    static int processInputLine( const std::string& sInfo, const msepoch_t & dtIn, int iSource = 0, int eInType = 0, int iTag = 0 );
+
+    static int processInputCmd( const std::string & sCommand, const std::map<std::string, std::string> & sParams, const msepoch_t & dtIn, int iSource = 0, int eInType = 0, int iTag = 0 );
+
+    friend class CxConsoleInputThread;
 
 };
 
@@ -243,9 +262,9 @@ class CxLineFlag {};
 class CxLineEndFlag {};
 
 
-class CxOutStream
+class CxOutStreamBase
 {
-private:
+protected:
     struct Stream
     {
         Stream() : ts(), title(), ref(1), enable(true), end(true), space(true), lf(false), type(0), reason(0), source(0), target(0), tag(0) {}
@@ -263,60 +282,45 @@ private:
         int tag;
     } * stream;
 public:
-    inline CxOutStream() : stream(new Stream()) {}
-    inline CxOutStream(const CxOutStream &o) : stream(o.stream) { ++stream->ref; }
-    inline CxOutStream &operator=(const CxOutStream &other)
-    {
-        if (this != &other)
-        {
-            CxOutStream outStream(other);
-            std::swap(stream, outStream.stream);
-        }
-        return *this;
-    }
+    inline CxOutStreamBase() : stream(new Stream()) {}
+    inline CxOutStreamBase(const CxOutStreamBase &o) : stream(o.stream) { ++stream->ref; }
 
-    inline ~CxOutStream()
-    {
-        if (!--stream->ref)
-        {
-            if ((! stream->end) && (stream->enable))
-            {
-                stream->ts << '\n';
-                CxInterinfoOut::outInfo(stream->ts.str(), stream->title, stream->type, stream->reason, stream->source, stream->target, stream->tag);
-            }
-            delete stream;
-        }
-    }
+    inline CxOutStreamBase &space() { stream->space = true; return *this; }
+    inline CxOutStreamBase &nospace() { stream->space = false; return *this; }
+    inline CxOutStreamBase &lf() { stream->lf = true; return *this; }
+    inline CxOutStreamBase &nolf() { stream->lf = false; return *this; }
+    inline CxOutStreamBase &enable() { stream->enable = true; return *this; }
+    inline CxOutStreamBase &disable() { stream->enable = false; return *this; }
+    inline CxOutStreamBase &setEnable(bool value) { stream->enable = value; return *this; }
+    inline CxOutStreamBase &end() { stream->end = true; return *this; }
+    inline CxOutStreamBase &noend() { stream->end = false; return *this; }
+    inline CxOutStreamBase &type(int value) { stream->type = value; return *this; }
+    inline CxOutStreamBase &source(int value) { stream->source = value; return *this; }
+    inline CxOutStreamBase &target(int value) { stream->target = value; return *this; }
+    inline CxOutStreamBase &reason(int value) { stream->reason = value; return *this; }
+    inline CxOutStreamBase &tag(int value) { stream->tag = value; return *this; }
+    inline CxOutStreamBase &title(const std::string& value) { stream->title = value; return *this; }
+    inline CxOutStreamBase &level(int value) { stream->reason = stream->reason | value ; return *this; }
 
-    inline CxOutStream &space() { stream->space = true; return *this; }
-    inline CxOutStream &nospace() { stream->space = false; return *this; }
-    inline CxOutStream &lf() { stream->lf = true; return *this; }
-    inline CxOutStream &nolf() { stream->lf = false; return *this; }
-    inline CxOutStream &enable() { stream->enable = true; return *this; }
-    inline CxOutStream &disable() { stream->enable = false; return *this; }
-    inline CxOutStream &setEnable(bool value) { stream->enable = value; return *this; }
-    inline CxOutStream &end() { stream->end = true; return *this; }
-    inline CxOutStream &noend() { stream->end = false; return *this; }
-    inline CxOutStream &type(int value) { stream->type = value; return *this; }
-    inline CxOutStream &source(int value) { stream->source = value; return *this; }
-    inline CxOutStream &target(int value) { stream->target = value; return *this; }
-    inline CxOutStream &reason(int value) { stream->reason = value; return *this; }
-    inline CxOutStream &tag(int value) { stream->tag = value; return *this; }
-    inline CxOutStream &title(const std::string& value) { stream->title = value; return *this; }
+    inline CxOutStreamBase &operator<<(const CxEndFlag&) { stream->end = true; return output(); }
 
-    inline CxOutStream &operator<<(const CxEndFlag&) { stream->end = true; return output(); }
+    inline CxOutStreamBase &operator<<(const CxLineFlag&) { stream->ts << '\n'; return output(); }
 
-    inline CxOutStream &operator<<(const CxLineFlag&) { stream->ts << '\n'; return output(); }
-
-    inline CxOutStream &operator<<(const CxLineEndFlag&) { stream->ts << '\n'; stream->end = true; return output(); }
+    inline CxOutStreamBase &operator<<(const CxLineEndFlag&) { stream->ts << '\n'; stream->end = true; return output(); }
 
     template<typename T>
-    inline CxOutStream &operator<<(const T & t) { stream->ts << t; return output(); }
+    inline CxOutStreamBase &operator<<(const T & t) { stream->ts << t; return output(); }
 
-    inline CxOutStream &operator<<(const bool& t) { stream->ts << (t ? "true" : "false"); return output(); }
+	inline CxOutStreamBase &operator<<(const bool& t) { stream->ts << (t ? "true" : "false"); return output(); }
+
+    inline CxOutStreamBase &operator<<(const std::string& t) { stream->ts << t; return output(); }
+
+    inline CxOutStreamBase &operator<<(char * t) { stream->ts << std::string(t); return output(); }
+
+    inline CxOutStreamBase &operator<<(const char * t) { stream->ts << std::string(t); return output(); }
 
     template<typename T>
-    inline CxOutStream &operator<<(const std::vector<T>& t)
+    inline CxOutStreamBase &operator<<(const std::vector<T>& t)
     {
         for (typename std::vector<T>::const_iterator it = t.begin(); it != t.end(); ++it)
         {
@@ -330,21 +334,81 @@ public:
     }
 
     template<typename TKey, typename TValue>
-    inline CxOutStream &operator<<(const std::map<TKey, TValue> & m)
+    inline CxOutStreamBase &operator<<(const std::map<TKey, TValue> & m)
     {
         for (typename std::map<TKey, TValue>::const_iterator it = m.begin(); it != m.end(); ++it)
         {
-            std::cout << it->first << "=" << it->second;
+            stream->ts << it->first << ":" << it->second;
             if (stream->lf)
                 stream->ts << "\n";
             else
-                stream->ts << " ";
+                stream->ts << ",";
         }
         return output();
     }
 
-private:
-    inline CxOutStream &output()
+protected:
+    virtual CxOutStreamBase &output() = 0;
+
+};
+
+class CxNoOutStreamBase
+{
+public:
+    inline CxNoOutStreamBase(){}
+    inline CxNoOutStreamBase(const CxOutStreamBase &){}
+    inline ~CxNoOutStreamBase(){}
+
+    inline CxNoOutStreamBase &space() { return *this; }
+    inline CxNoOutStreamBase &nospace() { return *this; }
+    inline CxNoOutStreamBase &lf() { return *this; }
+    inline CxNoOutStreamBase &nolf() { return *this; }
+    inline CxNoOutStreamBase &enable() { return *this; }
+    inline CxNoOutStreamBase &disable() { return *this; }
+    inline CxNoOutStreamBase &setEnable(bool) { return *this; }
+    inline CxNoOutStreamBase &end() { return *this; }
+    inline CxNoOutStreamBase &noend() { return *this; }
+    inline CxNoOutStreamBase &type(int) { return *this; }
+    inline CxNoOutStreamBase &source(int) { return *this; }
+    inline CxNoOutStreamBase &target(int) { return *this; }
+    inline CxNoOutStreamBase &reason(int) { return *this; }
+    inline CxNoOutStreamBase &tag(int) { return *this; }
+    inline CxNoOutStreamBase &title(const std::string&) { return *this; }
+    inline CxNoOutStreamBase &level(int) { return *this; }
+
+    template<typename T>
+    inline CxNoOutStreamBase &operator<<(const T &) { return *this; }
+
+};
+
+
+class CxInterinfoOutStream : public CxOutStreamBase {
+public:
+    inline ~CxInterinfoOutStream()
+    {
+        if (!--stream->ref)
+        {
+            if ((! stream->end) && (stream->enable))
+            {
+                stream->ts << '\n';
+                CxInterinfoOut::outInfo(stream->ts.str(), stream->title, stream->type, stream->reason, stream->source, stream->target, stream->tag);
+            }
+            delete stream;
+        }
+    }
+
+    inline CxInterinfoOutStream &operator=(const CxInterinfoOutStream &other)
+    {
+        if (this != &other)
+        {
+            CxInterinfoOutStream outStream(other);
+            std::swap(stream, outStream.stream);
+        }
+        return *this;
+    }
+
+protected:
+    virtual inline CxOutStreamBase &output()
     {
         if (stream->end)
         {
@@ -363,45 +427,19 @@ private:
 
 };
 
-
-class CxNoOutStream
-{
-public:
-    inline CxNoOutStream(){}
-    inline CxNoOutStream(const CxOutStream &){}
-    inline ~CxNoOutStream(){}
-
-    inline CxNoOutStream &space() { return *this; }
-    inline CxNoOutStream &nospace() { return *this; }
-    inline CxNoOutStream &lf() { return *this; }
-    inline CxNoOutStream &nolf() { return *this; }
-    inline CxNoOutStream &enable() { return *this; }
-    inline CxNoOutStream &disable() { return *this; }
-    inline CxNoOutStream &setEnable(bool) { return *this; }
-    inline CxNoOutStream &end() { return *this; }
-    inline CxNoOutStream &noend() { return *this; }
-    inline CxNoOutStream &type(int) { return *this; }
-    inline CxNoOutStream &source(int) { return *this; }
-    inline CxNoOutStream &target(int) { return *this; }
-    inline CxNoOutStream &reason(int) { return *this; }
-    inline CxNoOutStream &tag(int) { return *this; }
-    inline CxNoOutStream &title(const std::string&) { return *this; }
-
-    template<typename T>
-    inline CxNoOutStream &operator<<(const T &) { return *this; }
+class CxInterinfoNoOutStream : public CxNoOutStreamBase {
 
 };
 
 
 #if defined(GM_DEBUG)
-inline CxOutStream cxDebug() { CxOutStream r; r.noend(); r << CxGlobal::debugString; return r; }
+inline CxInterinfoOutStream cxDebug() { CxInterinfoOutStream r; r.noend(); r << CxGlobal::debugString; return r; }
 #else
 #undef cxDebug
-inline CxNoOutStream cxDebug() { return CxNoOutStream(); }
+inline CxInterinfoNoOutStream cxDebug() { return CxInterinfoNoOutStream(); }
 #define CX_NO_CXDEBUG_MACRO while (false) cxDebug
 #define cxDebug CX_NO_CXDEBUG_MACRO
 #endif
-
 
 #if defined(GM_TRACK_VALUE)
 #ifndef GM_TRACK_BEGIN
@@ -413,57 +451,79 @@ inline CxNoOutStream cxDebug() { return CxNoOutStream(); }
 #endif
 
 
-
 #if defined(GM_DEBUG) && defined(GM_TRACK_BEGIN) && defined(GM_TRACK_END)
-inline CxOutStream cxTrack(int iTrack) { CxOutStream r;  r.noend(); r.setEnable((iTrack>=GM_TRACK_BEGIN) && (iTrack<GM_TRACK_END)); r << CxGlobal::trackString << iTrack << " : "; return r; }
+inline CxInterinfoOutStream cxTrack(int iTrack) { CxInterinfoOutStream r;  r.noend(); r.setEnable((iTrack>=GM_TRACK_BEGIN) && (iTrack<GM_TRACK_END)); r << CxGlobal::trackString << iTrack << " : "; return r; }
 #else
 #undef cxTrack
-inline CxNoOutStream cxTrack(int iProcess) { return CxNoOutStream(); }
+inline CxInterinfoNoOutStream cxTrack(int iProcess) { return CxInterinfoNoOutStream(); }
 #define CX_NO_CXTRACK_MACRO while (false) cxTrack
 #define cxTrack CX_NO_CXTRACK_MACRO
 #endif
 
-inline CxOutStream cxPrompt() { CxOutStream r; r.noend(); r << CxGlobal::promptString; return r; }
+inline CxInterinfoOutStream cxPrompt() { CxInterinfoOutStream r; r.noend(); r << CxGlobal::promptString; return r; }
 
-inline CxOutStream cxWarn(const std::string & sFileName, int iLineIndex) { CxOutStream r; r.noend(); r << CxGlobal::warningString << sFileName << " at line " << iLineIndex << "\n" << CxGlobal::warningString; return r; }
+inline CxInterinfoOutStream cxWarn() { CxInterinfoOutStream r; r.noend(); r << CxGlobal::warningString; return r; }
+
+inline CxInterinfoOutStream cxWarn_(std::string sFileName, int iLineIndex) { CxInterinfoOutStream r; r.noend(); r << CxGlobal::warningString << sFileName << " at line " << iLineIndex << "\n" << CxGlobal::warningString; return r; }
 
 #ifndef cxWarning
-#define cxWarning() cxWarn(__FILE__,__LINE__)
+#define cxWarning() cxWarn_(std::string(__FILE__),int(__LINE__))
 #endif
 
-extern const CxEndFlag cxEnd;
-extern const CxLineFlag cxLine;
-extern const CxLineEndFlag cxEndLine;
+extern GM_CCXX_CORE_API const CxEndFlag cxEnd;
+extern GM_CCXX_CORE_API const CxLineFlag cxLine;
+extern GM_CCXX_CORE_API const CxLineEndFlag cxEndLine;
 
 #define cxPromptOut(p1)  ( cxPrompt() << p1 << cxEndLine )
 #define cxPromptOut1(p1) ( cxPrompt() << p1 << cxEndLine )
 #define cxPromptOut2(p1,p2) ( cxPrompt().space() << p1  << p2 << cxEndLine )
 #define cxPromptOut3(p1,p2,p3) ( cxPrompt().space() << p1 << p2 << p3 << cxEndLine )
-#define cxPromptOut4(p1,p2,p3,p4) ( cxPrompt().space() << p1 << p2 << << p3 << p4 << cxEndLine )
+#define cxPromptOut4(p1,p2,p3,p4) ( cxPrompt().space() << p1 << p2 << p3 << p4 << cxEndLine )
 #define cxPromptOut5(p1,p2,p3,p4,p5) ( cxPrompt().space() << p1 << p2 << p3 << p4 << p5 << cxEndLine )
 #define cxPromptOut6(p1,p2,p3,p4,p5,p6) ( cxPrompt().space() << p1 << p2 << p3 << p4 << p5 << p6 << cxEndLine )
+
+#define cxDebugOut(p1)  ( cxDebug() << p1 << cxEndLine )
+#define cxDebugOut1(p1) ( cxDebug() << p1 << cxEndLine )
+#define cxDebugOut2(p1,p2) ( cxDebug().space() << p1  << p2 << cxEndLine )
+#define cxDebugOut3(p1,p2,p3) ( cxDebug().space() << p1 << p2 << p3 << cxEndLine )
+#define cxDebugOut4(p1,p2,p3,p4) ( cxDebug().space() << p1 << p2 <<  p3 << p4 << cxEndLine )
+#define cxDebugOut5(p1,p2,p3,p4,p5) ( cxDebug().space() << p1 << p2 << p3 << p4 << p5 << cxEndLine )
+#define cxDebugOut6(p1,p2,p3,p4,p5,p6) ( cxDebug().space() << p1 << p2 << p3 << p4 << p5 << p6 << cxEndLine )
 
 #define cxWarningtOut(p1)  ( cxWarning() << p1 << cxEndLine )
 #define cxWarningtOut1(p1) ( cxWarning() << p1 << cxEndLine )
 #define cxWarningtOut2(p1,p2) ( cxWarning().space() << p1  << p2 << cxEndLine )
 #define cxWarningtOut3(p1,p2,p3) ( cxWarning().space() << p1 << p2 << p3 << cxEndLine )
-#define cxWarningtOut4(p1,p2,p3,p4) ( cxWarning().space() << p1 << p2 << << p3 << p4 << cxEndLine )
+#define cxWarningtOut4(p1,p2,p3,p4) ( cxWarning().space() << p1 << p2 <<  p3 << p4 << cxEndLine )
 #define cxWarningtOut5(p1,p2,p3,p4,p5) ( cxWarning().space() << p1 << p2 << p3 << p4 << p5 << cxEndLine )
 #define cxWarningtOut6(p1,p2,p3,p4,p5,p6) ( cxWarning().space() << p1 << p2 << p3 << p4 << p5 << p6 << cxEndLine )
 
-#define cxPromptCheck(b)  if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << cxEndLine; }
-#define cxPromptCheck1(b,p1) if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << p1 << cxEndLine; }
-#define cxPromptCheck2(b,p1,p2) if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << p1 << p2 << cxEndLine; }
-#define cxPromptCheck3(b,p1,p2,p3) if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << p1 << p2 << p3 << cxEndLine; }
-#define cxPromptCheck4(b,p1,p2,p3,p4) if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << cxEndLine; }
-#define cxPromptCheck5(b,p1,p2,p3,p4,p5) if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << p5 << cxEndLine; }
-#define cxPromptCheck6(b,p1,p2,p3,p4,p5,p6) if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << p5 << p6 << cxEndLine; }
+#define cxPromptCheck(b,r)  if(! (b) ) { cxPrompt().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << cxEndLine; r; }
+#define cxPromptCheck1(b,r,p1)  if(! (b) ) { cxPrompt().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << cxEndLine; r; }
+#define cxPromptCheck2(b,r,p1,p2)  if(! (b) ) { cxPrompt().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << cxEndLine; r; }
+#define cxPromptCheck3(b,r,p1,p2,p3)  if(! (b) ) { cxPrompt().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << cxEndLine; r; }
+#define cxPromptCheck4(b,r,p1,p2,p3,p4) if(! (b) ) { cxPrompt().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << cxEndLine; r; }
+#define cxPromptCheck5(b,r,p1,p2,p3,p4,p5) if(! (b) ) { cxPrompt().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << p5 << cxEndLine; r; }
+#define cxPromptCheck6(b,r,p1,p2,p3,p4,p5,p6) if(! (b) ) { cxPrompt().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << p5 << p6 << cxEndLine; r; }
 
-#define cxPromptReturn(b)  if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << cxEndLine; return; }
-#define cxPromptReturn_(b, r)  if(! (b) ) { cxPrompt().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << cxEndLine; return r; }
+#if defined(GM_DEBUG)
+#define cxDebugCheck(b,r)  if(! (b) ) { cxDebug().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << cxEndLine; r; }
+#define cxDebugCheck1(b,r,p1)  if(! (b) ) { cxDebug().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << cxEndLine; r; }
+#define cxDebugCheck2(b,r,p1,p2)  if(! (b) ) { cxDebug().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << cxEndLine; r; }
+#define cxDebugCheck3(b,r,p1,p2,p3)  if(! (b) ) { cxDebug().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << cxEndLine; r; }
+#define cxDebugCheck4(b,r,p1,p2,p3,p4) if(! (b) ) { cxDebug().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << cxEndLine; r; }
+#define cxDebugCheck5(b,r,p1,p2,p3,p4,p5) if(! (b) ) { cxDebug().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << p5 << cxEndLine; r; }
+#define cxDebugCheck6(b,r,p1,p2,p3,p4,p5,p6) if(! (b) ) { cxDebug().space() << "fail. __FILE__=" << std::string(__FILE__) << ", __LINE__=" << __LINE__ << std::string(#b) << p1 << p2 << p3 << p4 << p5 << p6 << cxEndLine; r; }
+#else
+#define cxDebugCheck(b,r)
+#define cxDebugCheck1(b,r,p1)
+#define cxDebugCheck2(b,r,p1,p2)
+#define cxDebugCheck3(b,r,p1,p2,p3)
+#define cxDebugCheck4(b,r,p1,p2,p3,p4)
+#define cxDebugCheck5(b,r,p1,p2,p3,p4,p5)
+#define cxDebugCheck6(b,r,p1,p2,p3,p4,p5,p6)
+#endif
 
-#define cxDebugReturn(b)  if(! (b) ) { cxDebug().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << cxEndLine; return; }
-#define cxDebugReturn_(b, r)  if(! (b) ) { cxDebug().space() << "fail : " << std::string(__FILE__) << __LINE__ << std::string(#b) << cxEndLine; return r; }
 
 //__FILE__, __LINE__,
 

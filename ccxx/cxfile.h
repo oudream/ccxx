@@ -20,45 +20,47 @@
 #endif
 
 
-class CxFile
+class GM_CCXX_CORE_API CxFile
 {
 public:
     /**
      * @brief load : Read file to byte array (string).
-     * @param sFileName
+     * @param sFilePath
      * @param sOut
      * @return
      */
-    static inline bool load(const std::string& sFileName, std::string& sOut) { return load(sFileName, sOut, 1024 * 1024 * 300); }
+    static inline std::string load(const std::string& sFilePath) { std::string r; load(sFilePath, r, 1024 * 1024 * 30); return r; }
 
-    static bool load(const std::string& sFileName, std::string& sOut, size_t iMaxSize);
+    static inline bool load(const std::string& sFilePath, std::string& sOut) { return load(sFilePath, sOut, 1024 * 1024 * 30); }
+
+    static bool load(const std::string& sFilePath, std::string& sOut, size_t iMaxSize);
 
     /**
      * @brief load : Read file to byte array (string) by split character.
-     * @param sFileName
+     * @param sFilePath
      * @param sOut
      * @param sSplitString
      * @return
      */
-    static int load(const std::string& sFileName, std::vector<std::string> & sOut, const std::string& sSplitString = CxGlobal::lineString);
+    static int load(const std::string& sFilePath, std::vector<std::string> & sOut, const std::string& sSplitString = CxGlobal::lineString);
 
     /**
      * @brief load
-     * @param sFileName
+     * @param sFilePath
      * @param sOut
      * @param cSplit
      * @return
      */
-    static int load(const std::string& sFileName, std::vector<std::string> & sOut, char cSplit);
+    static int load(const std::string& sFilePath, std::vector<std::string> & sOut, char cSplit);
 
     /**
      * @brief load
-     * @param sFileName
+     * @param sFilePath
      * @param sOut
      * @param iSectionLength
      * @return
      */
-    static int load(const std::string& sFileName, std::vector<std::string> & sOut, int iSectionLength);
+    static int load(const std::string& sFilePath, std::vector<std::string> & sOut, int iSectionLength);
 
     /**
      * @brief load
@@ -72,7 +74,7 @@ public:
 
     /**
      * @brief save : Write file from byte array (string).
-     * @param sFileName
+     * @param sFilePath
      * @param sBuffer
      * @return
      */
@@ -87,19 +89,9 @@ public:
      */
     static bool save(const std::string &sFilePath, const std::vector<std::string>& sStrings, const std::string& sSplitString = CxGlobal::lineString, bool saveReturn = false);
 
-    /**
-     * @brief md5
-     * @param sFilePath
-     * @param iCodeType : 0=data ; 1=hex
-     * @return : empty=file is empty or error
-     */
-    static std::string md5(const std::string &sFilePath, int iCodeType = 1);
-
-    static bool isSameFileData(const std::string &sFilePath1, const std::string &sFilePath2);
-
 };
 
-class CxFileSystem
+class GM_CCXX_CORE_API CxFileSystem
 {
 public:
     typedef enum {
@@ -388,7 +380,7 @@ public:
      * @param path of directory.
      * @return error number or 0 on success.
      */
-    static int removeDir(const std::string& sPath);
+    static bool removeDir(const std::string& sPath);
 
     /**
      * @brief scanDir
@@ -396,9 +388,10 @@ public:
      * @param pathInfos
      * @param includeDir
      */
-    static void scanDir(const std::string& sPath, std::vector<PathInfo>& pathInfos, bool includeDir = false);
+    static void scanDir(const std::string& sPath, std::vector<PathInfo>& pathInfos, bool bIncludeDir = false, bool bContainDir = false);
 
-    static void scanPath(const std::string& sPath, std::vector<PathInfo>& pathInfos, bool includeDir = false);
+    typedef void (*fn_scan_result_t)(const PathInfo& pathInfo, std::string * sParam, int * iParam);
+    static void scanDir(const std::string& sPath, fn_scan_result_t fn_scan_result, bool includeDir = false, std::string * sParam = NULL, int * iParam = NULL);
 
     /**
      * @brief sizeOfDir
@@ -499,6 +492,13 @@ public:
      * @return
      */
     static bool isWin32PathStyle(const std::string & sPath);
+
+    /**
+     * @brief getPathStyle
+     * @param sPath
+     * @return
+     */
+    static char getPathStyle(const std::string & sPath);
     
     /**
      * @brief convertPathStyle
@@ -509,12 +509,22 @@ public:
     static std::string convertPathStyle(const std::string & sPath, int iStype = 0);
 
     /**
-     * @brief refine
+     * @brief normalizePathStyle
      * @param sPath
      * @return 
      * @sample :/temp/a\b return : /temp/a/b
      */
-    static std::string refine(const std::string & sPath);
+    static std::string normalizePathStyle(const std::string & sPath);
+
+    /**
+     * @brief normalize
+     * @param sPath
+     * @return
+     * @sample :D:\\deploy/win32/b\\win32/bin_qt/./../bi\\bin_d/a.exe return : D:\deploy\win32\b\win32\bi\bin_d\a.exe
+     */
+    static std::string normalize(const std::string & sPath);
+
+    static std::string trimeDots(const std::string & sPath);
 
     /**
      * @brief calcLevel
@@ -522,7 +532,7 @@ public:
      * @return 
      * @sample :/temp/a\b return : 3
      */
-    static int calcLevel(const std::string & sPath);
+    static int calcLevel(const std::string & sPath) { return -1; } //needtodo:
     
     /**
      * @brief cd
@@ -533,7 +543,16 @@ public:
      */
     static std::string cd(const std::string& sPathString, const std::string& sCurrentPath=std::string());
 
+    /**
+     *
+     * @param sSize
+     * @return
+     * @case1 : 1024MB , 1024kb, 1024gb, 1024b, 1024
+     */
+    static int64 toSize(const std::string & sSize);
 
+private:
+    static std::string normalizeStringWin32(const std::string &sPath, bool bAllowAboveRoot);
 
 };
 
@@ -544,7 +563,7 @@ typedef CxFileSystem::PathInfo CxFilePathInfo;
  * Convenience class for library plugins.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxDll
+class GM_CCXX_CORE_API CxDll
 {
 private:
     friend class CxFileSystem;

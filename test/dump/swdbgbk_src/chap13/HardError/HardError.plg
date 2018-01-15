@@ -1,0 +1,98 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: HardError - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/HardError.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap13\HardError\HardError.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP580.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/HardError.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap13\HardError\HardError.cpp"
+"C:\dig\dbg\author\code\chap13\HardError\HardErrorDlg.cpp"
+"C:\dig\dbg\author\code\chap13\HardError\HardErrorRaiser.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP580.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP584.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/HardError.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap13\HardError\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP584.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP585.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/HardError.pdb" /machine:I386 /out:"../../bin/Release/HardError.exe" 
+\dig\dbg\author\code\temp\Release\HardError.obj
+\dig\dbg\author\code\temp\Release\HardErrorDlg.obj
+\dig\dbg\author\code\temp\Release\HardErrorRaiser.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\HardError.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP585.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+HardError.cpp
+HardErrorDlg.cpp
+HardErrorRaiser.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+HardError.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: HardError - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/HardError.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap13\HardError\HardError.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP587.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/HardError.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap13\HardError\HardError.cpp"
+"C:\dig\dbg\author\code\chap13\HardError\HardErrorDlg.cpp"
+"C:\dig\dbg\author\code\chap13\HardError\HardErrorRaiser.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP587.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP588.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/HardError.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap13\HardError\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP588.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP589.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/HardError.pdb" /debug /machine:I386 /out:"../../bin/Debug/HardError.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\HardError.obj
+\dig\dbg\author\code\temp\Debug\HardErrorDlg.obj
+\dig\dbg\author\code\temp\Debug\HardErrorRaiser.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\HardError.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP589.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+HardError.cpp
+HardErrorDlg.cpp
+HardErrorRaiser.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"../../bin/Debug/HardError.bsc"  \dig\dbg\author\code\temp\Debug\StdAfx.sbr \dig\dbg\author\code\temp\Debug\HardError.sbr \dig\dbg\author\code\temp\Debug\HardErrorDlg.sbr \dig\dbg\author\code\temp\Debug\HardErrorRaiser.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+HardError.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

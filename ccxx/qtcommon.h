@@ -24,7 +24,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QLineEdit>
-
+#include <QtCore/QMutex>
 
 #define GM_QString_TR(s) (QObject::trUtf8(s))
 
@@ -252,5 +252,23 @@ public:
 
 };
 
+
+class QtMutexScope
+{
+private:
+    QMutex * m_mutex;
+
+public:
+    inline QtMutexScope(QMutex * mutex) : m_mutex(mutex) {
+        m_mutex->lock();
+    }
+
+    inline QtMutexScope(QMutex & mutex) : m_mutex(& mutex) {
+        m_mutex->lock();
+    }
+
+    inline ~QtMutexScope() { m_mutex->unlock(); }
+
+};
 
 #endif // QTCOMMON_H

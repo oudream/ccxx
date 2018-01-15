@@ -1,33 +1,66 @@
 
-#include <cxglobal.h>
-#include <cxapplication.h>
-#include <cxtime.h>
-
-#include "cxTestThread1.cpp"
+#include <ccxx/ccxx.h>
 
 using namespace std;
 
-#include <windows.h>
 
-#include<stdio.h>
-
-int main(int argc, char * argv[])
+class FastcgiDealThread : public CxJoinableThread
 {
-    CxApplication::init(argc, argv);
-
-    int i = 0;
-    while (1)
+public:
+    FastcgiDealThread()
     {
-        std::cout << CxTime::currentMsepochString();
-        ::Sleep(1);
-        i++;
-        if (i==5000)
+        _isStarted = false;
+    }
+    ~FastcgiDealThread()
+    {
+    }
+
+    inline void stop() { _isStarted = false; join(); }
+
+protected:
+    void run()
+    {
+        _isStarted = true;
+        while (_isStarted)
         {
-            break;
+            cxPrompt() << "this thread say: ";
+            cxPrompt() << CxTime::currentMsepochString();
+            CxThread::sleep(1000);
         }
     }
 
-    std::
+public:
+    volatile bool _isStarted;
+
+
+};
+
+int main(int argc, const char * argv[])
+{
+    CxApplication::init(argc, argv);
+
+    FastcgiDealThread mThread;
+    int i = 0;
+    while (1)
+    {
+        ::Sleep(1000);
+        i++;
+        if (i==11)
+        {
+            cxPrompt() << "break!!!";
+            break;
+        }
+        if (i==1)
+        {
+            mThread.start();
+        }
+        if (i==10)
+        {
+            mThread.stop();
+            std::cout << "mThread.exit!!!";
+            cxPrompt() << "mThread.exit!!!";
+        }
+    }
 
     return 0;
 }

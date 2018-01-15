@@ -14,7 +14,7 @@
 //#define OTL_ODBC // Compile OTL 4/ODBC
 //#undef UNICODE
 //#undef _UNICODE
-#include "otlv4.h" // include the OTL 4 header file
+#include "otl/otlv4.h" // include the OTL 4 header file
 
 
 using namespace std;

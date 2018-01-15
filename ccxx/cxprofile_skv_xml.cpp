@@ -1,9 +1,7 @@
 #include "cxprofile_skv_xml.h"
 
 
-#include "cxfile.h"
 #include "cxxml.h"
-#include "cxcontainer.h"
 
 
 using namespace std;
@@ -11,6 +9,14 @@ using namespace std;
 
 CxSkverXml::CxSkverXml() :
     CxSkverBase(),
+    _dealState(0),
+    _dealType(0)
+{
+    _text = _textData;
+}
+
+CxSkverXml::CxSkverXml(const std::map<std::string, std::map<std::string, std::string> > & sectionEntryValues) :
+    CxSkverBase(sectionEntryValues),
     _dealState(0),
     _dealType(0)
 {

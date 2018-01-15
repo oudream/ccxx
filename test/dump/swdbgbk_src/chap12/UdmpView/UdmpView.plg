@@ -1,0 +1,98 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: UdmpView - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/UdmpView.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap12\UdmpView\UdmpView.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP594.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/UdmpView.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UdmpView\MdmpParser.cpp"
+"C:\dig\dbg\author\code\chap12\UdmpView\UdmpView.cpp"
+"C:\dig\dbg\author\code\chap12\UdmpView\UdmpViewDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP594.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP595.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"../../temp/Release/UdmpView.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap12\UdmpView\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP595.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP596.tmp" with contents
+[
+Dbghelp.lib /nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/UdmpView.pdb" /machine:I386 /out:"../../bin/Release/UdmpView.exe" 
+\dig\dbg\author\code\temp\Release\MdmpParser.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\UdmpView.obj
+\dig\dbg\author\code\temp\Release\UdmpViewDlg.obj
+\dig\dbg\author\code\temp\Release\UdmpView.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP596.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+MdmpParser.cpp
+UdmpView.cpp
+UdmpViewDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+UdmpView.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: UdmpView - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/UdmpView.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap12\UdmpView\UdmpView.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP598.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/UdmpView.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UdmpView\MdmpParser.cpp"
+"C:\dig\dbg\author\code\chap12\UdmpView\UdmpView.cpp"
+"C:\dig\dbg\author\code\chap12\UdmpView\UdmpViewDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP598.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP599.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/UdmpView.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap12\UdmpView\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP599.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP59A.tmp" with contents
+[
+Dbghelp.lib /nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/UdmpView.pdb" /debug /machine:I386 /out:"../../bin/Debug/UdmpView.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\MdmpParser.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\UdmpView.obj
+\dig\dbg\author\code\temp\Debug\UdmpViewDlg.obj
+\dig\dbg\author\code\temp\Debug\UdmpView.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP59A.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+MdmpParser.cpp
+UdmpView.cpp
+UdmpViewDlg.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"../../bin/Debug/UdmpView.bsc"  \dig\dbg\author\code\temp\Debug\StdAfx.sbr \dig\dbg\author\code\temp\Debug\MdmpParser.sbr \dig\dbg\author\code\temp\Debug\UdmpView.sbr \dig\dbg\author\code\temp\Debug\UdmpViewDlg.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+UdmpView.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

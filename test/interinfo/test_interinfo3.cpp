@@ -1,12 +1,7 @@
 
-#include <ccxx.h>
+#include <ccxx/ccxx.h>
 
 using namespace std;
-
-void do_interinfo_in_line( const std::string& sInfo, const msepoch_t & dtIn, int iSource = 0, int eInType = 0, int iTag = 0 )
-{
-    cxPromptOut(sInfo);
-}
 
 void run1()
 {
@@ -19,7 +14,7 @@ void run1()
 //        }
         if (i % 100 == 0)
         {
-            cin.peek()
+            cin.peek();
         }
         CxThread::sleep(10);
         ++i;
@@ -28,12 +23,8 @@ void run1()
     cxPromptOut("end test interinfo !!!");
 }
 
-int main(int argc, char * argv[])
+int main(int argc,const char * argv[])
 {
-    CxConsoleInterinfo::addObserver(do_interinfo_in_line);
-
-//    cout << "begin test interinfo : " << endl;
-
     cxPromptOut("begin test interinfo !!!");
 
     CxApplication::registStartFunction(run1);

@@ -1,0 +1,16 @@
+{ 
+    "tables":  
+    [   
+	    {
+	       "tbname":"self",
+			"rows":
+			[
+			    {
+					"DBSource": "UID=root;PWD=123456;DSN=ics_mysql_dsn", 
+					"DBType": "MySQL",
+					"ServerId": "5308417"
+				} 
+			]
+		}
+    ]
+}

@@ -9,6 +9,7 @@ const std::string CS_TypeSimpleName_Serial    = "Serial";
 const std::string CS_TypeSimpleName_Tcpserver = "Tcpserver";
 const std::string CS_TypeSimpleName_Tcpclient = "Tcpclient";
 const std::string CS_TypeSimpleName_Udp       = "Udp";
+const std::string CS_TypeSimpleName_None      = "None";
 
 const std::string CS_TypeSimpleName_MqReq = "MqReq";   //请求
 const std::string CS_TypeSimpleName_MqRep = "MqRep";   //响应
@@ -28,7 +29,6 @@ const std::string CS_EntryRemoteIpAddress   = "RemoteIpAddress";
 const std::string CS_EntryRemotePort        = "RemotePort";
 const std::string CS_EntryLocalIpAddress    = "LocalIpAddress";
 const std::string CS_EntryLocalPort         = "LocalPort";
-
 
 const std::string CS_EntryPortName     = "PortName";
 const std::string CS_EntryBaudRate     = "BaudRate";

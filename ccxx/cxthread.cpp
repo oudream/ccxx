@@ -978,7 +978,7 @@ void CxMutex::_unlock(void)
 
 
 
-
+/*
 extern "C" {
 #ifdef  GM_OS_WIN
     static unsigned __stdcall exec_thread(void *obj) {
@@ -1003,8 +1003,299 @@ extern "C" {
     }
 #endif
 }
+*/
+
+static bool volatile f_bThreadRunInTry = false;
+
+void CxThread::setRunInTry(bool b)
+{
+    f_bThreadRunInTry = b;
+}
+
+// CreateMiniDump
+#ifdef _MSC_VER
+#include <dbghelp.h>
+#include <crtdbg.h>
+#pragma comment ( lib, "dbghelp.lib" )
+
+static bool volatile f_bMiniDumping = false;
+static std::string f_sMiniDumpFilePath;
+
+BOOL CALLBACK MyMiniDumpCallback(
+	PVOID                            pParam,
+	const PMINIDUMP_CALLBACK_INPUT   pInput,
+	PMINIDUMP_CALLBACK_OUTPUT        pOutput
+	);
+
+bool IsDataSectionNeeded(const WCHAR* pModuleName);
+
+void CxThread::setMiniDumpFilePath(const std::string & sFilePath)
+{
+    f_sMiniDumpFilePath = sFilePath;
+    f_bThreadRunInTry = sFilePath.size() > 0;
+}
+
+void CxThread::createMiniDump(EXCEPTION_POINTERS* pep)
+{
+    if (f_bMiniDumping) return;
+    f_bMiniDumping = true;
+
+	// Open the file
+	HANDLE hFile = CreateFile((f_sMiniDumpFilePath.c_str()), GENERIC_READ | GENERIC_WRITE,
+		0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if ((hFile != NULL) && (hFile != INVALID_HANDLE_VALUE))
+	{
+		// Create the minidump
+
+		MINIDUMP_EXCEPTION_INFORMATION mdei;
+
+		mdei.ThreadId = GetCurrentThreadId();
+		mdei.ExceptionPointers = pep;
+		mdei.ClientPointers = FALSE;
+
+		MINIDUMP_CALLBACK_INFORMATION mci;
+
+		mci.CallbackRoutine = (MINIDUMP_CALLBACK_ROUTINE)MyMiniDumpCallback;
+		mci.CallbackParam = 0;
+
+		MINIDUMP_TYPE mdt = (MINIDUMP_TYPE)(MiniDumpWithPrivateReadWriteMemory |
+			MiniDumpWithDataSegs |
+			MiniDumpWithHandleData |
+			MiniDumpWithFullMemoryInfo |
+			MiniDumpWithThreadInfo |
+			MiniDumpWithUnloadedModules);
+
+		BOOL rv = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
+			hFile, mdt, (pep != 0) ? &mdei : 0, 0, &mci);
+
+		if (!rv)
+			printf(("MiniDumpWriteDump failed. Error: %u \n"), GetLastError());
+		else
+			printf(("Minidump created.\n"));
+
+		// Close the file
+
+		CloseHandle(hFile);
+	}
+	else
+	{
+		printf(("CreateFile failed. Error: %u \n"), GetLastError());
+	}
+
+    f_bMiniDumping = false;
+}
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Custom minidump callback
+//
+
+BOOL CALLBACK MyMiniDumpCallback(
+	PVOID                            pParam,
+	const PMINIDUMP_CALLBACK_INPUT   pInput,
+	PMINIDUMP_CALLBACK_OUTPUT        pOutput
+	)
+{
+	BOOL bRet = FALSE;
+
+
+	// Check parameters
+
+	if (pInput == 0)
+		return FALSE;
+
+	if (pOutput == 0)
+		return FALSE;
+
+
+	// Process the callbacks
+
+	switch (pInput->CallbackType)
+	{
+	case IncludeModuleCallback:
+	{
+								  // Include the module into the dump
+								  bRet = TRUE;
+	}
+		break;
+
+	case IncludeThreadCallback:
+	{
+								  // Include the thread into the dump
+								  bRet = TRUE;
+	}
+		break;
+
+	case ModuleCallback:
+	{
+						   // Are data sections available for this module ?
+
+						   if (pOutput->ModuleWriteFlags & ModuleWriteDataSeg)
+						   {
+							   // Yes, they are, but do we need them?
+
+							   if (!IsDataSectionNeeded(pInput->Module.FullPath))
+							   {
+								   wprintf(L"Excluding module data sections: %s \n", pInput->Module.FullPath);
+
+								   pOutput->ModuleWriteFlags &= (~ModuleWriteDataSeg);
+							   }
+						   }
+
+						   bRet = TRUE;
+	}
+		break;
+
+	case ThreadCallback:
+	{
+						   // Include all thread information into the minidump
+						   bRet = TRUE;
+	}
+		break;
+
+	case ThreadExCallback:
+	{
+							 // Include this information
+							 bRet = TRUE;
+	}
+		break;
+
+	case MemoryCallback:
+	{
+						   // We do not include any information here -> return FALSE
+						   bRet = FALSE;
+	}
+		break;
+
+	case CancelCallback:
+		break;
+	}
+
+	return bRet;
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// This function determines whether we need data sections of the given module
+//
+
+bool IsDataSectionNeeded(const WCHAR* pModuleName)
+{
+	// Check parameters
+
+	if (pModuleName == 0)
+	{
+		_ASSERTE(("Parameter is null."));
+		return false;
+	}
+
+
+	// Extract the module name
+
+	WCHAR szFileName[_MAX_FNAME] = L"";
+
+	_wsplitpath(pModuleName, NULL, NULL, szFileName, NULL);
+
+
+	// Compare the name with the list of known names and decide
+
+	// Note: For this to work, the executable name must be "mididump.exe"
+	if (wcsicmp(szFileName, L"mididump") == 0)
+	{
+		return true;
+	}
+	else if (wcsicmp(szFileName, L"ntdll") == 0)
+	{
+		return true;
+	}
+
+
+	// Complete
+
+	return false;
+
+}
+
+#endif
+
+
+#ifdef  GM_OS_WIN
+unsigned __stdcall CxThread::execThread(void *obj)
+{
+    assert(obj != NULL);
+
+    if (f_bThreadRunInTry)
+    {
+#ifdef _MSC_VER
+        __try
+        {
+            CxThread *th = static_cast<CxThread *>(obj);
+            th->setPriority();
+            th->run();
+            th->exit();
+        }
+        __except (CxThread::createMiniDump(GetExceptionInformation()), EXCEPTION_EXECUTE_HANDLER)
+        {
+            std::cout << "CxThread EXCEPTION!!! --> raise(SIGINT)!!!" << std::endl;
+            raise(SIGINT);
+        }
+#else
+        try
+        {
+            CxThread *th = static_cast<CxThread *>(obj);
+            th->setPriority();
+            th->run();
+            th->exit();
+        }
+        catch (...)
+        {
+            std::cout << "CxThread EXCEPTION!!! --> raise(SIGINT)!!!" << std::endl;
+            raise(SIGINT);
+        }
+#endif
+    }
+    else
+    {
+        CxThread *th = static_cast<CxThread *>(obj);
+        th->setPriority();
+        th->run();
+        th->exit();
+    }
+
+    return 0;
+}
+#else
+void * CxThread::execThread(void *obj)
+{
+    assert(obj != NULL);
+
+    if (f_bThreadRunInTry)
+    {
+        try
+        {
+            CxThread *th = static_cast<CxThread *>(obj);
+            th->setPriority();
+            th->run();
+            th->exit();
+        }
+        catch (...)
+        {
+            std::cout << "CxThread EXCEPTION!!! --> raise(SIGINT)!!!" << std::endl;
+            raise(SIGINT);
+        }
+    }
+    else
+    {
+        CxThread *th = static_cast<CxThread *>(obj);
+        th->setPriority();
+        th->run();
+        th->exit();
+    }
+
+    return NULL;
+}
+#endif
 
 bool CxThread::equal(cx_pthread_t t1, cx_pthread_t t2)
 {
@@ -1199,8 +1490,6 @@ void CxThread::init(void)
 }
 
 
-
-
 CxJoinableThread::CxJoinableThread(size_t size)
     : CxThread(size)
 {
@@ -1239,7 +1528,7 @@ void CxJoinableThread::start(int adj)
         stack = 1024;
 
     joining = false;
-    running = (HANDLE)_beginthreadex(NULL, stack, &exec_thread, this, 0, (unsigned int *)&tid);
+    running = (HANDLE)_beginthreadex(NULL, stack, &CxThread::execThread, this, 0, (unsigned int *)&tid);
     if(!running)
         running = INVALID_HANDLE_VALUE;
 }
@@ -1297,11 +1586,11 @@ void CxJoinableThread::start(int adj)
 #ifdef  __PTH__
     pth_attr_t attr = PTH_ATTR_DEFAULT;
     pth_attr_set(attr, PTH_ATTR_JOINABLE);
-    tid = pth_spawn(attr, &exec_thread, this);
+    tid = pth_spawn(attr, &CxThread::execThread, this);
 #else
     if(stack)
         pthread_attr_setstacksize(&attr, stack);
-    result = pthread_create(&tid, &attr, &exec_thread, this);
+    result = pthread_create(&tid, &attr, &CxThread::execThread, this);
     pthread_attr_destroy(&attr);
     if(!result)
         running = true;
@@ -1356,7 +1645,8 @@ CxDetachedThread::CxDetachedThread(size_t size)
 
 void CxDetachedThread::exit(void)
 {
-    delete this;
+    //todo
+//    delete this;
     cx_pthread_exit(NULL);
 }
 
@@ -1374,7 +1664,7 @@ void CxDetachedThread::start(int adj)
     if(stack == 1)
         stack = 1024;
 
-    hThread = (HANDLE)_beginthreadex(NULL, stack, &exec_thread, this, 0, (unsigned int *)&tid);
+    hThread = (HANDLE)_beginthreadex(NULL, stack, &CxThread::execThread, this, 0, (unsigned int *)&tid);
     if(hThread != INVALID_HANDLE_VALUE)
         active = true;
     CloseHandle(hThread);
@@ -1395,13 +1685,40 @@ void CxDetachedThread::start(int adj)
         stack = 0;
 #endif
 #ifdef  __PTH__
-    tid = pth_spawn(PTH_ATTR_DEFAULT, &exec_thread, this);
+    tid = pth_spawn(PTH_ATTR_DEFAULT, &CxThread::execThread, this);
 #else
     if(stack)
         pthread_attr_setstacksize(&attr, stack);
-    pthread_create(&tid, &attr, &exec_thread, this);
+    pthread_create(&tid, &attr, &CxThread::execThread, this);
     pthread_attr_destroy(&attr);
 #endif
     active = true;
 #endif
 }
+
+/*
+ *
+ HANDLE mutex;
+mutex = OpenMutex(MUTEX_ALL_ACCESS, FALSE, TEXT("memtest"));
+if (mutex == NULL)
+{
+    printf("null and create\n");
+    mutex = CreateMutex(NULL, FALSE, TEXT("memtest"));
+}
+
+int err = GetLastError();
+printf("error:%d\n", err);
+if (mutex == NULL)
+{
+    printf("create mutex failed\n");
+    return 1;
+}
+
+ pthread_mutexattr_init(&attr);
+pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
+
+pthread_mutex_init(&mutex, &attr);
+
+ *
+ */
+

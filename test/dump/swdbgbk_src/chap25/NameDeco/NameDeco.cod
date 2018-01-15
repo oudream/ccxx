@@ -1,0 +1,200 @@
+	TITLE	C:\dig\dbg\author\code\chap25\NameDeco\NameDeco.cpp
+	.386P
+include listing.inc
+if @Version gt 510
+.model FLAT
+else
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+_BSS	SEGMENT DWORD USE32 PUBLIC 'BSS'
+_BSS	ENDS
+$$SYMBOLS	SEGMENT BYTE USE32 'DEBSYM'
+$$SYMBOLS	ENDS
+$$TYPES	SEGMENT BYTE USE32 'DEBTYP'
+$$TYPES	ENDS
+_TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
+_TLS	ENDS
+;	COMDAT ??_C@_0BB@NAAD@Magellan?5MSWHEEL?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_06FPAF@MouseZ?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BA@CLBL@MSWHEEL_ROLLMSG?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BF@DLPD@MSH_WHEELSUPPORT_MSG?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0BF@ODOJ@MSH_SCROLL_LINES_MSG?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0EE@LGAC@c?3?2program?5files?2microsoft?5visua@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT ??_C@_00A@?$AA@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+;	COMDAT _main
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ??_GCNoTrackObject@@UAEPAXI@Z
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ??1CNoTrackObject@@UAE@XZ
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ??_7CNoTrackObject@@6B@
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+FLAT	GROUP _DATA, CONST, _BSS
+	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
+endif
+PUBLIC	_main
+PUBLIC	??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@		; `string'
+PUBLIC	??_C@_00A@?$AA@					; `string'
+EXTRN	__except_list:DWORD
+EXTRN	__chkesp:NEAR
+EXTRN	___CxxFrameHandler:NEAR
+EXTRN	_printf:NEAR
+EXTRN	??0CTest@@QAE@XZ:NEAR				; CTest::CTest
+EXTRN	??2CTest@@SAPAXI@Z:NEAR				; CTest::operator new
+EXTRN	??3CTest@@SAXPAX@Z:NEAR				; CTest::operator delete
+EXTRN	?SetName@CTest@@QBAHPADZZ:NEAR			; CTest::SetName
+EXTRN	?TestFunc@@YAHHH@Z:NEAR				; TestFunc
+;	COMDAT ??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@
+; File C:\dig\dbg\author\code\chap25\NameDeco\NameDeco.cpp
+CONST	SEGMENT
+??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@ DB 'Hello World!', 0aH, 00H ; `string'
+CONST	ENDS
+;	COMDAT ??_C@_00A@?$AA@
+CONST	SEGMENT
+??_C@_00A@?$AA@ DB 00H					; `string'
+CONST	ENDS
+;	COMDAT xdata$x
+xdata$x	SEGMENT
+__ehfuncinfo$_main DD 019930520H
+	DD	01H
+	DD	FLAT:__unwindtable$_main
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	ORG $+4
+__unwindtable$_main DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$_main$0
+xdata$x	ENDS
+;	COMDAT _main
+_TEXT	SEGMENT
+$T26631 = -20
+$T26632 = -24
+__$EHRec$ = -12
+_pTest$ = -16
+_main	PROC NEAR					; COMDAT
+
+; 20   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	6a ff		 push	 -1
+  00005	68 00 00 00 00	 push	 __ehhandler$_main
+  0000a	64 a1 00 00 00
+	00		 mov	 eax, DWORD PTR fs:__except_list
+  00010	50		 push	 eax
+  00011	64 89 25 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, esp
+  00018	83 ec 50	 sub	 esp, 80			; 00000050H
+  0001b	53		 push	 ebx
+  0001c	56		 push	 esi
+  0001d	57		 push	 edi
+  0001e	8d 7d a4	 lea	 edi, DWORD PTR [ebp-92]
+  00021	b9 14 00 00 00	 mov	 ecx, 20			; 00000014H
+  00026	b8 cc cc cc cc	 mov	 eax, -858993460		; ccccccccH
+  0002b	f3 ab		 rep stosd
+
+; 21   : 	printf("Hello World!\n");
+
+  0002d	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0O@FEEI@Hello?5World?$CB?6?$AA@ ; `string'
+  00032	e8 00 00 00 00	 call	 _printf
+  00037	83 c4 04	 add	 esp, 4
+
+; 22   : 	CTest* pTest=new CTest;
+
+  0003a	6a 01		 push	 1
+  0003c	e8 00 00 00 00	 call	 ??2CTest@@SAPAXI@Z	; CTest::operator new
+  00041	83 c4 04	 add	 esp, 4
+  00044	89 45 e8	 mov	 DWORD PTR $T26632[ebp], eax
+  00047	c7 45 fc 00 00
+	00 00		 mov	 DWORD PTR __$EHRec$[ebp+8], 0
+  0004e	83 7d e8 00	 cmp	 DWORD PTR $T26632[ebp], 0
+  00052	74 0d		 je	 SHORT $L26633
+  00054	8b 4d e8	 mov	 ecx, DWORD PTR $T26632[ebp]
+  00057	e8 00 00 00 00	 call	 ??0CTest@@QAE@XZ	; CTest::CTest
+  0005c	89 45 e4	 mov	 DWORD PTR -28+[ebp], eax
+  0005f	eb 07		 jmp	 SHORT $L26634
+$L26633:
+  00061	c7 45 e4 00 00
+	00 00		 mov	 DWORD PTR -28+[ebp], 0
+$L26634:
+  00068	8b 45 e4	 mov	 eax, DWORD PTR -28+[ebp]
+  0006b	89 45 ec	 mov	 DWORD PTR $T26631[ebp], eax
+  0006e	c7 45 fc ff ff
+	ff ff		 mov	 DWORD PTR __$EHRec$[ebp+8], -1
+  00075	8b 4d ec	 mov	 ecx, DWORD PTR $T26631[ebp]
+  00078	89 4d f0	 mov	 DWORD PTR _pTest$[ebp], ecx
+
+; 23   : 
+; 24   : 	pTest->SetName("");
+
+  0007b	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_00A@?$AA@ ; `string'
+  00080	8b 55 f0	 mov	 edx, DWORD PTR _pTest$[ebp]
+  00083	52		 push	 edx
+  00084	e8 00 00 00 00	 call	 ?SetName@CTest@@QBAHPADZZ ; CTest::SetName
+  00089	83 c4 08	 add	 esp, 8
+
+; 25   : 
+; 26   : 	TestFunc(0,1);
+
+  0008c	6a 01		 push	 1
+  0008e	6a 00		 push	 0
+  00090	e8 00 00 00 00	 call	 ?TestFunc@@YAHHH@Z	; TestFunc
+  00095	83 c4 08	 add	 esp, 8
+
+; 27   : 	return 0;
+
+  00098	33 c0		 xor	 eax, eax
+
+; 28   : }
+
+  0009a	8b 4d f4	 mov	 ecx, DWORD PTR __$EHRec$[ebp]
+  0009d	64 89 0d 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, ecx
+  000a4	5f		 pop	 edi
+  000a5	5e		 pop	 esi
+  000a6	5b		 pop	 ebx
+  000a7	83 c4 5c	 add	 esp, 92			; 0000005cH
+  000aa	3b ec		 cmp	 ebp, esp
+  000ac	e8 00 00 00 00	 call	 __chkesp
+  000b1	8b e5		 mov	 esp, ebp
+  000b3	5d		 pop	 ebp
+  000b4	c3		 ret	 0
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$_main$0:
+  00000	8b 45 e8	 mov	 eax, DWORD PTR $T26632[ebp]
+  00003	50		 push	 eax
+  00004	e8 00 00 00 00	 call	 ??3CTest@@SAXPAX@Z	; CTest::operator delete
+  00009	59		 pop	 ecx
+  0000a	c3		 ret	 0
+__ehhandler$_main:
+  0000b	b8 00 00 00 00	 mov	 eax, OFFSET FLAT:__ehfuncinfo$_main
+  00010	e9 00 00 00 00	 jmp	 ___CxxFrameHandler
+text$x	ENDS
+_main	ENDP
+END

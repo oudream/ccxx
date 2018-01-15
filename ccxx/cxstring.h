@@ -3,7 +3,7 @@
 
 #include "cxglobal.h"
 
-class CxString
+class GM_CCXX_CORE_API CxString
 {
 public:
     /**
@@ -154,6 +154,10 @@ public:
 
     static std::string toHexstring(const uint32& v);
 
+    static std::string toHexstring(const int64& v);
+
+    static std::string toHexstring(const uint64& v);
+
     static std::string toHexstring(const float& v);
 
     static std::string toHexstring(const double& v);
@@ -190,6 +194,8 @@ public:
      */
     static std::vector<std::string> split(const std::string& ss, char cSplitCharacter = CxGlobal::lineCharacter, bool bHasEmptyString = false);
 
+    static std::vector<std::string> splitByDelimiters(const std::string& ss, const std::string& sDelimiters, bool bHasEmptyString = false);
+
     static std::vector<std::string> split(const std::string& ss, const std::string& sSplitString, bool bHasEmptyString = false);
 
     static std::vector<std::string> split(const std::vector<std::string>& ss, const std::string& sSplitString, bool bHasEmptyString = false);
@@ -199,6 +205,9 @@ public:
     static void splitCase(int mode,char *pBuf,int num,std::string &sVal,std::string &split);
 
     static void splitCase(std::vector<std::vector<char> > &v,std::string &sVal,std::string &split);
+
+    //must  : k1=v1,k2=v2,k3=v3
+    static std::map<std::string, std::string> splitToMap(const std::vector<std::string> &ss, char cSplitCharacter, bool bTrim = true);
 
     //must  : k1=v1,k2=v2,k3=v3
     static std::map<std::string, std::string> splitToMap(const std::string& ss, char cMid, char cSplitCharacter, bool bTrim = true);
@@ -226,7 +235,9 @@ public:
 
     static std::string join(const std::vector<std::string>& ss, const std::string & sJoin);
 
-    static std::string join(const std::map<std::string, std::string> & pairs, const std::string& sMid, const std::string& sJoin);
+    static std::string join(const std::map<std::string, std::string> & pairs, char cMid, char cSplit);
+
+    static std::string join(const std::map<std::string, std::string> & pairs, const std::string& sMid, const std::string& sSplit);
 
     static std::vector<std::string> joinToStringList(const std::map<std::string, std::string> & pairs, const std::string& sMid);
 
@@ -286,6 +297,8 @@ public:
      */
     static size_t findLeftCase(const std::string& sMaster, const std::string& sSub);
     static size_t findLeftCase(const std::string& sMaster, const std::vector<std::string>& sSubs);
+    static size_t findLeftCase(const std::vector<std::string>& sMaster, const std::string& sSubs);
+    static size_t findEqualCase(const std::vector<std::string>& sMaster, const std::string& sSubs);
 
     static size_t findRightCase(const std::string& sMaster, const std::string& sSub);
 
@@ -293,8 +306,13 @@ public:
     static bool exist(const std::string& sMaster, const std::string& sSub);
 
     inline static bool containCase(const std::string& sMaster, const std::string& sSub) { return existCase(sMaster, sSub); }
+    inline static bool containCase(const std::string& sMaster, const std::vector<std::string>& sSubs) { return existCase(sMaster, sSubs); }
+    inline static bool containCase(const std::vector<std::string>& sMaster, const std::string& sSubs) { return existCase(sMaster, sSubs); }
+    inline static bool containEqualCase(const std::vector<std::string>& sMaster, const std::string& sSubs) { return existEqualCase(sMaster, sSubs); }
     static bool existCase(const std::string& sMaster, const std::string& sSub);
     static bool existCase(const std::string& sMaster, const std::vector<std::string>& sSubs);
+    static bool existCase(const std::vector<std::string>& sMaster, const std::string& sSubs);
+    static bool existEqualCase(const std::vector<std::string>& sMaster, const std::string& sSubs);
 
     static bool beginWith(const std::string& sMaster, const std::string& sSub);
 
@@ -344,7 +362,18 @@ public:
 
     static std::string unquote(const std::string & s, const std::string & quote_l, const std::string & quote_r);
 
-    static bool find(const std::string &src,const std::string &start,const std::string &end,int &pos,int &len,std::string &des);
+    /**
+     * @brief unquote
+     * @param s
+     * @param sPos : s's pos
+     * @param quote_l
+     * @param quote_r
+     * @param pPos : quote_r's pos
+     * @return
+     */
+    static std::string unquote(const std::string & s, size_t sPos, const std::string & quote_l, const std::string & quote_r, size_t *pPos = NULL);
+
+    static bool find(const std::string &src,const std::string &start,const std::string &end, int &pos, int &len, std::string &des);
 
     ///
     /// \brief lengthCString
@@ -380,6 +409,8 @@ public:
 
     static bool isValidCodeName(const std::string & sName);
 
+    static bool isValidHexCharater(const std::string & s);
+
     static int copyTo(const std::vector<std::string> & sLines, char * dest, int iLength);
 
     static int sizeOf(const std::vector<std::string> & sLines);
@@ -388,23 +419,34 @@ public:
 
     inline static std::string newString(const char * pText, size_t iMaxSize) { size_t iSize = strlen(pText); if (iMaxSize>iSize) return std::string(pText, iSize); else return std::string(pText, iMaxSize); }
 
+    static std::vector<std::string> newStrings(const std::vector<std::string> & ss);
+
+    static std::map<std::string, std::string> newStrings(const std::map<std::string, std::string> & ss);
+
     static int countOfString(const std::string & src, const std::string & sub);
 
     static int countOfString(const std::string & src, char sub);
 
+    static std::vector<int> parseToInts(const std::string &sSrc, char cJoin='~', char cSplit=',');
+
+    static std::wstring toWstring(const std::string &sSrc);
+
+    static std::string fromWstring(const std::wstring &sSrc);
+
+    static bool equal(const std::vector<std::string> & ss1, const std::vector<std::string> & ss2, bool bIgnoreOrder = false, bool bIgnoreCase=false, bool bTrim=false);
+
 private:
-    static std::map<std::string, std::string> doSplitToMap_trim(const std::string& s, char cMid, char cSplitCharacter);
+    static std::map<std::string, std::string> doSplitToMap_trim(const std::string& ss, char cMid, char cSplitCharacter);
 
-    static std::map<std::string, std::string> doSplitToMap_notrim(const std::string& s, char cMid, char cSplitCharacter);
+    static std::map<std::string, std::string> doSplitToMap_notrim(const std::string& ss, char cMid, char cSplitCharacter);
 
-    static std::map<std::string, std::string> doSplitToMap_reverse_trim(const std::string& s, char cMid, char cSplitCharacter);
+    static std::map<std::string, std::string> doSplitToMap_reverse_trim(const std::string& ss, char cMid, char cSplitCharacter);
 
-    static std::map<std::string, std::string> doSplitToMap_reverse_notrim(const std::string& s, char cMid, char cSplitCharacter);
-
+    static std::map<std::string, std::string> doSplitToMap_reverse_notrim(const std::string& ss, char cMid, char cSplitCharacter);
 
 };
 
-class CxStringC
+class GM_CCXX_CORE_API CxStringC
 {
 public:
     //***
@@ -618,6 +660,9 @@ private:
     static const char * pos(const char *text, ssize_t offset);
 
 };
+
+
+template<typename T1, typename T2> inline T2 CxValueType::valueTo(const T1 & t1, const T2 & defaultT2) { return CxString::fromString(t1, defaultT2); }
 
 /*** toString
 atof        Convert string to double (function )

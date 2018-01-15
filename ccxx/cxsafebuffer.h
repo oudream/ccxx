@@ -4,7 +4,10 @@
 
 #include "ccxx.h"
 
-class CxLoopBuf
+#define CX_LEN_DATA_EM     1024   //数据单元长度定义
+#define CX_LEN_DGM         4096   //数据报文长度
+
+class GM_CCXX_CORE_API CxLoopBuf
 {
 public:
     /* : m_semaphore(0,ET_MAX_SIZE * 8) */
@@ -104,7 +107,7 @@ private:
 };
 
 
-class CxSafeBuffer
+class GM_CCXX_CORE_API CxSafeBuffer
 {
 public:
     CxSafeBuffer(void);

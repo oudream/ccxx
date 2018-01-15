@@ -19,7 +19,7 @@ public:
  * behaviors on different pthread implimentations and platforms.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxConditional
+class GM_CCXX_CORE_API CxConditional
 {
 private:
     friend class CxSingleWait;
@@ -132,7 +132,7 @@ public:
 };
 
 
-class CxSingleWait
+class GM_CCXX_CORE_API CxSingleWait
 {
 private:
     friend class CxConditionalAccess;
@@ -194,7 +194,7 @@ public:
  * as well as the specialized condlock.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxConditionalAccess : private CxConditional
+class GM_CCXX_CORE_API CxConditionalAccess : private CxConditional
 {
 protected:
 #if defined _MSCONDITIONAL_
@@ -352,7 +352,7 @@ public:
  * wait with timeout.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxBarrier : private CxConditional
+class GM_CCXX_CORE_API CxBarrier : private CxConditional
 {
 private:
     unsigned count;
@@ -417,7 +417,7 @@ public:
  * to be altered during runtime and the use of timed waits.  This class also
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxSemaphore : protected CxConditional
+class GM_CCXX_CORE_API CxSemaphore : protected CxConditional
 {
 protected:
     unsigned count, waits, used;
@@ -483,7 +483,7 @@ public:
  * access by reducing the chance for collisions on the primary index mutex.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxMutex
+class GM_CCXX_CORE_API CxMutex
 {
 protected:
     cx_pthread_mutex_t mlock;
@@ -619,10 +619,14 @@ public:
 
 };
 
-class CxMutexScope
+class GM_CCXX_CORE_API CxMutexScope
 {
 private:
     CxMutex * m_mutex;
+
+    CxMutexScope();
+    CxMutexScope(const CxMutexScope&);
+    CxMutexScope& operator = (const CxMutexScope&);
 
 public:
     inline CxMutexScope(CxMutex * mutex) : m_mutex(mutex) {
@@ -648,8 +652,24 @@ public:
  * management and access functions found in thread support libraries.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxThread
+class GM_CCXX_CORE_API CxThread
 {
+public:
+    static void setRunInTry(bool);
+
+#ifdef _MSC_VER
+    static void setMiniDumpFilePath(const std::string & sFilePath);
+
+    static void createMiniDump(EXCEPTION_POINTERS* pep);
+#endif
+
+protected:
+#ifdef  GM_OS_WIN
+    static unsigned __stdcall execThread(void *obj);
+#else
+    static void * execThread(void *obj);
+#endif
+
 protected:
 // may be used in future if we need cancelable threads...
 #ifdef  GM_OS_WIN
@@ -671,6 +691,11 @@ protected:
     CxThread(size_t stack = 0);
 
     /**
+     * Destroy thread object, thread-specific data, and execution context.
+     */
+    virtual ~CxThread();
+
+    /**
      * Map thread for get method.  This should be called from start of the
      * run() method of a derived class.
      */
@@ -681,6 +706,21 @@ protected:
      */
     virtual bool is_active(void);
 
+    /**
+     * Abstract interface for thread context run method.
+     */
+    virtual void run(void) = 0;
+
+    /**
+     * Exit the thread context.  This function should NO LONGER be called
+     * directly to exit a running thread.  Instead this method will only be
+     * used to modify the behavior of the thread context at thread exit,
+     * including detached threads which by default delete themselves.  This
+     * documented usage was changed to support Mozilla NSPR exit behavior
+     * in case we support NSPR as an alternate thread runtime in the future.
+     */
+    virtual void exit(void);
+
 public:
     /**
      * Set thread priority without disrupting scheduling if possible.
@@ -689,6 +729,26 @@ public:
      * internal use.
      */
     void setPriority(void);
+
+    inline operator bool()
+        {return is_active();}
+
+    inline bool operator!()
+        {return !is_active();}
+
+    inline bool isRunning(void)
+        {return is_active();}
+
+    /**
+     * @brief start : subclass to implement stop thread interface;
+     * @param priority
+     */
+    virtual void start(int priority = 0) { /* assert("do not implement!!!"); */ }
+
+    /**
+     * @brief stop : subclass to implement stop thread interface;
+     */
+    virtual void stop() { /* assert("do not implement!!!"); */ }
 
     /**
      * Yield execution context of the current thread. This is a static
@@ -736,35 +796,6 @@ public:
      */
     static bool equal(cx_pthread_t thread1, cx_pthread_t thread2);
 
-    /**
-     * Abstract interface for thread context run method.
-     */
-    virtual void run(void) = 0;
-
-    /**
-     * Destroy thread object, thread-specific data, and execution context.
-     */
-    virtual ~CxThread();
-
-    /**
-     * Exit the thread context.  This function should NO LONGER be called
-     * directly to exit a running thread.  Instead this method will only be
-     * used to modify the behavior of the thread context at thread exit,
-     * including detached threads which by default delete themselves.  This
-     * documented usage was changed to support Mozilla NSPR exit behavior
-     * in case we support NSPR as an alternate thread runtime in the future.
-     */
-    virtual void exit(void);
-
-    inline operator bool()
-        {return is_active();}
-
-    inline bool operator!()
-        {return !is_active();}
-
-    inline bool isRunning(void)
-        {return is_active();}
-
 };
 
 /**
@@ -777,7 +808,7 @@ public:
  * exits.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxJoinableThread : public CxThread
+class GM_CCXX_CORE_API CxJoinableThread : public CxThread
 {
 protected:
 #ifdef  GM_OS_WIN
@@ -838,7 +869,7 @@ public:
  * exiting, or explicity calling the exit member function.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxDetachedThread : public CxThread
+class GM_CCXX_CORE_API CxDetachedThread : public CxThread
 {
 protected:
     bool active;
@@ -856,6 +887,10 @@ protected:
      */
     ~CxDetachedThread();
 
+    bool is_active(void);
+
+    virtual void run(void) = 0;
+
     /**
      * Exit context of detached thread.  Thread object will be deleted.
      * This function should NO LONGER be called directly to exit a running
@@ -865,10 +900,6 @@ protected:
      * while merging thread exit behavior with Mozilla NSPR.
      */
     void exit(void);
-
-    bool is_active(void);
-
-    virtual void run(void) = 0;
 
 public:
     /**

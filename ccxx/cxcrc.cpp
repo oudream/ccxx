@@ -1,7 +1,7 @@
 #include "cxcrc.h"
 
 #include "cxstring.h"
-#include "cxsystem.h"
+#include "cxfile.h"
 
 using namespace std;
 
@@ -1114,6 +1114,50 @@ std::vector<char> CxCrc::md5(const char *pData, int iLength)
     return rData;
 }
 
+string CxCrc::file2md5(const string &sFilePath, int iCodeType)
+{
+    string r;
+    vector<string> sFileContent;
+    if (!CxFile::load(sFilePath, sFileContent, 1024 * 2))
+    {
+        return r;
+    }
+
+    if (iCodeType == 0)
+    {
+        std::vector<char> crcData = CxCrc::md5(sFileContent);
+        if (crcData.size() > 0)
+            r = string((char *) (&crcData.front()), crcData.size());
+    }
+    else if (iCodeType == 1)
+    {
+        r = CxCrc::md5HexCode(sFileContent);
+    }
+
+    return r;
+}
+
+bool CxCrc::isSameMd5FileData(const string &sFilePath1, const string &sFilePath2)
+{
+    CxFileSystem::PathInfo pathInfo1 = CxFileSystem::getPathInfo(sFilePath1);
+    CxFileSystem::PathInfo pathInfo2 = CxFileSystem::getPathInfo(sFilePath2);
+    if (pathInfo1.pathType == CxFileSystem::PathTypeFile && pathInfo1.pathType == pathInfo2.pathType)
+    {
+        if (pathInfo1.fileSize == pathInfo2.fileSize)
+        {
+            if (pathInfo1.fileSize > 0)
+            {
+                return file2md5(sFilePath1) == file2md5(sFilePath2);
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 //异或校验
 uchar CxCrc::calcXOR(const uchar* pData, int iLength)
 {
@@ -1123,6 +1167,7 @@ uchar CxCrc::calcXOR(const uchar* pData, int iLength)
     }
     return Res;
 }
+
 //crc8校验
 uchar CxCrc::crc8(const uchar * ptr, int len)
 {

@@ -3,17 +3,23 @@
 #include <ccxx/cxfile.h>
 #include <ccxx/cxinterinfo.h>
 
+
 //#include "temp1.cpp"
 #include "testString1.cpp"
 #include "testString2.cpp"
 
+
 using namespace std;
+
+
+//#define ASSERT(x) assert(x)
+//#undef assert
+//#define assert(x) { CxFile::save("c:/1.log", CxString::format("error:%s-%d", __FILE__, __LINE__)); ::assert(x); }
 
 size_t fn_printf(const char *format, ...)
 {
     char buf[1024];
     va_list args;
-
     va_start(args, format);
     vsnprintf(buf, sizeof(buf), format, args);
     va_end(args);
@@ -183,11 +189,11 @@ std::map<string, string> fn_doSplitToMap(const string &s, char cMid, char cSplit
 void testString003_tomap()
 {
     string sText;
-    if ( CxFile::load("c:/0.txt", sText) )
+    if ( CxFile::load("f:/0.txt", sText) )
     {
         clock_t dtNow = clock();
         std::map<string, string> r;
-        for (size_t i = 0; i < 1000 * 100; ++i)
+        for (size_t i = 0; i < 10 * 100; ++i)
         {
             r = CxString::splitToMap(sText , '=', ';');
         }
@@ -231,7 +237,7 @@ void testString004_isValidPath()
 
 }
 
-#include <ccxx/cxvalue.h>
+#include <ccxx/cxglobal_value.h>
 
 void testString005_toString()
 {
@@ -320,15 +326,19 @@ void testString009_unquote()
     cout << s21 << endl;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
     CxApplication::init(argc, argv);
 
-    testString009_unquote();
+    testString003_tomap();
 
     cout << "--" << endl;
     cout << "--" << endl;
     cout << "--" << endl;
+
+//    assert(0);
+
+    exit(1);
 
     return 0;
 }

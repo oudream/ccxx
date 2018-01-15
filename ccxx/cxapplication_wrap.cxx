@@ -3974,7 +3974,7 @@ static int _wrap_CxApplication_getArguments(lua_State* L) {
   std::map< std::string,std::string > *result = 0 ;
   
   SWIG_check_num_args("CxApplication::getArguments",0,0)
-  result = (std::map< std::string,std::string > *) &CxApplication::getArguments();
+  result = (std::map< std::string,std::string > *) &CxApplication::arguments();
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_std__string_std__string_t,0); SWIG_arg++; 
   return SWIG_arg;
   

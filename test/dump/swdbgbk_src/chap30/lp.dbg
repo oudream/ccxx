@@ -1,0 +1,25 @@
+$$  Get process list LIST_ENTRY in $t0.
+r $t0 = nt!PsActiveProcessHead
+
+$$  Iterate over all processes in list.
+.for (r $t1 = poi(@$t0);
+      (@$t1 != 0) & (@$t1 != @$t0);
+      r $t1 = poi(@$t1))
+{
+    r? $t2 = #CONTAINING_RECORD(@$t1, nt!_EPROCESS, ActiveProcessLinks)
+
+    as /x ${/v:$Procc} @$t2
+
+    $$  Get image name into $ImageName.
+    as /ma $ImageName @@c++(&@$t2->ImageFileName[0])
+
+    .block
+    {
+        .echo ${$ImageName} at ${$Procc}
+    }
+
+    ad $ImageName
+    ad ${/v:$Procc}
+}
+
+

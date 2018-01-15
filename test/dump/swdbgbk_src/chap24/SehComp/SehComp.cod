@@ -1,0 +1,526 @@
+	TITLE	C:\dig\dbg\author\code\chap24\SehComp\SehComp.cpp
+	.386P
+include listing.inc
+if @Version gt 510
+.model FLAT
+else
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+_BSS	SEGMENT DWORD USE32 PUBLIC 'BSS'
+_BSS	ENDS
+_TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
+_TLS	ENDS
+;	COMDAT ??_C@_0O@JBCB@SEH?5Compile?$CB?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0P@HHEJ@TrySeh?5got?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_02LNJJ@A?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_02IGGG@B?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT _IsEqualGUID
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _==
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ?TrySeh@@YAHH@Z
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT ?TryLevel@@YAHH@Z
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _main
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+FLAT	GROUP _DATA, CONST, _BSS
+	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
+endif
+PUBLIC	?TrySeh@@YAHH@Z					; TrySeh
+EXTRN	__except_handler3:NEAR
+EXTRN	__except_list:DWORD
+;	COMDAT CONST
+; File C:\dig\dbg\author\code\chap24\SehComp\SehComp.cpp
+CONST	SEGMENT
+$T19353	DD	0ffffffffH
+	DD	FLAT:$L19349
+	DD	FLAT:$L19350
+CONST	ENDS
+;	COMDAT ?TrySeh@@YAHH@Z
+_TEXT	SEGMENT
+_n$ = 8
+__$SEHRec$ = -24
+?TrySeh@@YAHH@Z PROC NEAR				; TrySeh, COMDAT
+
+; 9    : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	6a ff		 push	 -1
+  00005	68 00 00 00 00	 push	 OFFSET FLAT:$T19353
+  0000a	68 00 00 00 00	 push	 OFFSET FLAT:__except_handler3
+  0000f	64 a1 00 00 00
+	00		 mov	 eax, DWORD PTR fs:__except_list
+  00015	50		 push	 eax
+  00016	64 89 25 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, esp
+  0001d	83 ec 08	 sub	 esp, 8
+  00020	53		 push	 ebx
+  00021	56		 push	 esi
+  00022	57		 push	 edi
+  00023	89 65 e8	 mov	 DWORD PTR __$SEHRec$[ebp], esp
+
+; 10   : 	__try
+
+  00026	c7 45 fc 00 00
+	00 00		 mov	 DWORD PTR __$SEHRec$[ebp+20], 0
+
+; 11   : 	{
+; 12   : 		n=1/n;
+
+  0002d	b8 01 00 00 00	 mov	 eax, 1
+  00032	99		 cdq
+  00033	f7 7d 08	 idiv	 DWORD PTR _n$[ebp]
+  00036	89 45 08	 mov	 DWORD PTR _n$[ebp], eax
+  00039	eb 0e		 jmp	 SHORT $L19357
+$L19349:
+
+; 13   : 	}
+; 14   : 	__except(EXCEPTION_EXECUTE_HANDLER)
+
+  0003b	b8 01 00 00 00	 mov	 eax, 1
+$L19351:
+  00040	c3		 ret	 0
+$L19350:
+  00041	8b 65 e8	 mov	 esp, DWORD PTR __$SEHRec$[ebp]
+
+; 15   : 	{
+; 16   : 		n=0x122;
+
+  00044	b8 22 01 00 00	 mov	 eax, 290		; 00000122H
+$L19357:
+  00049	c7 45 fc ff ff
+	ff ff		 mov	 DWORD PTR __$SEHRec$[ebp+20], -1
+
+; 17   : 	}
+; 18   : 	return n;
+; 19   : }
+
+  00050	8b 4d f0	 mov	 ecx, DWORD PTR __$SEHRec$[ebp+8]
+  00053	64 89 0d 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, ecx
+  0005a	5f		 pop	 edi
+  0005b	5e		 pop	 esi
+  0005c	5b		 pop	 ebx
+  0005d	8b e5		 mov	 esp, ebp
+  0005f	5d		 pop	 ebp
+  00060	c3		 ret	 0
+?TrySeh@@YAHH@Z ENDP					; TrySeh
+_TEXT	ENDS
+PUBLIC	?TryLevel@@YAHH@Z				; TryLevel
+;	COMDAT CONST
+; File C:\dig\dbg\author\code\chap24\SehComp\SehComp.cpp
+CONST	SEGMENT
+$T19378	DD	0ffffffffH
+	DD	FLAT:$L19362
+	DD	FLAT:$L19363
+	DD	00H
+	DD	FLAT:$L19366
+	DD	FLAT:$L19367
+	DD	00H
+	DD	FLAT:$L19370
+	DD	FLAT:$L19371
+	DD	0ffffffffH
+	DD	FLAT:$L19374
+	DD	FLAT:$L19375
+CONST	ENDS
+;	COMDAT ?TryLevel@@YAHH@Z
+_TEXT	SEGMENT
+_n$ = 8
+__$SEHRec$ = -24
+?TryLevel@@YAHH@Z PROC NEAR				; TryLevel, COMDAT
+
+; 21   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	6a ff		 push	 -1
+  00005	68 00 00 00 00	 push	 OFFSET FLAT:$T19378
+  0000a	68 00 00 00 00	 push	 OFFSET FLAT:__except_handler3
+  0000f	64 a1 00 00 00
+	00		 mov	 eax, DWORD PTR fs:__except_list
+  00015	50		 push	 eax
+  00016	64 89 25 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, esp
+  0001d	83 ec 08	 sub	 esp, 8
+  00020	53		 push	 ebx
+  00021	56		 push	 esi
+  00022	57		 push	 edi
+  00023	89 65 e8	 mov	 DWORD PTR __$SEHRec$[ebp], esp
+
+; 22   : 	__try{ // Try0
+
+  00026	33 f6		 xor	 esi, esi
+  00028	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+
+; 23   : 		n=n-1;
+
+  0002b	ff 4d 08	 dec	 DWORD PTR _n$[ebp]
+
+; 24   : 		__try{ // Try1
+
+  0002e	b8 01 00 00 00	 mov	 eax, 1
+  00033	89 45 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], eax
+
+; 25   : 			n=1/n;
+
+  00036	99		 cdq
+  00037	f7 7d 08	 idiv	 DWORD PTR _n$[ebp]
+  0003a	8b c8		 mov	 ecx, eax
+  0003c	89 4d 08	 mov	 DWORD PTR _n$[ebp], ecx
+  0003f	eb 10		 jmp	 SHORT $L19380
+$L19366:
+
+; 26   : 		}
+; 27   : 		__except(EXCEPTION_CONTINUE_SEARCH){
+
+  00041	33 c0		 xor	 eax, eax
+$L19368:
+  00043	c3		 ret	 0
+$L19367:
+  00044	8b 65 e8	 mov	 esp, DWORD PTR __$SEHRec$[ebp]
+
+; 28   : 			n=0x221;
+
+  00047	b9 21 02 00 00	 mov	 ecx, 545		; 00000221H
+  0004c	89 4d 08	 mov	 DWORD PTR _n$[ebp], ecx
+  0004f	33 f6		 xor	 esi, esi
+$L19380:
+  00051	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+
+; 29   : 		}
+; 30   : 		n++;
+
+  00054	41		 inc	 ecx
+  00055	89 4d 08	 mov	 DWORD PTR _n$[ebp], ecx
+
+; 31   : 		__try{ // Try2
+
+  00058	c7 45 fc 02 00
+	00 00		 mov	 DWORD PTR __$SEHRec$[ebp+20], 2
+
+; 32   : 			n=1/n;
+
+  0005f	b8 01 00 00 00	 mov	 eax, 1
+  00064	99		 cdq
+  00065	f7 f9		 idiv	 ecx
+  00067	8b c8		 mov	 ecx, eax
+  00069	89 4d 08	 mov	 DWORD PTR _n$[ebp], ecx
+  0006c	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+  0006f	eb 25		 jmp	 SHORT $L19373
+$L19370:
+
+; 33   : 		}
+; 34   : 		__except(EXCEPTION_CONTINUE_SEARCH){
+
+  00071	33 c0		 xor	 eax, eax
+$L19372:
+  00073	c3		 ret	 0
+$L19371:
+  00074	8b 65 e8	 mov	 esp, DWORD PTR __$SEHRec$[ebp]
+
+; 35   : 			n=0x222;
+
+  00077	b9 22 02 00 00	 mov	 ecx, 546		; 00000222H
+  0007c	89 4d 08	 mov	 DWORD PTR _n$[ebp], ecx
+  0007f	c7 45 fc 00 00
+	00 00		 mov	 DWORD PTR __$SEHRec$[ebp+20], 0
+  00086	eb 0e		 jmp	 SHORT $L19373
+$L19362:
+
+; 36   : 		}
+; 37   : 	}
+; 38   : 	__except(EXCEPTION_EXECUTE_HANDLER){
+
+  00088	b8 01 00 00 00	 mov	 eax, 1
+$L19364:
+  0008d	c3		 ret	 0
+$L19363:
+  0008e	8b 65 e8	 mov	 esp, DWORD PTR __$SEHRec$[ebp]
+
+; 39   : 		n=0x220;
+
+  00091	b9 20 02 00 00	 mov	 ecx, 544		; 00000220H
+$L19373:
+  00096	83 ce ff	 or	 esi, -1
+  00099	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+
+; 40   : 	}
+; 41   : 	__try{ // Try3
+
+  0009c	c7 45 fc 03 00
+	00 00		 mov	 DWORD PTR __$SEHRec$[ebp+20], 3
+
+; 42   : 		n=1/n;
+
+  000a3	b8 01 00 00 00	 mov	 eax, 1
+  000a8	99		 cdq
+  000a9	f7 f9		 idiv	 ecx
+  000ab	89 45 08	 mov	 DWORD PTR _n$[ebp], eax
+  000ae	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+
+; 46   : 	}
+; 47   : 	return n;
+; 48   : }
+
+  000b1	8b 4d f0	 mov	 ecx, DWORD PTR __$SEHRec$[ebp+8]
+  000b4	64 89 0d 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, ecx
+  000bb	5f		 pop	 edi
+  000bc	5e		 pop	 esi
+  000bd	5b		 pop	 ebx
+  000be	8b e5		 mov	 esp, ebp
+  000c0	5d		 pop	 ebp
+  000c1	c3		 ret	 0
+$L19374:
+
+; 43   : 	}
+; 44   : 	__except(EXCEPTION_EXECUTE_HANDLER){
+
+  000c2	b8 01 00 00 00	 mov	 eax, 1
+$L19376:
+  000c7	c3		 ret	 0
+$L19375:
+  000c8	8b 65 e8	 mov	 esp, DWORD PTR __$SEHRec$[ebp]
+
+; 45   : 		n=0x223;
+
+  000cb	b8 23 02 00 00	 mov	 eax, 547		; 00000223H
+  000d0	c7 45 fc ff ff
+	ff ff		 mov	 DWORD PTR __$SEHRec$[ebp+20], -1
+
+; 46   : 	}
+; 47   : 	return n;
+; 48   : }
+
+  000d7	8b 4d f0	 mov	 ecx, DWORD PTR __$SEHRec$[ebp+8]
+  000da	64 89 0d 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, ecx
+  000e1	5f		 pop	 edi
+  000e2	5e		 pop	 esi
+  000e3	5b		 pop	 ebx
+  000e4	8b e5		 mov	 esp, ebp
+  000e6	5d		 pop	 ebp
+  000e7	c3		 ret	 0
+?TryLevel@@YAHH@Z ENDP					; TryLevel
+_TEXT	ENDS
+PUBLIC	_main
+PUBLIC	??_C@_0O@JBCB@SEH?5Compile?$CB?6?$AA@		; `string'
+PUBLIC	??_C@_0P@HHEJ@TrySeh?5got?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_02LNJJ@A?6?$AA@				; `string'
+PUBLIC	??_C@_02IGGG@B?6?$AA@				; `string'
+EXTRN	_printf:NEAR
+;	COMDAT ??_C@_0O@JBCB@SEH?5Compile?$CB?6?$AA@
+; File C:\dig\dbg\author\code\chap24\SehComp\SehComp.cpp
+_DATA	SEGMENT
+??_C@_0O@JBCB@SEH?5Compile?$CB?6?$AA@ DB 'SEH Compile!', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0P@HHEJ@TrySeh?5got?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0P@HHEJ@TrySeh?5got?5?$CFd?6?$AA@ DB 'TrySeh got %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_02LNJJ@A?6?$AA@
+_DATA	SEGMENT
+??_C@_02LNJJ@A?6?$AA@ DB 'A', 0aH, 00H			; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_02IGGG@B?6?$AA@
+_DATA	SEGMENT
+??_C@_02IGGG@B?6?$AA@ DB 'B', 0aH, 00H			; `string'
+_DATA	ENDS
+;	COMDAT CONST
+CONST	SEGMENT
+$T19393	DD	0ffffffffH
+	DD	FLAT:$L19385
+	DD	FLAT:$L19386
+	DD	0ffffffffH
+	DD	FLAT:$L19389
+	DD	FLAT:$L19390
+CONST	ENDS
+;	COMDAT _main
+_TEXT	SEGMENT
+_argc$ = 8
+__$SEHRec$ = -24
+_main	PROC NEAR					; COMDAT
+
+; 51   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	6a ff		 push	 -1
+  00005	68 00 00 00 00	 push	 OFFSET FLAT:$T19393
+  0000a	68 00 00 00 00	 push	 OFFSET FLAT:__except_handler3
+  0000f	64 a1 00 00 00
+	00		 mov	 eax, DWORD PTR fs:__except_list
+  00015	50		 push	 eax
+  00016	64 89 25 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, esp
+  0001d	83 ec 08	 sub	 esp, 8
+  00020	53		 push	 ebx
+  00021	56		 push	 esi
+  00022	57		 push	 edi
+  00023	89 65 e8	 mov	 DWORD PTR __$SEHRec$[ebp], esp
+
+; 52   : 	printf("SEH Compile!\n");
+
+  00026	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0O@JBCB@SEH?5Compile?$CB?6?$AA@ ; `string'
+  0002b	e8 00 00 00 00	 call	 _printf
+
+; 53   : 	
+; 54   : 	printf("TrySeh got %d\n", TrySeh(argc-1));
+
+  00030	8b 45 08	 mov	 eax, DWORD PTR _argc$[ebp]
+  00033	8d 70 ff	 lea	 esi, DWORD PTR [eax-1]
+  00036	56		 push	 esi
+  00037	e8 00 00 00 00	 call	 ?TrySeh@@YAHH@Z		; TrySeh
+  0003c	83 c4 08	 add	 esp, 8
+  0003f	50		 push	 eax
+  00040	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0P@HHEJ@TrySeh?5got?5?$CFd?6?$AA@ ; `string'
+  00045	e8 00 00 00 00	 call	 _printf
+
+; 55   : 	printf("TrySeh got %d\n", TryLevel(argc-1));
+
+  0004a	56		 push	 esi
+  0004b	e8 00 00 00 00	 call	 ?TryLevel@@YAHH@Z	; TryLevel
+  00050	83 c4 0c	 add	 esp, 12			; 0000000cH
+  00053	50		 push	 eax
+  00054	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0P@HHEJ@TrySeh?5got?5?$CFd?6?$AA@ ; `string'
+  00059	e8 00 00 00 00	 call	 _printf
+  0005e	83 c4 08	 add	 esp, 8
+
+; 56   : 
+; 57   : 	__try
+
+  00061	33 c9		 xor	 ecx, ecx
+  00063	89 4d fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], ecx
+
+; 58   : 	{
+; 59   : 		argc=0;
+
+  00066	89 4d 08	 mov	 DWORD PTR _argc$[ebp], ecx
+
+; 60   : 		argc=1/argc;
+
+  00069	b8 01 00 00 00	 mov	 eax, 1
+  0006e	99		 cdq
+  0006f	33 f6		 xor	 esi, esi
+  00071	f7 fe		 idiv	 esi
+  00073	89 45 08	 mov	 DWORD PTR _argc$[ebp], eax
+  00076	83 ce ff	 or	 esi, -1
+  00079	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+  0007c	eb 1e		 jmp	 SHORT $L19388
+$L19385:
+
+; 61   : 	}
+; 62   : 	__except(EXCEPTION_EXECUTE_HANDLER)
+
+  0007e	b8 01 00 00 00	 mov	 eax, 1
+$L19387:
+  00083	c3		 ret	 0
+$L19386:
+  00084	8b 65 e8	 mov	 esp, DWORD PTR __$SEHRec$[ebp]
+
+; 63   : 	{
+; 64   : 		printf("A\n");
+
+  00087	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_02LNJJ@A?6?$AA@ ; `string'
+  0008c	e8 00 00 00 00	 call	 _printf
+  00091	83 c4 04	 add	 esp, 4
+  00094	83 ce ff	 or	 esi, -1
+  00097	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+  0009a	33 c9		 xor	 ecx, ecx
+$L19388:
+
+; 65   : 	}
+; 66   : 	__try
+
+  0009c	b8 01 00 00 00	 mov	 eax, 1
+  000a1	89 45 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], eax
+
+; 67   : 	{
+; 68   : 		argc=0;
+
+  000a4	89 4d 08	 mov	 DWORD PTR _argc$[ebp], ecx
+
+; 69   : 		argc=1/argc;
+
+  000a7	99		 cdq
+  000a8	33 c9		 xor	 ecx, ecx
+  000aa	f7 f9		 idiv	 ecx
+  000ac	89 45 08	 mov	 DWORD PTR _argc$[ebp], eax
+  000af	89 75 fc	 mov	 DWORD PTR __$SEHRec$[ebp+20], esi
+
+; 74   : 	}
+; 75   : 
+; 76   : 	return 0;
+
+  000b2	33 c0		 xor	 eax, eax
+
+; 77   : }
+
+  000b4	8b 4d f0	 mov	 ecx, DWORD PTR __$SEHRec$[ebp+8]
+  000b7	64 89 0d 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, ecx
+  000be	5f		 pop	 edi
+  000bf	5e		 pop	 esi
+  000c0	5b		 pop	 ebx
+  000c1	8b e5		 mov	 esp, ebp
+  000c3	5d		 pop	 ebp
+  000c4	c3		 ret	 0
+$L19389:
+
+; 70   : 	}
+; 71   : 	__except(EXCEPTION_EXECUTE_HANDLER)
+
+  000c5	b8 01 00 00 00	 mov	 eax, 1
+$L19391:
+  000ca	c3		 ret	 0
+$L19390:
+  000cb	8b 65 e8	 mov	 esp, DWORD PTR __$SEHRec$[ebp]
+
+; 72   : 	{
+; 73   : 		printf("B\n");
+
+  000ce	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_02IGGG@B?6?$AA@ ; `string'
+  000d3	e8 00 00 00 00	 call	 _printf
+  000d8	83 c4 04	 add	 esp, 4
+  000db	c7 45 fc ff ff
+	ff ff		 mov	 DWORD PTR __$SEHRec$[ebp+20], -1
+
+; 74   : 	}
+; 75   : 
+; 76   : 	return 0;
+
+  000e2	33 c0		 xor	 eax, eax
+
+; 77   : }
+
+  000e4	8b 4d f0	 mov	 ecx, DWORD PTR __$SEHRec$[ebp+8]
+  000e7	64 89 0d 00 00
+	00 00		 mov	 DWORD PTR fs:__except_list, ecx
+  000ee	5f		 pop	 edi
+  000ef	5e		 pop	 esi
+  000f0	5b		 pop	 ebx
+  000f1	8b e5		 mov	 esp, ebp
+  000f3	5d		 pop	 ebp
+  000f4	c3		 ret	 0
+_main	ENDP
+_TEXT	ENDS
+END

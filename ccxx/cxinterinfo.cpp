@@ -1,11 +1,14 @@
 #include "cxinterinfo.h"
 
 #include "cxcontainer.h"
-#include "cxstring.h"
 #include "cxtime.h"
 #include "cxthread.h"
-#include "cxapplication.h"
-#include "cxxml.h"
+
+#ifdef WIN32
+#  include <io.h>
+#  include <fcntl.h>
+#  include <stdio.h>
+#endif
 
 
 using namespace std;
@@ -14,22 +17,32 @@ const CxEndFlag cxEnd = CxEndFlag();
 const CxLineFlag cxLine = CxLineFlag();
 const CxLineEndFlag cxEndLine = CxLineEndFlag();
 
-CxConsoleInterinfo * fn_consoleInterinfoStart()
+static string * f_pConsoleInputLine = NULL;
+static string * f_pConsoleInputCommand = NULL;
+static std::map<std::string, std::string> * f_pConsoleInputParams = NULL;
+static msepoch_t * f_pConsoleInputDtIn = NULL;
+static int  * f_pConsoleInputSource = NULL;
+static int * f_pConsoleInputInType = NULL;
+static int * f_pConsoleInputTag = NULL;
+
+static fn_interinfo_in_line_t f_fnInterinfoIn_line = 0;
+static fn_interinfo_in_cmd_t f_fnInterinfoIn_cmd = 0;
+static CxInterinfoIn_I * f_oInterinfoIn = NULL;
+
+CxMutex * fn_pConsoleInputSingleThreadLock()
 {
-    CxApplication::registStartFunction(CxConsoleInterinfo::start);
-    CxApplication::registStopFunction(CxConsoleInterinfo::stop);
-    static CxConsoleInterinfo consoleInterinfo;
-    return & consoleInterinfo;
+    static CxMutex m;
+    return & m;
+}
+
+CxConsoleInterinfo * fn_oConsoleInterinfoSingleton()
+{
+    static CxConsoleInterinfo m;
+    return & m;
 }
 
 
-static CxConsoleInterinfo * s_consoleInterinfo = fn_consoleInterinfoStart();
-
-
-static volatile int f_bConsoleFilter = 0;
-
-
-
+///*InterinfoOutSubject*/
 CxMutex * fn_getInterinfoOutSubjectsLock()
 {
     static CxMutex interInfoLock;
@@ -42,14 +55,212 @@ vector<CxInterinfoOut_I*> * fn_getInterinfoOutSubjects()
     return & interinfoSubjects;
 }
 
-static CxMutex * f_interinfoOutSubjectsLock = fn_getInterinfoOutSubjectsLock();
+static fn_void_queue_msg_tlv_t f_fnITCPostDefault = 0;
+static fn_void_t f_fnITCSignalDefault = 0;
+
+CxMutex * fn_getConsoleInsLock()
+{
+    static CxMutex consoleInsLock;
+    return & consoleInsLock;
+}
+
+vector<fn_interinfo_in_line_t> * fn_getConsoleInCallbacks_line()
+{
+    static vector<fn_interinfo_in_line_t> m;
+    return & m;
+}
+
+vector<fn_interinfo_in_cmd_t> * fn_getConsoleInCallbacks_cmd()
+{
+    static vector<fn_interinfo_in_cmd_t> m;
+    return & m;
+}
+
+vector<CxInterinfoIn_I*> * fn_getConsoleInSubjects()
+{
+    static vector<CxInterinfoIn_I*> s_consoleInSubjects;
+    return & s_consoleInSubjects;
+}
+
+CxMutex * fn_getConsoleInputLock()
+{
+    static CxMutex consoleInputLock;
+    return & consoleInputLock;
+}
+
+queue<pair<string, msepoch_t> > * fn_getConsoleInputs()
+{
+    static queue<pair<string, msepoch_t> > consoleInputs;
+    return & consoleInputs;
+}
 
 
+class CxConsoleInputThread : public CxDetachedThread
+{
+public:
+    enum StartConditionEnum {
+        StartCondition_None = 0,
+        StartCondition_InfoStart = 0x00000001,
+        StartCondition_Observer = 0x00000002
+    };
 
+    static void startConsoleInputThread(StartConditionEnum eStartCondition);
 
+    static void stopConsoleInputThread();
 
+public:
+    CxConsoleInputThread()
+    {
+        _isStarted = false;
+//        ios_base::sync_with_stdio(false);
+//        std::cin.tie(NULL);
+//        ungetc(ch,stdin);
+    }
+    ~CxConsoleInputThread()
+    {
+    }
 
+protected:
+    void run()
+    {
+        std::string sLine;
+        while ( _isStarted )
+        {
+//            std::cin >> sLine;
+            std::getline (std::cin, sLine);
 
+            if (_isStarted && std::cin.good())
+            {
+                std::cout << "CxConsoleInputThread input" << sLine << endl;
+                CxConsoleInterinfo::updateConsoleInputString(sLine);
+            }
+            else
+            {
+                _isStarted = false;
+                std::cout << "CxConsoleInputThread end." << endl;
+            }
+        }
+    }
+
+private:
+    volatile bool _isStarted;
+
+    friend class CxInterinfo;
+	friend class CxInterinfoIn;
+
+};
+
+int * fn_oConsoleInputThreadStartCondition()
+{
+    static int m;
+    return &m;
+}
+
+CxConsoleInputThread * fn_oConsoleInputThreadInit()
+{
+    static CxConsoleInputThread m;
+    return &m;
+}
+
+void CxConsoleInputThread::startConsoleInputThread(CxConsoleInputThread::StartConditionEnum eStartCondition)
+{
+    int * pStartCondition = fn_oConsoleInputThreadStartCondition();
+    * pStartCondition |= eStartCondition;
+    if (* pStartCondition < StartCondition_InfoStart | StartCondition_Observer) return;
+
+//    if (!(fn_getConsoleInSubjects()->size()>0 && fn_getConsoleInCallbacks_line()->size()>0 && fn_getConsoleInCallbacks_cmd()->size()>0))
+//    {
+//        return;
+//    }
+    CxConsoleInputThread * oConsoleInputThread = fn_oConsoleInputThreadInit();
+    if (! oConsoleInputThread->_isStarted){}
+    {
+#ifdef WIN32
+#  ifdef __BORLANDC__
+        setmode(_fileno(stdin), O_BINARY);
+#  else
+        _setmode(_fileno(stdin), _O_BINARY);
+#  endif
+#endif
+        oConsoleInputThread->_isStarted = true;
+        oConsoleInputThread->start();
+        cxPrompt() << "CxInterinfo::startConsoleInputThread";
+    }
+}
+
+void CxConsoleInputThread::stopConsoleInputThread()
+{
+    CxConsoleInputThread * oConsoleInputThread = fn_oConsoleInputThreadInit();
+    oConsoleInputThread->_isStarted = false;
+    std::cin.setstate(std::cin.eofbit);
+    std::cout << "CxInterinfo::stopConsoleInputThread." << std::endl;
+    {
+//		ungetc('\r', stdin);
+
+//        cin.exceptions(std::ifstream::eofbit);
+
+//        std::cin.setstate(std::cin.eofbit);
+//        feof(stdin);
+//        fclose(stdin);
+
+//		char mybuffer[32768];
+//		setvbuf(stdin, mybuffer, _IOFBF, sizeof(mybuffer));
+//
+//		setvbuf(stdin, NULL, _IOFBF, 16384);
+//		setvbuf(stdin, "0", _IOEOF, 1);
+//		setvbuf(stdin, mybuffer, _IOEOF, sizeof(mybuffer));
+
+//		if (isatty(fileno(stdin)))
+//			printf("stdin is a terminal\n");
+//		else
+//			printf("stdin is a file or a pipe\n");
+
+//        std::cin.setstate(std::cin.eofbit);
+//        close(fileno(stdin));
+
+//        std::cin.fill(_IOEOF);
+//        std::cin.fill(0);
+
+//        std::ios::sync_with_stdio(false);
+//        std::cin.tie(0);
+
+//        std::ostream *prevstr;
+//        std::ofstream ofs;
+//        ofs.open("test.txt");
+//        std::cout << "tie example:\n";	// 直接输出到屏幕
+//        *std::cin.tie() << "This is inserted into cout\n";	// 空参数调用返回默认的output stream，也就是cout
+//        prevstr = std::cin.tie(&ofs);						// cin绑定ofs，返回原来的output stream
+//        *std::cin.tie() << "This is inserted into the file\n";	// ofs，输出到文件
+//        std::cin.tie(prevstr);									// 恢复
+//        ofs.close();
+
+//        fclose(stdin);
+//        CxThread::sleep(100);
+
+//        *std::cin.tie()<< 0 << "This is inserted into cout\r\n";
+//        std::cout << "CxInterinfo::stopInterInfo." << std::endl;
+    }
+}
+
+void CxInterinfo::startInterInfo(fn_void_queue_msg_tlv_t fnITCPostDefault, fn_void_t fnITCSignalDefault, bool bRunInputThread)
+{
+    f_fnITCPostDefault = fnITCPostDefault;
+    f_fnITCSignalDefault = fnITCSignalDefault;
+
+    CxInterinfoOut::addObserver(fn_oConsoleInterinfoSingleton());
+    cxPrompt() << "CxInterinfo::startInterInfo";
+    if (bRunInputThread)
+    {
+        CxConsoleInputThread::startConsoleInputThread(CxConsoleInputThread::StartCondition_InfoStart);
+    }
+}
+
+void CxInterinfo::stopInterInfo()
+{
+    CxConsoleInputThread::stopConsoleInputThread();
+    CxInterinfoOut::removeObserver(fn_oConsoleInterinfoSingleton());
+    std::cout << "CxInterinfo::stopInterInfo." << std::endl;
+}
 
 
 CxInterinfo::PlatformEnum CxInterinfo::platformFrom(const string & sPlatform)
@@ -63,6 +274,8 @@ CxInterinfo::PlatformEnum CxInterinfo::platformFrom(const string & sPlatform)
         ePlatform = CxInterinfo::Platform_Log;
     else if (sPlatform == "net")
         ePlatform = CxInterinfo::Platform_Net;
+    else if (sPlatform == "tty")
+        ePlatform = CxInterinfo::Platform_Tty;
 
     return ePlatform;
 }
@@ -75,6 +288,7 @@ string CxInterinfo::platformToString(CxInterinfo::PlatformEnum e)
     case Platform_Cmd:      return "cmd"; break;
     case Platform_Log:      return "log"; break;
     case Platform_Net:      return "net"; break;
+    case Platform_Tty:      return "tty"; break;
     default :               return "none"; break;
     }
 }
@@ -127,6 +341,42 @@ string CxInterinfo::typeToString(CxInterinfo::TypeEnum e)
     }
 }
 
+CxInterinfo::LevelEnum CxInterinfo::levelFrom(const string &sLevel)
+{
+    CxInterinfo::LevelEnum eLevel = CxInterinfo::LevelNone;
+    if (sLevel ==      "fatal")         eLevel = CxInterinfo::LevelFatal;
+    else if (sLevel == "error")         eLevel = CxInterinfo::LevelError;
+    else if (sLevel == "warn")          eLevel = CxInterinfo::LevelWarn ;
+    else if (sLevel == "info")          eLevel = CxInterinfo::LevelInfo ;
+    else if (sLevel == "debug")         eLevel = CxInterinfo::LevelDebug;
+    return eLevel;
+}
+
+string CxInterinfo::levelToString(CxInterinfo::LevelEnum e)
+{
+    switch (e)
+    {
+    case LevelFatal    :  return "fatal"    ; break;
+    case LevelError    :  return "error"    ; break;
+    case LevelWarn     :  return "warn"     ; break;
+    case LevelInfo     :  return "info"     ; break;
+    case LevelDebug    :  return "debug"    ; break;
+    default :             return "none"     ; break;
+    }
+}
+
+string CxInterinfo::levelUnmberToString(int eNum)
+{
+    switch (eNum & 0x00FF0000)
+    {
+    case LevelFatal    :  return "fatal"    ; break;
+    case LevelError    :  return "error"    ; break;
+    case LevelWarn     :  return "warn"     ; break;
+    case LevelInfo     :  return "info"     ; break;
+    case LevelDebug    :  return "debug"    ; break;
+    default :             return "none"     ; break;
+    }
+}
 
 
 
@@ -136,9 +386,8 @@ string CxInterinfo::typeToString(CxInterinfo::TypeEnum e)
 
 void CxInterinfoOut::addObserver(CxInterinfoOut_I *oSubject)
 {
-    CxMutex * oLock = fn_getInterinfoOutSubjectsLock();
+    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
     vector<CxInterinfoOut_I*> * oSubjects = fn_getInterinfoOutSubjects();
-    CxMutexScope lock(oLock);
     if ( find(oSubjects->begin(), oSubjects->end(), oSubject) ==  oSubjects->end() )
     {
         oSubjects->push_back(oSubject);
@@ -147,9 +396,8 @@ void CxInterinfoOut::addObserver(CxInterinfoOut_I *oSubject)
 
 void CxInterinfoOut::removeObserver(CxInterinfoOut_I *oSubject)
 {
-    CxMutex * oLock = fn_getInterinfoOutSubjectsLock();
+    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
     vector<CxInterinfoOut_I*> * oSubjects = fn_getInterinfoOutSubjects();
-    CxMutexScope lock(oLock);
     CxContainer::remove(*oSubjects, oSubject);
 }
 
@@ -161,12 +409,53 @@ void CxInterinfoOut::outInfo(const string &sInfo, const std::string& sTitle, int
     for (vector<CxInterinfoOut_I*>::iterator it = itBegin; it != itEnd; ++it)
     {
         CxInterinfoOut_I * oInterinfoOut = (* it);
-        bool bIsEnable = oInterinfoOut->filter()->isEnable(type, source, reason);
-        if (oInterinfoOut->filter()->getIsReverse())
-            bIsEnable = ! bIsEnable;
-        if (bIsEnable)
+        if (oInterinfoOut->platformValue() == CxInterinfo::Platform_Log)
         {
-            oInterinfoOut->interinfo_out(sInfo, sTitle, type, reason, source, target, iTag);
+            if (reason < CxInterinfo::LevelFatal)
+            {
+                bool bIsEnable = oInterinfoOut->filter()->isEnable(type, source, reason);
+                if (oInterinfoOut->filter()->getIsReverse())
+                    bIsEnable = ! bIsEnable;
+                if (bIsEnable)
+                {
+                    oInterinfoOut->interinfo_out(sInfo, sTitle, type, reason, source, target, iTag);
+                }
+            }
+            else
+            {
+                oInterinfoOut->interinfo_out(sInfo, sTitle, type, reason, source, target, iTag);
+            }
+        }
+        else
+        {
+            bool bIsEnable = oInterinfoOut->filter()->isEnable(type, source, reason);
+            if (oInterinfoOut->filter()->getIsReverse())
+                bIsEnable = ! bIsEnable;
+            if (bIsEnable)
+            {
+                oInterinfoOut->interinfo_out(sInfo, sTitle, type, reason, source, target, iTag);
+            }
+        }
+    }
+}
+
+void CxInterinfoOut::outLog(const string &sInfo, const string &sTitle, int type, int reason, int source, int target, int iTag)
+{
+    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
+    vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
+    for (vector<CxInterinfoOut_I*>::iterator it = itBegin; it != itEnd; ++it)
+    {
+        CxInterinfoOut_I * oInterinfoOut = (* it);
+        if (oInterinfoOut->platformValue() == CxInterinfo::Platform_Log)
+        {
+            bool bIsEnable = oInterinfoOut->filter()->isEnable(type, source, reason);
+            if (oInterinfoOut->filter()->getIsReverse())
+                bIsEnable = ! bIsEnable;
+            if (bIsEnable)
+            {
+                oInterinfoOut->interinfo_out(sInfo, sTitle, type, reason, source, target, iTag);
+            }
         }
     }
 }
@@ -449,20 +738,6 @@ void CxInterinfoOut::disableType(int type, int source, int reason, CxInterinfo::
     }
 }
 
-void CxInterinfoOut::updateByXml(const string &sFilePath)
-{
-    vector<map<string, string> > rows;
-    CxXml::loadTable4Level(sFilePath, rows, "", "interinfo", "");
-    update(rows);
-}
-
-void CxInterinfoOut::updateByXml(const char *pData, int iLength)
-{
-    vector<map<string, string> > rows;
-    CxXml::loadTable4Level(pData, iLength, rows, "", "interinfo", "");
-    update(rows);
-}
-
 void CxInterinfoOut::update(const string &sContent)
 {
 
@@ -552,90 +827,26 @@ CxInterinfoOut_I *CxInterinfoOut::findInterinfoOut(CxInterinfo::PlatformEnum ePl
     return NULL;
 }
 
-static volatile int f_iThreadInputStatus = 1;
-
-class ThreadInputPrivate : public CxDetachedThread
+void CxInterinfoIn::addObserver(CxInterinfoIn_I *oSubject)
 {
-public:
-    void run()
-    {
-        std::string sLine;
-        while ( f_iThreadInputStatus )
-        {
-            //needtodo 怎么样中断此 stdin
-            std::getline (std::cin, sLine);
-
-            if (f_iThreadInputStatus)
-            {
-                CxConsoleInterinfo::updateInputString(sLine);
-            }
-        }
-    }
-
-};
-
-ThreadInputPrivate f_threadInput;
-
-
-CxMutex * fn_getConsoleInsLock()
-{
-    static CxMutex consoleInsLock;
-    return & consoleInsLock;
-}
-
-vector<fn_interinfo_in_line_t> * fn_getConsoleInCallbacks_line()
-{
-    static vector<fn_interinfo_in_line_t> m;
-    return & m;
-}
-
-vector<fn_interinfo_in_cmd_t> * fn_getConsoleInCallbacks_cmd()
-{
-    static vector<fn_interinfo_in_cmd_t> m;
-    return & m;
-}
-
-vector<CxInterinfoIn_I*> * fn_getConsoleInSubjects()
-{
-    static vector<CxInterinfoIn_I*> s_consoleInSubjects;
-    return & s_consoleInSubjects;
-}
-
-CxMutex * fn_getConsoleInputLock()
-{
-    static CxMutex consoleInputLock;
-    return & consoleInputLock;
-}
-
-queue<pair<string, msepoch_t> > * fn_getConsoleInputs()
-{
-    static queue<pair<string, msepoch_t> > consoleInputs;
-    return & consoleInputs;
-}
-
-void CxConsoleInterinfo::addObserver(CxInterinfoIn_I *oSubject)
-{
-    CxMutex * oLock = fn_getConsoleInsLock();
+    CxMutexScope lock(fn_getConsoleInsLock());
     vector<CxInterinfoIn_I*> * oSubjects = fn_getConsoleInSubjects();
-    CxMutexScope lock(oLock);
     if ( find(oSubjects->begin(), oSubjects->end(), oSubject) ==  oSubjects->end() )
     {
         oSubjects->push_back(oSubject);
     }
 }
 
-void CxConsoleInterinfo::removeObserver(CxInterinfoIn_I *oSubject)
+void CxInterinfoIn::removeObserver(CxInterinfoIn_I *oSubject)
 {
-    CxMutex * oLock = fn_getConsoleInsLock();
+    CxMutexScope lock(fn_getConsoleInsLock());
     vector<CxInterinfoIn_I*> * oSubjects = fn_getConsoleInSubjects();
-    CxMutexScope lock(oLock);
     CxContainer::remove(*oSubjects, oSubject);
 }
 
-void CxConsoleInterinfo::addObserver(fn_interinfo_in_line_t fn)
+void CxInterinfoIn::addObserver(fn_interinfo_in_line_t fn)
 {
-    CxMutex * oLock = fn_getConsoleInsLock();
-    CxMutexScope lock(oLock);
+    CxMutexScope lock(fn_getConsoleInsLock());
     vector<fn_interinfo_in_line_t> * oCallbacks = fn_getConsoleInCallbacks_line();
     if (!CxContainer::contain(oCallbacks, fn))
     {
@@ -643,18 +854,16 @@ void CxConsoleInterinfo::addObserver(fn_interinfo_in_line_t fn)
     }
 }
 
-void CxConsoleInterinfo::removeObserver(fn_interinfo_in_line_t fn)
+void CxInterinfoIn::removeObserver(fn_interinfo_in_line_t fn)
 {
-    CxMutex * oLock = fn_getConsoleInsLock();
-    CxMutexScope lock(oLock);
+    CxMutexScope lock(fn_getConsoleInsLock());
     vector<fn_interinfo_in_line_t> * oCallbacks = fn_getConsoleInCallbacks_line();
     CxContainer::remove(*oCallbacks, fn);
 }
 
-void CxConsoleInterinfo::addObserver(fn_interinfo_in_cmd_t fn)
+void CxInterinfoIn::addObserver(fn_interinfo_in_cmd_t fn)
 {
-    CxMutex * oLock = fn_getConsoleInsLock();
-    CxMutexScope lock(oLock);
+    CxMutexScope lock(fn_getConsoleInsLock());
     vector<fn_interinfo_in_cmd_t> * oCallbacks = fn_getConsoleInCallbacks_cmd();
     if (!CxContainer::contain(oCallbacks, fn))
     {
@@ -662,39 +871,160 @@ void CxConsoleInterinfo::addObserver(fn_interinfo_in_cmd_t fn)
     }
 }
 
-void CxConsoleInterinfo::removeObserver(fn_interinfo_in_cmd_t fn)
+void CxInterinfoIn::removeObserver(fn_interinfo_in_cmd_t fn)
 {
-    CxMutex * oLock = fn_getConsoleInsLock();
-    CxMutexScope lock(oLock);
+    CxMutexScope lock(fn_getConsoleInsLock());
     vector<fn_interinfo_in_cmd_t> * oCallbacks = fn_getConsoleInCallbacks_cmd();
     CxContainer::remove(*oCallbacks, fn);
 }
 
-void CxConsoleInterinfo::setFilterChannelInfo(bool value)
+string CxConsoleInterinfo::waitInputLine(fn_void_t fnProcessEvents, int iTimeOut, msepoch_t *pDtIn, int *pSource, int *pInType, int *pTag)
 {
-    if (value)
-        f_bConsoleFilter |= 0x04000000;
+    CxMutexScope lock(fn_pConsoleInputSingleThreadLock());
+    string sLine;
+    f_pConsoleInputLine = & sLine;
+    f_pConsoleInputCommand = NULL;
+    f_pConsoleInputParams = NULL;
+    f_pConsoleInputDtIn = pDtIn;
+    f_pConsoleInputSource = pSource;
+    f_pConsoleInputInType = pInType;
+    f_pConsoleInputTag = pTag;
+    try
+    {
+        msepoch_t dtNow = CxTime::currentMsepoch();
+        while (1)
+        {
+            if (sLine.size()>0)
+            {
+                break;
+            }
+            if (iTimeOut > 0 && CxTime::milliSecondDifferToNow(dtNow) > iTimeOut)
+            {
+                break;
+            }
+            if (fnProcessEvents)
+            {
+                fnProcessEvents();
+            }
+            CxThread::sleep(10);
+        }
+    }
+    catch (...)
+    {
+        f_pConsoleInputLine = NULL;
+        f_pConsoleInputCommand = NULL;
+        f_pConsoleInputParams = NULL;
+        f_pConsoleInputDtIn = NULL;
+        f_pConsoleInputSource = NULL;
+        f_pConsoleInputInType = NULL;
+        f_pConsoleInputTag = NULL;
+    }
+    f_pConsoleInputLine = NULL;
+    f_pConsoleInputCommand = NULL;
+    f_pConsoleInputParams = NULL;
+    f_pConsoleInputDtIn = NULL;
+    f_pConsoleInputSource = NULL;
+    f_pConsoleInputInType = NULL;
+    f_pConsoleInputTag = NULL;
+
+    return sLine;
+}
+
+string CxConsoleInterinfo::waitInputCmd(fn_void_t fnProcessEvents, int iTimeOut, std::map<string, string> *oParams, msepoch_t *pDtIn, int *pSource, int *pInType, int *pTag)
+{
+    CxMutexScope lock(fn_pConsoleInputSingleThreadLock());
+    string sCmd;
+    f_pConsoleInputLine = NULL;
+    f_pConsoleInputCommand = & sCmd;
+    f_pConsoleInputParams = oParams;
+    f_pConsoleInputDtIn = pDtIn;
+    f_pConsoleInputSource = pSource;
+    f_pConsoleInputInType = pInType;
+    f_pConsoleInputTag = pTag;
+    try
+    {
+
+        msepoch_t dtNow = CxTime::currentMsepoch();
+        while (1)
+        {
+            if (sCmd.size()>0)
+            {
+                break;
+            }
+            if (iTimeOut > 0 && CxTime::milliSecondDifferToNow(dtNow) > iTimeOut)
+            {
+                break;
+            }
+            if (fnProcessEvents)
+            {
+                fnProcessEvents();
+            }
+            CxThread::sleep(10);
+        }
+    }
+    catch (...)
+    {
+        f_pConsoleInputLine = NULL;
+        f_pConsoleInputCommand = NULL;
+        f_pConsoleInputParams = NULL;
+        f_pConsoleInputDtIn = NULL;
+        f_pConsoleInputSource = NULL;
+        f_pConsoleInputInType = NULL;
+        f_pConsoleInputTag = NULL;
+    }
+    f_pConsoleInputLine = NULL;
+    f_pConsoleInputCommand = NULL;
+    f_pConsoleInputParams = NULL;
+    f_pConsoleInputDtIn = NULL;
+    f_pConsoleInputSource = NULL;
+    f_pConsoleInputInType = NULL;
+    f_pConsoleInputTag = NULL;
+
+    return sCmd;
+}
+
+void CxConsoleInterinfo::updateConsoleInputString(const string &sLine)
+{
+    if (f_fnITCPostDefault && f_fnITCSignalDefault)
+    {
+        f_fnITCPostDefault(processInputString, 0, 0, sLine.data(), sLine.size(), 0, 0, false);
+        f_fnITCSignalDefault();
+    }
     else
-        f_bConsoleFilter &= (~0x04000000);
+    {
+        //needtodo
+    }
 }
 
-void CxConsoleInterinfo::updateInputString(const string &sLine)
-{
-    CxApplication::pushProcessCallBack(processInputString, 0, 0, sLine.data(), sLine.size(), 0, 0);
-    CxApplication::signalMainThread();
-}
-
-static fn_interinfo_in_line_t f_fnInterinfoIn_line = 0;
-static fn_interinfo_in_cmd_t f_fnInterinfoIn_cmd = 0;
-static CxInterinfoIn_I * f_oInterinfoIn = NULL;
+//*** fn_interinfo_in_line_t fn_interinfo_in_cmd_t CxInterinfoIn_I ***
+//*** fn_interinfo_in_line_t fn_interinfo_in_cmd_t CxInterinfoIn_I ***
+//*** fn_interinfo_in_line_t fn_interinfo_in_cmd_t CxInterinfoIn_I ***
 
 void CxConsoleInterinfo::processInputString(int iEvent, int iTag, const void * pData, int iLength, void * oSource, void * oTarget)
 {
     string sLine((const char *)pData, iLength);
+    size_t i1 = sLine.find_first_of("\r\n");
+    if (i1 != string::npos) sLine = sLine.substr(0, i1);
     string sCmdParams((const char *)pData, iLength);
-    string sCmd = CxString::token(sCmdParams, ' ');
-    map<string, string> sParams = CxString::splitToMap_mix(sCmdParams, '=', ' ');
+    string sCmd;
+    map<string, string> sParams;
+    if (sCmdParams.find(' ') != string::npos)
+    {
+        sCmd = CxString::token(sCmdParams, ' ');
+        sParams = CxString::splitToMap_mix(sCmdParams, '=', ' ');
+    }
+    else
+    {
+        sCmd = sLine;
+    }
     msepoch_t dtNow = CxTime::currentSystemTime();
+
+    if (! processInputLine(sLine, dtNow, 0, 0, 0) )
+    {
+        processInputCmd(sCmd, sParams, dtNow, 0, 0, 0);
+    }
+
+    //*{lock input deal; InDeal_Lock
     if (f_fnInterinfoIn_line)
     {
         if ( f_fnInterinfoIn_line(sLine, dtNow, 0, 0, 0) != CxInterinfo::InDeal_Lock)
@@ -725,6 +1055,7 @@ void CxConsoleInterinfo::processInputString(int iEvent, int iTag, const void * p
         }
         return;
     }
+    //*}lock input deal
 
     {
         CxMutexScope lock(fn_getConsoleInsLock());
@@ -780,139 +1111,96 @@ void CxConsoleInterinfo::processInputString(int iEvent, int iTag, const void * p
     }
 }
 
+int CxConsoleInterinfo::processInputLine(const string &sInfo, const msepoch_t &dtIn, int iSource, int eInType, int iTag)
+{
+    if (f_pConsoleInputLine)
+    {
+        * f_pConsoleInputLine = CxString::newString(sInfo);
+    }
+    else
+    {
+        return FALSE;
+    }
+    if (f_pConsoleInputDtIn)
+    {
+        * f_pConsoleInputDtIn = dtIn;
+    }
+    if (f_pConsoleInputSource)
+    {
+        * f_pConsoleInputSource = iSource;
+    }
+    if (f_pConsoleInputInType)
+    {
+        * f_pConsoleInputInType = eInType;
+    }
+    if (f_pConsoleInputTag)
+    {
+        * f_pConsoleInputTag = iTag;
+    }
+    return TRUE;
+}
+
+int CxConsoleInterinfo::processInputCmd(const string &sCommand, const std::map<string, string> &sParams, const msepoch_t &dtIn, int iSource, int eInType, int iTag)
+{
+    if (f_pConsoleInputCommand)
+    {
+        * f_pConsoleInputCommand = CxString::newString(sCommand);
+    }
+    else
+    {
+        return FALSE;
+    }
+    if (f_pConsoleInputParams)
+    {
+        * f_pConsoleInputParams = CxString::newStrings(sParams);
+    }
+    if (f_pConsoleInputDtIn)
+    {
+        * f_pConsoleInputDtIn = dtIn;
+    }
+    if (f_pConsoleInputSource)
+    {
+        * f_pConsoleInputSource = iSource;
+    }
+    if (f_pConsoleInputInType)
+    {
+        * f_pConsoleInputInType = eInType;
+    }
+    if (f_pConsoleInputTag)
+    {
+        * f_pConsoleInputTag = iTag;
+    }
+    return TRUE;
+}
+
 void CxConsoleInterinfo::interinfo_out(const string &sInfo, const std::string& sTitle, int type, int reason, int source, int target, int tag)
 {
-    if ((f_bConsoleFilter & type) == 0)
+    if (reason < 6)
     {
-        if (reason < 6)
-        {
-            stringstream sOutInfo;
-            if (sTitle.size()>0)
-                sOutInfo << "[title]=" << sTitle;
-            if (type)
-                sOutInfo << "[type]=" << type;
-            if (reason)
-                sOutInfo << "[reason]=" << reason;
-            if (source)
-                sOutInfo << "[source]=" << source;
-            if (target)
-                sOutInfo << "[target]=" << target;
-            if (tag)
-                sOutInfo << "[tag]=" << tag;
-            if (sOutInfo.tellp() > 0)
-                sOutInfo << "\n";
-            sOutInfo << sInfo;
-            ::cout << sOutInfo.str();
-        }
+        stringstream sOutInfo;
+        if (sTitle.size()>0)
+            sOutInfo << "[title]=" << sTitle;
+        if (type)
+            sOutInfo << "[type]=" << type;
+        if (reason)
+            sOutInfo << "[reason]=" << reason;
+        if (source)
+            sOutInfo << "[source]=" << source;
+        if (target)
+            sOutInfo << "[target]=" << target;
+        if (tag)
+            sOutInfo << "[tag]=" << tag;
+        if (sOutInfo.tellp() > 0)
+            sOutInfo << "\n";
+        sOutInfo << sInfo;
+        ::cout << sOutInfo.str();
     }
 }
 
 
-//LogDisables=type,source,reason;type
-//LogDisables=0x01000001
-void CxConsoleInterinfo::start()
-{
-    //*log out disable
-    string sLogDisables; //type,
-    sLogDisables = CxString::trim(CxApplication::findConfig( CS_SectionProgramConfig , "LogDisables", std::string()));
-    if ((sLogDisables.size() == 3) && (CxString::toLower(sLogDisables) == "all"))
-    {
-        CxInterinfoOut::diableAll(CxInterinfo::Platform_Log);
-    }
-    else if (sLogDisables.size()>0)
-    {
-        vector<string> logDisables = CxString::split(sLogDisables, ';');
-        for (size_t i = 0; i < logDisables.size(); ++i)
-        {
-            string sLine = logDisables.at(i);
-            string sType = CxString::token(sLine, ',');
-            string sSource = CxString::token(sLine, ',');
-            string sReason = sLine;
-            bool bOk;
-            int iType = CxString::toInt32(sType, &bOk);
-            if (bOk)
-            {
-                int iSource = CxString::toInt32(sSource, &bOk);
-                if (bOk)
-                {
-                    int iReason = CxString::toInt32(sReason, &bOk);
-                    if (bOk)
-                    {
-                        CxInterinfoOut::disableType(iType, iSource, iReason, CxInterinfo::Platform_Log);
-                    }
-                    else
-                    {
-                        CxInterinfoOut::disableType(iType, iSource, CxInterinfo::Platform_Log);
-                    }
-                }
-                else
-                {
-                    CxInterinfoOut::disableType(iType, CxInterinfo::Platform_Log);
-                }
-            }
-        }
-    }
-    if (CxApplication::projectType() == GM_PROJECT_TYPE_APP_CONSOLE)
-    {
-        CxInterinfoOut::addObserver(s_consoleInterinfo);
-        f_threadInput.start();
-    }
-}
 
-void CxConsoleInterinfo::stop()
-{
-    CxInterinfoOut::removeObserver(s_consoleInterinfo);
-    f_iThreadInputStatus = 0;
-}
 
-bool fn_waitInputBoolean()
-{
-    bool r;
-    ::cin >> r; ::getchar();
-    return r;
-}
 
-int fn_waitInputInteger()
-{
-    int r;
-    ::cin >> r; ::getchar();
-    return r;
-}
-
-double fn_waitInputDouble()
-{
-    double r;
-    ::cin >> r; ::getchar();
-    return r;
-}
-
-string fn_waitInputString()
-{
-    string r;
-    ::cin >> r; ::getchar();
-    return r;
-//    char str[1024];
-//    memset(str, 0, 1024);
-//    gets(str);
-//    s = string(str);
-}
-
-tm fn_waitInputTm()
-{
-    string rs;
-    ::cin >> rs; ::getchar();
-    tm r;
-    CxTime::fromString(rs, r);
-    return r;
-}
-
-//void fn_temp_cxinterinfo(CxEndFlag & aEnd, CxLineFlag & aLine, CxLineEndFlag & aEndLine)
-//{
-//    if ( & aEnd == & cxEnd || & aLine == & cxLine || & aEndLine == & cxEndLine )
-//    {
-//        ::cout << "true" << ::endl;
-//    }
-//}
 
 //type 下的 source
 //source 下的 int reason, int target, int iTag
@@ -1061,5 +1349,3 @@ void CxInterinfoFilter::disableType(int type, int source, int reason)
         m_types[type] = sourceReasons;
     }
 }
-
-

@@ -1,0 +1,22 @@
+$$ Get module list LIST_ENTRY in $t0.
+r? $t0 = &@$peb->Ldr->InLoadOrderModuleList
+ 
+$$ Iterate over all modules in list.
+.for (r? $t1 = *(ntdll!_LDR_DATA_TABLE_ENTRY**)@$t0;
+      (@$t1 != 0) & (@$t1 != @$t0);
+      r? $t1 = (ntdll!_LDR_DATA_TABLE_ENTRY*)@$t1->InLoadOrderLinks.Flink)
+{
+    $$ Get base address in $Base.
+    as /x ${/v:$Base} @@c++(@$t1->DllBase)
+    
+    $$ Get full name into $Mod.
+    as /msu ${/v:$Mod} @@c++(&@$t1->FullDllName)
+ 
+    .block
+    {
+        .echo ${$Mod} at ${$Base}
+    }
+ 
+    ad ${/v:$Base}
+    ad ${/v:$Mod}
+}

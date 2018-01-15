@@ -5,7 +5,7 @@
 #include "cxchannel.h"
 
 
-class CxChannelUdp : public CxChannelBase
+class GM_CCXX_CORE_API CxChannelUdp : public CxChannelBase
 {
 public:
     CxChannelUdp();
@@ -143,7 +143,7 @@ private:
 
 };
 
-class CxChannelUdpFactory : public CxChannelFactoryBase
+class GM_CCXX_CORE_API CxChannelUdpFactory : public CxChannelFactoryBase
 {
 //    GM_SINGLETON_DECLARATION( CxChannelUdpFactory )
 public:

@@ -9,7 +9,7 @@
 #include "re2/re2.h"
 #include "re2/regexp.h"
 #include "util/pcre.h"
-#include "util/benchmark.h"
+#include "benchmark.h"
 
 namespace re2 {
 void Test();

@@ -19,7 +19,7 @@
  * and other operations can be created in derived classes.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxBitmap
+class GM_CCXX_CORE_API CxBitmap
 {
 protected:
     size_t size;

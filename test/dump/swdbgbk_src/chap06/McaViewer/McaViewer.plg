@@ -1,0 +1,123 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: McaViewer - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Release/McaViewer.res" /d "NDEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap06\McaViewer\McaViewer.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4D9.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Release/" /Fp"../../temp/Release/McaViewer.pch" /Yu"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap06\McaViewer\DvrAgent.cpp"
+"C:\dig\dbg\author\code\chap06\McaViewer\McaPoller.cpp"
+"C:\dig\dbg\author\code\chap06\McaViewer\McaViewer.cpp"
+"C:\dig\dbg\author\code\chap06\McaViewer\McaViewerDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4D9.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DA.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Release/" /Fp"../../temp/Release/McaViewer.pch" /Yc"stdafx.h" /Fo"../../temp/Release/" /Fd"../../temp/Release/" /FD /c 
+"C:\dig\dbg\author\code\chap06\McaViewer\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DA.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DB.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"../../bin/Release/McaViewer.pdb" /machine:I386 /out:"../../bin/Release/McaViewer.exe" 
+\dig\dbg\author\code\temp\Release\DvrAgent.obj
+\dig\dbg\author\code\temp\Release\McaPoller.obj
+\dig\dbg\author\code\temp\Release\McaViewer.obj
+\dig\dbg\author\code\temp\Release\McaViewerDlg.obj
+\dig\dbg\author\code\temp\Release\StdAfx.obj
+\dig\dbg\author\code\temp\Release\McaViewer.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DB.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+DvrAgent.cpp
+McaPoller.cpp
+McaViewer.cpp
+McaViewerDlg.cpp
+Generating Code...
+Linking...
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DD.tmp" with contents
+[
+/nologo /o"../../bin/Release/McaViewer.bsc" 
+\dig\dbg\author\code\temp\Release\StdAfx.sbr
+\dig\dbg\author\code\temp\Release\DvrAgent.sbr
+\dig\dbg\author\code\temp\Release\McaPoller.sbr
+\dig\dbg\author\code\temp\Release\McaViewer.sbr
+\dig\dbg\author\code\temp\Release\McaViewerDlg.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DD.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+McaViewer.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: McaViewer - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"../../temp/Debug/McaViewer.res" /d "_DEBUG" /d "_AFXDLL" "C:\dig\dbg\author\code\chap06\McaViewer\McaViewer.rc"" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DE.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/McaViewer.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap06\McaViewer\DvrAgent.cpp"
+"C:\dig\dbg\author\code\chap06\McaViewer\McaPoller.cpp"
+"C:\dig\dbg\author\code\chap06\McaViewer\McaViewer.cpp"
+"C:\dig\dbg\author\code\chap06\McaViewer\McaViewerDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DE.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DF.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/McaViewer.pch" /Yc"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ /c 
+"C:\dig\dbg\author\code\chap06\McaViewer\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4DF.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4E0.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"../../bin/Debug/McaViewer.pdb" /debug /machine:I386 /out:"../../bin/Debug/McaViewer.exe" /pdbtype:sept 
+\dig\dbg\author\code\temp\Debug\DvrAgent.obj
+\dig\dbg\author\code\temp\Debug\McaPoller.obj
+\dig\dbg\author\code\temp\Debug\McaViewer.obj
+\dig\dbg\author\code\temp\Debug\McaViewerDlg.obj
+\dig\dbg\author\code\temp\Debug\StdAfx.obj
+\dig\dbg\author\code\temp\Debug\McaViewer.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4E0.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+DvrAgent.cpp
+McaPoller.cpp
+McaViewer.cpp
+McaViewerDlg.cpp
+Generating Code...
+Linking...
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4E2.tmp" with contents
+[
+/nologo /o"../../bin/Debug/McaViewer.bsc" 
+\dig\dbg\author\code\temp\Debug\StdAfx.sbr
+\dig\dbg\author\code\temp\Debug\DvrAgent.sbr
+\dig\dbg\author\code\temp\Debug\McaPoller.sbr
+\dig\dbg\author\code\temp\Debug\McaViewer.sbr
+\dig\dbg\author\code\temp\Debug\McaViewerDlg.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP4E2.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+McaViewer.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: LBR - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1BC.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LBR_EXPORTS" /FR"../../temp/Debug/" /Fp"../../temp/Debug/LBR.pch" /Yu"stdafx.h" /Fo"../../temp/Debug/" /Fd"../../temp/Debug/" /FD /GZ  /c 
+"C:\dig\dbg\author\code\chap05\LBR\LBR.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1BC.tmp" 
+Creating temporary file "C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1BD.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /pdb:"../../bin/Debug/LBR.pdb" /debug /machine:I386 /def:".\LBR.def" /out:"../../bin/Debug/LBR.dll" /implib:"../../bin/Debug/LBR.lib" /pdbtype:sept 
+\DIG\DBG\AUTHOR\CODE\temp\Debug\LBR.obj
+\DIG\DBG\AUTHOR\CODE\temp\Debug\StdAfx.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\yzhan31\LOCALS~1\Temp\RSP1BD.tmp"
+<h3>Output Window</h3>
+Compiling...
+LBR.cpp
+C:\dig\dbg\author\code\chap05\LBR\LBR.cpp(120) : warning C4244: '=' : conversion from 'unsigned __int64' to 'unsigned long', possible loss of data
+C:\dig\dbg\author\code\chap05\LBR\LBR.cpp(127) : warning C4244: '=' : conversion from 'unsigned __int64' to 'unsigned long', possible loss of data
+C:\dig\dbg\author\code\chap05\LBR\LBR.cpp(128) : warning C4244: '=' : conversion from 'unsigned __int64' to 'unsigned long', possible loss of data
+Linking...
+   Creating library ../../bin/Debug/LBR.lib and object ../../bin/Debug/LBR.exp
+Creating command line "bscmake.exe /nologo /o"../../bin/Debug/LBR.bsc"  \DIG\DBG\AUTHOR\CODE\temp\Debug\StdAfx.sbr \DIG\DBG\AUTHOR\CODE\temp\Debug\LBR.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+LBR.dll - 0 error(s), 3 warning(s)
+</pre>
+</body>
+</html>

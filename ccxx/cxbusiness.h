@@ -62,7 +62,7 @@ private:
 
 };
 
-class CxMsObjectTypeManager
+class GM_CCXX_CORE_API CxMsObjectTypeManager
 {
 public:
     static void start();
@@ -79,7 +79,7 @@ public:
 
 
 //通用的业务对象
-class CxMsObjectData
+class GM_CCXX_CORE_API CxMsObjectData
 {
 public:
     inline CxMsObjectData() : _majorModify(false), _objectType(NULL) {}
@@ -167,7 +167,7 @@ protected:
 };
 
 
-class CxMsObjectDataManager
+class GM_CCXX_CORE_API CxMsObjectDataManager
 {
 public:
     static void addObserver(CxIMsObjectDataSubject * oSubject);

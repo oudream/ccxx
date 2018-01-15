@@ -3,7 +3,7 @@
 
 #include "cxglobal.h"
 
-class CxBuffer
+class GM_CCXX_CORE_API CxBuffer
 {
 public:
     ///

@@ -5,7 +5,7 @@
 #include "cxchannel.h"
 
 
-class CxChannelTcpclient : public CxChannelBase
+class GM_CCXX_CORE_API CxChannelTcpclient : public CxChannelBase
 {
 public:
     CxChannelTcpclient();
@@ -123,7 +123,7 @@ private:
 
 };
 
-class CxChannelTcpclientFactory : public CxChannelFactoryBase
+class GM_CCXX_CORE_API CxChannelTcpclientFactory : public CxChannelFactoryBase
 {
 //    GM_SINGLETON_DECLARATION( CxChannelTcpclientFactory )
 public:

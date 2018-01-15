@@ -3,8 +3,6 @@
 
 #include "cxglobal.h"
 #include "cxcontext.h"
-#include "cxvalue.h"
-#include "cxfactory.h"
 #include "cxstring.h"
 
 
@@ -94,7 +92,7 @@ class CxDescribeFactoryBase : public CxFactoryTemplate<CxDescribeBase>
 };
 
 
-class CxDescribeBase
+class GM_CCXX_CORE_API CxDescribeBase
 {
 public:
     static std::vector<CxFactoryTemplate<CxDescribeBase>*>* factoriesContainer();
@@ -191,8 +189,8 @@ private:
     bool                        _canNull;
     bool                        _isVisible;
     bool                        _isReadOnly;
-    size_t                      _maxLength;
-    size_t                      _minLength;
+    int                         _maxLength;
+    int                         _minLength;
     std::string                 _regularExpression;
     std::vector<std::string>    _valueScopes;
     std::string                 _foreignKey;
@@ -221,7 +219,7 @@ typedef std::string (*GFUNC_DescribeDefaultValue)(CxDescribeUnit* oDescribeUnit,
 typedef void (*GFUNC_DescribeValuesCalc)(const CxDescribeUnit* oDescribeUnit);
 
 
-class CxDescribeUnit
+class GM_CCXX_CORE_API CxDescribeUnit
 {
 public:
     static CxDescribeUnit* createDescribes(const std::string& sFilePath);
@@ -390,7 +388,7 @@ private:
 
 
 
-class CxDescribeCatalog
+class GM_CCXX_CORE_API CxDescribeCatalog
 {
 public:
     struct UnitAttr
@@ -470,7 +468,7 @@ typedef CxDescribeCatalog::UnitAttr CxUnitAttr;
 
 
 
-class CxDescribeProject
+class GM_CCXX_CORE_API CxDescribeProject
 {
 public:
     struct CatalogAttr {
@@ -527,7 +525,7 @@ typedef CxDescribeProject::CatalogAttr CxCatalogAttr;
 
 
 
-class CxDescribeManager
+class GM_CCXX_CORE_API CxDescribeManager
 {
 public:
     static void start( );
@@ -676,7 +674,7 @@ public:
 
 
 
-class CxDescribeBoolean : public CxDescribeTemplate<bool>
+class GM_CCXX_CORE_API CxDescribeBoolean : public CxDescribeTemplate<bool>
 {
 public:
     CxDescribeBoolean();
@@ -689,7 +687,7 @@ public:
 
 };
 
-class CxDescribeBooleanFactory : public CxDescribeTemplateFactory<bool>
+class GM_CCXX_CORE_API CxDescribeBooleanFactory : public CxDescribeTemplateFactory<bool>
 {
 //    GM_SINGLETON_DECLARATION(CxDescribeBooleanFactory)
 public:
@@ -714,7 +712,7 @@ public:
 
 
 
-class CxDescribeDateTime : public CxDescribeTemplate<msepoch_t>
+class GM_CCXX_CORE_API CxDescribeDateTime : public CxDescribeTemplate<msepoch_t>
 {
 public:
     CxDescribeDateTime();
@@ -746,7 +744,7 @@ private:
 
 };
 
-class CxDescribeDateTimeFactory : public CxDescribeTemplateFactory<msepoch_t>
+class GM_CCXX_CORE_API CxDescribeDateTimeFactory : public CxDescribeTemplateFactory<msepoch_t>
 {
 //    GM_SINGLETON_DECLARATION(CxDescribeDateTimeFactory)
 public:
@@ -768,7 +766,7 @@ public:
 
 
 
-class CxDescribeDouble : public CxDescribeTemplate<double>
+class GM_CCXX_CORE_API CxDescribeDouble : public CxDescribeTemplate<double>
 {
 
 public:
@@ -801,7 +799,7 @@ private:
 
 };
 
-class CxDescribeDoubleFactory : public CxDescribeTemplateFactory<double>
+class GM_CCXX_CORE_API CxDescribeDoubleFactory : public CxDescribeTemplateFactory<double>
 {
 //    GM_SINGLETON_DECLARATION(CxDescribeDoubleFactory)
 public:
@@ -828,7 +826,7 @@ public:
 
 
 
-class CxDescribeEnum : public CxDescribeTemplate<int>
+class GM_CCXX_CORE_API CxDescribeEnum : public CxDescribeTemplate<int>
 {
 
     GM_DESCRIBETYPE(CxDescribeBase, CxValueType::ValueType_Enum, CxDescribeStrings::enumString())
@@ -865,7 +863,7 @@ private:
 
 };
 
-class CxDescribeEnumFactory : public CxDescribeFactoryBase
+class GM_CCXX_CORE_API CxDescribeEnumFactory : public CxDescribeFactoryBase
 {
 //    GM_SINGLETON_DECLARATION(CxDescribeEnumFactory)
 public:
@@ -890,7 +888,7 @@ public:
 
 
 
-class CxDescribeInteger : public CxDescribeTemplate<int>
+class GM_CCXX_CORE_API CxDescribeInteger : public CxDescribeTemplate<int>
 {
 
 public:
@@ -930,7 +928,7 @@ private:
 
 };
 
-class CxDescribeIntegerFactory : public CxDescribeTemplateFactory<int>
+class GM_CCXX_CORE_API CxDescribeIntegerFactory : public CxDescribeTemplateFactory<int>
 {
 //    GM_SINGLETON_DECLARATION(CxDescribeIntegerFactory)
 public:
@@ -953,7 +951,7 @@ public:
 
 
 
-class CxDescribeString : public CxDescribeTemplate<std::string>
+class GM_CCXX_CORE_API CxDescribeString : public CxDescribeTemplate<std::string>
 {
 
 public:
@@ -968,7 +966,7 @@ public:
 
 };
 
-class CxDescribeStringFactory : public CxDescribeTemplateFactory<std::string>
+class GM_CCXX_CORE_API CxDescribeStringFactory : public CxDescribeTemplateFactory<std::string>
 {
 //    GM_SINGLETON_DECLARATION(CxDescribeStringFactory)
 public:

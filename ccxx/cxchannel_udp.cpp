@@ -16,8 +16,6 @@
 
 CxChannelUdp::CxChannelUdp()
 {
-    _localIpAddress.init("127.0.0.1", 5555, true);
-    _remoteIpAddress.init("127.0.0.1", 5556);
     _socketBind = INVALID_SOCKET;
     _socketSend = INVALID_SOCKET;
     _receiver = NULL;
@@ -52,7 +50,7 @@ void CxChannelUdp::fromContext(const CxIGetSkv& context)
 
 int CxChannelUdp::writeTo(const char *pData, int iLength, std::string szRemoteIp, int nRemotePort)
 {
-    cxPromptReturn_(_socketSend != INVALID_SOCKET, -1);
+    cxPromptCheck(_socketSend != INVALID_SOCKET, return -1);
 
     CxIpAddress sockAddrSend(szRemoteIp, nRemotePort);
 
@@ -61,8 +59,8 @@ int CxChannelUdp::writeTo(const char *pData, int iLength, std::string szRemoteIp
 
 int CxChannelUdp::writeTo(const char *pData, int iLength, const CxIpAddress & mSendIp)
 {
-    cxPromptReturn_(_socketSend != INVALID_SOCKET, -1);
-    cxPromptReturn_(mSendIp.isValid(), -1);
+    cxPromptCheck(_socketSend != INVALID_SOCKET, return -1);
+    cxPromptCheck(mSendIp.isValid(), return -1);
 
     msepoch_t tmStart = CxTime::currentMsepoch();
 
@@ -144,13 +142,13 @@ bool CxChannelUdp::isSameChannelImpl(const std::map<std::string, std::string> &p
 
 int CxChannelUdp::writeDataImpl(const char *pData, int iLength, void * oTarget)
 {
-    cxPromptReturn_(_socketSend != INVALID_SOCKET, -1);
+    cxPromptCheck(_socketSend != INVALID_SOCKET, return -1);
     if (oTarget)
     {
         CxChannelRoad * oRoad = (CxChannelRoad *)oTarget;
         const CxIpAddress & ipAddress = oRoad->sourceIpAddress();
 
-        cxPromptReturn_(ipAddress.isValid(), -1);
+        cxPromptCheck(ipAddress.isValid(), return -1);
 
         ssize_t r = ::sendto(_socketSend, pData, iLength, 0, ipAddress.getSockAddr(), ipAddress.getSockAddrSize());
 
@@ -167,7 +165,7 @@ int CxChannelUdp::writeDataImpl(const char *pData, int iLength, void * oTarget)
     }
     else
     {
-        cxPromptReturn_(_remoteIpAddress.isValid(), -1);
+        cxPromptCheck(_remoteIpAddress.isValid(), return -1);
 
         ssize_t r = ::sendto(_socketSend, pData, iLength, 0, _remoteIpAddress.getSockAddr(), _remoteIpAddress.getSockAddrSize());
 
@@ -234,13 +232,13 @@ void CxChannelUdp::shutdownAndClose()
 
 void CxChannelUdp::openChannelImpl()
 {
-    cxPromptReturn(_socketBind == INVALID_SOCKET && _receiver == NULL);
+    cxPromptCheck(_socketBind == INVALID_SOCKET && _receiver == NULL, return);
 
     _socketSend = INVALID_SOCKET;
     if (_localIpAddress.isValid())
     {
         _socketBind = CxSocket::create(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-        cxPromptReturn(_socketBind != INVALID_SOCKET);
+        cxPromptCheck(_socketBind != INVALID_SOCKET, return);
 
         //CxSocket return 0 : success
         int iError = CxSocket::bindto(_socketBind, _localIpAddress.getSockAddr());
@@ -305,7 +303,7 @@ bool CxChannelUdp::getConnectedImpl() const
 void CxChannelUdp::ReceiverThread::run()
 {
     socket_t iRecvSocket = _channel->_socketBind;
-    cxPromptReturn(iRecvSocket != INVALID_SOCKET);
+    cxPromptCheck(iRecvSocket != INVALID_SOCKET, return);
 
     char mBuffer[4096];
     sockaddr * pSenderAddr = (sockaddr *)mBuffer;

@@ -104,10 +104,12 @@ struct sockaddr_storage
  * addressing, and additional addressing domains (such as Unix domain sockets).
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxSocket
+class GM_CCXX_CORE_API CxSocket
 {
 public:
-    static bool isValidSocket(socket_t iSocket);
+    inline static bool isValidSocket(socket_t iSocket) {
+        return iSocket > 0 && iSocket != INVALID_SOCKET;
+    }
 
     /**
      * Initialize socket subsystem.
@@ -1009,7 +1011,7 @@ public:
 };
 
 #define CxSockAddrMaxSize 64
-class CxIpAddress
+class GM_CCXX_CORE_API CxIpAddress
 {
 public:
     static std::string getIp(const struct sockaddr * oSockAddr);
@@ -1155,7 +1157,7 @@ private:
  * The address class will call the resolver when passed host names.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxIpAddressExtend
+class GM_CCXX_CORE_API CxIpAddressExtend
 {
 protected:
     struct addrinfo *list;
@@ -1421,7 +1423,7 @@ public:
 
 
 
-class CxSocketExtend : public CxSocket
+class GM_CCXX_CORE_API CxSocketExtend : public CxSocket
 {
 public:
     CxSocketExtend();
@@ -1526,7 +1528,7 @@ public:
  * is commonly used for TCP and DCCP listener sockets.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class CxListenSocket : protected CxSocketExtend
+class GM_CCXX_CORE_API CxListenSocket : protected CxSocketExtend
 {
 public:
     /**
@@ -1639,12 +1641,14 @@ inline struct sockaddr * addr(CxIpAddressExtend & address)
 
 
 
-class CxNetwork
+class GM_CCXX_CORE_API CxNetwork
 {
 public:
     static std::string getHostName();
 
     static std::vector<std::string> getLocalIps();
+
+    static int ping(const std::string & sIpAddress);
 
 };
 
@@ -1693,6 +1697,7 @@ inline bool eq_subnet(const struct sockaddr * s1, const struct sockaddr * s2)
 
 /*
  IOCP , kqueue , epoll
+ http://libevent.org/
 */
 
 #endif // CXSOCKET_H
