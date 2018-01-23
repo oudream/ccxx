@@ -24,7 +24,7 @@ struct ProcessCallBack
     volatile bool hadRun;
 };
 
-#define f_iProcessCallBackCount (1024 * 5)
+#define f_iProcessCallBackCount (1024 * 4 * 3)
 
 ProcessCallBack * * fn_oProcessCallBacks()
 {
@@ -39,7 +39,7 @@ CxMutex * fn_oProcessCallBackPushLock()
 }
 
 static ProcessCallBack * * const f_oProcessCallBacks = fn_oProcessCallBacks();
-static ProcessCallBack * * const f_oProcessCallBackEnd = fn_oProcessCallBacks()+f_iProcessCallBackCount;
+static ProcessCallBack * * const f_oProcessCallBackEnd = fn_oProcessCallBacks() + f_iProcessCallBackCount;
 static CxMutex * f_oProcessCallBackPushLock = fn_oProcessCallBackPushLock();
 static int f_iProcessCallBackIndexPush = 0;
 static int f_iProcessCallBackIndexPop = 0;
@@ -246,8 +246,8 @@ void CxApplication::pushProcessCallBack(fn_void_msg_tlv_t fn, int iMsg, int iTag
         //*push
         if (f_oProcessCallBacks[f_iProcessCallBackIndexPush] != NULL)
         {
-            cxWarning() << "Error ! Error ! Error ! CxApplication Cache Full. f_iProcessCallBackIndexPush=" << f_iProcessCallBackIndexPush << "; f_iProcessCallBackIndexPop" << f_iProcessCallBackIndexPop;
-            cout        << "Error ! Error ! Error ! CxApplication Cache Full. f_iProcessCallBackIndexPush=" << f_iProcessCallBackIndexPush << "; f_iProcessCallBackIndexPop" << f_iProcessCallBackIndexPop << endl;
+            cxWarning() << "Error ! Error ! Error ! CxApplication Cache Full. f_iProcessCallBackIndexPush=" << f_iProcessCallBackIndexPush << "; f_iProcessCallBackIndexPop=" << f_iProcessCallBackIndexPop;
+            cout        << "Error ! Error ! Error ! CxApplication Cache Full. f_iProcessCallBackIndexPush=" << f_iProcessCallBackIndexPush << "; f_iProcessCallBackIndexPop=" << f_iProcessCallBackIndexPop << endl;
             if (f_oRunningProcessCallBack)
             {
                 cxWarning() << "Current CallBack : fn=" << (f_oRunningProcessCallBack->fn!=0) << "; msg=" << f_oRunningProcessCallBack->msg << "; tag=" << f_oRunningProcessCallBack->tag << "; source=" << (f_oRunningProcessCallBack->source!=0) << "; target=" << f_oRunningProcessCallBack->target

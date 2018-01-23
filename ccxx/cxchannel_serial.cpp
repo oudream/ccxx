@@ -37,7 +37,12 @@ const int    CIDefaultSerialParity       = CxChannelSerial::parityNone;
 const int    CIDefaultSerialStopBits     = CxChannelSerial::stopBitsOne;
 const int    CIDefaultSerialCharacterSize= CxChannelSerial::CharacterSizeEight;
 
-
+//PortName      = \\.\COM1
+//BaudRate      = 6
+//CharacterSize = 4
+//StopBits      = 1
+//Parity        = 0
+//FlowControl   = 0
 
 
 
@@ -334,6 +339,11 @@ void CxChannelSerial::doOpen()
 {
 #ifdef GM_OS_WIN
     // open COMM device
+// https://stackoverflow.com/questions/27909666/createfile-serial-communication-issue
+// CreateFile() is successful when you use "COM1" through "COM9" for the name of the file;
+// however, the message INVALID_HANDLE_VALUE is returned if you use "COM10" or greater.
+//    string sDev = "\\\\.\\" + _portName;
+//    dev = CreateFile(sDev.c_str(),
     dev = CreateFile(_portName.c_str(),
                      GENERIC_READ | GENERIC_WRITE,
                      0,                    // exclusive access
@@ -889,7 +899,9 @@ void CxChannelSerial::fromContext(const CxIGetSkv& context)
 {
     CxChannelBase::fromContext(context);
     setPortName     (context.getValue(CS_EntryPortName     , CSDefaultSerialPortName ));
-    setBaudRate     (context.getValue(CS_EntryBaudRate     , CIDefaultSerialBaudRate ));
+    _baudMode = context.getValue(CS_EntryBaudMode     , 1 );
+    _baudRate = context.getValue(CS_EntryBaudRate     , CIDefaultSerialBaudRate );
+    setBaudRate     (_baudRate,_baudMode);
     setCharacterSize(CharacterSize (context.getValue(CS_EntryCharacterSize, CIDefaultSerialCharacterSize )));
     setStopBits     (StopBits (context.getValue(CS_EntryStopBits     , CIDefaultSerialStopBits )));
     setParity       (Parity (context.getValue(CS_EntryParity       , CIDefaultSerialParity )));
@@ -927,7 +939,7 @@ bool CxChannelSerial::isSameChannelImpl(const std::map<std::string, std::string>
     int iFlow     = CxString::fromString(CxContainer::value( params, CS_EntryFlowControl    , sDefault), ci_int_minus_one);
 
     return sPortName == _portName
-            && iBaudRate == _baudRateEnum
+            && (iBaudRate == _baudRateEnum || iBaudRate ==  _baudRate)
             && iDataBits == _characterSize
             && iStopBits == _stopBits
             && iParity   == _parity
@@ -990,7 +1002,7 @@ void CxChannelSerial::openChannelImpl()
         doOpen();
         if (getConnectedImpl())
         {
-            if ( doSetSpeed(getBaudRateInter())
+            if ( doSetSpeed(getBaudRateInter(_baudMode))
                  && doSetFlowControl((Flow)_flowControl)
                  && doSetParity((Parity)_parity)
                  && doSetStopBits(_stopBits + 1)

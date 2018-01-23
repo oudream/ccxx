@@ -62,6 +62,11 @@ void testFileSuffixName()
     cout << CxFileSystem::extractFileName(s4) << endl;
 }
 
+void fn_timer_timeout(int iInterval)
+{
+    cxLog() << CxTime::currentSystemTimeString();
+}
+
 int main(int argc,const char *argv[])
 {
     CxApplication::init(argc, argv);
@@ -76,6 +81,10 @@ int main(int argc,const char *argv[])
     cout << CxFileSystem::cd(s3, s1) << endl;
     cout << CxFileSystem::cd(s4, s1) << endl;
     cout << CxFileSystem::cd(s5, s1) << endl;
+
+    CxTimerManager::startTimer(fn_timer_timeout, 100);
+
+    CxApplication::exec();
 
     return 0;
 }

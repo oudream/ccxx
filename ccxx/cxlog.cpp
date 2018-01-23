@@ -165,26 +165,31 @@ void fn_clearLogFiles()
     }
 }
 
+static int f_iLogType = 1;
 void CxLogManager::startLog()
 {
-#ifdef GM_LOG_REALTIME
-    CxLogRealtime * oLogRealtime = fn_oLogRealtimeSingleton();
-    if (oLogRealtime)
+//#ifdef GM_LOG_REALTIME
+    if (f_iLogType == 0)
     {
-        CxInterinfoOut::addObserver(oLogRealtime);
+        CxLogRealtime * oLogRealtime = fn_oLogRealtimeSingleton();
+        if (oLogRealtime)
+        {
+            CxInterinfoOut::addObserver(oLogRealtime);
+        }
     }
-#else
-    CxLogThread *oLogThread = fn_oLogThreadSingleton();
-    if (!oLogThread->_isStarted)
+    else
     {
-        CxInterinfoOut::addObserver(oLogThread);
-        //order : after CxInterinfoOut::addObserver(oLogThread);
-        loadLogConfig();
+        CxLogThread *oLogThread = fn_oLogThreadSingleton();
+        if (!oLogThread->_isStarted)
+        {
+            CxInterinfoOut::addObserver(oLogThread);
+            //order : after CxInterinfoOut::addObserver(oLogThread);
+            loadLogConfig();
 
-        oLogThread->_isStarted = true;
-        oLogThread->start();
+            oLogThread->_isStarted = true;
+            oLogThread->start();
+        }
     }
-#endif
 
     cxLogInfo() << "CxLogManager::startLog.";
     cxLogInfo() << "CxAppEnv::configFilePath: " << CxAppEnv::configFilePath();
@@ -194,28 +199,33 @@ void CxLogManager::startLog()
 
 void CxLogManager::stopLog()
 {
-#ifdef GM_LOG_REALTIME
-    CxLogRealtime * oLogRealtime = fn_oLogRealtimeSingleton();
-    if (oLogRealtime)
+//#ifdef GM_LOG_REALTIME
+    if (f_iLogType == 0)
     {
-        CxInterinfoOut::removeObserver(oLogRealtime);
-        std::cout << "CxLogManager::stopLog." << std::endl;
-        cxLogInfo() << "CxLogManager::stopLog.";
+        CxLogRealtime * oLogRealtime = fn_oLogRealtimeSingleton();
+        if (oLogRealtime)
+        {
+            CxInterinfoOut::removeObserver(oLogRealtime);
+            std::cout << "CxLogManager::stopLog." << std::endl;
+            cxLogInfo() << "CxLogManager::stopLog.";
+        }
     }
-#else
-    CxLogThread *oLogThread = fn_oLogThreadSingleton();
-    if (oLogThread && oLogThread->_isStarted)
+    else
     {
-        cxLogInfo() << "CxLogManager::stopLog.";
-        std::cout << "CxLogManager::stopLog 1." << std::endl;
-        CxInterinfoOut::removeObserver(oLogThread);
-        std::cout << "CxLogManager::stopLog 2." << std::endl;
-        oLogThread->stop();
-        std::cout << "CxLogManager::stopLog 3." << std::endl;
-        oLogThread->doSaveLog();
-        std::cout << "CxLogManager::stopLog." << std::endl;
+        CxLogThread *oLogThread = fn_oLogThreadSingleton();
+        if (oLogThread && oLogThread->_isStarted)
+        {
+            cxLogInfo() << "CxLogManager::stopLog.";
+            std::cout << "CxLogManager::stopLog 1." << std::endl;
+            CxInterinfoOut::removeObserver(oLogThread);
+            std::cout << "CxLogManager::stopLog 2." << std::endl;
+            oLogThread->stop();
+            std::cout << "CxLogManager::stopLog 3." << std::endl;
+            oLogThread->doSaveLog();
+            std::cout << "CxLogManager::stopLog." << std::endl;
+        }
     }
-#endif
+
     for (map<string, FILE *>::iterator it = f_logFiles.begin(); it != f_logFiles.end(); ++it)
     {
         FILE *oFile = it->second;
@@ -348,19 +358,23 @@ FILE *CxLogManager::fileByFileName(const string &sFileName)
 void
 CxLogManager::outLog(const std::string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
 {
-#ifdef GM_LOG_REALTIME
-    CxLogRealtime * oLogRealtime = fn_oLogRealtimeSingleton();
-    if (oLogRealtime)
+//#ifdef GM_LOG_REALTIME
+    if (f_iLogType == 0)
     {
-        oLogRealtime->interinfo_out(sInfo, sTitle, type, reason, source, target, tag);
+        CxLogRealtime *oLogRealtime = fn_oLogRealtimeSingleton();
+        if (oLogRealtime)
+        {
+            oLogRealtime->interinfo_out(sInfo, sTitle, type, reason, source, target, tag);
+        }
     }
-#else
-    CxLogThread *oLogThread = fn_oLogThreadSingleton();
-    if (oLogThread)
+    else
     {
-        oLogThread->interinfo_out(sInfo, sTitle, type, reason, source, target, tag);
+        CxLogThread *oLogThread = fn_oLogThreadSingleton();
+        if (oLogThread)
+        {
+            oLogThread->interinfo_out(sInfo, sTitle, type, reason, source, target, tag);
+        }
     }
-#endif
 }
 
 CxLogRealtime::CxLogRealtime()
@@ -390,9 +404,8 @@ CxLogRealtime::interinfo_out(const string &sInfo, const std::string &sTitle, int
             sText = fn_getLogString(sInfo, sTitle, type, reason, source, target, tag);
         //增加时标和换行回车
         sText = CxTime::currentMsepochString() + " " + sText + "\r\n";
-
         size_t iWrote = fwrite(const_cast<char *>(sText.data()), 1, sText.size(), oFile);
-        fflush(_fileRt);
+//        fflush(_fileRt);
         _fileCountRt += sText.size();
         _fileSizeRt += iWrote;
     }
@@ -439,7 +452,7 @@ void CxLogThread::run()
                 dtNextChecktTime = CxTime::currentMsepoch() + (1000 * 60 * 60);
                 fn_clearLogFiles();
             }
-            CxThread::sleep(30);
+            CxThread::sleep(15);
         }
     }
 }

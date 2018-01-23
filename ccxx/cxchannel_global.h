@@ -31,6 +31,7 @@ const std::string CS_EntryLocalIpAddress    = "LocalIpAddress";
 const std::string CS_EntryLocalPort         = "LocalPort";
 
 const std::string CS_EntryPortName     = "PortName";
+const std::string CS_EntryBaudMode     = "BaudMode";
 const std::string CS_EntryBaudRate     = "BaudRate";
 const std::string CS_EntryCharacterSize= "CharacterSize";
 const std::string CS_EntryStopBits     = "StopBits";

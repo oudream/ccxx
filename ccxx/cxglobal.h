@@ -471,7 +471,7 @@ typedef pid_t pid_os_t;
 #define cx_stricmp                  stricmp
 #define cx_strnicmp                 strnicmp
 
-#include <byteswap.h>
+//#include <byteswap.h>
 #endif
 
 //*error id

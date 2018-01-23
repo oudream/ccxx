@@ -17,10 +17,14 @@ public:
         BaudRate_2400,
         BaudRate_4800,
         BaudRate_9600,
+        BaudRate_14400,
         BaudRate_19200,
         BaudRate_38400,
+        BaudRate_56000,
         BaudRate_57600,
-        BaudRate_115200
+        BaudRate_115200,
+        BaudRate_128000,
+        BaudRate_256000
     };
     typedef enum BaudRateEnum BaudRateEnum;
 
@@ -251,11 +255,15 @@ public:
         }
     }
 
-    inline ushort baudRate() const { return _baudRateEnum; }
-    inline void setBaudRate(ushort value) {
+    inline ushort baudRate(int mode=1) const {
+        if(mode>0)return _baudRateEnum;
+        else   return _baudRate;
+    }
+    inline void setBaudRate(ushort value,int mode=1) {
         if (! connected())
         {
-            _baudRateEnum = value;
+            if(mode>0)_baudRateEnum = value;
+            else _baudRate = value;
         }
     }
 
@@ -338,6 +346,8 @@ private:
     int _parity;
     int _stopBits;
     int _characterSize;
+    int _baudRate;
+    int _baudMode;
 
     CxChannelSerial * _serial;
 
@@ -352,46 +362,62 @@ private:
 private:
     void stopAndDeleteRecieverThread();
 
-    int getBaudRateInter() {
-        switch (_baudRateEnum)
+    int getBaudRateInter(int mode=1) {
+        if(mode>0)
         {
-        case BaudRate_115200:
-            return 115200;
-            break;
-        case BaudRate_57600:
-            return 57600;
-            break;
-        case BaudRate_38400:
-            return 38400;
-            break;
-        case BaudRate_19200:
-            return 19200;
-            break;
-        case BaudRate_9600:
-            return 9600;
-            break;
-        case BaudRate_4800:
-            return 4800;
-            break;
-        case BaudRate_2400:
-            return 2400;
-            break;
-        case BaudRate_1200:
-            return 1200;
-            break;
-        case BaudRate_600:
-            return 600;
-            break;
-        case BaudRate_300:
-            return 300;
-            break;
-        case BaudRate_110:
-            return 110;
-            break;
-        default:
-            return _baudRateEnum;
-            break;
+            switch (_baudRateEnum)
+            {
+                case BaudRate_256000:
+                    return 256000;
+                    break;
+                case BaudRate_128000:
+                    return 128000;
+                    break;
+                case BaudRate_115200:
+                    return 115200;
+                    break;
+                case BaudRate_57600:
+                    return 57600;
+                    break;
+                case BaudRate_56000:
+                    return 56000;
+                    break;
+                case BaudRate_38400:
+                    return 38400;
+                    break;
+                case BaudRate_19200:
+                    return 19200;
+                    break;
+                case BaudRate_14400:
+                    return 14400;
+                    break;
+                case BaudRate_9600:
+                    return 9600;
+                    break;
+                case BaudRate_4800:
+                    return 4800;
+                    break;
+                case BaudRate_2400:
+                    return 2400;
+                    break;
+                case BaudRate_1200:
+                    return 1200;
+                    break;
+                case BaudRate_600:
+                    return 600;
+                    break;
+                case BaudRate_300:
+                    return 300;
+                    break;
+                case BaudRate_110:
+                    return 110;
+                    break;
+                default:
+                    return _baudRateEnum;
+                    break;
+            }
         }
+        else return _baudRate;
     }
 
     int getCharBitsInter() {
@@ -410,8 +436,6 @@ private:
             return 8;
             break;
         default:
-            if (_characterSize > 3 && _characterSize < 9)
-                return _characterSize;
             return 8;
             break;
         }
