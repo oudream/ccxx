@@ -4,3 +4,5 @@
 /build/cmake-vs2015
 /.svn
 /cxpython/build
+/test/cxpy/build
+/test/python/build
