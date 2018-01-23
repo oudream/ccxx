@@ -1,0 +1,6 @@
+/cmake-*
+/.idea
+/build/deploy
+/build/cmake-vs2015
+/.svn
+/cxpython/build
