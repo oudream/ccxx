@@ -414,7 +414,7 @@ size_t CxSocket::readfrom(void *data, size_t len, struct sockaddr_storage *from)
 size_t CxSocket::writeto(const void *data, size_t dlen, const struct sockaddr *dest)
 {
     assert(data != NULL);
-    assert(len > 0);
+    assert(dlen > 0);
 
     socklen_t slen = 0;
     if(dest)
@@ -431,7 +431,7 @@ size_t CxSocket::writeto(const void *data, size_t dlen, const struct sockaddr *d
 ssize_t CxSocket::sendto(socket_t so, const void *data, size_t dlen, int flags, const struct sockaddr *dest)
 {
     assert(data != NULL);
-    assert(len > 0);
+    assert(dlen > 0);
 
     socklen_t slen = 0;
     if(dest)
@@ -1477,7 +1477,7 @@ unsigned CxSocket::copy(struct sockaddr *s1, const struct sockaddr *s2)
         return 0;
 
     socklen_t slen = len(s1);
-    if(len > 0) {
+    if(slen > 0) {
         memcpy(s1, s2, slen);
         return slen;
     }

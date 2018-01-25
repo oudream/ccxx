@@ -5,6 +5,10 @@
 #include "cxthread.h"
 #include "cxtime.h"
 
+#if defined(sun) || defined(__APPLE__) || defined(__osf__) || defined(__QNX__) || defined(_AIX)
+#include <semaphore.h>
+#endif
+
 //multi process scenario
 class GM_CCXX_CORE_API CxProcMutex
 {

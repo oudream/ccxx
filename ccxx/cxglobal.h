@@ -471,7 +471,12 @@ typedef pid_t pid_os_t;
 #define cx_stricmp                  stricmp
 #define cx_strnicmp                 strnicmp
 
-//#include <byteswap.h>
+#ifdef __APPLE__
+#include <sys/_endian.h>
+#else
+#include <byteswap.h>
+#endif
+
 #endif
 
 //*error id

@@ -1,5 +1,7 @@
 #include "cxuuid.h"
 
+// https://github.com/graeme-hill/crossguid
+
 #include "cxstring.h"
 #include "cxtime.h"
 #include "cxmath.h"

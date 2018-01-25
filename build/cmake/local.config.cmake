@@ -5,7 +5,7 @@
 
 # Find the QtWidgets library
 if(APPLE)
-    set(CMAKE_PREFIX_PATH /usr/local/opt/qt5)
+    set(CMAKE_PREFIX_PATH /Users/oudream/Qt5.5.0/5.5/clang_64)
 elseif(UNIX)
     set(CMAKE_PREFIX_PATH /fff/qt5.6.3/5.6.3/gcc_64)
 elseif(WIN32)
