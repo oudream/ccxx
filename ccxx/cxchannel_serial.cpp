@@ -7,8 +7,7 @@ using namespace std;
 
 
 #if defined(GM_OS_WIN)
-const string CSDefaultSerialPortNames[9] = {"COM1", "COM2", "COM3", "COM4", "COM5"
-                                            , "COM6", "COM7", "COM8", "COM9" };
+const string CSDefaultSerialPortNames[9] = {"COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9"};
 #elif defined(GM_OS_IRIX)
 const string CSDefaultSerialPortNames[9] = {"/dev/ttyf1", "/dev/ttyf2", "/dev/ttyf3", "/dev/ttyf4", "/dev/ttyf5"
                                             , "/dev/ttyf6", "/dev/ttyf7", "/dev/ttyf8", "/dev/ttyf9" };
@@ -31,11 +30,11 @@ const string CSDefaultSerialPortNames[9] = {"/dev/ttyS1", "/dev/ttyS2", "/dev/tt
 
 const string CSDefaultSerialPortName = CSDefaultSerialPortNames[0];
 
-const int    CIDefaultSerialBaudRate     = CxChannelSerial::BaudRate_9600;
-const int    CIDefaultSerialFlowControl  = CxChannelSerial::flowNone;
-const int    CIDefaultSerialParity       = CxChannelSerial::parityNone;
-const int    CIDefaultSerialStopBits     = CxChannelSerial::stopBitsOne;
-const int    CIDefaultSerialCharacterSize= CxChannelSerial::CharacterSizeEight;
+const int CIDefaultSerialBaudRate = CxChannelSerial::BaudRate_9600;
+const int CIDefaultSerialFlowControl = CxChannelSerial::flowNone;
+const int CIDefaultSerialParity = CxChannelSerial::parityNone;
+const int CIDefaultSerialStopBits = CxChannelSerial::stopBitsOne;
+const int CIDefaultSerialCharacterSize = CxChannelSerial::CharacterSizeEight;
 
 //PortName      = \\.\COM1
 //BaudRate      = 6
@@ -108,7 +107,6 @@ using std::ios;
 #define CRTSCTS 0
 #endif
 
-
 void CxChannelSerial::initConfig(void)
 {
 #ifdef  GM_OS_WIN
@@ -116,27 +114,23 @@ void CxChannelSerial::initConfig(void)
 #define ASCII_XON       0x11
 #define ASCII_XOFF      0x13
 
-    DCB * attr = (DCB *)current;
-    DCB * orig = (DCB *)original;
-
-    attr->DCBlength = sizeof(DCB);
-    orig->DCBlength = sizeof(DCB);
+    DCB *attr = (DCB *) current;
+    DCB *orig = (DCB *) original;
 
     GetCommState(dev, orig);
     GetCommState(dev, attr);
-
     attr->DCBlength = sizeof(DCB);
-    attr->BaudRate = 9600;
-    attr->ByteSize = 8;
-    attr->XoffLim = 512;
-    attr->XonLim = 2048;
-    attr->fBinary = 1;
-    attr->fTXContinueOnXoff = 1;
-
-    SetCommState(dev, attr);
+    orig->DCBlength = sizeof(DCB);
+//    attr->BaudRate = 9600;
+//    attr->ByteSize = 8;
+//    attr->XoffLim = 512;
+//    attr->XonLim = 2048;
+//    attr->fBinary = 1;
+//    attr->fTXContinueOnXoff = 1;
+//    SetCommState(dev, attr);
 
     COMMTIMEOUTS CommTimeouts;
-    CommTimeouts.ReadIntervalTimeout = MAXDWORD;
+    CommTimeouts.ReadIntervalTimeout = 100;
     CommTimeouts.ReadTotalTimeoutConstant = 0;
     CommTimeouts.ReadTotalTimeoutMultiplier = 0;
     CommTimeouts.WriteTotalTimeoutConstant = 0;
@@ -185,7 +179,7 @@ void CxChannelSerial::restore(void)
 {
 #ifdef  GM_OS_WIN
     memcpy(current, original, sizeof(DCB));
-    SetCommState(dev, (DCB *)current);
+    SetCommState(dev, (DCB *) current);
 #else
     memcpy(current, original, sizeof(struct termios));
     tcsetattr(dev, TCSANOW, (struct termios *)current);
@@ -207,14 +201,14 @@ void CxChannelSerial::initSerial(void)
 void CxChannelSerial::endSerial(void)
 {
 #ifdef  GM_OS_WIN
-    if(dev == INVALID_HANDLE_VALUE && original)
-        SetCommState(dev, (DCB *)original);
+    if (dev == INVALID_HANDLE_VALUE && original)
+        SetCommState(dev, (DCB *) original);
 
-    if(current)
-        delete (DCB *)current;
+    if (current)
+        delete (DCB *) current;
 
-    if(original)
-        delete (DCB *)original;
+    if (original)
+        delete (DCB *) original;
 #else
     if(dev < 0 && original)
         tcsetattr(dev, TCSANOW, (struct termios *)original);
@@ -225,7 +219,7 @@ void CxChannelSerial::endSerial(void)
         if(original)
             delete (struct termios *)original;
 #endif
-            CxChannelSerial::doClose();
+    CxChannelSerial::doClose();
 
     current = NULL;
     original = NULL;
@@ -311,7 +305,7 @@ CxChannelSerial &CxChannelSerial::operator=(const CxChannelSerial &ser)
 {
     CxChannelSerial::doClose();
 
-    if(ser.dev < 0)
+    if (ser.dev < 0)
         return *this;
 
 #ifdef  GM_OS_WIN
@@ -319,7 +313,8 @@ CxChannelSerial &CxChannelSerial::operator=(const CxChannelSerial &ser)
 
     int result = DuplicateHandle(process, ser.dev, process, &dev, DUPLICATE_SAME_ACCESS, 0, 0);
 
-    if (0 == result) {
+    if (0 == result)
+    {
         memcpy(current, ser.current, sizeof(DCB));
         memcpy(original, ser.original, sizeof(DCB));
     }
@@ -334,7 +329,6 @@ CxChannelSerial &CxChannelSerial::operator=(const CxChannelSerial &ser)
     return *this;
 }
 
-
 void CxChannelSerial::doOpen()
 {
 #ifdef GM_OS_WIN
@@ -344,103 +338,50 @@ void CxChannelSerial::doOpen()
 // however, the message INVALID_HANDLE_VALUE is returned if you use "COM10" or greater.
 //    string sDev = "\\\\.\\" + _portName;
 //    dev = CreateFile(sDev.c_str(),
-    dev = CreateFile(_portName.c_str(),
+    string sDev = (_portName.find("\\\\.\\") == string::npos) ? "\\\\.\\" + _portName : _portName;
+    dev = CreateFile(sDev.c_str(),
                      GENERIC_READ | GENERIC_WRITE,
                      0,                    // exclusive access
                      NULL,                 // no security attrs
                      OPEN_EXISTING,
                      FILE_FLAG_OVERLAPPED,
                      NULL);
-    if(dev != INVALID_HANDLE_VALUE)
-        initConfig();
+
+    if (dev == INVALID_HANDLE_VALUE)
+    {
+        cxPrompt() << "Serial Fail: CreateFile, dev= " << sDev;
+        return;
+    }
+
+    if (GetFileType(dev) != FILE_TYPE_CHAR)
+    {
+        CloseHandle(dev);
+        cxPrompt() << "Serial Fail: File handle is not a comm handle.";
+        return;
+    }
+
+    if (!SetupComm(dev, 4096, 4096))
+    {
+        CloseHandle(dev);
+        cxPrompt() << "Serial Fail: SetupComm( dev, 4096, 4096 ).";
+        return;
+    }
+
+    // purge any information in the buffer
+    PurgeComm(dev, PURGE_TXABORT | PURGE_RXABORT | PURGE_TXCLEAR | PURGE_RXCLEAR);
+
+    initConfig();
 #else
     int cflags = O_RDWR | O_NDELAY;
     dev = ::open(_portName.c_str(), cflags);
-    if(dev > -1)
-        initConfig();
+    if(dev <= -1)
+    {
+        cxPrompt() << 'Serial Fail: open, dev= ' << _portName;
+        return;
+    }
+    initConfig();
 #endif
 }
-
-#ifdef  GM_OS_WIN
-int CxChannelSerial::doRead(char * Data, const int Length)
-{
-
-    unsigned long   dwLength = 0, dwError, dwReadLength;
-    COMSTAT cs;
-    OVERLAPPED ol;
-
-    // Return zero if handle is invalid
-    if(dev == INVALID_HANDLE_VALUE)
-        return 0;
-
-    // Read max length or only what is available
-    ClearCommError(dev, &dwError, &cs);
-
-    // If not requiring an exact byte count, get whatever is available
-    if(Length > (int)cs.cbInQue)
-        dwReadLength = cs.cbInQue;
-    else
-        dwReadLength = Length;
-
-    memset(&ol, 0, sizeof(OVERLAPPED));
-    ol.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-    if(dwReadLength > 0) {
-        if(ReadFile(dev, Data, dwReadLength, &dwLength, &ol) == FALSE) {
-            if(GetLastError() == ERROR_IO_PENDING) {
-                WaitForSingleObject(ol.hEvent, INFINITE);
-                GetOverlappedResult(dev, &ol, &dwLength, TRUE);
-            }
-            else
-                ClearCommError(dev, &dwError, &cs);
-        }
-    }
-
-    if(ol.hEvent != INVALID_HANDLE_VALUE)
-        CloseHandle(ol.hEvent);
-
-    return dwLength;
-}
-
-int CxChannelSerial::doWrite(const char * Data, const int Length)
-{
-    COMSTAT cs;
-    unsigned long dwError = 0;
-    OVERLAPPED ol;
-
-    // Clear the com port of any error condition prior to read
-    ClearCommError(dev, &dwError, &cs);
-
-    unsigned long retSize = 0;
-
-    memset(&ol, 0, sizeof(OVERLAPPED));
-    ol.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-    if(WriteFile(dev, Data, Length, &retSize, &ol) == FALSE) {
-        if(GetLastError() == ERROR_IO_PENDING) {
-            WaitForSingleObject(ol.hEvent, INFINITE);
-            GetOverlappedResult(dev, &ol, &retSize, TRUE);
-        }
-        else
-            ClearCommError(dev, &dwError, &cs);
-    }
-
-    if(ol.hEvent != INVALID_HANDLE_VALUE)
-        CloseHandle(ol.hEvent);
-
-    return retSize;
-}
-#else
-int CxChannelSerial::doRead(char *Data, const int Length)
-{
-    return ::read(dev, Data, Length);
-}
-
-int CxChannelSerial::doWrite(const char *Data, const int Length)
-{
-    return ::write(dev, Data, Length);
-}
-#endif
 
 void CxChannelSerial::doClose()
 {
@@ -455,77 +396,99 @@ void CxChannelSerial::doClose()
     }
 }
 
-bool CxChannelSerial::doSetSpeed(unsigned long speed)
+bool CxChannelSerial::doSetSpeed(BaudRateEnum baudRate)
 {
     unsigned long rate;
-
-    switch(speed) {
-    case 115200:
-    case 57600:
-    case 38400:
-    case 19200:
-    case 9600:
-    case 4800:
-    case 2400:
-    case 1200:
-    case 600:
-    case 300:
-    case 110:
-    case 0:
-        rate = speed;
-        break;
-    default:
-        return false;
+    switch (baudRate)
+    {
+        case BaudRate_256000:
+            rate = 256000;
+            break;
+        case BaudRate_128000:
+            rate = 128000;
+            break;
+        case BaudRate_115200:
+            rate = 115200;
+            break;
+        case BaudRate_57600:
+            rate = 57600;
+            break;
+        case BaudRate_56000:
+            rate = 56000;
+            break;
+        case BaudRate_38400:
+            rate = 38400;
+            break;
+        case BaudRate_19200:
+            rate = 19200;
+            break;
+        case BaudRate_14400:
+            rate = 14400;
+            break;
+        case BaudRate_9600:
+            rate = 9600;
+            break;
+        case BaudRate_4800:
+            rate = 4800;
+            break;
+        case BaudRate_2400:
+            rate = 2400;
+            break;
+        case BaudRate_1200:
+            rate = 1200;
+            break;
+        case BaudRate_600:
+            rate = 600;
+            break;
+        case BaudRate_300:
+            rate = 300;
+            break;
+        case BaudRate_110:
+            rate = 110;
+            break;
+        default:
+            return false;
     }
-
 #ifdef  GM_OS_WIN
-
-    DCB     * dcb = (DCB *)current;
+    DCB *dcb = (DCB *) current;
     dcb->DCBlength = sizeof(DCB);
-    GetCommState(dev, dcb);
-
     dcb->BaudRate = rate;
-    SetCommState(dev, dcb) ;
-
+    SetCommState(dev, dcb);
 #else
     struct termios *attr = (struct termios *)current;
     cfsetispeed(attr, rate);
     cfsetospeed(attr, rate);
     tcsetattr(dev, TCSANOW, attr);
 #endif
-
     return true;
 }
 
 bool CxChannelSerial::doSetFlowControl(Flow flow)
 {
 #ifdef  GM_OS_WIN
-
-    DCB * attr = (DCB *)current;
+    DCB *attr = (DCB *) current;
+    switch (flow)
+    {
+        case flowSoft:
+            attr->fInX = attr->fOutX = 1;
+            break;
+        case flowBoth:
+            attr->fInX = attr->fOutX = 1;
+        case flowHard:
+            attr->fOutxCtsFlow = 1;
+            attr->fRtsControl = RTS_CONTROL_HANDSHAKE;
+            break;
+        case flowNone:
+            break;
+        default:
+            return false;
+    }
     attr->XonChar = ASCII_XON;
     attr->XoffChar = ASCII_XOFF;
     attr->XonLim = 100;
     attr->XoffLim = 100;
-
-    switch(flow) {
-    case flowSoft:
-        attr->fInX = attr->fOutX = 1;
-        break;
-    case flowBoth:
-        attr->fInX = attr->fOutX = 1;
-    case flowHard:
-        attr->fOutxCtsFlow = 1;
-        attr->fRtsControl = RTS_CONTROL_HANDSHAKE;
-        break;
-    case flowNone:
-        break;
-    default:
-        return false;
-    }
-
     SetCommState(dev, attr);
 #else
-
     struct termios *attr = (struct termios *)current;
 
     attr->c_cflag &= ~CRTSCTS;
@@ -547,60 +510,69 @@ bool CxChannelSerial::doSetFlowControl(Flow flow)
     }
 
     tcsetattr(dev, TCSANOW, attr);
-
 #endif
     return true;
 }
 
-bool CxChannelSerial::doSetStopBits(int bits)
+bool CxChannelSerial::doSetStopBits(StopBits bits)
 {
 #ifdef  GM_OS_WIN
-
-    DCB * attr = (DCB *)current;
-    switch(bits) {
-    case 1:
-        attr->StopBits = ONESTOPBIT;
-        break;
-    case 2:
-        attr->StopBits = TWOSTOPBITS;
-        break;
-    default:
-        return false;
+    DCB *attr = (DCB *) current;
+    switch (bits)
+    {
+        case stopBitsOne:
+            attr->StopBits = ONESTOPBIT;
+            break;
+        case stopBuitOne5:
+            attr->StopBits = ONE5STOPBITS;
+            break;
+        case StopBitsTwo:
+            attr->StopBits = TWOSTOPBITS;
+            break;
+        default:
+            return false;
     }
-
     SetCommState(dev, attr);
 #else
-    struct termios *attr = (struct termios *)current;
-    attr->c_cflag &= ~CSTOPB;
+    struct termios *attr = (struct termios *) current;
 
-    switch(bits) {
-    case 1:
-        break;
-    case 2:
-        attr->c_cflag |= CSTOPB;
-        break;
-    default:
-        return false;
+    switch (bits)
+    {
+        case stopBitsOne:
+        case stopBuitOne5:
+            attr->c_cflag &= ~CSTOPB;
+            break;
+        case 2:
+            attr->c_cflag |= CSTOPB;
+            break;
+        default:
+            return false;
     }
     tcsetattr(dev, TCSANOW, attr);
 #endif
     return true;
 }
 
-bool CxChannelSerial::doSetCharBits(int bits)
+bool CxChannelSerial::doSetCharBits(CharacterSize bits)
 {
 #ifdef  GM_OS_WIN
-
-    DCB * attr = (DCB *)current;
-    switch(bits) {
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-        attr->ByteSize = bits;
-        break;
-    default:
-        return false;
+    DCB *attr = (DCB *) current;
+    switch (bits)
+    {
+        case CharacterSizeFive:
+            attr->ByteSize = 5;
+            break;
+        case CharacterSizeSix:
+            attr->ByteSize = 6;
+            break;
+        case CharacterSizeSeven:
+            attr->ByteSize = 7;
+            break;
+        case CharacterSizeEight:
+            attr->ByteSize = 8;
+            break;
+        default:
+            return false;
     }
     SetCommState(dev, attr);
 #else
@@ -608,16 +580,16 @@ bool CxChannelSerial::doSetCharBits(int bits)
     attr->c_cflag &= ~CSIZE;
 
     switch(bits) {
-    case 5:
+    case CharacterSizeFive:
         attr->c_cflag |= CS5;
         break;
-    case 6:
+    case CharacterSizeSix:
         attr->c_cflag |= CS6;
         break;
-    case 7:
+    case CharacterSizeSeven:
         attr->c_cflag |= CS7;
         break;
-    case 8:
+    case CharacterSizeEight:
         attr->c_cflag |= CS8;
         break;
     default:
@@ -625,27 +597,26 @@ bool CxChannelSerial::doSetCharBits(int bits)
     }
     tcsetattr(dev, TCSANOW, attr);
 #endif
-
     return true;
 }
 
 bool CxChannelSerial::doSetParity(Parity parity)
 {
 #ifdef  GM_OS_WIN
-
-    DCB * attr = (DCB *)current;
-    switch(parity) {
-    case parityEven:
-        attr->Parity = EVENPARITY;
-        break;
-    case parityOdd:
-        attr->Parity = ODDPARITY;
-        break;
-    case parityNone:
-        attr->Parity = NOPARITY;
-        break;
-    default:
-        return false;
+    DCB *attr = (DCB *) current;
+    switch (parity)
+    {
+        case parityEven:
+            attr->Parity = EVENPARITY;
+            break;
+        case parityOdd:
+            attr->Parity = ODDPARITY;
+            break;
+        case parityNone:
+            attr->Parity = NOPARITY;
+            break;
+        default:
+            return false;
     }
     SetCommState(dev, attr);
 #else
@@ -684,7 +655,8 @@ void CxChannelSerial::toggleDTR(timems_t millisec)
 {
 #ifdef  GM_OS_WIN
     EscapeCommFunction(dev, CLRDTR);
-    if(millisec) {
+    if (millisec)
+    {
         CxThread::sleep(millisec);
         EscapeCommFunction(dev, SETDTR);
     }
@@ -707,24 +679,26 @@ void CxChannelSerial::toggleDTR(timems_t millisec)
 bool CxChannelSerial::isPending(Pending pending, timems_t timeout)
 {
 #ifdef  GM_OS_WIN
-    unsigned long   dwError;
+    unsigned long dwError;
     COMSTAT cs;
 
     ClearCommError(dev, &dwError, &cs);
 
-    if(timeout == 0 || ((pending == pendingInput) && (0 != cs.cbInQue)) ||
-            ((pending == pendingOutput) && (0 != cs.cbOutQue)) || (pending == pendingError))
+    if (timeout == 0 || ((pending == pendingInput) && (0 != cs.cbInQue)) ||
+        ((pending == pendingOutput) && (0 != cs.cbOutQue)) || (pending == pendingError))
     {
-        switch(pending) {
-        case pendingInput:
-            return (0 != cs.cbInQue);
-        case pendingOutput:
-            return (0 != cs.cbOutQue);
-        case pendingError:
-            return false;
+        switch (pending)
+        {
+            case pendingInput:
+                return (0 != cs.cbInQue);
+            case pendingOutput:
+                return (0 != cs.cbOutQue);
+            case pendingError:
+                return false;
         }
     }
-    else {
+    else
+    {
         OVERLAPPED ol;
         DWORD dwMask;
         DWORD dwEvents = 0;
@@ -733,17 +707,19 @@ bool CxChannelSerial::isPending(Pending pending, timems_t timeout)
         memset(&ol, 0, sizeof(OVERLAPPED));
         ol.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
-        if(pending == pendingInput)
+        if (pending == pendingInput)
             dwMask = EV_RXCHAR;
-        else if(pending == pendingOutput)
+        else if (pending == pendingOutput)
             dwMask = EV_TXEMPTY;
         else   // on error
             dwMask = EV_ERR;
 
         SetCommMask(dev, dwMask);
         // let's wait for event or timeout
-        if((suc = WaitCommEvent(dev, &dwEvents, &ol)) == FALSE) {
-            if(GetLastError() == ERROR_IO_PENDING) {
+        if ((suc = WaitCommEvent(dev, &dwEvents, &ol)) == FALSE)
+        {
+            if (GetLastError() == ERROR_IO_PENDING)
+            {
                 DWORD transferred;
 
                 dwError = WaitForSingleObject(ol.hEvent, timeout);
@@ -758,16 +734,15 @@ bool CxChannelSerial::isPending(Pending pending, timems_t timeout)
                 ClearCommError(dev, &dwError, &cs);
         }
 
-        if(ol.hEvent != INVALID_HANDLE_VALUE)
+        if (ol.hEvent != INVALID_HANDLE_VALUE)
             CloseHandle(ol.hEvent);
 
-        if(suc == FALSE)
+        if (suc == FALSE)
             return false;
         return true;
     }
+
 #else
-
-
     int status = 0;
 #ifdef HAVE_POLL
     struct pollfd pfd;
@@ -841,34 +816,16 @@ bool CxChannelSerial::isPending(Pending pending, timems_t timeout)
     return false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 CxChannelSerial::CxChannelSerial()
 {
     initSerial();
 
-    _portName       =       CSDefaultSerialPortName         ;
-    _baudRateEnum       =       CIDefaultSerialBaudRate         ;
-    _flowControl       =    CIDefaultSerialFlowControl      ;
-    _parity       =         CIDefaultSerialParity           ;
-    _stopBits       =       CIDefaultSerialStopBits         ;
-    _characterSize       =  CIDefaultSerialCharacterSize    ;
+    _portName = CSDefaultSerialPortName;
+    _baudRateEnum = CIDefaultSerialBaudRate;
+    _flowControlEnum = CIDefaultSerialFlowControl;
+    _parityEnum = CIDefaultSerialParity;
+    _stopBitsEnum = CIDefaultSerialStopBits;
+    _characterSizeEnum = CIDefaultSerialCharacterSize;
 
     _receiver = NULL;
     _receiverStatus = ThreadStatus_Creating;
@@ -884,77 +841,96 @@ CxChannelSerial::~CxChannelSerial()
     endSerial();
 }
 
-void CxChannelSerial::toContext(CxISetSkv& context) const
+void CxChannelSerial::toContext(CxISetSkv &context) const
 {
     CxChannelBase::toContext(context);
-    context.setValue(CS_EntryPortName     , _portName        );
-    context.setValue(CS_EntryBaudRate     , _baudRateEnum        );
-    context.setValue(CS_EntryCharacterSize, _characterSize   );
-    context.setValue(CS_EntryStopBits     , _stopBits        );
-    context.setValue(CS_EntryParity       , _parity          );
-    context.setValue(CS_EntryFlowControl  , _flowControl     );
+    context.setValue(CS_EntryPortName, _portName);
+    context.setValue(CS_EntryBaudRate, _baudRateEnum);
+    context.setValue(CS_EntryCharacterSize, _characterSizeEnum);
+    context.setValue(CS_EntryStopBits, _stopBitsEnum);
+    context.setValue(CS_EntryParity, _parityEnum);
+    context.setValue(CS_EntryFlowControl, _flowControlEnum);
 }
 
-void CxChannelSerial::fromContext(const CxIGetSkv& context)
+void CxChannelSerial::fromContext(const CxIGetSkv &context)
 {
     CxChannelBase::fromContext(context);
-    setPortName     (context.getValue(CS_EntryPortName     , CSDefaultSerialPortName ));
-    _baudMode = context.getValue(CS_EntryBaudMode     , 1 );
-    _baudRate = context.getValue(CS_EntryBaudRate     , CIDefaultSerialBaudRate );
-    setBaudRate     (_baudRate,_baudMode);
-    setCharacterSize(CharacterSize (context.getValue(CS_EntryCharacterSize, CIDefaultSerialCharacterSize )));
-    setStopBits     (StopBits (context.getValue(CS_EntryStopBits     , CIDefaultSerialStopBits )));
-    setParity       (Parity (context.getValue(CS_EntryParity       , CIDefaultSerialParity )));
-    setFlowControl  (Flow (context.getValue(CS_EntryFlowControl  , CIDefaultSerialFlowControl)));
+    setPortName(context.getValue(CS_EntryPortName, CSDefaultSerialPortName));
+    setBaudRate(BaudRateEnum(context.getValue(CS_EntryBaudRate, CIDefaultSerialBaudRate)));
+    setCharacterSize(CharacterSize(context.getValue(CS_EntryCharacterSize, CIDefaultSerialCharacterSize)));
+    setStopBits(StopBits(context.getValue(CS_EntryStopBits, CIDefaultSerialStopBits)));
+    setParity(Parity(context.getValue(CS_EntryParity, CIDefaultSerialParity)));
+    setFlowControl(Flow(context.getValue(CS_EntryFlowControl, CIDefaultSerialFlowControl)));
 }
 
 void CxChannelSerial::toReport(std::vector<std::string> &sReports) const
 {
-    sReports.push_back(CS_EntryPortName      + "=" + _portName);
-    sReports.push_back(CS_EntryBaudRate      + "=" + CxString::toString(_baudRateEnum     ));
-    sReports.push_back(CS_EntryCharacterSize + "=" + CxString::toString(_characterSize));
-    sReports.push_back(CS_EntryStopBits      + "=" + CxString::toString(_stopBits     ));
-    sReports.push_back(CS_EntryParity        + "=" + CxString::toString(_parity       ));
-    sReports.push_back(CS_EntryFlowControl   + "=" + CxString::toString(_flowControl  ));
+    sReports.push_back(CS_EntryPortName + "=" + _portName);
+    sReports.push_back(CS_EntryBaudRate + "=" + CxString::toString(_baudRateEnum));
+    sReports.push_back(CS_EntryCharacterSize + "=" + CxString::toString(_characterSizeEnum));
+    sReports.push_back(CS_EntryStopBits + "=" + CxString::toString(_stopBitsEnum));
+    sReports.push_back(CS_EntryParity + "=" + CxString::toString(_parityEnum));
+    sReports.push_back(CS_EntryFlowControl + "=" + CxString::toString(_flowControlEnum));
 }
 
-void CxChannelSerial::toDescribe(CxDescribeUnit & describeUnit) const
+void CxChannelSerial::toDescribe(CxDescribeUnit &describeUnit) const
 {
-    CxDescribeString*  oEntryPortNameDescribe    =describeUnit.createAndRegister<CxDescribeString>(CS_EntryPortName    );  oEntryPortNameDescribe->initValue( _portName       );
-    CxDescribeEnum*    oEntryBaudRateDescribe    =describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryBaudRate    );    oEntryBaudRateDescribe->initValue( _baudRateEnum   );  oEntryBaudRateDescribe->setEnumCopeFromZero(10);
-    CxDescribeEnum*    oEntryDataBitsDescribe    =describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryCharacterSize    );  oEntryDataBitsDescribe->initValue(_characterSize);  oEntryDataBitsDescribe->setEnumCopeFromZero(3);
-    CxDescribeEnum*    oEntryStopBitsDescribe    =describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryStopBits    );    oEntryStopBitsDescribe->initValue(   _stopBits     );  oEntryStopBitsDescribe->setEnumCopeFromZero(1);
-    CxDescribeEnum*    oEntryParityDescribe      =describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryParity      );    oEntryParityDescribe->initValue(      _parity      );  oEntryParityDescribe->setEnumCopeFromZero(2);
-    CxDescribeEnum*    oEntryFlowDescribe        =describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryFlowControl        );    oEntryFlowDescribe->initValue( _flowControl );  oEntryFlowDescribe->setEnumCopeFromZero(3);
+    CxDescribeString *oEntryPortNameDescribe = describeUnit.createAndRegister<CxDescribeString>(CS_EntryPortName);
+    oEntryPortNameDescribe->initValue(_portName);
+    CxDescribeEnum *oEntryBaudRateDescribe = describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryBaudRate);
+    oEntryBaudRateDescribe->initValue(_baudRateEnum);
+    oEntryBaudRateDescribe->setEnumCopeFromZero(10);
+    CxDescribeEnum *oEntryDataBitsDescribe = describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryCharacterSize);
+    oEntryDataBitsDescribe->initValue(_characterSizeEnum);
+    oEntryDataBitsDescribe->setEnumCopeFromZero(3);
+    CxDescribeEnum *oEntryStopBitsDescribe = describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryStopBits);
+    oEntryStopBitsDescribe->initValue(_stopBitsEnum);
+    oEntryStopBitsDescribe->setEnumCopeFromZero(1);
+    CxDescribeEnum *oEntryParityDescribe = describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryParity);
+    oEntryParityDescribe->initValue(_parityEnum);
+    oEntryParityDescribe->setEnumCopeFromZero(2);
+    CxDescribeEnum *oEntryFlowDescribe = describeUnit.createAndRegister<CxDescribeEnum>(CS_EntryFlowControl);
+    oEntryFlowDescribe->initValue(_flowControlEnum);
+    oEntryFlowDescribe->setEnumCopeFromZero(3);
 }
 
 bool CxChannelSerial::isSameChannelImpl(const std::map<std::string, std::string> &params) const
 {
     std::string sDefault = "-1";
-    std::string sPortName = CxContainer::value( params, CS_EntryPortName );
-    int iBaudRate = CxString::fromString(CxContainer::value( params, CS_EntryBaudRate, sDefault), ci_int_minus_one);
-    int iDataBits = CxString::fromString(CxContainer::value( params, CS_EntryCharacterSize, sDefault), ci_int_minus_one);
-    int iStopBits = CxString::fromString(CxContainer::value( params, CS_EntryStopBits, sDefault), ci_int_minus_one);
-    int iParity   = CxString::fromString(CxContainer::value( params, CS_EntryParity  , sDefault), ci_int_minus_one);
-    int iFlow     = CxString::fromString(CxContainer::value( params, CS_EntryFlowControl    , sDefault), ci_int_minus_one);
+    std::string sPortName = CxContainer::value(params, CS_EntryPortName);
+    int iBaudRate = CxString::fromString(CxContainer::value(params, CS_EntryBaudRate, sDefault), ci_int_minus_one);
+    int iDataBits = CxString::fromString(CxContainer::value(params, CS_EntryCharacterSize, sDefault), ci_int_minus_one);
+    int iStopBits = CxString::fromString(CxContainer::value(params, CS_EntryStopBits, sDefault), ci_int_minus_one);
+    int iParity = CxString::fromString(CxContainer::value(params, CS_EntryParity, sDefault), ci_int_minus_one);
+    int iFlow = CxString::fromString(CxContainer::value(params, CS_EntryFlowControl, sDefault), ci_int_minus_one);
 
     return sPortName == _portName
-            && (iBaudRate == _baudRateEnum || iBaudRate ==  _baudRate)
-            && iDataBits == _characterSize
-            && iStopBits == _stopBits
-            && iParity   == _parity
-            && iFlow     == _flowControl;
+           && iBaudRate == _baudRateEnum
+           && iDataBits == _characterSizeEnum
+           && iStopBits == _stopBitsEnum
+           && iParity == _parityEnum
+           && iFlow == _flowControlEnum;
 }
 
-int CxChannelSerial::writeDataImpl(const char *pData, int iLength, void * oTarget)
+void CxChannelSerial::stopAndDeleteRecieverThread()
+{
+    if (!_receiver) return;
+    _receiverStatus = ThreadStatus_Stop;
+    _receiver->waitExit();
+    delete _receiver;
+    _receiver = NULL;
+}
+
+int CxChannelSerial::writeDataImpl(const char *pData, int iLength, void *oTarget)
 {
 #ifdef GM_OS_WIN
     unsigned long retSize = 0;
     try
     {
-        if(::WriteFile(dev, pData, iLength, &retSize, &_overLapped) == FALSE)
+        if (::WriteFile(dev, pData, iLength, &retSize, &_overLapped) == FALSE)
         {
-            if(GetLastError() == ERROR_IO_PENDING) {
+            if (GetLastError() == ERROR_IO_PENDING)
+            {
                 WaitForSingleObject(_overLapped.hEvent, INFINITE);
                 GetOverlappedResult(dev, &_overLapped, &retSize, TRUE);
             }
@@ -986,15 +962,6 @@ int CxChannelSerial::writeDataImpl(const char *pData, int iLength, void * oTarge
 #endif
 }
 
-void CxChannelSerial::stopAndDeleteRecieverThread()
-{
-    if (! _receiver) return;
-    _receiverStatus = ThreadStatus_Stop;
-    _receiver->waitExit();
-    delete _receiver;
-    _receiver = NULL;
-}
-
 void CxChannelSerial::openChannelImpl()
 {
     if (!getConnectedImpl())
@@ -1002,11 +969,11 @@ void CxChannelSerial::openChannelImpl()
         doOpen();
         if (getConnectedImpl())
         {
-            if ( doSetSpeed(getBaudRateInter(_baudMode))
-                 && doSetFlowControl((Flow)_flowControl)
-                 && doSetParity((Parity)_parity)
-                 && doSetStopBits(_stopBits + 1)
-                 && doSetCharBits(getCharBitsInter()) )
+            if (doSetSpeed((BaudRateEnum) _baudRateEnum)
+                && doSetFlowControl((Flow) _flowControlEnum)
+                && doSetParity((Parity) _parityEnum)
+                && doSetStopBits((StopBits) _stopBitsEnum)
+                && doSetCharBits((CharacterSize) _characterSizeEnum))
             {
                 //createAndStartReceiverThread
                 stopAndDeleteRecieverThread();
@@ -1039,7 +1006,7 @@ void CxChannelSerial::closeChannelImpl()
     doClose();
     stopAndDeleteRecieverThread();
 #ifdef GM_OS_WIN
-    if(_overLapped.hEvent != INVALID_HANDLE_VALUE && _overLapped.hEvent != 0)
+    if (_overLapped.hEvent != INVALID_HANDLE_VALUE && _overLapped.hEvent != 0)
     {
         ::CloseHandle(_overLapped.hEvent);
         memset(&_overLapped, 0, sizeof(OVERLAPPED));
@@ -1061,46 +1028,98 @@ void CxChannelSerial::ReceiverThread::run()
 {
     fd_t hFd = _channel->dev;
     // Return zero if handle is invalid
-    if(hFd == INVALID_HANDLE_VALUE)
+    if (hFd == INVALID_HANDLE_VALUE)
         return;
 
-    unsigned long   dwLength = 0, dwError;
+    unsigned long dwError;
     COMSTAT cs;
-    OVERLAPPED ol;
-
     // Read max length or only what is available
     ClearCommError(hFd, &dwError, &cs);
 
-    memset(&ol, 0, sizeof(OVERLAPPED));
-    ol.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+    DWORD dwRead;
+    BOOL fWaitingOnRead = FALSE;
+    OVERLAPPED osReader = {0};
 
-    * _status = ThreadStatus_Running;
-    while (* _status == ThreadStatus_Running)
+// Create the overlapped event. Must be closed before exiting
+// to avoid a handle leak.
+    osReader.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+    if (osReader.hEvent == NULL)
     {
-        if(::ReadFile(hFd, _buffer, sizeof(_buffer), &dwLength, &ol) == FALSE)
+        // Error creating overlapped event; abort.
+        cxPrompt() << "Serial Fail: Error creating overlapped event; abort.";
+        threadEventNotify(_channel, ChannelEvent_Receive_Error);
+        return;
+    }
+
+    *_status = ThreadStatus_Running;
+    while (*_status == ThreadStatus_Running)
+    {
+        if (!ReadFile(hFd, _buffer, sizeof(_buffer), &dwRead, &osReader))
         {
-            if(GetLastError() == ERROR_IO_PENDING)
-            {
-                WaitForSingleObject(ol.hEvent, INFINITE);
-                GetOverlappedResult(hFd, &ol, &dwLength, TRUE);
-            }
-            else
+            if (GetLastError() != ERROR_IO_PENDING) // read not delayed?
             {
                 ClearCommError(hFd, &dwError, &cs);
+                cxPrompt() << "Serial Fail: ReadFile Error 1. " << dwError;
                 threadEventNotify(_channel, ChannelEvent_Receive_Error);
                 break;
+            } // Error in communications; report it.
+            else
+            {
+                fWaitingOnRead = TRUE;
             }
         }
         else
         {
-            if (dwLength > 0)
-                threadEventNotify(_channel, ChannelEvent_Received_Data, 0, _buffer, dwLength);
-            CxThread::sleep(1);
+            if (dwRead>0) // read completed immediately
+            {
+                threadEventNotify(_channel, ChannelEvent_Received_Data, 0, _buffer, dwRead);
+            }
+        }
+
+        DWORD dwRes;
+
+        if (fWaitingOnRead)
+        {
+            dwRes = WaitForSingleObject(osReader.hEvent, 500); //READ_TIMEOUT : 500
+            switch(dwRes)
+            {
+                // Read completed.
+                case WAIT_OBJECT_0:
+                    if (!GetOverlappedResult(hFd, &osReader, &dwRead, FALSE))  // Error in communications; report it.
+                    {
+                        ClearCommError(hFd, &dwError, &cs);
+                        cxPrompt() << "Serial Fail: ReadFile Error 2. " << dwError;
+                        threadEventNotify(_channel, ChannelEvent_Receive_Error);
+                    }
+                    else  // Read completed successfully.
+                    if (dwRead>0)
+                    {
+                        threadEventNotify(_channel, ChannelEvent_Received_Data, 0, _buffer, dwRead);
+                    }
+
+                    //  Reset flag so that another opertion can be issued.
+                    fWaitingOnRead = FALSE;
+                    break;
+
+                case WAIT_TIMEOUT:
+                    // Operation isn't complete yet. fWaitingOnRead flag isn't
+                    // changed since I'll loop back around, and I don't want
+                    // to issue another read until the first one finishes.
+                    //
+                    // This is a good time to do some background work.
+                    break;
+
+                default:
+                    // Error in the WaitForSingleObject; abort.
+                    // This indicates a problem with the OVERLAPPED structure's
+                    // event handle.
+                    break;
+            }
         }
     }
 
-    if(ol.hEvent != INVALID_HANDLE_VALUE)
-        CloseHandle(ol.hEvent);
+    if (osReader.hEvent != INVALID_HANDLE_VALUE)
+        CloseHandle(osReader.hEvent);
 }
 
 #else
@@ -1136,10 +1155,9 @@ void CxChannelSerial::ReceiverThread::run()
 
 #endif
 
-
 void CxChannelSerial::ReceiverThread::exit()
 {
-    * _status = ThreadStatus_Exit;
+    *_status = ThreadStatus_Exit;
     CxJoinableThread::exit();
 }
 

@@ -72,6 +72,7 @@ set_target_properties(cxtest_udp_server PROPERTIES FOLDER ccxx/test)
 ### test channel serial
 set(fslSerial
         channel/test_channel_serial1.cpp
+#        channel/test_serial1.cpp
         )
 
 mc_merge_file_path(${gs_ccxx_test_path} "${fslSerial}" fslSerialPath)

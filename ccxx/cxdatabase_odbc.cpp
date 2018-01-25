@@ -42,6 +42,7 @@ vector<string> fn_getDdlStrings()
     r.push_back("drop");
     r.push_back("insert");
     r.push_back("delete");
+    r.push_back("alter");
     return r;
 }
 
@@ -253,7 +254,7 @@ protected:
 
         try
         {
-            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
+//            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
 
             string sSql = CxString::format("insert into %s ", sTableName.c_str());
             string sColumnes = "(";
@@ -375,7 +376,7 @@ protected:
         }
 
 //        cxDebug()<<"CxDatabaseOdbc->saveTableImpl end "<<_db.connected << ";dt1-dt0=" << dt1-dt0 << ";dt2-dt1=" << dt2-dt1 << ";dt3-dt2=" << dt3-dt2 << ";dt4-dt3=" << dt4-dt3 << ";dt5-dt4=" << dt5-dt4 << ";dt6-dt5=" << dt6-dt5 << ";dt7-dt6=" << dt7-dt6;
-        cxLog() << "CxDatabaseOdbc->saveTableImpl end " << _db.connected;
+//        cxLog() << "CxDatabaseOdbc->saveTableImpl end " << _db.connected;
 
         return rows.size();
     }
@@ -429,7 +430,7 @@ protected:
 
         try
         {
-            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
+//            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
 
             string sSql = CxString::format("UPDATE %s ", sTableName.c_str());
             string sColumnes = "(";
@@ -550,14 +551,14 @@ protected:
         }
 
 //        cxDebug()<<"CxDatabaseOdbc->saveTableImpl end "<<_db.connected << ";dt1-dt0=" << dt1-dt0 << ";dt2-dt1=" << dt2-dt1 << ";dt3-dt2=" << dt3-dt2 << ";dt4-dt3=" << dt4-dt3 << ";dt5-dt4=" << dt5-dt4 << ";dt6-dt5=" << dt6-dt5 << ";dt7-dt6=" << dt7-dt6;
-        cxLog() << "CxDatabaseOdbc->saveTableImpl end " << _db.connected;
+//        cxLog() << "CxDatabaseOdbc->saveTableImpl end " << _db.connected;
 
         return rows.size();
     }
 
     int execSqlImpl(const string &sSql)
     {
-        int iResult = FALSE;
+        int iResult = -1;
 
         if (_db.connected && sSql.size() > 0)
         {
@@ -578,19 +579,20 @@ protected:
                 else
                 {
                     otl_stream o(1, sSql.c_str(), _db); // buffer size （SQL执行后数据往返次数）, SQL statement,connect object
-                    iResult = TRUE;
+                    o.flush();
+                    iResult = o.get_rpc(); // rpc 影响的行数
                 }
             }
             catch (otl_exception &p)
             {                        // intercept OTL exceptions
                 cxDebug() << "odbc execSqlImpl exception: " << p.msg << p.stm_text << p.sqlstate << p.var_info
                           << cxEndLine;
-                iResult = FALSE;
+                iResult = -1;
             }
             catch (...)
             {
                 cxDebug() << "odbc execSqlImpl exception : unknow";
-                iResult = FALSE;
+                iResult = -1;
             }
         }
         return iResult;
@@ -656,7 +658,7 @@ protected:
 
         try
         {
-            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
+//            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
 
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
 //                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
@@ -809,7 +811,7 @@ protected:
             return -9;
         }
 
-        cxLog() << "CxDatabaseOdbc->loadSqlImpl end " << rows.size();
+//        cxLog() << "CxDatabaseOdbc->loadSqlImpl end " << rows.size();
 
         return rows.size();
     }
@@ -829,7 +831,7 @@ protected:
 
         try
         {
-            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
+//            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
 
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
                 //                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
@@ -1039,7 +1041,7 @@ protected:
             return -9;
         }
 
-        cxLog() << "CxDatabaseOdbc->loadSqlImpl end " << rows.size();
+//        cxLog() << "CxDatabaseOdbc->loadSqlImpl end " << rows.size();
 
         return rows.size();
     }

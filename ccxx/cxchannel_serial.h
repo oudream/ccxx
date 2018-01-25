@@ -10,57 +10,58 @@ class GM_CCXX_CORE_API CxChannelSerial : public CxChannelBase
 {
 public:
     enum BaudRateEnum {
-        BaudRate_110,
-        BaudRate_300,
-        BaudRate_600,
-        BaudRate_1200,
-        BaudRate_2400,
-        BaudRate_4800,
-        BaudRate_9600,
-        BaudRate_14400,
-        BaudRate_19200,
-        BaudRate_38400,
-        BaudRate_56000,
-        BaudRate_57600,
-        BaudRate_115200,
-        BaudRate_128000,
-        BaudRate_256000
+        BaudRate_110 = 0,
+        BaudRate_300 = 1,
+        BaudRate_600 = 2,
+        BaudRate_1200 = 3,
+        BaudRate_2400 = 4,
+        BaudRate_4800 = 5,
+        BaudRate_9600 = 6,
+        BaudRate_14400 = 7,
+        BaudRate_19200 = 8,
+        BaudRate_38400 = 9,
+        BaudRate_56000 = 10,
+        BaudRate_57600 = 11,
+        BaudRate_115200 = 12,
+        BaudRate_128000 = 13,
+        BaudRate_256000 = 14
     };
     typedef enum BaudRateEnum BaudRateEnum;
 
     enum Flow {
-        flowNone,
-        flowSoft,
-        flowHard,
-        flowBoth
+        flowNone = 0,
+        flowSoft = 1,
+        flowHard = 2,
+        flowBoth = 3
     };
     typedef enum Flow Flow;
 
     enum Parity {
-        parityNone,
-        parityOdd,
-        parityEven
+        parityNone = 0,
+        parityOdd = 1,
+        parityEven = 3
     };
     typedef enum Parity Parity;
 
     enum StopBits {
-        stopBitsOne,
-        StopBitsTwo
+        stopBitsOne = 0,
+        stopBuitOne5 = 1,
+        StopBitsTwo = 2
     };
     typedef enum StopBits StopBits;
 
     enum CharacterSize {
-        CharacterSizeFive,
-        CharacterSizeSix,
-        CharacterSizeSeven,
-        CharacterSizeEight
+        CharacterSizeFive = 0,
+        CharacterSizeSix = 1,
+        CharacterSizeSeven = 2,
+        CharacterSizeEight = 3
     };
     typedef enum CharacterSize CharacterSize;
 
     enum Pending {
-        pendingInput,
-        pendingOutput,
-        pendingError
+        pendingInput = 0,
+        pendingOutput = 1,
+        pendingError = 2
     };
     typedef enum Pending Pending;
 
@@ -145,7 +146,7 @@ protected:
      * @return 0 on success.
      * @param speed to select. 0 signifies modem "hang up".
      */
-    bool doSetSpeed(unsigned long speed);
+    bool doSetSpeed(BaudRateEnum baudRate);
 
     /**
      * Set character size.
@@ -153,7 +154,7 @@ protected:
      * @return 0 on success.
      * @param bits character size to use (usually 7 or 8).
      */
-    bool doSetCharBits(int bits);
+    bool doSetCharBits(CharacterSize bits);
 
     /**
      * Set parity mode.
@@ -169,7 +170,7 @@ protected:
      * @return 0 on success.
      * @param bits stop bits.
      */
-    bool doSetStopBits(int bits);
+    bool doSetStopBits(StopBits bits);
 
     /**
      * Set flow control.
@@ -205,23 +206,6 @@ protected:
     void doClose(void);
 
     /**
-     * Reads from serial device.
-     *
-     * @param Data  Point to character buffer to receive data.  Buffers MUST
-     *              be at least Length + 1 bytes in size.
-     * @param Length Number of bytes to read.
-     */
-    virtual int doRead(char * Data, const int Length);
-
-    /**
-     * Writes to serial device.
-     *
-     * @param Data  Point to character buffer containing data to write.  Buffers MUST
-     * @param Length Number of bytes to write.
-     */
-    virtual int doWrite(const char * Data, const int Length);
-
-    /**
      * Get the status of pending operations.  This can be used to
      * examine if input or output is waiting, or if an error has
      * occured on the serial device.
@@ -255,47 +239,43 @@ public:
         }
     }
 
-    inline ushort baudRate(int mode=1) const {
-        if(mode>0)return _baudRateEnum;
-        else   return _baudRate;
-    }
-    inline void setBaudRate(ushort value,int mode=1) {
+    inline BaudRateEnum baudRate(int mode=1) const { return (BaudRateEnum)_baudRateEnum; }
+    inline void setBaudRate(BaudRateEnum value) {
         if (! connected())
         {
-            if(mode>0)_baudRateEnum = value;
-            else _baudRate = value;
+            _baudRateEnum = value;
         }
     }
 
-    inline Flow flowControl() const { return (Flow)_flowControl; }
+    inline Flow flowControl() const { return (Flow)_flowControlEnum; }
     inline void setFlowControl(Flow value) {
         if (! connected())
         {
-            _flowControl = value;
+            _flowControlEnum = value;
         }
     }
 
-    inline Parity parity() const { return (Parity)_parity; }
+    inline Parity parity() const { return (Parity)_parityEnum; }
     inline void setParity(Parity value) {
         if (! connected())
         {
-            _parity = value;
+            _parityEnum = value;
         }
     }
 
-    inline StopBits stopBits() const { return (StopBits)_stopBits; }
+    inline StopBits stopBits() const { return (StopBits)_stopBitsEnum; }
     inline void setStopBits(StopBits value) {
         if (! connected())
         {
-            _stopBits = value;
+            _stopBitsEnum = value;
         }
     }
 
-    inline CharacterSize characterSize() const { return (CharacterSize)_characterSize; }
+    inline CharacterSize characterSize() const { return (CharacterSize)_characterSizeEnum; }
     inline void setCharacterSize(CharacterSize value) {
         if (! connected())
         {
-            _characterSize = value;
+            _characterSizeEnum = value;
         }
     }
 
@@ -342,14 +322,10 @@ protected:
 private:
     std::string _portName;
     int _baudRateEnum;
-    int _flowControl;
-    int _parity;
-    int _stopBits;
-    int _characterSize;
-    int _baudRate;
-    int _baudMode;
-
-    CxChannelSerial * _serial;
+    int _flowControlEnum;
+    int _parityEnum;
+    int _stopBitsEnum;
+    int _characterSizeEnum;
 
     ReceiverThread * _receiver;
     int _receiverStatus;
@@ -361,86 +337,7 @@ private:
 
 private:
     void stopAndDeleteRecieverThread();
-
-    int getBaudRateInter(int mode=1) {
-        if(mode>0)
-        {
-            switch (_baudRateEnum)
-            {
-                case BaudRate_256000:
-                    return 256000;
-                    break;
-                case BaudRate_128000:
-                    return 128000;
-                    break;
-                case BaudRate_115200:
-                    return 115200;
-                    break;
-                case BaudRate_57600:
-                    return 57600;
-                    break;
-                case BaudRate_56000:
-                    return 56000;
-                    break;
-                case BaudRate_38400:
-                    return 38400;
-                    break;
-                case BaudRate_19200:
-                    return 19200;
-                    break;
-                case BaudRate_14400:
-                    return 14400;
-                    break;
-                case BaudRate_9600:
-                    return 9600;
-                    break;
-                case BaudRate_4800:
-                    return 4800;
-                    break;
-                case BaudRate_2400:
-                    return 2400;
-                    break;
-                case BaudRate_1200:
-                    return 1200;
-                    break;
-                case BaudRate_600:
-                    return 600;
-                    break;
-                case BaudRate_300:
-                    return 300;
-                    break;
-                case BaudRate_110:
-                    return 110;
-                    break;
-                default:
-                    return _baudRateEnum;
-                    break;
-            }
-        }
-        else return _baudRate;
-    }
-
-    int getCharBitsInter() {
-        switch (_characterSize)
-        {
-        case CharacterSizeFive:
-            return 5;
-            break;
-        case CharacterSizeSix:
-            return 6;
-            break;
-        case CharacterSizeSeven:
-            return 7;
-            break;
-        case CharacterSizeEight:
-            return 8;
-            break;
-        default:
-            return 8;
-            break;
-        }
-    }
-
+    
 };
 
 class GM_CCXX_CORE_API CxChannelSerialFactory : public CxChannelFactoryBase

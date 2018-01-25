@@ -3,13 +3,16 @@
 
 using namespace std;
 
+static long long f_iSerialReceivedTotal = 0;
+
 class SerialSubject : public CxIChannelSubject
 {
 protected:
     void channel_receivedData(const uchar* pData, int iLength, void * oSource)
     {
         // 接收数据
-        cxPrompt() << "Recv " << iLength << " Byte";
+        f_iSerialReceivedTotal += iLength;
+        cxPrompt() << "Recv " << f_iSerialReceivedTotal << " Byte";
     }
 
 };
@@ -36,22 +39,16 @@ int main(int argc, const char * argv[])
     CxApplication::init(argc, argv);
 
     string sPort = CxAppEnv::findArgument("port");
-    if (sPort.empty()) sPort = "COM5";
+    if (sPort.empty()) sPort = "COM1";
     // 新建，配置
     // 实现CxIChannelSubject，并注册处理
     f_mSerial.addObserver(&f_mSerialSubject);
-//PortName      = COM1
-//BaudRate      = 6
-//CharacterSize = 3
-//StopBits      = 1
-//Parity        = 0
-//FlowControl   = 0
-    f_mSerial.setPortName(sPort);
-    f_mSerial.setBaudRate(6);
-    f_mSerial.setCharacterSize((CxChannelSerial::CharacterSize)3);
-    f_mSerial.setStopBits((CxChannelSerial::StopBits)1);
-    f_mSerial.setParity((CxChannelSerial::Parity)0);
-    f_mSerial.setFlowControl((CxChannelSerial::Flow)0);
+    f_mSerial.setPortName(sPort);                                   //PortName      = COM1
+    f_mSerial.setBaudRate(CxChannelSerial::BaudRate_56000);         //BaudRate      = 10
+    f_mSerial.setCharacterSize(CxChannelSerial::CharacterSizeEight);//CharacterSize = 3
+    f_mSerial.setStopBits(CxChannelSerial::stopBitsOne);            //StopBits      = 0
+    f_mSerial.setParity(CxChannelSerial::parityNone);               //Parity        = 0
+    f_mSerial.setFlowControl(CxChannelSerial::flowNone);            //FlowControl   = 0
 
     f_mSerial.open();
 
