@@ -1526,6 +1526,7 @@ CxFileSystem::scanDir(const std::string &sPath, CxFileSystem::fn_scan_result_t f
     char              childpath[512];
 
     pDir=opendir(path);
+    if (pDir == NULL) return;
     memset(childpath,0,sizeof(childpath));
     while((ent=readdir(pDir))!=NULL)
     {
