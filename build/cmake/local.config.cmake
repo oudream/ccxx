@@ -12,6 +12,7 @@ elseif(WIN32)
     if(MSVC)
         if(MSVC_VERSION EQUAL 1800) # 1800 is Visual Studio 2013
             set(CMAKE_PREFIX_PATH F:/qt5.8.0msvc2013/5.8/msvc2013)
+            set(CMAKE_PREFIX_PATH F:/qt5.8.0msvc2013/5.8/msvc2013)
         else()
             set(CMAKE_PREFIX_PATH F:/qt5.6.1msvc2015/5.6/msvc2015)
         endif()

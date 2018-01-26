@@ -7,7 +7,9 @@ if(APPLE)
 set(CMAKE_MACOSX_RPATH 0)
 endif()
 
-add_subdirectory(./gtest/googletest)
+set(gs_project_path ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_subdirectory(./gtest)
 
 add_subdirectory(./build/cmake)
 

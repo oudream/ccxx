@@ -53,6 +53,7 @@ HEADERS += \
     $$PWD/cxprofile_skv_json.h \
     $$PWD/cxchannel_global.h \
     $$PWD/cxchannel.h \
+    $$PWD/cxchannel_none.h \
     $$PWD/cxchannel_tcpclient.h \
     $$PWD/cxchannel_tcpserver.h \
     $$PWD/cxchannel_udp.h \
@@ -102,6 +103,7 @@ SOURCES += \
     $$PWD/cxprofile_skv_xml.cpp \
     $$PWD/cxprofile_skv_json.cpp \
     $$PWD/cxchannel.cpp \
+    $$PWD/cxchannel_none.cpp \
     $$PWD/cxchannel_tcpclient.cpp \
     $$PWD/cxchannel_tcpserver.cpp \
     $$PWD/cxchannel_udp.cpp \

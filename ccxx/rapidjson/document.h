@@ -1973,9 +1973,10 @@ private:
         return true;
     }
 
-private:
+public:
     //! Prohibit copying
     GenericDocument(const GenericDocument&);
+private:
     //! Prohibit assignment
     GenericDocument& operator=(const GenericDocument&);
 
