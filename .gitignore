@@ -2,6 +2,7 @@
 /.idea
 /build/deploy
 /build/cmake-vs2015
+/deploy
 /.svn
 /cxpython/build
 /test/cxpy/build
