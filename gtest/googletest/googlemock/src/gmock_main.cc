@@ -50,5 +50,8 @@ GTEST_API_ int main(int argc, char** argv) {
   // also responsible for initializing Google Test.  Therefore there's
   // no need for calling testing::InitGoogleTest() separately.
   testing::InitGoogleMock(&argc, argv);
-  return RUN_ALL_TESTS();
+  int r = RUN_ALL_TESTS();
+  int c = getchar();
+  putchar(c);
+  return r;
 }

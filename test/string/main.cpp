@@ -2,6 +2,7 @@
 #include <ccxx/cxstring.h>
 #include <ccxx/cxfile.h>
 #include <ccxx/cxinterinfo.h>
+#include <ccxx/cxtimer.h>
 
 
 //#include "temp1.cpp"
@@ -237,8 +238,6 @@ void testString004_isValidPath()
 
 }
 
-#include <ccxx/cxglobal_value.h>
-
 void testString005_toString()
 {
     double dMin = CxValueType::minValue<double>()/*GM_DOUBLE_MIN*/;
@@ -326,19 +325,19 @@ void testString009_unquote()
     cout << s21 << endl;
 }
 
+void fn_timer_timeout(int iInterval)
+{
+    string sHex = "3132336141";
+    vector<uchar> cHexes = CxString::fromHexstring(sHex);
+    cxPrompt() << cHexes;
+    CxTimerManager::stopTimer(fn_timer_timeout);
+}
+
 int main(int argc, const char *argv[])
 {
     CxApplication::init(argc, argv);
 
-    testString003_tomap();
+    CxTimerManager::startTimer(fn_timer_timeout, 2000);
 
-    cout << "--" << endl;
-    cout << "--" << endl;
-    cout << "--" << endl;
-
-//    assert(0);
-
-    exit(1);
-
-    return 0;
+    return CxApplication::exec();
 }

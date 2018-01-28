@@ -1,35 +1,23 @@
 
 ###has ccxx
 set(fslSourceCcxxs
-        json/main_ccxx.cpp
+        xml/main.cpp
         )
 
 mc_merge_file_path(${gs_ccxx_test_path} "${fslSourceCcxxs}" fslSourceCcxxPaths)
 
-add_executable(cxtest_json
+add_executable(cxtest_xml
         ${fslSourceCcxxPaths})
 
-add_dependencies(cxtest_json
+add_dependencies(cxtest_xml
         libccxx
         )
 
-target_link_libraries(cxtest_json
+target_link_libraries(cxtest_xml
         libccxx
         )
 
-set_target_properties(cxtest_json PROPERTIES FOLDER ccxx/test)
+set_target_properties(cxtest_xml PROPERTIES FOLDER ccxx/test)
 
 
 
-###no ccxx
-set(fslSources
-        json/main.cpp
-        )
-
-mc_merge_file_path(${gs_ccxx_test_path} "${fslSources}" fslSourcePaths)
-
-add_executable(test_json
-        ${fslSourcePaths})
-
-
-set_target_properties(test_json PROPERTIES FOLDER test)

@@ -1,5 +1,5 @@
 
-#include(./../../build/cmake/ccxx/ccxx.cmake)
+include(./../../build/cmake/ccxx/ccxx.cmake)
 
 include_directories(${gtest_SOURCE_DIR}/include)
 include_directories(${gmock_SOURCE_DIR}/include)

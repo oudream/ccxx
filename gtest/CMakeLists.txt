@@ -54,4 +54,4 @@ include_directories(${gs_project_include_path})
 
 add_subdirectory(./googletest)
 add_subdirectory(./test)
-#add_subdirectory(./ccxx)
+add_subdirectory(./ccxx)
