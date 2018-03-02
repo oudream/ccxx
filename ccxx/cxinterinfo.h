@@ -167,7 +167,16 @@ public:
 
     static void removeObserver(CxInterinfoOut_I* oSubject);
 
-    //信息输出到所有IO端（包括命令行、日志、网络信息口等等）
+    /**
+     * summary : out into to all io, inclue : desktop, tty, log, cmd
+     * @param sInfo
+     * @param sTitle
+     * @param type
+     * @param reason
+     * @param source
+     * @param target
+     * @param iTag
+     */
     static void outInfo(const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int iTag = 0);
 
     static void outLog(const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int iTag = 0);

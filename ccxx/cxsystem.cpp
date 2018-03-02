@@ -144,7 +144,7 @@ CxSystem::registAutoStart(const std::string &sCommand, const string &sWorkingDir
 #endif
 }
 
-static unsigned long long system_time_delta; // 系统时间增量
+static unsigned long long system_time_delta; // time increment
 
 #ifdef GM_OS_WIN
 CxSystem::SysInfo CxSystem::getSysInfo()
@@ -173,12 +173,12 @@ CxSystem::SysInfo CxSystem::getSysInfo()
     }
     last_system_time_ = totalTime;
     last_idleTime_ = idleTime.QuadPart;
-    //获取system内存使用率
+    // get system memory Usage
     MEMORYSTATUSEX statex;
     statex.dwLength = sizeof(statex);
     if (::GlobalMemoryStatusEx(&statex))
     {
-        r.sysmem = statex.dwMemoryLoad; // 内存使用率
+        r.sysmem = statex.dwMemoryLoad;
     }
     return r;
 }
@@ -189,7 +189,6 @@ bool CxSystem::winInstallService(const std::string &sServiceName, const string &
     if (winIsExistService(sServiceName))
         return true;
 
-    //打开服务控制管理器
     SC_HANDLE hSCM = ::OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if (hSCM == NULL)
     {
@@ -199,7 +198,6 @@ bool CxSystem::winInstallService(const std::string &sServiceName, const string &
 
     DWORD dwStartupType = SERVICE_AUTO_START;
 
-    //创建服务
     SC_HANDLE hService = ::CreateService(
         hSCM, sServiceName.c_str(), sServiceName.c_str(),
         SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
@@ -240,7 +238,6 @@ bool CxSystem::winUninstallService(const std::string &sServiceName)
     SERVICE_STATUS status;
     ::ControlService(hService, SERVICE_CONTROL_STOP, &status);
 
-    //删除服务
     BOOL bDelete = ::DeleteService(hService);
     ::CloseServiceHandle(hService);
     ::CloseServiceHandle(hSCM);
@@ -252,12 +249,10 @@ bool CxSystem::winIsExistService(const std::string &sServiceName)
 {
     bool r = false;
 
-    //打开服务控制管理器
     SC_HANDLE hSCM = ::OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 
     if (hSCM != NULL)
     {
-        //打开服务
         SC_HANDLE hService = ::OpenService(hSCM, sServiceName.c_str(), SERVICE_QUERY_CONFIG);
         if (hService != NULL)
         {

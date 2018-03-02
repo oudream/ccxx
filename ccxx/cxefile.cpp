@@ -49,13 +49,13 @@ vector<string> EFileElement::toEfileBuffer()
    sLines.clear();
    switch(_type)
    {
-   case ee_type_row: //目前只支持横表模式
+   case ee_type_row: // Only Horizontal Table
    {
        string sLine;
-       //类::实例名
+       //
        sLine = "<" + _className + "::" + _InstanceName + ">";
        sLines.push_back(sLine);
-       //字段
+       // field
        sLine = "@";
        if(_field.size()>0)
        {
@@ -63,7 +63,7 @@ vector<string> EFileElement::toEfileBuffer()
             sLine += CxString::join(_field,cc_flag_tab);
        }
        sLines.push_back(sLine);
-       //记录
+       // record
        for (size_t i = 0; i < _rec.size(); ++i)
        {
           vector<string> rec = _rec.at(i);
@@ -72,7 +72,7 @@ vector<string> EFileElement::toEfileBuffer()
           sLine += CxString::join(rec,cc_flag_tab);
           sLines.push_back(sLine);
        }
-       //结束
+       // end
        sLine = "</" + _className + "::" + _InstanceName + ">";
        sLines.push_back(sLine);
    }
@@ -149,7 +149,7 @@ void EFileElement::setRec2(vector<map<string, string> > &vRec)
 
     for(map<string,string>::const_iterator it = map1.begin(); it != map1.end(); ++it)
     {
-        //更新本地值
+        // update local value
         _field.push_back(it->first);
     }
 
@@ -232,7 +232,7 @@ ExplainEfile::ExplainEfile()
 {
 
 }
-//文件检查
+
 bool ExplainEfile::check(const string &sFile, const string &sErr)
 {
     //need to do
@@ -243,7 +243,7 @@ int ExplainEfile::explain(const char *pData, int iLength, map<string, string> &h
 {
 	return 0;
 }
-//解析E文件
+
 int ExplainEfile::explain(const char *pData, int iLength, map<string, string> &declare, vector<EFileElement> &vObj)
 {
     vector<string> sLines = CxString::split(string(pData, iLength), cc_flag_line);
@@ -268,16 +268,16 @@ int ExplainEfile::explain(const vector<string> &data, map<string, string> &decla
 
         switch (sLine.data()[0])
         {
-        case '<'://头部
+        case '<':// head
         {
             if(sLine.size()<2)break;
-            if((sLine.data()[1])=='!')//声明
+            if((sLine.data()[1])=='!') // declare
             {
                 string s = CxString::unquote(sLine, '!', '!');
                 s = CxString::trim(s);
                 declare = CxString::splitToMap(s,'=',' ');
             }
-            else if((sLine.data()[1])!='/')//类名实例名
+            else if((sLine.data()[1])!='/') // class instance
             {
                 string s = CxString::unquote(sLine, '<', '>');
                 s = CxString::trim(s);
@@ -287,15 +287,15 @@ int ExplainEfile::explain(const vector<string> &data, map<string, string> &decla
             }
             else
             {
-                vObj.push_back(ee); //表结束
+                vObj.push_back(ee); //end table
                 err = TRUE;
             }
         }
             break;
-        case '@'://定义
+        case '@':// declare
         {
             if(sLine.size()<2)break;
-            if((sLine.data()[1])=='@')//列表
+            if((sLine.data()[1])=='@')// list
             {
 
             }
@@ -303,7 +303,7 @@ int ExplainEfile::explain(const vector<string> &data, map<string, string> &decla
             {
 
             }
-            else //横表结构
+            else // horizontal table
             {
                 string s = sLine.substr(1, sLine.size()-1);
                 ee.seField(CxString::split(s, cc_flag_tab));
@@ -311,7 +311,7 @@ int ExplainEfile::explain(const vector<string> &data, map<string, string> &decla
             }
         }
             break;
-        case '#': //记录
+        case '#': // record
         {
             if (sLine.size() > 1)
             {
@@ -322,7 +322,7 @@ int ExplainEfile::explain(const vector<string> &data, map<string, string> &decla
             }
         }
             break;
-        case '/': //注释
+        case '/': //
         {
             if (sLine.size() > 2)
             {
@@ -330,7 +330,7 @@ int ExplainEfile::explain(const vector<string> &data, map<string, string> &decla
             }
         }
             break;
-        case '%'://注释
+        case '%':// comments
         {
             if (sLine.size() > 2)
             {
@@ -347,12 +347,11 @@ int ExplainEfile::explain(const vector<string> &data, map<string, string> &decla
 }
 
 
-//生成E文件
 vector<char> ExplainEfile::toEfileBuffer(map<string, string> &heads, map<string, string> &majors, vector<map<string, string> > &details)
 {
 	 return vector<char>();
 }
-//生成E文件
+
 vector<string> ExplainEfile::toEfileBuffer(map<string, string> &declare, vector<EFileElement> &vObj)
 {
     vector<string> sLines;
@@ -371,7 +370,7 @@ vector<string> ExplainEfile::toEfileBuffer(map<string, string> &declare, vector<
     }
     return sLines;
 }
-//加载文件
+
 int ExplainEfile::loadFromFile(const string & sFile, map<string, string> &declare, vector<EFileElement> &vObj)
 {
     int err = FALSE;
@@ -384,6 +383,7 @@ int ExplainEfile::loadFromFile(const string & sFile, map<string, string> &declar
     }
     return FALSE;
 }
+
 int ExplainEfile::loadFromString(const string &sBuffer, map<string, string> &declare, vector<EFileElement> &vObj)
 {
     int err = FALSE;
@@ -396,7 +396,6 @@ int ExplainEfile::loadFromString(const string &sBuffer, map<string, string> &dec
 }
 
 
-//存文件
 int ExplainEfile::saveToFile(const string & sFile, map<string, string> &declare, vector<EFileElement> &vObj)
 {
     vector<string> sLines = toEfileBuffer(declare,vObj);
@@ -410,7 +409,7 @@ int ExplainEfile::saveToFile(const string & sFile, map<string, string> &declare,
     }
     return err;
 }
-///////////////////////////////////////////////////////////////////////////////
+
 void ExplainEfile::clear()
 {
     f_eFileDeclare.clear();
@@ -460,7 +459,6 @@ bool ExplainEfile::createElement_sql(const string &sClassName, const string &sIn
 
     return true;
 }
-
 
 
 bool ExplainEfile::createElement_row(const string &sClassName, const string &sInstanceName, const string &row)
@@ -561,10 +559,10 @@ std::vector<string> CxEfile::toEfileBuffer(const string &sClassName, const strin
     vector<string> sLines;
     string sLine = "<! Version=1.0 System=ygct.ics.efile Code=utf-8 Data=1.0 !>";
     sLines.push_back(sLine+"\n");
-    //类::实例名
+    // class::instance.name
     sLine = "<" + sClassName + "::" + sInstanceName + ">";
     sLines.push_back(sLine+"\n");
-    //字段
+    // field
     sLine = "@";
     if(sFields.size()>0)
     {
@@ -572,7 +570,7 @@ std::vector<string> CxEfile::toEfileBuffer(const string &sClassName, const strin
          sLine += CxString::join(sFields,cc_flag_tab);
     }
     sLines.push_back(sLine+"\n");
-    //记录
+    // record
     for (size_t i = 0; i < sRows.size(); ++i)
     {
        vector<string> sRow = sRows.at(i);
@@ -586,7 +584,7 @@ std::vector<string> CxEfile::toEfileBuffer(const string &sClassName, const strin
        sLine += CxString::join(sRow,cc_flag_tab);
        sLines.push_back(sLine+"\n");
     }
-    //结束
+    // end
     sLine = "</" + sClassName + "::" + sInstanceName + ">";
     sLines.push_back(sLine+"\n");
     return sLines;

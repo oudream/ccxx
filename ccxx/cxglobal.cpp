@@ -11,17 +11,11 @@ const double CxGlobal::deadZone = 0.0001f;
 //const std::string CxGlobal::emptyString = "";
 
 //const std::string CxGlobal::spaceString = " ";
-//空格
 const char CxGlobal::spaceChar = ' ';
-//等号
 const char CxGlobal::equalChar = '=';
-//分号
 const char CxGlobal::colonChar = ';';
-//逗号
 const char CxGlobal::commaChar = ',';
-
 const char  CxGlobal::middleChar = '=';
-
 const char  CxGlobal::splitChar = ';';
 
 const std::map<std::string, std::string> CxGlobal::emptyMapString = std::map<std::string, std::string>();

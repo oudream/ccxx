@@ -16,6 +16,7 @@ CxSafeBuffer::~CxSafeBuffer(void)
     }
     memset(m_buf,0,CX_LEN_DGM);
 }
+
 void  CxSafeBuffer::putIn(const uchar *pBuf,const ushort &wSize)
 {
     if((m_wWpoint + wSize) <= m_MaxLen)
@@ -29,12 +30,12 @@ void  CxSafeBuffer::putIn(const uchar *pBuf,const ushort &wSize)
          memcpy(&m_buf[m_wWpoint],pBuf,wLen1);
          m_wWpoint = m_MaxLen;
 
-         ushort wLen2 =  wSize-wLen1;//多余数据
+         ushort wLen2 =  wSize-wLen1; // excess data
          if(m_pLoopBuf!=NULL)
          {
              for(ushort i=0;i<wLen2;i++)
              {
-                 m_pLoopBuf->write(pBuf[wLen1+i]);//压栈
+                 m_pLoopBuf->write(pBuf[wLen1+i]);
              }
          }
     }
@@ -55,13 +56,13 @@ void CxSafeBuffer::removeLeft(int nlen)
     memcpy(m_byTmp,&m_buf[nlen],m_wWpoint);
     memset(m_buf,0,CX_LEN_DGM);
     memcpy(m_buf,m_byTmp,m_wWpoint);
-//从环形缓冲区中读
+// read from loopbuf
     if(m_pLoopBuf!=NULL)
     {
         while(m_pLoopBuf->read(&m_buf[m_wWpoint]))
         {
             m_wWpoint++;
-            if(m_wWpoint>=m_MaxLen)break;//缓冲区满
+            if(m_wWpoint>=m_MaxLen)break;// full cache
         }
     }
 }

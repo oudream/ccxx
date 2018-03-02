@@ -186,7 +186,6 @@ protected:
         }
         sSql = sSql + sColumnes + " VALUES " + sValues;
 
-        //启动事务
         if (bTransaction)
             if (! beginTransaction())
                 return -1;
@@ -196,10 +195,10 @@ protected:
         int rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if(rc != SQLITE_OK)
         {
-            //设置LastError
+            // set LastError
             string sErrorString = CxString::format("sql exec error: %s" , sqlite3_errmsg(db));
             setLastError(rc, sErrorString);
-            //回滚
+            // rollback
             if (bTransaction) rollbackTransaction();
             return -1;
         }
@@ -220,16 +219,16 @@ protected:
             rc = sqlite3_step(stmt);
             if(rc != SQLITE_OK && rc != SQLITE_DONE)
             {
-                //设置LastError
+                // set LastError
                 string sErrorString = CxString::format("sql exec error: %s" , sqlite3_errmsg(db));
                 setLastError(rc, sErrorString);
-                //回滚
+                // roll back
                 if (bTransaction) rollbackTransaction();
                 return i;
             }
         }
         sqlite3_finalize(stmt);
-        //提交
+        // commit
         if (bTransaction) commitTransaction();
         return rows.size();
     }
@@ -261,7 +260,6 @@ protected:
 //        }
 //        sSql = sSql + sColumnes + " VALUES " + sValues;
 
-        //启动事务
         if (bTransaction)
             if (! beginTransaction())
                 return -1;
@@ -273,7 +271,7 @@ protected:
         {
             string sErrorString = CxString::format("sql exec error: %s" , sqlite3_errmsg(db));
             setLastError(rc, sErrorString);
-            //回滚
+            // roll back
             if (bTransaction) rollbackTransaction();
             return -1;
         }
@@ -295,13 +293,13 @@ protected:
             {
                 string sErrorString = CxString::format("sql exec error: %s" , sqlite3_errmsg(db));
                 setLastError(rc, sErrorString);
-                //回滚
+                // roll back
                 if (bTransaction) rollbackTransaction();
                 return i;
             }
         }
         sqlite3_finalize(stmt);
-        //提交
+        // commit
         if (bTransaction) commitTransaction();
         return rows.size();
     }
@@ -332,7 +330,7 @@ protected:
         }
         sSql = sSql + sSetColumneValues + CxString::format(" WHERE [%s] = ? ", columnNames.at(columnNames.size()-1).c_str());
 
-        //启动事务
+        // start transaction
         if (bTransaction)
             if (! beginTransaction())
                 return -1;
@@ -342,10 +340,10 @@ protected:
         int rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if(rc != SQLITE_OK)
         {
-            //设置LastError
+            // set LastError
             string sErrorString = CxString::format("sql exec error: %s" , sqlite3_errmsg(db));
             setLastError(rc, sErrorString);
-            //回滚
+            // rollback
             if (bTransaction) rollbackTransaction();
             return -1;
         }
@@ -366,16 +364,16 @@ protected:
             rc = sqlite3_step(stmt);
             if(rc != SQLITE_OK && rc != SQLITE_DONE)
             {
-                //设置LastError
+                // set LastError
                 string sErrorString = CxString::format("sql exec error: %s" , sqlite3_errmsg(db));
                 setLastError(rc, sErrorString);
-                //回滚
+                // rollback
                 if (bTransaction) rollbackTransaction();
                 return i;
             }
         }
         sqlite3_finalize(stmt);
-        //提交
+        // commit
         if (bTransaction) commitTransaction();
         return rows.size();
     }

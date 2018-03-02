@@ -62,8 +62,6 @@ int CxChannelUdp::writeTo(const char *pData, int iLength, const CxIpAddress & mS
     cxPromptCheck(_socketSend != INVALID_SOCKET, return -1);
     cxPromptCheck(mSendIp.isValid(), return -1);
 
-    msepoch_t tmStart = CxTime::currentMsepoch();
-
     ssize_t r = ::sendto( _socketSend, pData, iLength, 0, mSendIp.getSockAddr(), mSendIp.getSockAddrSize());
 
     if (SOCKET_ERROR == r)
@@ -74,9 +72,6 @@ int CxChannelUdp::writeTo(const char *pData, int iLength, const CxIpAddress & mS
            outChannelPrompt() << "writeTo fail : " << mSendIp.ip() << mSendIp.port() << cxEndLine;
        }
     }
-
-    //判断发送超时
-    if((CxTime::currentMsepoch()-tmStart)>100) r = -2;
 
     return r;
 }
@@ -251,7 +246,7 @@ void CxChannelUdp::openChannelImpl()
             return;
         }
 
-        //关于UDP socket 的10054错误解决办法
+        // UDP socket error:10054 , solution
         //http://support.microsoft.com/kb/263823/
 #ifdef GM_OS_WIN
         DWORD dwBytesReturned = 0;

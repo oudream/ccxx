@@ -24,13 +24,13 @@ class GM_CCXX_CORE_API CxTime
 {
 public:
     /**
-     * @brief 当前的系统时间（since 1970-01-01的毫秒数）
+     * @brief os.time count ms（since 1970-01-01 's count ms）
      * @return
      */
     static msepoch_t currentSystemTime();
 
     /**
-     * @brief 当前的系统时间的字符形式 2012-12-12 12:12:000
+     * @brief os.time : 2012-12-12 12:12:000
      * '2', '0', '1', '2', sSplit1, '1', '2', sSplit1, '1', '2', sSplit2, '1', '2', sSplit3, '1', '2', sSplit3, '1', '2', sSplit3, '1', '2', '2', '\0'
      * @param sSplit1
      * @param sSplit2
@@ -40,7 +40,7 @@ public:
     inline static std::string currentSystemTimeString(char sSplit1 = '/', char sSplit2 = ' ', char sSplit3 = ':') { return toString(currentSystemTime(), sSplit1, sSplit2, sSplit3); }
 
     /**
-     * @brief 当前的系统时间（since 1970-01-01的毫秒数）
+     * @brief os.time count ms:（since 1970-01-01 's count ms）
      * @return
      */
     static msepoch_t currentMsepoch();
@@ -48,7 +48,7 @@ public:
     inline static std::string currentMsepochString(char sSplit1 = '/', char sSplit2 = ' ', char sSplit3 = ':') { return toString(currentMsepoch(), sSplit1, sSplit2, sSplit3); }
 
     /**
-     * @brief 当前的系统时间（since 1970-01-01的秒数）
+     * @brief os.time count seconds（since 1970-01-01 's count ms）
      * @return
      */
     static sepoch_t currentSepoch();
@@ -56,19 +56,19 @@ public:
     static inline std::string currentSepochString(char sSplit1 = '/', char sSplit2 = ' ', char sSplit3 = ':') { return toStringSepoch(currentSepoch(), sSplit1, sSplit2, sSplit3); }
 
     /**
-     * @brief 当前的系统日期 2012-12-12
+     * @brief os.date : 2012-12-12
      * @return
      */
     static inline std::string currentDayString(char sSplit1 = '/') { return toStringDay(currentSepoch(), sSplit1); }
 
     /**
-     * @brief 当前的 UTC
+     * @brief os.UTC
      * @return
      */
     static tm currentUtc();
 
     /**
-     * @brief 系统的TM （ 一般是当地日期时间 ）
+     * @brief os.TM
      * @return
      */
     static tm localTm();
@@ -189,17 +189,17 @@ public:
 
 /***
  *
-time                        C系统调用	低	<1s
-clcok                       C系统调用	低	<10ms
-gettimeofday                linux环境下C系统调用	高	<0.1ms
-clock_gettime               linux环境下C系统调用	高	<0.1ms
-timeGetTime                 Windows API	中	<1ms
-QueryPerformanceCounter     Windows API	高	<0.1ms
-QueryPerformanceFrequency   Windows API	高	<0.1ms
-GetTickCount                Windows API	中	<1ms
-GetLocalTime                Windows API	中	<1ms
+time                        clib <1s
+clcok                       clib <10ms
+gettimeofday                linux env clib <0.1ms
+clock_gettime               linux env clib <0.1ms
+timeGetTime                 Windows API	middle<1ms
+QueryPerformanceCounter     Windows API	high<0.1ms
+QueryPerformanceFrequency   Windows API	high<0.1ms
+GetTickCount                Windows API	middle<1ms
+GetLocalTime                Windows API	middle<1ms
 GetTickCount
 GetSystemTimeAsFileTime
-RDTSC                       汇编指令	高	<0.1ms
+RDTSC                       Assemble instructions high<0.1ms
  */
 #endif // CXTIME_H

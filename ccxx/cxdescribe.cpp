@@ -763,7 +763,7 @@ int CxDescribeManager::loadProject(CxDescribeProject &describeProject, const str
     std::vector<CxCatalogAttr *> describeCatalogs;
 
 //    ProjectName=YGCT_CP
-//    ProjectTitle=远光共创通信平台
+//    ProjectTitle=xxx.title
 //    ConfigDataPath=./../
 //    DescribePath=./../describe
 
