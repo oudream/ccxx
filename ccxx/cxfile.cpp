@@ -1365,7 +1365,7 @@ bool CxFileSystem::removeDir(const string &sPath)
     }
 }
 
-void CxFileSystem::scanDir(const std::string &sPath, vector<PathInfo> &pathInfos, bool bIncludeDir, bool bContainDir)
+void CxFileSystem::scanDir(const std::string &sPath, vector<PathInfo> &pathInfos, bool bIncludeSubDir, bool bContainDir, const std::vector<std::string> & ignoreDirNames)
 {
     const char *path = sPath.c_str();
 #ifdef GM_OS_WIN
@@ -1397,16 +1397,10 @@ void CxFileSystem::scanDir(const std::string &sPath, vector<PathInfo> &pathInfos
                 strcpy(szFile, path);
                 strcat(szFile, "//");
                 strcat(szFile, FindFileData.cFileName);
-                if (bIncludeDir)
+                if (bIncludeSubDir)
                 {
-//                    PathInfo pathInfo;
-//                    if (getPathInfo(szFile, &pathInfo))
-//                    {
-//                        pathInfos.push_back(pathInfo);
-//                    }
-                    scanDir(szFile, pathInfos, bIncludeDir); //llb add
+                    scanDir(szFile, pathInfos, bIncludeSubDir, bContainDir, ignoreDirNames);
                 }
-//                scanDir(szFile, pathInfos);
             }
         }
         else
@@ -1435,26 +1429,34 @@ void CxFileSystem::scanDir(const std::string &sPath, vector<PathInfo> &pathInfos
     {
         if(ent->d_type & DT_DIR)
         {
-            if(strcmp(ent->d_name,".")==0 || strcmp(ent->d_name,"..")==0)
-                continue;
-
-            sprintf(childpath,"%s/%s",path,ent->d_name);
-//            printf("path:%s/n",childpath);
-            if (bIncludeDir)
+            if(ent->d_name[0] != '.')
             {
-                PathInfo pathInfo;
-                if (! getPathInfo(childpath, &pathInfo))
+                sprintf(childpath,"%s/%s",path,ent->d_name);
+                string sFilePath(childpath);
+//            printf("path:%s/n",childpath);
+                if (bContainDir)
                 {
-                    pathInfos.push_back(pathInfo);
+                    PathInfo pathInfo;
+                    if (getPathInfo(sFilePath, &pathInfo))
+                    {
+                        pathInfos.push_back(pathInfo);
+                    }
+                }
+                if (bIncludeSubDir)
+                {
+                    string sPathName(ent->d_name);
+                    if( std::find(ignoreDirNames.begin(), ignoreDirNames.end(), sPathName) != ignoreDirNames.end() )
+                    {
+                        continue;
+                    }
+                    scanDir(sFilePath, pathInfos, bIncludeSubDir, bContainDir, ignoreDirNames);
                 }
             }
-
-            scanDir(childpath, pathInfos);
         }
         else
         {
             PathInfo pathInfo;
-            if (! getPathInfo(mergeFilePath(path, ent->d_name), &pathInfo))
+            if (getPathInfo(mergeFilePath(path, ent->d_name), &pathInfo))
             {
                 pathInfos.push_back(pathInfo);
             }
@@ -1465,7 +1467,7 @@ void CxFileSystem::scanDir(const std::string &sPath, vector<PathInfo> &pathInfos
 }
 
 void
-CxFileSystem::scanDir(const std::string &sPath, CxFileSystem::fn_scan_result_t fn_scan_result, bool includeDir, std::string *sParam, int *iParam)
+CxFileSystem::scanDir(const std::string &sPath, CxFileSystem::fn_scan_result_t fn_scan_result, bool bIncludeSubDir, std::string *sParam, int *iParam)
 {
     const char *path = sPath.c_str();
 #ifdef GM_OS_WIN
@@ -1486,24 +1488,13 @@ CxFileSystem::scanDir(const std::string &sPath, CxFileSystem::fn_scan_result_t f
         {
             if (FindFileData.cFileName[0] != '.')
             {
-//                PathInfo pathInfo;
-//                if (getPathInfo(mergeFilePath(path,FindFileData.cFileName), &pathInfo))
-//                {
-//                    fn_scan_result(pathInfo, sParam, iParam);
-//                }
                 strcpy(szFile, path);
                 strcat(szFile, "//");
                 strcat(szFile, FindFileData.cFileName);
-                if (includeDir)
+                if (bIncludeSubDir)
                 {
-//                    PathInfo pathInfo;
-//                    if (getPathInfo(szFile, &pathInfo))
-//                    {
-//                        fn_scan_result(pathInfo, sParam, iParam);
-//                    }
-                    scanDir(szFile, fn_scan_result, includeDir); //llb add
+                    scanDir(szFile, fn_scan_result, bIncludeSubDir);
                 }
-//                scanDir(szFile, fn_scan_result);
             }
         }
         else
@@ -1532,26 +1523,26 @@ CxFileSystem::scanDir(const std::string &sPath, CxFileSystem::fn_scan_result_t f
     {
         if(ent->d_type & DT_DIR)
         {
-            if(strcmp(ent->d_name,".")==0 || strcmp(ent->d_name,"..")==0)
-                continue;
-
-            sprintf(childpath,"%s/%s",path,ent->d_name);
-//            printf("path:%s/n",childpath);
-            if (includeDir)
+            if(ent->d_name[0] != '.')
             {
+                sprintf(childpath, "%s/%s", path, ent->d_name);
+                string sFilePath(childpath);
+//            printf("path:%s/n",childpath);
                 PathInfo pathInfo;
-                if (! getPathInfo(childpath, &pathInfo))
+                if (getPathInfo(sFilePath, &pathInfo))
                 {
                     fn_scan_result(pathInfo, sParam, iParam);
                 }
+                if (bIncludeSubDir)
+                {
+                    scanDir(sFilePath, fn_scan_result, bIncludeSubDir);
+                }
             }
-
-            scanDir(childpath, fn_scan_result);
         }
         else
         {
             PathInfo pathInfo;
-            if (! getPathInfo(mergeFilePath(path, ent->d_name), &pathInfo))
+            if (getPathInfo(mergeFilePath(path, ent->d_name), &pathInfo))
             {
                 fn_scan_result(pathInfo, sParam, iParam);
             }

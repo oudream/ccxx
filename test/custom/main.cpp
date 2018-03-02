@@ -20,18 +20,18 @@ int fn_interinfo_in_cmd( const std::string & sCommand, const std::map<std::strin
     if (sCommand == "exit")
     {
         CxApplication::exit();
-		return TRUE;
-	}
+        return TRUE;
+    }
     else
     {
         cxPrompt() << "in : " << sCommand;
     }
-	return FALSE;
+    return FALSE;
 }
 
-
-void fn_test(int, int, const void *, int, void *, void *)
+void fn_test_windows_AttachConsole()
 {
+#ifdef GM_OS_WIN
     DWORD pid;
     HANDLE hProcess;
 
@@ -64,6 +64,44 @@ void fn_test(int, int, const void *, int, void *, void *)
         return;
 //    testString12();
     CxProcess::kill("cxtest_pure.exe");
+#endif
+}
+
+void fn_test_encoding1()
+{
+    vector<string> sFileStrings;
+    string sFilePath = "/ddd/ccpp/ccxx/ccxx/cxchannel.h";
+    string sFilePath2 = "/ddd/ccpp/ccxx/ccxx/cxchannel2.h";
+    if (CxFile::load(sFilePath, sFileStrings, (int)1024))
+    {
+        vector<string> sFileString2 = CxEncoding::utf8ToGb2312(sFileStrings);
+        bool bResult = CxFile::save(sFilePath2, sFileStrings, "");
+        cxPrompt() << "Size:" << sFileString2.size() << ", bResult: " << bResult;
+    }
+}
+
+void fn_test_encoding2()
+{
+    string sFileStrings;
+    string sFilePath = "/ddd/ccpp/ccxx/ccxx/cxchannel.h";
+    string sFilePath2 = "/ddd/ccpp/ccxx/ccxx/cxchannel3.h";
+    sFileStrings = CxFile::load(sFilePath);
+    string sFileString2 = CxEncoding::utf8ToGb2312(sFileStrings);
+    bool bResult = CxFile::save(sFilePath2, sFileStrings);
+    cxPrompt() << "Size:" << sFileString2.size() << ", bResult: " << bResult;
+}
+
+void fn_test_encoding3()
+{
+    string string1 = "CICS申请结束下发.s";
+    string sFileString2 = CxEncoding::utf8ToGb2312(string1);
+    cxPrompt() << string1 << " - " << sFileString2;
+    CxFile::save("/fff/901.txt", sFileString2);
+}
+
+void fn_test(int, int, const void *, int, void *, void *)
+{
+    fn_test_encoding3();
 }
 
 void fn_timer1(int)

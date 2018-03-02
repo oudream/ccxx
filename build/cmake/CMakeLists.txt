@@ -23,7 +23,7 @@ if (NOT gs_project_path)
 endif()
 message('PROJECT-PATH: ' ${gs_project_path})
 
-set(gs_project_deploy_path ${gs_project_path}/deploy)
+set(gs_project_deploy_path ${gs_project_path}/build/deploy)
 set(gs_project_include_path ${gs_project_path}/include)
 set(gs_project_3rd_path ${gs_project_path}/3rd)
 

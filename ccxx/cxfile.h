@@ -388,10 +388,10 @@ public:
      * @param pathInfos
      * @param includeDir
      */
-    static void scanDir(const std::string& sPath, std::vector<PathInfo>& pathInfos, bool bIncludeDir = false, bool bContainDir = false);
+    static void scanDir(const std::string& sPath, std::vector<PathInfo>& pathInfos, bool bIncludeSubDir = false, bool bContainDir = false, const std::vector<std::string> & ignoreDirNames = std::vector<std::string>());
 
     typedef void (*fn_scan_result_t)(const PathInfo& pathInfo, std::string * sParam, int * iParam);
-    static void scanDir(const std::string& sPath, fn_scan_result_t fn_scan_result, bool includeDir = false, std::string * sParam = NULL, int * iParam = NULL);
+    static void scanDir(const std::string& sPath, fn_scan_result_t fn_scan_result, bool includeSubDir = false, std::string * sParam = NULL, int * iParam = NULL);
 
     /**
      * @brief sizeOfDir

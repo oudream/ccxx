@@ -125,7 +125,7 @@ void fn_clearLogFiles()
 #define GM_LOG_MAX_SAVETIME2 (1000LL * 60 * 60 * 24 * 7)
 
     vector<CxFileSystem::PathInfo> pathInfos;
-    CxFileSystem::scanDir(f_logDir, pathInfos);
+        CxFileSystem::scanDir(f_logDir, pathInfos);
     int64 r = 0;
     for (size_t i = 0; i < pathInfos.size(); ++i)
     {
