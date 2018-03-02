@@ -199,7 +199,7 @@ int CxBuffer::toBuf(uint8 *pBuf, float val, int mode)
         *pBuf++ = p[2];
         *pBuf   = p[3];
         break;
-    case 1://IEEE 454 单精度浮点 小端模式
+    case 1://IEEE 454 sigle float , small end 's mode
         //        nVal = (data[1]|(data[0]<<8)|(data[3]<<16)|(data[2]<<24));
         *pBuf++ = p[1];
         *pBuf++ = p[0];
@@ -356,7 +356,7 @@ bool CxBuffer::fromBuf(uint8 *pBuf, int len, float &val, int mode)
     case 0:
         nVal = (data[0]|(data[1]<<8)|(data[2]<<16)|(data[3]<<24));
         break;
-    case 1://IEEE 454 单精度浮点 小端模式
+    case 1://IEEE 454 sigle float , small end mode
         nVal = (data[1]|(data[0]<<8)|(data[3]<<16)|(data[2]<<24));
         break;
     case 2:
@@ -396,7 +396,7 @@ bool CxBuffer::fromBuf(uint8 *pBuf, int len, double &val, int mode)
 //        printf("%f",val);
     }
         break;
-    case 1://标准字节序
+    case 1:// standar order byte
     {
         u a;
         a.s[0] = pBuf[1];

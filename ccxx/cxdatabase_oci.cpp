@@ -231,7 +231,7 @@ protected:
 //            sSql = "insert into t1 (f1 ,f2 ,f3 ,f4 ,f5 ,f6 ,f7 ) VALUES (:f1<SHORT INT> ,:f2<INT> ,:f3<DOUBLE> ,:f4<DOUBLE> ,:f5<CHAR[31]> ,:f6<VARCHAR LONG> ,:f7<RAW LONG> )";
 //            cout<<"CxDatabaseOci->saveTableImpl sql : "<<sSql;
 
-            //以下数据插入参考 ：ex702_odbc.cpp
+            // referto : ex702_odbc.cpp
             otl_stream o;
 
             o.open(1, // buffer size has to be set to 1 for operations with LONGTEXTs
@@ -241,7 +241,6 @@ protected:
                    _db // connect object
                    );
 
-            //启动事务
             if (bTransaction)
                 o.set_commit(0); // setting stream "auto-commit" to "off". It is required
 
@@ -311,7 +310,7 @@ protected:
         {
             try{
 
-                otl_stream o(1,sSql.c_str(),_db); // buffer size （SQL执行后数据往返次数）, SQL statement,connect object
+                otl_stream o(1,sSql.c_str(),_db); // buffer size , SQL statement,connect object
 
                 iResult = TRUE;
             }
@@ -461,7 +460,7 @@ private:
 
             try{
 
-                otl_stream o(1,sSql.c_str(),_db); // buffer size （SQL执行后数据往返次数）, SQL statement,connect object
+                otl_stream o(1,sSql.c_str(),_db); // buffer size , SQL statement,connect object
 
                 otl_column_desc* desc;
                 int desc_len;

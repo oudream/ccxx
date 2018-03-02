@@ -290,7 +290,6 @@ public:
 //        {
 //            if (pchEnd - pchIndex < sizeof(PacketData))
 //            {
-//                //长度太小，够积累后再处理
 //                break;
 //            }
 //            PacketData frame;
@@ -298,7 +297,6 @@ public:
 //            frame.length = *(short *)(pchIndex+4+2);
 //            if (l <0 || l > 4096)
 //            {
-//                //格式不合，跳到下个循环
 //                pchIndex+=6;
 //                continue;
 //            }

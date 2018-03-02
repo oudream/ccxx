@@ -262,7 +262,7 @@ void CxApplication::pushProcessCallBack(fn_void_msg_tlv_t fn, int iMsg, int iTag
         }
         else
         {
-            //有数据，并且少于 4 M
+            // has data and < 4M
             if (iLength>0)
             {
                 if (iLength<1024*1024*4 && pData)
@@ -461,8 +461,8 @@ int CxApplication::exec(int iTag)
     cxPrompt() << "..." << CxGlobal::lineString << CxGlobal::lineString << CxGlobal::lineString;
 
 
-//交给 CxApplication::assertDeal 来处理
-//交给 fn_Windows_Exception_callback 来处理
+//to CxApplication::assertDeal
+//to fn_Windows_Exception_callback
     fn_void_int_t fn_sig_handler;
 //    fn_sig_handler = signal (SIGABRT, fn_app_SIGABRT);
 //    if (fn_sig_handler == SIG_ERR)
@@ -534,10 +534,10 @@ void CxApplication::runProcessCallBacks()
 {
     do
     {
-        //判断是否收到 push 的 ProcessCallBack
+        // push 's ProcessCallBack
         if (f_oProcessCallBacks[f_iProcessCallBackIndexPop] != NULL)
         {
-            //复制指针
+            // copy
             f_oRunningProcessCallBack = f_oProcessCallBacks[f_iProcessCallBackIndexPop];
             f_iProcessCallBackIndexPop ++;
             if (f_iProcessCallBackIndexPop >= f_iProcessCallBackCount)

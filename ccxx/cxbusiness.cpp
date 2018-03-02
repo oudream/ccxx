@@ -159,7 +159,7 @@ int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string 
     CxMsObjectData * oMsObjectOld = find(sTypeName, sName);
     if (oMsObjectOld)
     {
-        //更新，修改
+        // update
         iChangeType = 3;
         oMsObjectOld->updateMajor(major);
         oMsObjectOld->_source = f_receivedSource;
@@ -196,7 +196,7 @@ int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string 
     CxMsObjectData * oMsObjectOld = find(sTypeName, sName);
     if (oMsObjectOld)
     {
-        //更新，修改
+        // update
         iChangeType = 3;
         oMsObjectOld->updateMajor(major);
         oMsObjectOld->updateDetails(details);
@@ -236,13 +236,13 @@ int CxMsObjectDataManager::receivedObject(const CxMsObjectData * oMsObject, bool
     {
         if (bReplace)
         {
-            //整个替换
+            // replace
             iChangeType = 2;
             oMsObjectOld->assignFrom(* oMsObject);
         }
         else
         {
-            //更新，修改
+            // update
             iChangeType = 3;
             oMsObjectOld->updateMajor(oMsObject->_major);
             oMsObjectOld->updateDetails(oMsObject->_details);

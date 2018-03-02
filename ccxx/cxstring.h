@@ -681,12 +681,12 @@ char * strchr (char * str, int character );
 char * strrchr (char * str, int character ); //Returns a pointer to the last occurrence
 char * strstr (       char * str1, const char * str2 );
 
-//返回字符串中第一个在指定字符组中出现的字符下标+1
+// retrurn first index + 1 : in list
 size_t strcspn ( const char * str, const char * list );
 char * strpbrk ( char * str1, const char * list );
 static char * inside(char *text, const char *list);
 static char * insideRight(char *text, const char *list);
-//返回字符串中第一个不在指定字符组中出现的字符下标+1
+// retrurn first index + 1 : do not in list
 size_t strspn ( const char * str, const char * list );
 static char * skip(char *text, const char *list);
 static char * skipRight(char *text, const char *list);

@@ -6,16 +6,16 @@
 class GM_CCXX_CORE_API CxMath
 {
 public:
-    //最大公约数
+    // The greatest common divisor
     static int gcd(int a,int b);
 
-    //最小公倍数
+    // The least common multiple
     static int lcm(int a,int b);
 
-    //随机整数
+    //
     static int random(int iMax = 0);
 
-    //随机整数
+    //
     static int divRound(int iDivisor, int iDivisored);
 
 };

@@ -414,7 +414,7 @@ string CxXml::toXmlBuffer1(const std::vector<string> &sFields, const std::vector
     vector<string> sLines;
     string sLine = CxString::format("<?xml version=\"1.0\" encoding=\"utf-8\" ?><%s><%s>", sLevel1Name.c_str(), sLevel2Name.c_str());
     sLines.push_back(sLine);
-    //记录
+    //
     for (size_t i = 0; i < sRows.size(); ++i)
     {
        vector<string> sRow = sRows.at(i);
@@ -428,7 +428,7 @@ string CxXml::toXmlBuffer1(const std::vector<string> &sFields, const std::vector
        }
        sLines.push_back(sLine);
     }
-    //结束
+    //
     sLine = CxString::format("</%s></%s>", sLevel2Name.c_str(), sLevel1Name.c_str());;
     sLines.push_back(sLine);
     return CxString::join(sLines, 0);
@@ -439,7 +439,7 @@ string CxXml::toXmlBuffer2(const std::vector<string> &sFields, const std::vector
     vector<string> sLines;
     string sLine = CxString::format("<?xml version=\"1.0\" encoding=\"utf-8\" ?><%s><%s>", sLevel1Name.c_str(), sLevel2Name.c_str());
     sLines.push_back(sLine);
-    //记录
+    //
     for (size_t i = 0; i < sRows.size(); ++i)
     {
        vector<string> sRow = sRows.at(i);
@@ -454,7 +454,7 @@ string CxXml::toXmlBuffer2(const std::vector<string> &sFields, const std::vector
        sLine += CxString::format("</%s>", sLevel3Name.c_str());
        sLines.push_back(sLine);
     }
-    //结束
+    //
     sLine = CxString::format("</%s></%s>", sLevel2Name.c_str(), sLevel1Name.c_str());;
     sLines.push_back(sLine);
     return CxString::join(sLines, 0);

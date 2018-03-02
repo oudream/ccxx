@@ -111,7 +111,7 @@ public:
 
     virtual void fromContext(const CxIGetSkv& context);
 
-    /// Name 就是 Section
+    /// Name = Section
     inline std::string name() const { return _name; }
     inline void setName(const std::string& value) { _name = value; }
 

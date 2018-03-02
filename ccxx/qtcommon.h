@@ -272,3 +272,4 @@ public:
 };
 
 #endif // QTCOMMON_H
+

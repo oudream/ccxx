@@ -93,10 +93,10 @@ public:
 
 private:
     CxChannelBase * _localChannel;
-    CxIpAddress _remoteIpAddress; // udp 用到的，从 recv 来的 socket 从获得
-    socket_t _localSocket; //tcpserver 用到的
-    int _sourceId; //来源 == remote
-    CxIpAddress _sourceIpAddress; //来源 == remote
+    CxIpAddress _remoteIpAddress; // by udp, value from recv
+    socket_t _localSocket; // by tcpserver
+    int _sourceId; // from remote
+    CxIpAddress _sourceIpAddress; // from remote
     msepoch_t _createTime;
     msepoch_t _lastTime;
 

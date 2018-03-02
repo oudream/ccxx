@@ -84,14 +84,14 @@ void CxDatabase::closeDatabase()
 int
 CxDatabase::loadTable(const string &sTableName, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames, int iMaxRowCount)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = loadTableImpl(sTableName, rows, oColumnNames);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = loadTableImpl(sTableName, rows, oColumnNames);
@@ -102,14 +102,14 @@ CxDatabase::loadTable(const string &sTableName, std::vector<std::vector<string> 
 int
 CxDatabase::saveTable(const string &sTableName, const std::vector<string> &columnNames, const std::vector<std::vector<string> > &rows, const std::vector<int> &columnTypes, bool bTransaction)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = saveTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = saveTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
@@ -120,14 +120,14 @@ CxDatabase::saveTable(const string &sTableName, const std::vector<string> &colum
 int
 CxDatabase::saveTable(const string &sSql, const std::vector<std::vector<string> > &rows, const std::vector<int> *oColumnTypes, bool bTransaction)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = saveTableImpl(sSql, rows, oColumnTypes, bTransaction);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = saveTableImpl(sSql, rows, oColumnTypes, bTransaction);
@@ -138,14 +138,14 @@ CxDatabase::saveTable(const string &sSql, const std::vector<std::vector<string> 
 int
 CxDatabase::updateTable(const string &sTableName, const std::vector<string> &columnNames, const std::vector<std::vector<string> > &rows, const std::vector<int> &columnTypes, bool bTransaction)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = updateTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = updateTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
@@ -155,14 +155,14 @@ CxDatabase::updateTable(const string &sTableName, const std::vector<string> &col
 
 int CxDatabase::execSql(const string &sSql)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = execSqlImpl(sSql);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = execSqlImpl(sSql);
@@ -172,14 +172,14 @@ int CxDatabase::execSql(const string &sSql)
 
 int CxDatabase::execSqlList(const std::vector<string> &sqlList)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = execSqlListImpl(sqlList);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = execSqlListImpl(sqlList);
@@ -189,14 +189,14 @@ int CxDatabase::execSqlList(const std::vector<string> &sqlList)
 
 int CxDatabase::loadSql(const string &sSql, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = loadSqlImpl(sSql, rows, oColumnNames);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = loadSqlImpl(sSql, rows, oColumnNames);
@@ -207,14 +207,14 @@ int CxDatabase::loadSql(const string &sSql, std::vector<std::vector<string> > &r
 int
 CxDatabase::loadSql1(const string &sSql, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames, int iMaxRowCount)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = loadSqlImpl(sSql, rows, oColumnNames, iMaxRowCount);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = loadSqlImpl(sSql, rows, oColumnNames, iMaxRowCount);
@@ -225,14 +225,14 @@ CxDatabase::loadSql1(const string &sSql, std::vector<std::vector<string> > &rows
 int
 CxDatabase::loadSql2(const string &sSql, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames, std::vector<int> *oColumnTypes)
 {
-    //无连接，连接后再跑。
+    // Check open and open it
     if (!isOpen()) openDatabase();
     if (!isOpen()) return -1;
     int r = loadSql2Impl(sSql, rows, oColumnNames);
     for (int i = 0; i < 1; ++i)
     {
         if (r >= 0) return r;
-        //错了，连接后再跑
+        // fail, rerun after open
         setSqlLastSuccessTime(r);
         if (!isOpen()) continue;
         r = loadSql2Impl(sSql, rows, oColumnNames);
@@ -328,7 +328,7 @@ void CxDatabase::setSqlLastSuccessTime(int rSqlExec)
     }
     else
     {
-        //重连间隔
+        // reopen interval
         if (CxTime::milliSecondDifferToNow(_reconnectTime) > 200)
         {
             closeDatabase();
@@ -482,7 +482,7 @@ void CxDatabaseManager::connectCheck(int iInterval)
             {
                 oDb->openDatabase();
             }
-            //超时重连
+            // out time reopen
             if (CxTime::milliSecondDifferToNow(oDb->_sqlLastSuccessTime) > 1000 * 60 * 3)
             {
                 if (oDb->isOpen())

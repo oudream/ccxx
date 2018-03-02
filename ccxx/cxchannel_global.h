@@ -11,14 +11,14 @@ const std::string CS_TypeSimpleName_Tcpclient = "Tcpclient";
 const std::string CS_TypeSimpleName_Udp       = "Udp";
 const std::string CS_TypeSimpleName_None      = "None";
 
-const std::string CS_TypeSimpleName_MqReq = "MqReq";   //请求
-const std::string CS_TypeSimpleName_MqRep = "MqRep";   //响应
-const std::string CS_TypeSimpleName_MqRoute = "MqRoute";//路由
-const std::string CS_TypeSimpleName_MqDealer = "MqDealer";//分发
-const std::string CS_TypeSimpleName_MqSub = "MqSub";//订阅
-const std::string CS_TypeSimpleName_MqPub = "MqPub";//发布
-const std::string CS_TypeSimpleName_MqPull = "MqPull";//拉
-const std::string CS_TypeSimpleName_MqPush = "MqPush";//推
+const std::string CS_TypeSimpleName_MqReq = "MqReq";
+const std::string CS_TypeSimpleName_MqRep = "MqRep";
+const std::string CS_TypeSimpleName_MqRoute = "MqRoute";
+const std::string CS_TypeSimpleName_MqDealer = "MqDealer";
+const std::string CS_TypeSimpleName_MqSub = "MqSub";
+const std::string CS_TypeSimpleName_MqPub = "MqPub";
+const std::string CS_TypeSimpleName_MqPull = "MqPull";
+const std::string CS_TypeSimpleName_MqPush = "MqPush";
 
 
 const std::string CS_EntryIsSendQueue = "IsSendQueue";

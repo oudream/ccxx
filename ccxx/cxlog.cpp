@@ -402,7 +402,6 @@ CxLogRealtime::interinfo_out(const string &sInfo, const std::string &sTitle, int
             sText = fn_getLogString(sInfo, type, reason, source, target, tag);
         else
             sText = fn_getLogString(sInfo, sTitle, type, reason, source, target, tag);
-        //增加时标和换行回车
         sText = CxTime::currentMsepochString() + " " + sText + "\r\n";
         size_t iWrote = fwrite(const_cast<char *>(sText.data()), 1, sText.size(), oFile);
 //        fflush(_fileRt);
@@ -491,7 +490,6 @@ void CxLogThread::doSaveLog()
             const string &sLogString = _logStringsPop->at(i);
             FILE *oFile = _logFilesPop->at(i);
 
-            //增加时标和换行回车
             string sText = CxTime::currentMsepochString() + " " + sLogString + "\r\n";
             size_t iWrote = fwrite(const_cast<char *>(sText.data()), 1, sText.size(), oFile);
 

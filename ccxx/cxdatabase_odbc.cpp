@@ -22,14 +22,9 @@
 #define OTL_STL // Compile OTL 4/ODBC
 #define OTL_BIGINT long long // SQL_C_SBIGINT
 
-// otl的函数异常已关闭，用以下方法：
-//   修改 otlv4.h 中代码#define OTL_ANSI_CPP_11_NOEXCEPT_FALSE noexcept(false) 改成 #define OTL_ANSI_CPP_11_NOEXCEPT_FALSE noexcept(true)
 #define OTL_DESTRUCTORS_DO_NOT_THROW
-//#define OTL_ANSI_CPP_11_NOEXCEPT_FALSE noexcept(true)
 
-// The following #define is required with MyODBC 3.51.11 and higher
 #define OTL_ODBC_SELECT_STM_EXECUTE_BEFORE_DESCRIBE
-//#define OTL_UNCAUGHT_EXCEPTION_OFF 关异常
 
 #include "otl/otlv4.h" // include the OTL 4 header file
 
@@ -290,7 +285,7 @@ protected:
 //            sSql = "insert into t1 (f1 ,f2 ,f3 ,f4 ,f5 ,f6 ,f7 ) VALUES (:f1<SHORT INT> ,:f2<INT> ,:f3<DOUBLE> ,:f4<DOUBLE> ,:f5<CHAR[31]> ,:f6<VARCHAR LONG> ,:f7<RAW LONG> )";
 //            cout<<"CxDatabaseOdbc->saveTableImpl sql : "<<sSql;
 
-            //以下数据插入参考 ：ex702_odbc.cpp
+            // referto : ex702_odbc.cpp
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
 //                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
                          sSql.c_str(),
@@ -304,7 +299,6 @@ protected:
 //            o.setBufSize(1024 * 1024 * 2);
 //            o.get_shell()
 
-            //启动事务
             if (bTransaction)
             {
                 _db.auto_commit_off();
@@ -465,7 +459,7 @@ protected:
 //            sSql = "insert into t1 (f1 ,f2 ,f3 ,f4 ,f5 ,f6 ,f7 ) VALUES (:f1<SHORT INT> ,:f2<INT> ,:f3<DOUBLE> ,:f4<DOUBLE> ,:f5<CHAR[31]> ,:f6<VARCHAR LONG> ,:f7<RAW LONG> )";
 //            cout<<"CxDatabaseOdbc->saveTableImpl sql : "<<sSql;
 
-            //以下数据插入参考 ：ex702_odbc.cpp
+            // referto : ex702_odbc.cpp
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
 //                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
                          sSql.c_str(),
@@ -479,7 +473,7 @@ protected:
 //            o.setBufSize(1024 * 1024 * 2);
 //            o.get_shell()
 
-            //启动事务
+            //
             if (bTransaction)
             {
                 _db.auto_commit_off();
@@ -578,9 +572,9 @@ protected:
                 }
                 else
                 {
-                    otl_stream o(1, sSql.c_str(), _db); // buffer size （SQL执行后数据往返次数）, SQL statement,connect object
+                    otl_stream o(1, sSql.c_str(), _db); // buffer size , SQL statement,connect object
                     o.flush();
-                    iResult = o.get_rpc(); // rpc 影响的行数
+                    iResult = o.get_rpc(); // rpc : row count
                 }
             }
             catch (otl_exception &p)
@@ -627,7 +621,7 @@ protected:
 //                }
 //                else
 //                {
-//                    otl_stream o(1,sSql.c_str(),_db); // buffer size （SQL执行后数据往返次数）, SQL statement,connect object
+//                    otl_stream o(1,sSql.c_str(),_db); // buffer size , SQL statement,connect object
 //                    iResult = TRUE;
 //                }
             }
@@ -1056,7 +1050,7 @@ private:
             try
             {
 
-                otl_stream o(1, sSql.c_str(), _db); // buffer size （SQL执行后数据往返次数）, SQL statement,connect object
+                otl_stream o(1, sSql.c_str(), _db); // buffer size , SQL statement,connect object
 
                 otl_column_desc *desc;
                 int desc_len;

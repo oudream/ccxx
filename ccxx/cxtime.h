@@ -24,7 +24,7 @@ class GM_CCXX_CORE_API CxTime
 {
 public:
     /**
-     * @brief os.time count ms（since 1970-01-01 's count ms）
+     * @brief os.time count ms(since 1970-01-01 's count ms)
      * @return
      */
     static msepoch_t currentSystemTime();
@@ -40,15 +40,15 @@ public:
     inline static std::string currentSystemTimeString(char sSplit1 = '/', char sSplit2 = ' ', char sSplit3 = ':') { return toString(currentSystemTime(), sSplit1, sSplit2, sSplit3); }
 
     /**
-     * @brief os.time count ms:（since 1970-01-01 's count ms）
+     * @brief os.time count ms:(since 1970-01-01 's count ms)
      * @return
      */
     static msepoch_t currentMsepoch();
-	
+
     inline static std::string currentMsepochString(char sSplit1 = '/', char sSplit2 = ' ', char sSplit3 = ':') { return toString(currentMsepoch(), sSplit1, sSplit2, sSplit3); }
 
     /**
-     * @brief os.time count seconds（since 1970-01-01 's count ms）
+     * @brief os.time count seconds(since 1970-01-01 's count ms)
      * @return
      */
     static sepoch_t currentSepoch();

@@ -227,11 +227,11 @@ void CxConsoleInputThread::stopConsoleInputThread()
 //        std::ostream *prevstr;
 //        std::ofstream ofs;
 //        ofs.open("test.txt");
-//        std::cout << "tie example:\n";	// 直接输出到屏幕
-//        *std::cin.tie() << "This is inserted into cout\n";	// 空参数调用返回默认的output stream，也就是cout
-//        prevstr = std::cin.tie(&ofs);						// cin绑定ofs，返回原来的output stream
-//        *std::cin.tie() << "This is inserted into the file\n";	// ofs，输出到文件
-//        std::cin.tie(prevstr);									// 恢复
+//        std::cout << "tie example:\n";
+//        *std::cin.tie() << "This is inserted into cout\n";
+//        prevstr = std::cin.tie(&ofs);
+//        *std::cin.tie() << "This is inserted into the file\n";
+//        std::cin.tie(prevstr);
 //        ofs.close();
 
 //        fclose(stdin);
@@ -999,7 +999,6 @@ void CxConsoleInterinfo::updateConsoleInputString(const string &sLine)
 //*** fn_interinfo_in_line_t fn_interinfo_in_cmd_t CxInterinfoIn_I ***
 //*** fn_interinfo_in_line_t fn_interinfo_in_cmd_t CxInterinfoIn_I ***
 //*** fn_interinfo_in_line_t fn_interinfo_in_cmd_t CxInterinfoIn_I ***
-
 void CxConsoleInterinfo::processInputString(int iEvent, int iTag, const void * pData, int iLength, void * oSource, void * oTarget)
 {
     string sLine((const char *)pData, iLength);
@@ -1201,57 +1200,56 @@ void CxConsoleInterinfo::interinfo_out(const string &sInfo, const std::string& s
 
 
 
-
-//type 下的 source
-//source 下的 int reason, int target, int iTag
+//type's source
+//source's int reason, int target, int iTag
 int CxInterinfoFilter::isEnable(int type, int source, int reason)
 {
     std::map<int , std::map<int, std::vector<int> > >::const_iterator itType = m_types.find(type);
     if (itType != m_types.end())
     {
         const std::map<int, std::vector<int> > & sourceReasons = itType->second;
-        //控制会细到 source
+        // source
         if (sourceReasons.size() > 0)
         {
             std::map<int, std::vector<int> >::const_iterator itSource = sourceReasons.find(source);
             if (itSource != sourceReasons.end())
             {
                 const std::vector<int> & iReasons = itSource->second;
-                //控制会细到 reason
+                // reason
                 if (iReasons.size() > 0)
                 {
                     if (std::find(iReasons.begin(), iReasons.end(), reason) != iReasons.end())
                     {
-                        //找到要控制的 reason
+                        // found reason
                         return FALSE;
                     }
                     else
                     {
-                        //没有要控制的 reason
+                        // no found reason
                         return TRUE;
                     }
                 }
                 else
                 {
-                    //即要控制全部 reason
+                    // all reason
                     return FALSE;
                 }
             }
             else
             {
-                //没有要控制的 source
+                // no source
                 return TRUE;
             }
         }
         else
         {
-            //即要控制全部 source
+            // all source
             return FALSE;
         }
     }
     else
     {
-        //没有要控制的 type
+        // no type
         return TRUE;
     }
 }

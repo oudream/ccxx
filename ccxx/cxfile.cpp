@@ -201,6 +201,8 @@ int CxFile::load(const string &sFilePath, std::vector<std::string> &sOut, const 
             {
                 if (start != end)
                     sOut.push_back(sLine.substr(start, end - start));
+                else
+                    sOut.push_back(string());
                 start = end + sSplitString.size();
             }
             if (start > 0)
@@ -1257,11 +1259,11 @@ int CxFileSystem::createDirMultiLevel(const string &sPath, unsigned model)
 //bool DeleteFile1(const char * lpszPath)
 //{
 //    SHFILEOPSTRUCT FileOp={0};
-//    FileOp.fFlags = FOF_ALLOWUNDO |   //允许放回回收站
-//                    FOF_NOCONFIRMATION; //不出现确认对话框
+//    FileOp.fFlags = FOF_ALLOWUNDO |   // can put to Recycle Bin
+//                    FOF_NOCONFIRMATION; // do not show prompt
 //    FileOp.pFrom = lpszPath;
-//    FileOp.pTo = NULL;      //一定要是NULL
-//    FileOp.wFunc = FO_DELETE;    //删除操作
+//    FileOp.pTo = NULL;      // must NULL
+//    FileOp.wFunc = FO_DELETE;    // operation : delete
 //    return SHFileOperation(&FileOp) == 0;
 //}
 

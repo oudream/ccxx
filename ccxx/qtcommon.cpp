@@ -670,7 +670,7 @@ bool QtCommonString::CompareName(const QString &name1, const QString &name2)
 
 void QtCommonDialog::ShowPrompt(const QString& sText, const QString& sTitle)
 {
-    QMessageBox::information(0, sTitle, sText, GM_QString_TR("确定"));
+    QMessageBox::information(0, sTitle, sText, GM_QString_TR("OK"));
 }
 
 
@@ -775,8 +775,8 @@ bool QtCommonDialog::DialogInput2(const QString &sTitle, const QString &sValue1T
     gridLayout->addWidget( value2Label, 1, 0, 1, 1 );
     gridLayout->addWidget( value2Ed, 1, 1, 1, 3 );
 
-    QPushButton* okBtn = new QPushButton( QString::fromUtf8("确定") );
-    QPushButton* cancelBtn =new QPushButton  ( QString::fromUtf8("取消") );
+    QPushButton* okBtn = new QPushButton( QString::fromUtf8("OK") );
+    QPushButton* cancelBtn =new QPushButton  ( QString::fromUtf8("Cancel") );
     QHBoxLayout* btnLayout = new QHBoxLayout;
     btnLayout->setSpacing( 60 );
     btnLayout->addWidget( okBtn );
@@ -835,8 +835,8 @@ bool QtCommonDialog::DialogInput3(const QString &sTitle, const QString &sValue1T
     gridLayout->addWidget( value3Label, 2, 0, 1, 1 );
     gridLayout->addWidget( value3Ed, 2, 1, 1, 3 );
 
-    QPushButton* okBtn = new QPushButton( QPushButton::tr("确定") );
-    QPushButton* cancelBtn =new QPushButton  ( QPushButton::tr("取消") );
+    QPushButton* okBtn = new QPushButton( QPushButton::tr("OK") );
+    QPushButton* cancelBtn =new QPushButton  ( QPushButton::tr("Cancel") );
     QHBoxLayout* btnLayout = new QHBoxLayout;
     btnLayout->setSpacing( 60 );
     btnLayout->addWidget( okBtn );
@@ -893,8 +893,8 @@ bool QtCommonDialog::DialogCombox(const QString &sTitle, const QString &sPrompt,
     gridLayout->addWidget( valueLabel, 0, 0, 1, 1);
     gridLayout->addWidget( valueCombo, 0, 1, 1, 3 );
 
-    QPushButton* okBtn = new QPushButton( QObject::tr("确定") );
-    QPushButton* cancelBtn =new QPushButton  ( QObject::tr("取消") );
+    QPushButton* okBtn = new QPushButton( QObject::tr("OK") );
+    QPushButton* cancelBtn =new QPushButton  ( QObject::tr("Cancel") );
     QHBoxLayout* btnLayout = new QHBoxLayout;
     btnLayout->setSpacing( 60 );
     btnLayout->addWidget( okBtn );
@@ -1381,7 +1381,7 @@ std::vector<int> QtCommonWidget::deleteSelectRows(QTableWidget *oGrid)
 
     if (iRows.size()>0)
     {
-        QString sMsg = QString::fromUtf8("? 确认删除 行 :\n  %1").arg(sRows);
+        QString sMsg = QString::fromUtf8("? Do you sure delete row: \n  %1").arg(sRows);
         if (QtCommonDialog::ShowQuery(sMsg))
         {
             for (size_t i = 0; i < iRows.size(); ++i)

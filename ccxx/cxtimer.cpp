@@ -15,7 +15,7 @@ using namespace std;
 
 ///
 /// \brief The CxTimerHost struct
-/// CxTimerHost : 是装着CxTimer的容器
+/// CxTimerHost : With CxTimer
 struct CxTimerHost
 {
     CxTimerHost()
@@ -39,12 +39,6 @@ struct CxTimerHost
     int m_processTimes;
 
 };
-
-///
-/// \brief f_timerHostes : 是全局CxTimerHost*的容器，装着指向CxTimerHost的指针；启动与停止CxTimer就是从此容器中添加与删除CxTimer指针
-/// \brief f_timerHostes_process : 是全局CxTimerHost*的容器，装着指向CxTimerHost的指针，是时钟是否到时的处理子线程中处，在主线程中处理时钟回调用
-/// \brief f_mutex_host_size : 是f_timerHostes的锁
-/// \brief f_mutex_timer_process : 是f_timerHostes_process的锁
 
 #define ci_timerhostes_size (100)
 static CxTimerHost f_mTimerHostes[ci_timerhostes_size];
@@ -281,7 +275,7 @@ protected:
         while ( _isStarted )
         {
             fn_updateTimers();
-            //besttodo : sleep 的毫秒数可以用最大公约数除10
+            //todo : sleep 's ms can = (The greatest common divisor) gcd div 10
             CxThread::sleep(10);
         }
     }
@@ -495,7 +489,7 @@ void CxTimer::start()
     if (m_interval <= 0)
         return;
     CxTimerManager::startTimer(this);
-    //besttodo : m_isStarted = CxTimerObjectManager::isExist(this); if (! m_isStarted) 内部错误
+    //todo : m_isStarted = CxTimerObjectManager::isExist(this); if (! m_isStarted) : interne error
     m_isStarted = true;
 }
 

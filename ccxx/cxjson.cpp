@@ -6,15 +6,11 @@
 using namespace std;
 using namespace rapidjson;
 
-// todo:
-// Value：：IsObject 中缺少模糊查找功能：如：/*/name == "name1"
-// Value：：IsArray 中缺少插入
-// Document：：缺少总点空间大小函数
 
 rapidjson::Document CxJson::load(const std::string &sFilePath, size_t iMaxSize)
 {
     Document doc; //
-    FILE *pFile = fopen(sFilePath.c_str(), "rb"); // 非 Windows 平台使用 "r"
+    FILE *pFile = fopen(sFilePath.c_str(), "rb"); // no Windows use "r"
     if (pFile == NULL)
     {
         return doc;
@@ -48,7 +44,7 @@ rapidjson::Document CxJson::load(const std::string &sFilePath, size_t iMaxSize)
 
 bool CxJson::load(const std::string &sFilePath, rapidjson::Document &doc, size_t iMaxSize)
 {
-    FILE *pFile = fopen(sFilePath.c_str(), "rb"); // 非 Windows 平台使用 "r"
+    FILE *pFile = fopen(sFilePath.c_str(), "rb"); // no Windows use "r"
     if (pFile == NULL)
     {
         return false;
@@ -88,7 +84,7 @@ bool CxJson::save(const std::string &sFilePath, rapidjson::Document &doc)
 bool CxJson::save(const std::string &sFilePath, rapidjson::Document &doc, size_t iBufferSize)
 {
     FILE *pFile;
-    pFile = fopen(sFilePath.data(), "wb");  // 非 Windows 平台使用 "w"
+    pFile = fopen(sFilePath.data(), "wb");  // no Windows use "r"
     if (pFile == NULL) return false;
     rewind(pFile);
     string sOut;

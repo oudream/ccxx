@@ -882,14 +882,14 @@ public:
     static const msepoch_t invalidMsepoch;
     static const msepoch_t invalidUsepoch;
     static const double deadZone;
-    static const char spaceChar;//空格
+    static const char spaceChar; // space char
     static const char *spaceString;
-    static const char equalChar;//等号
-    static const char colonChar;//分号
-    static const char commaChar;//逗号
-    static const char middleChar;//键值对的中间字符
+    static const char equalChar;// =
+    static const char colonChar;// ;
+    static const char commaChar;// ,
+    static const char middleChar;
     static const char *middleString;
-    static const char splitChar;//多个字符串的分隔字符（多键值对的分隔字符）
+    static const char splitChar;
     static const char *splitString;
     static const std::map<std::string, std::string> emptyMapString;
     static const char pathCharacter;

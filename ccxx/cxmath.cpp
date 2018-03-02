@@ -6,14 +6,12 @@ int CxMath::gcd(int a,int b)
     int temp;
     if(a<b)
     {
-        /*交换两个数，使大数放在a上*/
         temp=a;
         a=b;
         b=temp;
     }
     while(b!=0)
     {
-        /*利用辗除法，直到b为0为止*/
         temp=a%b;
         a=b;
         b=temp;
@@ -38,24 +36,24 @@ int CxMath::random(int iMax)
         r = r % iMax;
     return r;
     /*
-        srand((int)time(0));   //设置时间种子
-        int num = rand()%100000;   //生成100000内的随机数
+        srand((int)time(0));
+        int num = rand()%100000;
     //    printf("rand num:%6d\n", num);
 
         struct tm *p;
         time_t second;
         time(&second);
 
-        p = localtime(&second);//获取当前时间
+        p = localtime(&second);
 
         char buf[64] = {0};
 
         sprintf(buf, "%d-%d-%d %d:%d:%d_%06d", 1900+p->tm_year, 1+p->tm_mon, p->tm_mday,
-            p->tm_hour, p->tm_min, p->tm_sec, num);  //格式化时间和随机数字符串，存放在buf内
+            p->tm_hour, p->tm_min, p->tm_sec, num);
 
         return std::string(buf);
 
-    //    printf("guid:%s\n", buf);  //输出guid到控制台
+    //    printf("guid:%s\n", buf);
 
     */
 }

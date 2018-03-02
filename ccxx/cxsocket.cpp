@@ -3281,12 +3281,12 @@ std::vector<std::string> CxNetwork::getLocalIps()
 
 typedef struct _ICMP_HEADER
 {
-    BYTE bType;        //类型
-    BYTE bCode;        //代码
-    USHORT nCheckSum;  //校验各
-    USHORT nId;        //进程ID
-    USHORT nSequence;  //序号
-    UINT nTimeStamp;   //时间
+    BYTE bType;        //
+    BYTE bCode;        //
+    USHORT nCheckSum;  //
+    USHORT nId;        // pid
+    USHORT nSequence;  // order
+    UINT nTimeStamp;   //
 }ICMP_HEADER, *PICMP_HEADER;
 
 USHORT GetCheckSum(LPBYTE lpBuff, DWORD dwSize)
@@ -3358,7 +3358,7 @@ int CxNetwork::ping(const std::string &sIpAddress)
 
         PICMP_HEADER pRcvHeader = (PICMP_HEADER)(szRcvBuff + IP_HEADER_SIZE);
         int nTime = ::GetTickCount() - pRcvHeader->nTimeStamp;
-//        printf("从目标地址传回: %s bytes=%d time=%dms\n", inet_ntoa(SourceSockAddr.sin_addr), nRet, nTime);
+//        printf("from target: %s bytes=%d time=%dms\n", inet_ntoa(SourceSockAddr.sin_addr), nRet, nTime);
         printf("from target ip=%s receive-bytes=%d time=%dms\n", inet_ntoa(SourceSockAddr.sin_addr), nRet, nTime);
         ::Sleep(1000);
     }

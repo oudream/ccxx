@@ -1423,7 +1423,7 @@ void CxString::splitCase(int mode, char *pBuf, int num, string &sVal, string &sp
         {
             switch (mode)
             {
-                case 0://整形
+                case 0:// int
                 {
                     int *pw = (int *) pBuf;
                     for (int i = 0; i < num; i++)
@@ -1432,7 +1432,7 @@ void CxString::splitCase(int mode, char *pBuf, int num, string &sVal, string &sp
                     }
                 }
                     break;
-                case 1://双精度
+                case 1:// double
                 {
                     double *pd = (double *) pBuf;
                     for (int i = 0; i < num; i++)
@@ -2179,7 +2179,7 @@ string CxString::format(const char *sFormat, ...)
     char buffer[4096];
     va_list args;
     va_start (args, sFormat);
-//    vsprintf (buffer, sFormat, args); //会有内存溢出 llb 20140427
+// vsprintf (buffer, sFormat, args); // risk, todo
     vsnprintf(buffer, sizeof(buffer), sFormat, args);
 //    perror (buffer);
     va_end (args);
@@ -2550,7 +2550,6 @@ uint32 CxString::toUint32(std::string szBuf)
     uint32 val = 0;
     string tmp="";
     size_t i=0;
-    //消除空格
     for(i=0;i<szBuf.length();i++)
     {
         if(szBuf.substr(i,1)!=" ")
@@ -2558,7 +2557,6 @@ uint32 CxString::toUint32(std::string szBuf)
             tmp+=szBuf.substr(i,1);
         }
     }
-    //消除开始字符
     if((tmp.substr(0,2)=="0x")||(tmp.substr(0,2)=="0X"))
     {
         tmp = tmp.substr(2,tmp.length()-2);
@@ -2573,14 +2571,13 @@ uint32 CxString::toUint32(std::string szBuf)
             val |= (v[i]<<((count-i-1)*8));
         }
     }
-    else //十进制
+    else
     {
         val = atoi(szBuf.data());
     }
     return val;
 }
 */
-//Ip 地址转寄存器
 //std::string CxString::ipToString(uint32 val)
 //{
 //    char*pBuf = (char*)&val;
@@ -2995,7 +2992,7 @@ std::map<string, string> CxString::doSplitToMap_reverse_notrim(const string &ss,
 }
 
 /*
-连字符解析 0x0100200~0x0100300,0x100300,0x0100400,
+: 0x0100200~0x0100300,0x100300,0x0100400,
  */
 std::vector<int> CxString::parseToInts(const string &sSrc, char cJoin, char cSplit)
 {
@@ -3006,7 +3003,7 @@ std::vector<int> CxString::parseToInts(const string &sSrc, char cJoin, char cSpl
     for (size_t i = 0; i < v.size(); ++i)
     {
         string s = v[i];
-        //更新带 ‘~' 段式
+        // ~
         string sub = format("%c", cJoin);
         if (contain(s, sub))
         {
@@ -3019,8 +3016,7 @@ std::vector<int> CxString::parseToInts(const string &sSrc, char cJoin, char cSpl
                 vRet.push_back(j);
             }
         }
-            //更新单个
-        else
+        else // update one
         {
             vRet.push_back(CxString::toInt32(s));
         }

@@ -497,9 +497,7 @@ void CxChannelBase::threadEventNotify(CxChannelBase *oTarget, int iChannelEvent,
     }
     else
     {
-        //把数据加入队列中
         CxApplication::pushProcessCallBack(CxChannelBase::processThreadNofity, iChannelEvent, iTag, pData, iLength, oSource, oTarget);
-        //通知
         CxApplication::signalMainThread();
     }
 }

@@ -33,6 +33,7 @@ void fn_checkFiles()
 
         int iHasReturn = -1;
         int iHasZh = -1;
+        int iHasZhCol;
         vector<string> sLines;
         CxFile::load(sScanFilePath, sLines, "\n");
         for (int i = 0; i < sLines.size(); ++i)
@@ -46,6 +47,7 @@ void fn_checkFiles()
                     if (sLine[k] < 0)
                     {
                         iHasZh = i;
+                        iHasZhCol = k;
                         break;
                     }
                 }
@@ -53,11 +55,11 @@ void fn_checkFiles()
         }
         if (iHasReturn != -1)
         {
-            sHasReturnFilePaths.push_back(sScanFilePath + " ( " + CxString::toString(iHasReturn) + " ) ");
+            sHasReturnFilePaths.push_back(sScanFilePath + " ( " + CxString::toString(iHasReturn+1) + " ) ");
         }
         if (iHasZh != -1)
         {
-            sHasZhFilePaths.push_back(sScanFilePath + " ( " + CxString::toString(iHasZh) + " ) ");
+            sHasZhFilePaths.push_back(sScanFilePath + " ( " + CxString::toString(iHasZh+1) + " | " + CxString::toString(iHasZhCol+1) + " ) ");
         }
     }
     bool bResult = CxFile::save(sFilePathScan, sScanFilePaths);

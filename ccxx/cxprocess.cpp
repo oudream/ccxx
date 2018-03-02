@@ -52,7 +52,7 @@ protected:
     void run()
     {
 #ifdef GM_OS_WIN
-        ::WaitForSingleObject(m_pid.hProcess, INFINITE);//检测进程是否停止
+        ::WaitForSingleObject(m_pid.hProcess, INFINITE); // wait process exit
         CxProcess::threadEventNotify(NULL, GM_EVENT_PROCESS_END, 0, (void *) &m_pid, sizeof(m_pid), NULL);
 #endif
     }

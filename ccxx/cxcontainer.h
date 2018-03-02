@@ -585,7 +585,6 @@ public:
         }
     }
 
-    //删除
     template<typename _Key, typename _Tp>
     static void remove(std::map<_Key, _Tp> & map1, const _Key& key1)
     {

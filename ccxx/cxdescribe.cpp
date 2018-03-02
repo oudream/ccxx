@@ -677,7 +677,7 @@ void CxDescribeManager::start()
 
 void CxDescribeManager::stop()
 {
-    //不可以删除，删除了UI无得调用
+    // todo : can not delete. otherwise ui do not use then
     return;
     for (std::map<std::string, CxDescribeUnit*> ::iterator it = f_describeUnits.begin();  it != f_describeUnits.end(); it++)
     {

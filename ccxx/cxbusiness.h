@@ -8,7 +8,6 @@
 const std::string CS_SectionMsObjectTypes = "MsObjectTypes";
 
 
-//表描述
 class CxMsObjectType
 {
 public:
@@ -53,10 +52,10 @@ public:
 
 private:
     std::string _typeName;
-    StructType_Enum _structType; //表示这种内存对象的结构类型 main表示有从表
-    std::vector<std::string> _majorKeies; //主表的字段名称
-    std::string _detailKey; //从表的关键字段名称
-    msepoch_t _howLongStore; //表示这种类型是否长久住内存
+    StructType_Enum _structType; // main detail table
+    std::vector<std::string> _majorKeies; // main table field name
+    std::string _detailKey; // detail table major key name
+    msepoch_t _howLongStore; //
 
     friend class CxMsObjectTypeManager;
 
@@ -78,7 +77,6 @@ public:
 };
 
 
-//通用的业务对象
 class GM_CCXX_CORE_API CxMsObjectData
 {
 public:
@@ -138,10 +136,10 @@ public:
     int updateDetails(const std::map<std::string, std::map<std::string, std::string> > & details);
 
 private:
-    std::string _typeName; //类型名称
-    std::string _name; //主键值
-    std::map<std::string, std::string> _major; //主表内容
-    std::map<std::string, std::map<std::string, std::string> > _details; //从表内容
+    std::string _typeName;
+    std::string _name; // major key value
+    std::map<std::string, std::string> _major; // main table content
+    std::map<std::string, std::map<std::string, std::string> > _details; // detail table content
     bool _majorModify;
     std::map<std::string, int> _detailModifies;
     int _source;
