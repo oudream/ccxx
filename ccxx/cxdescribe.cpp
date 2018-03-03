@@ -762,7 +762,7 @@ int CxDescribeManager::loadProject(CxDescribeProject &describeProject, const str
     string sParentPath = CxFileSystem::parentPath(CxFileSystem::extractPath(sFilePath));
     std::vector<CxCatalogAttr *> describeCatalogs;
 
-//    ProjectName=YGCT_CP
+//    ProjectName=CP
 //    ProjectTitle=xxx.title
 //    ConfigDataPath=./../
 //    DescribePath=./../describe

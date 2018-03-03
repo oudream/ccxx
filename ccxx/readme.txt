@@ -30,7 +30,6 @@
 
 /***
 * 简称
-g 共创 远光
 inter center => giic ( rtdb )
 inter p         girc
 */

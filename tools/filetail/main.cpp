@@ -19,7 +19,7 @@ void fn_checkFiles()
     if (sFilePath.size() > 0)
     {
         vector<CxFileSystem::PathInfo> pathInfos;
-        CxFileSystem::scanDir(sFilePath, pathInfos, false, false, f_sIgnoreDirNames);
+        CxFileSystem::scanDir(sFilePath, pathInfos, true, false, f_sIgnoreDirNames);
         for (size_t i = 0; i < pathInfos.size(); ++i)
         {
             const CxFileSystem::PathInfo &pathInfo = pathInfos.at(i);

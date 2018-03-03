@@ -557,7 +557,7 @@ string ExplainEfile::toString()
 std::vector<string> CxEfile::toEfileBuffer(const string &sClassName, const string &sInstanceName, const std::vector<string> &sFields, const std::vector<std::vector<string> > &sRows)
 {
     vector<string> sLines;
-    string sLine = "<! Version=1.0 System=ygct.ics.efile Code=utf-8 Data=1.0 !>";
+    string sLine = "<! Version=1.0 System=ccxx.efile Code=utf-8 Data=1.0 !>";
     sLines.push_back(sLine+"\n");
     // class::instance.name
     sLine = "<" + sClassName + "::" + sInstanceName + ">";

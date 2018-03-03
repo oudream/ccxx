@@ -474,7 +474,7 @@ bool CxAppEnv::singleInstance(int argc, const char *argv[])
                 if (ERROR_ALREADY_EXISTS == dwRet)
                 {
                     string sInfo = sApplicationFilePath+string(" is running!!!");
-                    ::MessageBox(NULL,sInfo.c_str(),"ygct error",MB_OKCANCEL);
+                    ::MessageBox(NULL,sInfo.c_str(),"SingleInstance error",MB_OKCANCEL);
                     ::CloseHandle(m_hMutex);
                     bRet = false;
                 }
