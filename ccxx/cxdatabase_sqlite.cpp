@@ -64,14 +64,11 @@ protected:
         if (!db)
         {
             cxDebug() << "OpenDatabase.sqlite: open-begin: " << sDatabase;
+            if (sDatabase.empty()) return false;
             string sDatabase2 = sDatabase;
-            if (! CxFileSystem::isExist(sDatabase))
+            if (! (CxFileSystem::hasRootPath(sDatabase) && CxFileSystem::isExist(sDatabase)))
             {
-                string s1 = CxFileSystem::mergeFilePath(CxDatabaseManager::getDefaultDatabasePath(), sDatabase);
-                if (CxFileSystem::isExist(s1))
-                {
-                    sDatabase2 = s1;
-                }
+                sDatabase2 = CxFileSystem::mergeFilePath(CxDatabaseManager::getDefaultDatabasePath(), sDatabase);
             }
             int flags = bCreate ? SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE : SQLITE_OPEN_READWRITE;
             int rc=sqlite3_open_v2(sDatabase2.c_str(),&db, flags, NULL);
@@ -422,7 +419,42 @@ protected:
 
     int execSqlListImpl(const std::vector<std::string> & sqlList)
     {
-        return FALSE;
+        if (! db)
+        {
+            string sErrorString = "error : db is not open sql!";
+            setLastError(-1, sErrorString);
+            return -1;
+        }
+        if (! beginTransaction())
+            return -1;
+
+        for (int i = 0; i < sqlList.size(); ++i)
+        {
+            const string &sSql = sqlList.at(i);
+
+            char *zErr;
+            int rc = sqlite3_exec(db, sSql.c_str(), NULL, NULL, &zErr);
+            if(rc != SQLITE_OK)
+            {
+                rollbackTransaction();
+                string sErrorString;
+                if (zErr != NULL)
+                {
+                    sErrorString = CxString::format("sql exec error: %s" , zErr);
+                    sqlite3_free(zErr);
+                }
+                setLastError(rc, sErrorString);
+                return -1;
+            }
+        }
+        if (commitTransaction())
+        {
+            return sqlList.size();
+        }
+        else
+        {
+            return -1;
+        }
     }
 
     int loadSqlImpl(const std::string & sSql, std::vector<std::vector<std::string> > & rows, std::vector<std::string> * oColumnNames = NULL, int iMaxRowCount = -1)
@@ -549,6 +581,8 @@ protected:
         sqlite3_finalize(stmt);
         return rows.size( );
     }
+
+    virtual void * getDbImpl() { return db; }
 
 private:
     bool beginTransaction() {

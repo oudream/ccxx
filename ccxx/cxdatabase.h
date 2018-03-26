@@ -208,6 +208,8 @@ public:
 
     std::map<std::string, std::string> loadVerticalTableObject(const std::string & sSql);
 
+    inline void * getDb() { return getDbImpl(); }
+
 protected:
     inline void setLastError(int iErrorId, const std::string &sErrorString)
     {
@@ -250,6 +252,8 @@ protected:
 
     virtual int
     loadSql2Impl(const std::string &sSql, std::vector<std::vector<std::string> > &rows, std::vector<std::string> *oColumnNames = NULL, std::vector<int> *oColumnTypes = NULL, int iMaxRowCount = -1) = 0;
+
+    virtual void * getDbImpl() = 0;
 
 protected:
     std::map<std::string, std::string> _databaseAttrs;

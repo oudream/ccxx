@@ -1040,6 +1040,8 @@ protected:
         return rows.size();
     }
 
+    virtual void * getDbImpl() { return & _db; }
+
 private:
     void getColumnDescs(const std::string &sTableName, std::vector<OdbcColumnDesc> &fieldTypes)
     {

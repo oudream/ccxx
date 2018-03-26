@@ -71,6 +71,25 @@ public:
      */
     static int load(const std::string& sFilePath, void * oObject, fn_int_object_tlv_t fn);
 
+    /**
+     * @brief load first size
+     * @param sFilePath
+     * @param iSize
+     * @param sOut
+     * @param sSplitString
+     * @return
+     */
+    static int loadFirst(const std::string& sFilePath, size_t iSize, std::vector<std::string> & sOut, const std::string& sSplitString = CxGlobal::lineString);
+
+    /**
+     * @brief load last size
+     * @param sFilePath
+     * @param iSize
+     * @param sOut
+     * @param sSplitString
+     * @return
+     */
+    static int loadLast(const std::string& sFilePath, size_t iSize, std::vector<std::string> & sOut, const std::string& sSplitString = CxGlobal::lineString);
 
     /**
      * @brief save : Write file from byte array (string).

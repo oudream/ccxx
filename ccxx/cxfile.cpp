@@ -393,6 +393,153 @@ int CxFile::load(const string &sFilePath, void *oObject, fn_int_object_tlv_t fn)
     return iReadSize;
 }
 
+int CxFile::loadFirst(const string &sFilePath, size_t iSize, std::vector<std::string> &sOut, const string &sSplitString)
+{
+    FILE *pFile;
+    size_t iFileSize;
+    size_t iOldSize = sOut.size();
+
+    pFile = fopen(sFilePath.data(), "rb");
+    if (pFile == NULL)
+    {
+        return sOut.size() - iOldSize;
+    }
+
+    // obtain file size:
+    fseek(pFile, 0, SEEK_END);
+    iFileSize = ftell(pFile);
+    if (iFileSize <= 0)
+    {
+//        fputs ("file is empty",stderr);
+        fclose(pFile);
+        return sOut.size() - iOldSize;
+    }
+    rewind(pFile);
+
+    const size_t ci_bufferSize = 512;
+    vector<char> buffer(ci_bufferSize, 0);
+    char *pBuffer = &(buffer.front());
+    string sLine;
+    size_t iReadSize = 0;
+    size_t iMaxSize = iSize > iFileSize ? iFileSize : iSize;
+    while (iReadSize < iMaxSize)
+    {
+        size_t iRemain = iMaxSize - iReadSize;
+        size_t iReadingLen = (iRemain > ci_bufferSize) ? ci_bufferSize : iRemain;
+
+        // copy the file into the buffer:
+        if (fread(pBuffer, 1, iReadingLen, pFile) != iReadingLen)
+        {
+            // read to file end
+            fclose(pFile);
+            return sOut.size() - iOldSize;
+        }
+        else
+        {
+            sLine.append(string(pBuffer, iReadingLen));
+
+            size_t start = 0;
+            size_t end;
+//            while ((end = CxString::search(sLine.data()+start, sLine.size()-start, sSplitString.data(), sSplitString.size())) != string::npos)
+            while ((end = sLine.find(sSplitString, start)) != string::npos)
+            {
+                if (start != end)
+                    sOut.push_back(sLine.substr(start, end - start));
+                else
+                    sOut.push_back(string());
+                start = end + sSplitString.size();
+            }
+            if (start > 0)
+            {
+                sLine = sLine.substr(start);
+            }
+        }
+        iReadSize += iReadingLen;
+    }
+    if (sLine.size() > 0)
+    {
+        sOut.push_back(sLine);
+    }
+
+    /* the whole file is now loaded in the memory buffer. */
+    fclose(pFile);
+    return sOut.size() - iOldSize;
+}
+
+int CxFile::loadLast(const string &sFilePath, size_t iSize, std::vector<std::string> &sOut, const string &sSplitString)
+{
+    FILE *pFile;
+    size_t iFileSize;
+    size_t iOldSize = sOut.size();
+
+    pFile = fopen(sFilePath.data(), "rb");
+    if (pFile == NULL)
+    {
+        return sOut.size() - iOldSize;
+    }
+
+    // obtain file size:
+    fseek(pFile, 0, SEEK_END);
+    iFileSize = ftell(pFile);
+    if (iFileSize <= 0)
+    {
+//        fputs ("file is empty",stderr);
+        fclose(pFile);
+        return sOut.size() - iOldSize;
+    }
+    rewind(pFile);
+    size_t iOffset = iSize > iFileSize ? 0 : iFileSize - iSize;
+    fseek(pFile, iOffset, SEEK_SET );
+
+    const size_t ci_bufferSize = 512;
+    vector<char> buffer(ci_bufferSize, 0);
+    char *pBuffer = &(buffer.front());
+    string sLine;
+    size_t iReadSize = 0;
+    while (iReadSize < iSize)
+    {
+        size_t iRemain = iSize - iReadSize;
+        size_t iReadingLen = (iRemain > ci_bufferSize) ? ci_bufferSize : iRemain;
+
+        // copy the file into the buffer:
+        if (fread(pBuffer, 1, iReadingLen, pFile) != iReadingLen)
+        {
+            // read to file end
+            fclose(pFile);
+            return sOut.size() - iOldSize;
+        }
+        else
+        {
+            sLine.append(string(pBuffer, iReadingLen));
+
+            size_t start = 0;
+            size_t end;
+//            while ((end = CxString::search(sLine.data()+start, sLine.size()-start, sSplitString.data(), sSplitString.size())) != string::npos)
+            while ((end = sLine.find(sSplitString, start)) != string::npos)
+            {
+                if (start != end)
+                    sOut.push_back(sLine.substr(start, end - start));
+                else
+                    sOut.push_back(string());
+                start = end + sSplitString.size();
+            }
+            if (start > 0)
+            {
+                sLine = sLine.substr(start);
+            }
+        }
+        iReadSize += iReadingLen;
+    }
+    if (sLine.size() > 0)
+    {
+        sOut.push_back(sLine);
+    }
+
+    /* the whole file is now loaded in the memory buffer. */
+    fclose(pFile);
+    return sOut.size() - iOldSize;
+}
+
 //from cplusplus.com sample
 bool CxFile::save(const string &sFilePath, const string &sBuffer)
 {

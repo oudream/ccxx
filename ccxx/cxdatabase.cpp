@@ -311,7 +311,7 @@ std::map<std::string, std::string> CxDatabase::loadVerticalTableObject(const std
     for (int i = 0; i < rows.size(); ++i)
     {
         const vector<string> &row = rows.at(i);
-        if (row.size() > 1)
+        if (row.size() < 2)
         {
             break;
         }
