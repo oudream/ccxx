@@ -330,6 +330,13 @@ public:
     static PathInfo getPathInfo(const std::string & sFilePath);
 
     /**
+     *
+     * @param pathType
+     * @return
+     */
+    static std::string getPathTypeString(PathTypeEnum pathType);
+
+    /**
      * Create a symbolic link.
      * @param path to create.
      * @param target of link.
@@ -576,6 +583,7 @@ private:
 };
 
 typedef CxFileSystem::PathInfo CxFilePathInfo;
+typedef CxFileSystem::PathTypeEnum CxFilePathTypeEnum;
 
 
 /**

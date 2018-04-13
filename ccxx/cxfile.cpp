@@ -1163,6 +1163,34 @@ CxFileSystem::PathInfo CxFileSystem::getPathInfo(const string &sFilePath)
     return pathInfo;
 }
 
+std::string CxFileSystem::getPathTypeString(PathTypeEnum pathType)
+{
+    switch (pathType)
+    {
+        case PathTypeFile:
+            return "file";
+            break;
+        case PathTypeDir:
+            return "directory";
+            break;
+        case PathTypeSoftlink:
+            return "link";
+            break;
+        case PathTypeDevChar:
+            return "io";
+            break;
+        case PathTypeDevBlock:
+            return "disk";
+            break;
+        case PathTypeSystem:
+            return "system";
+            break;
+        default:
+            return "none";
+            break;
+    }
+}
+
 bool CxFileSystem::createLink(const std::string &sPath, const std::string &sTarget)
 {
     const char *path = sPath.c_str();
