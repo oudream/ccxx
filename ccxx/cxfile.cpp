@@ -120,9 +120,8 @@ bool CxFile::load(const string &sFilePath, std::string &sOut, size_t iMaxSize)
     rewind(pFile);
 
     // allocate memory to contain the whole file:
-    iBufferSize = sizeof(char) * iFileSize + 1;
     size_t iOldSize = sOut.size();
-    sOut.resize(sOut.size() + iBufferSize);
+    sOut.resize(sOut.size() + iFileSize);
     if (sOut.size() <= iOldSize)
     {
 //        fputs ("Memory error",stderr);
