@@ -48,6 +48,8 @@ message(${CMAKE_C_COMPILER_ID})
 message(${CMAKE_CXX_COMPILER_ID})
 message(${gs_project_output_path_debug})
 message(${gs_project_output_path_release})
+#message(${CMAKE_PREFIX_PATH})
+message("----------------------------------------------------------------------")
 
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${gs_project_output_path_debug}")
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${gs_project_output_path_release}")
