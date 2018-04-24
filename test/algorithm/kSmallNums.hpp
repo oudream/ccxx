@@ -47,6 +47,9 @@ vector<int> kSmallNums(vector<int> &nums, int k) {
     return kNums;
 }
 
+/*
+错误	9	error C2064: 项不会计算为接受 2 个参数的函数	
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xutility	521	1	test_algorithm
 
 vector<int> kSmallNums_multiset(vector<int> nums, int k) {
     multiset<int, greater<int> > s;
@@ -87,6 +90,8 @@ vector<int> kSmallNums2(vector<int> nums, int k) {
     }
     return res;
 }
+*/
+
 //
 //作者：雨停就走
 //    链接：http://www.jianshu.com/p/d0c42c40b4e7

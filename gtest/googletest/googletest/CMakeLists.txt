@@ -310,3 +310,8 @@ if (gtest_build_tests)
   cxx_executable(gtest_xml_output_unittest_ test gtest)
   py_test(gtest_xml_output_unittest)
 endif()
+
+
+message("CMAKE_CXX_FLAGS-GTEST: " ${CMAKE_CXX_FLAGS_DEBUG})
+message("CMAKE_CXX_FLAGS-GTEST: " ${CMAKE_CXX_FLAGS_RELEASE})
+

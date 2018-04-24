@@ -9,6 +9,12 @@ endif()
 
 set(gs_project_path ${CMAKE_CURRENT_SOURCE_DIR})
 
+# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+include(./gtest/googletest/googletest/cmake/internal_utils.cmake)
+
+config_compiler_and_linker()  # Defined in internal_utils.cmake.
+
 add_subdirectory(./gtest)
 
 add_subdirectory(./build/cmake)
