@@ -10,12 +10,12 @@ add_executable(test_dll_host
         )
 
 add_dependencies(test_dll_host
-        libccxx
+        ccxx
         test_dll_vdi
         )
 
 target_link_libraries(test_dll_host
-        libccxx
+        ccxx
         test_dll_vdi
         )
 

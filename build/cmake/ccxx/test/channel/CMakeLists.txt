@@ -11,11 +11,11 @@ add_executable(cxtest_channel
         )
 
 add_dependencies(cxtest_channel
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_channel
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_channel PROPERTIES FOLDER ccxx/test)
@@ -34,11 +34,11 @@ add_executable(cxtest_udp_client
         )
 
 add_dependencies(cxtest_udp_client
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_udp_client
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_udp_client PROPERTIES FOLDER ccxx/test)
@@ -57,11 +57,11 @@ add_executable(cxtest_udp_server
         )
 
 add_dependencies(cxtest_udp_server
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_udp_server
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_udp_server PROPERTIES FOLDER ccxx/test)
@@ -82,11 +82,11 @@ add_executable(cxtest_serial
         )
 
 add_dependencies(cxtest_serial
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_serial
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_serial PROPERTIES FOLDER ccxx/test)

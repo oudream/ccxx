@@ -10,11 +10,11 @@ add_executable(cxtest_json
         ${fslSourceCcxxPaths})
 
 add_dependencies(cxtest_json
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_json
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_json PROPERTIES FOLDER ccxx/test)

@@ -11,11 +11,11 @@ add_executable(cxtest_string
         )
 
 add_dependencies(cxtest_string
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_string
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_string PROPERTIES FOLDER ccxx/test)

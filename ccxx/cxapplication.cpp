@@ -71,10 +71,10 @@ long   __stdcall   fn_Windows_Exception_callback(EXCEPTION_POINTERS* excp)
     sMsg += CxString::format("\nException_Address= %x" , excp->ExceptionRecord->ExceptionAddress);
     sMsg += "\nCPU_Register: " + CxTime::currentMsepochString();
     sMsg += CxString::format("\nException_Time=eax   %x   ebx   %x   ecx   %x   edx   %x",
-        excp->ContextRecord->Eax,
-        excp->ContextRecord->Ebx,
-		excp->ContextRecord->Ecx,
-        excp->ContextRecord->Edx);
+        excp->ContextRecord->SegGs,
+        excp->ContextRecord->SegFs,
+		excp->ContextRecord->SegEs,
+        excp->ContextRecord->SegDs);
     cxPrompt() << sMsg;
 
 #ifdef _MSC_VER

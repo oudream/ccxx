@@ -299,69 +299,6 @@ macro(mc_ccxx_sqlite_include)
     source_group("ccxx_sqlite" FILES ${gs_ccxx_sqlite_filepaths})
 endmacro()
 
-
-#4, regexp
-set(gs_ccxx_regexp_path ${gs_ccxx_source_path}/regexp)
-
-set(gsl_regexp_headers
-        re2/filtered_re2.h
-        re2/prefilter.h
-        re2/prefilter_tree.h
-        re2/prog.h
-        re2/re2.h
-        re2/regexp.h
-        re2/set.h
-        re2/stringpiece.h
-        re2/unicode_casefold.h
-        re2/unicode_groups.h
-        re2/variadic_function.h
-        re2/walker-inl.h
-        util/atomicops.h
-        util/flags.h
-        util/logging.h
-        util/mutex.h
-        util/sparse_array.h
-        util/sparse_set.h
-        util/utf.h
-        util/util.h
-        util/pcre.h
-        )
-
-set(gsl_regexp_sources
-        re2/bitstate.cc
-        re2/compile.cc
-        re2/dfa.cc
-        re2/filtered_re2.cc
-        re2/mimics_pcre.cc
-        re2/nfa.cc
-        re2/onepass.cc
-        re2/parse.cc
-        re2/perl_groups.cc
-        re2/prefilter.cc
-        re2/prefilter_tree.cc
-        re2/prog.cc
-        re2/re2.cc
-        re2/regexp.cc
-        re2/set.cc
-        re2/simplify.cc
-        re2/stringpiece.cc
-        re2/tostring.cc
-        re2/unicode_casefold.cc
-        re2/unicode_groups.cc
-        util/rune.cc
-        util/strutil.cc
-        util/pcre.cc
-        )
-
-mc_merge_file_path(${gs_ccxx_regexp_path} "${gsl_regexp_headers}" gsl_regexp_header_filepaths)
-mc_merge_file_path(${gs_ccxx_regexp_path} "${gsl_regexp_sources}" gsl_regexp_source_filepaths)
-
-macro(mc_ccxx_regexp_include)
-    include_directories(${gs_ccxx_regexp_path})
-    source_group("ccxx_regexp" FILES ${gsl_regexp_header_filepaths} ${gsl_regexp_source_filepaths})
-endmacro()
-
-
 #5, qt
 set(gsl_ccxx_qt_files
         qtcommon.h

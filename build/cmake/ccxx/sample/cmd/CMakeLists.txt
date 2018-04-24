@@ -12,15 +12,15 @@ add_executable(ccxx_sample_cmd
 set_target_properties(ccxx_sample_cmd PROPERTIES FOLDER ccxx/sample)
 
 add_dependencies(ccxx_sample_cmd
-        libccxx
-        libccxx_database_odbc
-        libccxx_database_sqlite
+        ccxx
+        ccxx_database_odbc
+        ccxx_database_sqlite
         )
 
 target_link_libraries(ccxx_sample_cmd
-        libccxx
-        libccxx_database_odbc
-        libccxx_database_sqlite
+        ccxx
+        ccxx_database_odbc
+        ccxx_database_sqlite
         )
 
 

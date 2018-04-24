@@ -13,12 +13,12 @@ add_library(test_dll_modbus SHARED
         )
 
 add_dependencies(test_dll_modbus
-        libccxx
+        ccxx
         test_dll_vdi
         )
 
 target_link_libraries(test_dll_modbus
-        libccxx
+        ccxx
         test_dll_vdi
         )
 

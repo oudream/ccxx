@@ -10,7 +10,6 @@
 
 #include <string>
 #include <vector>
-#include "util/random.h"
 #include "util/util.h"
 #include "re2/stringpiece.h"
 
@@ -27,7 +26,7 @@ namespace re2 {
 //
 class RegexpGenerator {
  public:
-  RegexpGenerator(int maxatoms, int maxops, const vector<string>& atoms,
+  RegexpGenerator(int maxatoms, int maxops, const std::vector<string>& atoms,
                   const vector<string>& ops);
   virtual ~RegexpGenerator() {}
 

@@ -10,11 +10,11 @@ add_executable(cxtool_filetail
         ${fslSourceCcxxPaths})
 
 add_dependencies(cxtool_filetail
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtool_filetail
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtool_filetail PROPERTIES FOLDER ccxx/tools)

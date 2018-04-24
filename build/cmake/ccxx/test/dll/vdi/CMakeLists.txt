@@ -13,11 +13,11 @@ add_library(test_dll_vdi SHARED
         )
 
 add_dependencies(test_dll_vdi
-        libccxx
+        ccxx
         )
 
 target_link_libraries(test_dll_vdi
-        libccxx
+        ccxx
         )
 
 set_target_properties(test_dll_vdi PROPERTIES FOLDER ccxx/test)

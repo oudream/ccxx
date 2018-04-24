@@ -12,3 +12,5 @@ set(gs_project_path ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(./gtest)
 
 add_subdirectory(./build/cmake)
+
+add_subdirectory(./3rd)

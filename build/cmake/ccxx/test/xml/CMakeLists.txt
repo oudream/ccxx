@@ -10,11 +10,11 @@ add_executable(cxtest_xml
         ${fslSourceCcxxPaths})
 
 add_dependencies(cxtest_xml
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_xml
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_xml PROPERTIES FOLDER ccxx/test)

@@ -40,16 +40,18 @@ set(fslSources
 
 mc_merge_file_path(${gs_ccxx_test_path} "${fslSources}" fslSourcePaths)
 
+include_directories(${gs_ccxx_path}/ccxx/regexp)
+
 add_executable(cxtest_regexp
         ${fslSourcePaths}
         )
 
 add_dependencies(cxtest_regexp
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtest_regexp
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtest_regexp PROPERTIES FOLDER ccxx/test)

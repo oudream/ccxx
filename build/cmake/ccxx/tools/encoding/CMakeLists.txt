@@ -10,11 +10,11 @@ add_executable(cxtool_encoding
         ${fslSourceCcxxPaths})
 
 add_dependencies(cxtool_encoding
-        libccxx
+        ccxx
         )
 
 target_link_libraries(cxtool_encoding
-        libccxx
+        ccxx
         )
 
 set_target_properties(cxtool_encoding PROPERTIES FOLDER ccxx/tools)

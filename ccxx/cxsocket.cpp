@@ -341,7 +341,7 @@ unsigned CxSocket::segsize(socket_t so, unsigned size)
         break;
     }
 #ifdef  IP_MTU
-    getsockopt(so, IPPROTO_IP, IP_MTU, &size, &alen);
+    getsockopt(so, IPPROTO_IP, IP_MTU, (char*)(&size), &alen);
 #else
     size = 0;
 #endif

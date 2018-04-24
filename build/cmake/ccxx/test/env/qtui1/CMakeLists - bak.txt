@@ -38,11 +38,11 @@ add_executable(test_qt1
 target_link_libraries(test_qt1 ${QT_LIBRARIES})
 
 #add_dependencies(test_qt1
-#        libccxx
+#        ccxx
 #        )
 #
 #target_link_libraries(test_qt1
-#        libccxx
+#        ccxx
 #        )
 
 set_target_properties(test_qt1 PROPERTIES FOLDER ccxx/test)
