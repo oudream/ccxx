@@ -26,10 +26,23 @@ add_dependencies(cxpython
 target_link_libraries(cxpython
         ccxx
         )
-
-target_link_libraries(cxpython
-        ${PYTHON_LIBRARIES}
-        )
+if (WIN32)
+    if (MSVC)
+        target_link_libraries(cxpython
+                ${PYTHON_LIBRARIES}
+                )
+    else()
+#        target_link_libraries( IcsRt2Stack debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/libgcl_sdk.dll)
+#        target_link_libraries( IcsRt2Stack optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libgcl_sdk.dll)
+        target_link_libraries(cxpython
+                C:/Python/Python36-32/libs/libpython36.a
+                )
+    endif()
+else()
+    target_link_libraries(cxpython
+            ${PYTHON_LIBRARIES}
+            )
+endif ()
 
 message("PYTHON_LIBRARIES: "  ${PYTHON_LIBRARIES})
 
