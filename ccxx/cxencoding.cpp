@@ -1,10 +1,10 @@
 #include "cxencoding.h"
 
 
-//define CodeTableGB2312ToUnicode
-//define CodeTableGB2312UnicodeCross
-//define void fn_gb2312ToUtf8(char * sGB2312, char * sUtf8, int & iOutUftLength);
-//define void fn_utf8ToGb2312(char * sUtf8, char * sGb2312, int & iOutGb2312Length);
+// define CodeTableGB2312ToUnicode
+// define CodeTableGB2312UnicodeCross
+// define void fn_gb2312ToUtf8(char * sGB2312, char * sUtf8, int & iOutUftLength);
+// define void fn_utf8ToGb2312(char * sUtf8, char * sGb2312, int & iOutGb2312Length);
 
 
 
@@ -70,11 +70,11 @@ typedef struct _unicode_gb2312_pair_t
 
 
 
-//**********************************************************************************************
-//***
-//***   CodeTableGB2312ToUnicode
-//***
-//**********************************************************************************************
+// **********************************************************************************************
+// ***
+// ***   CodeTableGB2312ToUnicode
+// ***
+// **********************************************************************************************
 
 static unsigned short CodeTableGB2312ToUnicode[81][94] = {
 
@@ -173,7 +173,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x2193,
         0x3013},
 
-//2
+// 2
     {0x2170,
         0x2171,
         0x2172,
@@ -269,7 +269,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE770,
         0xE771},
 
-//3
+// 3
     {0xFF01,
         0xFF02,
         0xFF03,
@@ -365,7 +365,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xFF5D,
         0xFFE3},
 
-//4
+// 4
     {0x3041,
         0x3042,
         0x3043,
@@ -461,7 +461,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE77B,
         0xE77C},
 
-//5
+// 5
     {0x30A1,
         0x30A2,
         0x30A3,
@@ -557,7 +557,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE783,
         0xE784},
 
-//6
+// 6
     {0x0391,
         0x0392,
         0x0393,
@@ -653,7 +653,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE79E,
         0xE79F},
 
-//7
+// 7
     {0x0410,
         0x0411,
         0x0412,
@@ -749,7 +749,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE7BA,
         0xE7BB},
 
-//8
+// 8
     {0x0101,
         0x00E1,
         0x01CE,
@@ -845,7 +845,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE7E0,
         0xE7E1},
 
-//9
+// 9
     {0xE7FE,
         0xE7FF,
         0xE800,
@@ -941,7 +941,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE80E,
         0xE80F},
 
-//16
+// 16
     {0x554A,
         0x963F,
         0x57C3,
@@ -1037,7 +1037,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x8912,
         0x5265},
 
-//17
+// 17
     {0x8584,
         0x96F9,
         0x4FDD,
@@ -1133,7 +1133,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x997C,
         0x70B3},
 
-//18
+// 18
     {0x75C5,
         0x5E76,
         0x73BB,
@@ -1229,7 +1229,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x660C,
         0x7316},
 
-//19
+// 19
     {0x573A,
         0x5C1D,
         0x5E38,
@@ -1325,7 +1325,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x9664,
         0x695A},
 
-//20
+// 20
     {0x7840,
         0x50A8,
         0x77D7,
@@ -1421,7 +1421,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5F85,
         0x902E},
 
-//21
+// 21
     {0x6020,
         0x803D,
         0x62C5,
@@ -1517,7 +1517,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x8C0D,
         0x53E0},
 
-//22
+// 22
     {0x4E01,
         0x76EF,
         0x53EE,
@@ -1613,7 +1613,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6D31,
         0x4E8C},
 
-//23
+// 23
     {0x8D30,
         0x53D1,
         0x7F5A,
@@ -1709,7 +1709,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x4FD8,
         0x670D},
 
-//24
+// 24
     {0x6D6E,
         0x6DAA,
         0x798F,
@@ -1805,7 +1805,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5E9A,
         0x7FB9},
 
-//25
+// 25
     {0x57C2,
         0x803F,
         0x6897,
@@ -1901,7 +1901,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x8FC7,
         0x54C8},
 
-//26
+// 26
     {0x9AB8,
         0x5B69,
         0x6D77,
@@ -1997,7 +1997,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7CCA,
         0x6E56},
 
-//27
+// 27
     {0x5F27,
         0x864E,
         0x552C,
@@ -2093,7 +2093,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x79EF,
         0x7B95},
 
-//28
+// 28
     {0x808C,
         0x9965,
         0x8FF9,
@@ -2189,7 +2189,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7BAD,
         0x4EF6},
 
-//29
+// 29
     {0x5065,
         0x8230,
         0x5251,
@@ -2285,7 +2285,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x70EC,
         0x6D78},
 
-//30
+// 30
     {0x5C3D,
         0x52B2,
         0x8346,
@@ -2381,7 +2381,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x541B,
         0x5CFB},
 
-//31
+// 31
     {0x4FCA,
         0x7AE3,
         0x6D5A,
@@ -2477,7 +2477,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x9B41,
         0x5080},
 
-//32
+// 32
     {0x9988,
         0x6127,
         0x6E83,
@@ -2573,7 +2573,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x4F8B,
         0x4FD0},
 
-//33
+// 33
     {0x75E2,
         0x7ACB,
         0x7C92,
@@ -2669,7 +2669,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7B3C,
         0x7ABF},
 
-//34
+// 34
     {0x9686,
         0x5784,
         0x62E2,
@@ -2765,7 +2765,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6162,
         0x6F2B},
 
-//35
+// 35
     {0x8C29,
         0x8292,
         0x832B,
@@ -2861,7 +2861,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x8C2C,
         0x6478},
 
-//36
+// 36
     {0x6479,
         0x8611,
         0x6A21,
@@ -2957,7 +2957,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x51DD,
         0x5B81},
 
-//37
+// 37
     {0x62E7,
         0x6CDE,
         0x725B,
@@ -3053,7 +3053,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7435,
         0x6BD7},
 
-//38
+// 38
     {0x5564,
         0x813E,
         0x75B2,
@@ -3149,7 +3149,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x8BAB,
         0x6390},
 
-//39
+// 39
     {0x6070,
         0x6D3D,
         0x7275,
@@ -3245,7 +3245,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x9A71,
         0x6E20},
 
-//40
+// 40
     {0x53D6,
         0x5A36,
         0x9F8B,
@@ -3341,7 +3341,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x4E09,
         0x53C1},
 
-//41
+// 41
     {0x4F1E,
         0x6563,
         0x6851,
@@ -3437,7 +3437,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5347,
         0x7EF3},
 
-//42
+// 42
     {0x7701,
         0x76DB,
         0x5269,
@@ -3533,7 +3533,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6570,
         0x6F31},
 
-//43
+// 43
     {0x6055,
         0x5237,
         0x800D,
@@ -3629,7 +3629,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5979,
         0x5854},
 
-//44
+// 44
     {0x736D,
         0x631E,
         0x8E4B,
@@ -3725,7 +3725,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x542C,
         0x70C3},
 
-//45
+// 45
     {0x6C40,
         0x5EF7,
         0x505C,
@@ -3821,7 +3821,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5984,
         0x5A01},
 
-//46
+// 46
     {0x5DCD,
         0x5FAE,
         0x5371,
@@ -3917,7 +3917,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x9521,
         0x727A},
 
-//47
+// 47
     {0x7A00,
         0x606F,
         0x5E0C,
@@ -4013,7 +4013,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6DC6,
         0x6653},
 
-//48
+// 48
     {0x5C0F,
         0x5B5D,
         0x6821,
@@ -4109,7 +4109,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x65CB,
         0x7384},
 
-//49
+// 49
     {0x9009,
         0x7663,
         0x7729,
@@ -4205,7 +4205,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5996,
         0x7476},
 
-//50
+// 50
     {0x6447,
         0x5C27,
         0x9065,
@@ -4301,7 +4301,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5F15,
         0x9690},
 
-//51
+// 51
     {0x5370,
         0x82F1,
         0x6A31,
@@ -4397,7 +4397,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x80B2,
         0x8A89},
 
-//52
+// 52
     {0x6D74,
         0x5BD3,
         0x88D5,
@@ -4493,7 +4493,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x672D,
         0x8F67},
 
-//53
+// 53
     {0x94E1,
         0x95F8,
         0x7728,
@@ -4589,7 +4589,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6B63,
         0x653F},
 
-//54
+// 54
     {0x5E27,
         0x75C7,
         0x90D1,
@@ -4685,7 +4685,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x94F8,
         0x7B51},
 
-//55
+// 55
     {0x4F4F,
         0x6CE8,
         0x795D,
@@ -4781,7 +4781,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0xE813,
         0xE814},
 
-//56
+// 56
     {0x4E8D,
         0x4E0C,
         0x5140,
@@ -4877,7 +4877,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x4F5A,
         0x4F5D},
 
-//57
+// 57
     {0x4F5F,
         0x4F57,
         0x4F32,
@@ -4973,7 +4973,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x51BD,
         0x51BC},
 
-//58
+// 58
     {0x51C7,
         0x5196,
         0x51A2,
@@ -5069,7 +5069,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x90B6,
         0x90BA},
 
-//59
+// 59
     {0x90B8,
         0x90B0,
         0x90CF,
@@ -5165,7 +5165,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x57E4,
         0x57DD},
 
-//60
+// 60
     {0x580B,
         0x580D,
         0x57FD,
@@ -5261,7 +5261,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x8366,
         0x8365},
 
-//61
+// 61
     {0x8368,
         0x831B,
         0x8369,
@@ -5357,7 +5357,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x851F,
         0x853A},
 
-//62
+// 62
     {0x8556,
         0x853B,
         0x84FF,
@@ -5453,7 +5453,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x646D,
         0x6496},
 
-//63
+// 63
     {0x647A,
         0x64B7,
         0x64B8,
@@ -5549,7 +5549,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5550,
         0x553C},
 
-//64
+// 64
     {0x5537,
         0x5556,
         0x5575,
@@ -5645,7 +5645,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5E3B,
         0x5E3C},
 
-//65
+// 65
     {0x5E37,
         0x5E44,
         0x5E54,
@@ -5741,7 +5741,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7303,
         0x72FA},
 
-//66
+// 66
     {0x72FB,
         0x7317,
         0x7313,
@@ -5837,7 +5837,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x607A,
         0x6042},
 
-//67
+// 67
     {0x606A,
         0x607D,
         0x6096,
@@ -5933,7 +5933,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6CEF,
         0x6CFE},
 
-//68
+// 68
     {0x6D39,
         0x6D27,
         0x6D0C,
@@ -6029,7 +6029,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6F7A,
         0x6FD1},
 
-//69
+// 69
     {0x6FC9,
         0x6FA7,
         0x6FB9,
@@ -6125,7 +6125,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x59AA,
         0x59A3},
 
-//70
+// 70
     {0x5997,
         0x59CA,
         0x59AB,
@@ -6221,7 +6221,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7EA8,
         0x7EA9},
 
-//71
+// 71
     {0x7EAD,
         0x7EB0,
         0x7EBE,
@@ -6317,7 +6317,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x742E,
         0x742C},
 
-//72
+// 72
     {0x741B,
         0x741A,
         0x7441,
@@ -6413,7 +6413,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6920,
         0x68F9},
 
-//73
+// 73
     {0x6924,
         0x68F0,
         0x690B,
@@ -6509,7 +6509,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x8F87,
         0x8F8B},
 
-//74
+// 74
     {0x8F8D,
         0x8F8E,
         0x8F8F,
@@ -6605,7 +6605,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x6332,
         0x63B0},
 
-//75
+// 75
     {0x643F,
         0x64D8,
         0x8004,
@@ -6701,7 +6701,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x81CA,
         0x81BB},
 
-//76
+// 76
     {0x81C1,
         0x81A6,
         0x6B24,
@@ -6797,7 +6797,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x5FD1,
         0x5FD0},
 
-//77
+// 77
     {0x603C,
         0x605D,
         0x605A,
@@ -6893,7 +6893,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x775A,
         0x7768},
 
-//78
+// 78
     {0x7762,
         0x7765,
         0x777F,
@@ -6989,7 +6989,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x94E8,
         0x94EA},
 
-//79
+// 79
     {0x94E9,
         0x94EB,
         0x94EE,
@@ -7085,7 +7085,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7A1E,
         0x7A14},
 
-//80
+// 80
     {0x7A39,
         0x7A37,
         0x7A51,
@@ -7181,7 +7181,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7615,
         0x7619},
 
-//81
+// 81
     {0x761B,
         0x763C,
         0x7622,
@@ -7277,7 +7277,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x9880,
         0x9883},
 
-//82
+// 82
     {0x9889,
         0x988C,
         0x988D,
@@ -7373,7 +7373,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x87A8,
         0x87D2},
 
-//83
+// 83
     {0x87C6,
         0x8788,
         0x8785,
@@ -7469,7 +7469,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x7C16,
         0x7C0B},
 
-//84
+// 84
     {0x7C1F,
         0x7C2A,
         0x7C26,
@@ -7565,7 +7565,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x914F,
         0x9164},
 
-//85
+// 85
     {0x9162,
         0x9161,
         0x9170,
@@ -7661,7 +7661,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x89DA,
         0x89DC},
 
-//86
+// 86
     {0x89E5,
         0x89EB,
         0x89EF,
@@ -7757,7 +7757,7 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
         0x9CCA,
         0x9CCB},
 
-//87
+// 87
     {0x9CCC,
         0x9CCD,
         0x9CCE,
@@ -7865,11 +7865,11 @@ static unsigned short CodeTableGB2312ToUnicode[81][94] = {
 
 
 
-//**********************************************************************************************
-//***
-//***   CodeTableGB2312UnicodeCross
-//***
-//**********************************************************************************************
+// **********************************************************************************************
+// ***
+// ***   CodeTableGB2312UnicodeCross
+// ***
+// **********************************************************************************************
 
 
 
@@ -15511,34 +15511,34 @@ fn_gb2312ToUtf8(const char* sGb2312, char* sUtf8, int& iOutUftLength)
     iOutUftLength = 0;
     while ('\0' != *pSrcGB2312)
     {
-        if (*pSrcGB2312 >= 0xA0) //is zh : gb2312 to unicode, unioce to utf8
+        if (*pSrcGB2312 >= 0xA0) // is zh : gb2312 to unicode, unioce to utf8
         {
-            //GB2312 to unicode
-            highByte = *(pSrcGB2312) - 0xA0 - 1; //
+            // GB2312 to unicode
+            highByte = *(pSrcGB2312) - 0xA0 - 1; // 
             if (highByte > 0x09)
                 highByte = highByte - 6;
-            lowByte = *(pSrcGB2312 + 1) - 0xA0 - 1;//
+            lowByte = *(pSrcGB2312 + 1) - 0xA0 - 1;// 
             x = (int) highByte;
             y = (int) lowByte;
-            unicodeWord = CodeTableGB2312ToUnicode[x][y];//get unicode code
+            unicodeWord = CodeTableGB2312ToUnicode[x][y];// get unicode code
 
-            //unicode to GB2312
+            // unicode to GB2312
             highByte = (0xff00 & unicodeWord) >> 8;
             lowByte = (0x00ff & unicodeWord);
 
-            //get uft8 code
+            // get uft8 code
             uft8Word[0] = 0xE0 | ((0xF0 & highByte) >> 4);
             uft8Word[1] = 0x80 | (((0x0F & highByte) << 2) | ((0xC0 & lowByte) >> 6));
             uft8Word[2] = 0x80 | (0x3F & lowByte);
 
             memcpy(pDesUTF8, uft8Word, sizeof(uft8Word));
 
-            //++ p
+            // ++ p
             pSrcGB2312 += 2;
             pDesUTF8 += 3;
             iOutUftLength += 3;
         }
-        else             //no zh : copy
+        else             // no zh : copy
         {
             memcpy(pDesUTF8, pSrcGB2312, 1 * sizeof(char));
 
@@ -15583,14 +15583,14 @@ fn_utf8ToGb2312(const char* sUtf8, char* sGb2312, int& iOutGb2312Length)
                 break;
 
             case 3:
-                //UTF8->Unicode
+                // UTF8->Unicode
                 temp[j + 1] = ((utf8[i] & 0x0F) << 4) | ((utf8[i + 1] >> 2) & 0x0F);
                 temp[j] = ((utf8[i + 1] & 0x03) << 6) + (utf8[i + 2] & 0x3F);
 
-                //get Unicode value
+                // get Unicode value
                 memcpy(&unicodeKey, (temp + j), 2);
 
-                //find table on GB2312's value
+                // find table on GB2312's value
                 gbKey = searchCodeTable(unicodeKey);
 
                 if (gbKey != 0)
@@ -15686,9 +15686,9 @@ searchCodeTable(unsigned short unicodeKey)
 
 
 
-//----------------------------------------------------------------------------------------------------
-//*base64---------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+// *base64---------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
 
 
 
@@ -15869,7 +15869,7 @@ CxEncoding::base64Encode(const unsigned char* str, int length)
 
     std::string::size_type iRsize = (((length + 2) / 3) * 4) * (sizeof(char)) + (1);
     r.resize(iRsize);
-    //resize fail
+    // resize fail
     if (r.size() < iRsize)
         return std::string();
 
@@ -15920,7 +15920,7 @@ CxEncoding::base64Decode(const unsigned char* str, int length)
 
     std::string::size_type iRsize = length + 1;
     r.resize(iRsize);
-    //resize fail
+    // resize fail
     if (r.size() < iRsize)
         return std::string();
     result = (char*) r.data();
@@ -16015,16 +16015,16 @@ CxEncoding::isUtf8(const void* pBuffer, long size)
     unsigned char* end = (unsigned char*) pBuffer + size;
     while (start < end)
     {
-        if (*start < 0x80) //(10000000): <0x80 is ASCII
+        if (*start < 0x80) // (10000000): <0x80 is ASCII
         {
             start++;
         }
-        else if (*start < (0xC0)) //(11000000): 0x80 <  and < 0xC0 invalid UTF-8's char
+        else if (*start < (0xC0)) // (11000000): 0x80 <  and < 0xC0 invalid UTF-8's char
         {
             IsUTF8 = false;
             break;
         }
-        else if (*start < (0xE0)) //(11100000): is 2bytes UTF-8
+        else if (*start < (0xE0)) // (11100000): is 2bytes UTF-8
         {
             if (start >= end - 1)
             {
@@ -16039,7 +16039,7 @@ CxEncoding::isUtf8(const void* pBuffer, long size)
 
             start += 2;
         }
-        else if (*start < (0xF0)) //(11110000): is 3bytes UTF-8
+        else if (*start < (0xF0)) // (11110000): is 3bytes UTF-8
         {
             if (start >= end - 2)
             {
@@ -16064,10 +16064,10 @@ CxEncoding::isUtf8(const void* pBuffer, long size)
     return IsUTF8;
 }
 
-//Based on utf8_check.c by Markus Kuhn, 2005
-//https://www.cl.cam.ac.uk/~mgk25/ucs/utf8_check.c
-//Optimized for predominantly 7-bit content by Alex Hultman, 2016
-//Licensed as Zlib, like the rest of this project
+// Based on utf8_check.c by Markus Kuhn, 2005
+// https:// www.cl.cam.ac.uk/~mgk25/ucs/utf8_check.c
+// Optimized for predominantly 7-bit content by Alex Hultman, 2016
+// Licensed as Zlib, like the rest of this project
 bool
 CxEncoding::isValidUtf8(unsigned char* s, size_t length)
 {
