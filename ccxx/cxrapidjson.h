@@ -1,5 +1,5 @@
-#ifndef CXJSON_H
-#define CXJSON_H
+#ifndef CXRAPIDJSON_H
+#define CXRAPIDJSON_H
 
 
 #include "cxglobal.h"
@@ -16,7 +16,7 @@
 #include "rapidjson/filewritestream.h"
 
 
-class GM_CCXX_CORE_API CxJson
+class GM_CCXX_CORE_API CxRapidJson
 {
 public:
     /**
@@ -146,4 +146,4 @@ private:
 
 };
 
-#endif // CXJSON_H
+#endif // CXRAPIDJSON_H

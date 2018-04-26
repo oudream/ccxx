@@ -23,7 +23,7 @@ set(gsl_ccxx_pure_heads
         cxcontext.h
 #        cxdescribe.h
         cxprofile.h
-#        cxxml.h
+#        cxtinyxml.h
 #        cxefile.h
 #        cxsharememory.h
 #        cxsocket.h
@@ -44,7 +44,7 @@ set(gsl_ccxx_pure_heads
 #        cxbusiness.h
 #        cxencoding.h
 #        cxresource.h
-#        cxjson.h
+#        cxrapidjson.h
 #        cxuuid.h
 #        cxprocmutex.h
 #        cxwinreg.h
@@ -72,7 +72,7 @@ set(gsl_ccxx_pure_sources
 #        tinyxml/tinyxml.cpp
 #        tinyxml/tinyxmlerror.cpp
 #        tinyxml/tinyxmlparser.cpp
-#        cxxml.cpp
+#        cxtinyxml.cpp
 #        cxefile.cpp
 #        cxsharememory.cpp
 #        cxsocket.cpp
@@ -95,7 +95,7 @@ set(gsl_ccxx_pure_sources
         cxprofile_factorymanager.cpp
 #        cxdescribe_factorymanager.cpp
 #        cxresource.cpp
-#        cxjson.cpp
+#        cxrapidjson.cpp
 #        cxuuid.cpp
 #        cxprocmutex.cpp
 #        cxwinreg.cpp

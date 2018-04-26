@@ -1,4 +1,4 @@
-#include "cxjson.h"
+#include "cxrapidjson.h"
 
 #include "cxstring.h"
 #include "cxfile.h"
@@ -7,7 +7,7 @@ using namespace std;
 using namespace rapidjson;
 
 
-rapidjson::Document CxJson::load(const std::string &sFilePath, size_t iMaxSize)
+rapidjson::Document CxRapidJson::load(const std::string &sFilePath, size_t iMaxSize)
 {
     Document doc; //
     FILE *pFile = fopen(sFilePath.c_str(), "rb"); // no Windows use "r"
@@ -42,7 +42,7 @@ rapidjson::Document CxJson::load(const std::string &sFilePath, size_t iMaxSize)
     return doc;
 }
 
-bool CxJson::load(const std::string &sFilePath, rapidjson::Document &doc, size_t iMaxSize)
+bool CxRapidJson::load(const std::string &sFilePath, rapidjson::Document &doc, size_t iMaxSize)
 {
     FILE *pFile = fopen(sFilePath.c_str(), "rb"); // no Windows use "r"
     if (pFile == NULL)
@@ -76,12 +76,12 @@ bool CxJson::load(const std::string &sFilePath, rapidjson::Document &doc, size_t
     return ! doc.HasParseError();
 }
 
-bool CxJson::save(const std::string &sFilePath, rapidjson::Document &doc)
+bool CxRapidJson::save(const std::string &sFilePath, rapidjson::Document &doc)
 {
     return save(sFilePath, doc, 1024 * 1024);
 }
 
-bool CxJson::save(const std::string &sFilePath, rapidjson::Document &doc, size_t iBufferSize)
+bool CxRapidJson::save(const std::string &sFilePath, rapidjson::Document &doc, size_t iBufferSize)
 {
     FILE *pFile;
     pFile = fopen(sFilePath.data(), "wb");  // no Windows use "r"
@@ -101,7 +101,7 @@ bool CxJson::save(const std::string &sFilePath, rapidjson::Document &doc, size_t
     return r;
 }
 
-rapidjson::Value *CxJson::findMember(rapidjson::Value &d, const char *sMember)
+rapidjson::Value *CxRapidJson::findMember(rapidjson::Value &d, const char *sMember)
 {
     if (d.IsObject())
     {
@@ -115,7 +115,7 @@ rapidjson::Value *CxJson::findMember(rapidjson::Value &d, const char *sMember)
     return NULL;
 }
 
-const rapidjson::Value *CxJson::findMember(const rapidjson::Value &d, const char *sMember)
+const rapidjson::Value *CxRapidJson::findMember(const rapidjson::Value &d, const char *sMember)
 {
     if (d.IsObject())
     {
@@ -129,7 +129,7 @@ const rapidjson::Value *CxJson::findMember(const rapidjson::Value &d, const char
     return NULL;
 }
 
-string CxJson::findMemberToString(const rapidjson::Value &d, const char *sMember, bool *bFind)
+string CxRapidJson::findMemberToString(const rapidjson::Value &d, const char *sMember, bool *bFind)
 {
     if (d.IsObject())
     {
@@ -148,7 +148,7 @@ string CxJson::findMemberToString(const rapidjson::Value &d, const char *sMember
     return string();
 }
 
-bool CxJson::findMemberToBoolean(const rapidjson::Value &d, const char *sMember, bool *bFind)
+bool CxRapidJson::findMemberToBoolean(const rapidjson::Value &d, const char *sMember, bool *bFind)
 {
     if (d.IsObject())
     {
@@ -167,7 +167,7 @@ bool CxJson::findMemberToBoolean(const rapidjson::Value &d, const char *sMember,
     return false;
 }
 
-int CxJson::findMemberToInt(const rapidjson::Value &d, const char *sMember, bool *bFind)
+int CxRapidJson::findMemberToInt(const rapidjson::Value &d, const char *sMember, bool *bFind)
 {
     if (d.IsObject())
     {
@@ -186,7 +186,7 @@ int CxJson::findMemberToInt(const rapidjson::Value &d, const char *sMember, bool
     return -1;
 }
 
-int64 CxJson::findMemberToInt64(const rapidjson::Value &d, const char *sMember, bool *bFind)
+int64 CxRapidJson::findMemberToInt64(const rapidjson::Value &d, const char *sMember, bool *bFind)
 {
     if (d.IsObject())
     {
@@ -205,7 +205,7 @@ int64 CxJson::findMemberToInt64(const rapidjson::Value &d, const char *sMember, 
     return -1;
 }
 
-double CxJson::findMemberToDouble(const rapidjson::Value &d, const char *sMember, bool *bFind)
+double CxRapidJson::findMemberToDouble(const rapidjson::Value &d, const char *sMember, bool *bFind)
 {
     if (d.IsObject())
     {
@@ -224,7 +224,7 @@ double CxJson::findMemberToDouble(const rapidjson::Value &d, const char *sMember
     return 0;
 }
 
-string CxJson::valueToString(const Value &v)
+string CxRapidJson::valueToString(const Value &v)
 {
     if (v.IsString())
     {
@@ -252,7 +252,7 @@ string CxJson::valueToString(const Value &v)
 }
 
 int
-CxJson::loadTable(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
+CxRapidJson::loadTable(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
 {
     string sFileData = CxString::trim(CxFile::load(sFilePath));
     if (sFileData.empty()) return 0;
@@ -266,7 +266,7 @@ CxJson::loadTable(const string &sFilePath, std::vector<std::map<string, string> 
 }
 
 int
-CxJson::loadTable(const rapidjson::Document &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
+CxRapidJson::loadTable(const rapidjson::Document &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
 {
     if (doc.HasParseError()) return -1;
 
@@ -318,7 +318,7 @@ CxJson::loadTable(const rapidjson::Document &doc, std::vector<std::map<string, s
 }
 
 int
-CxJson::loadTable(const string &sFilePath, std::map<string, std::map<string, string> > &rows, const string &sDataBaseName)
+CxRapidJson::loadTable(const string &sFilePath, std::map<string, std::map<string, string> > &rows, const string &sDataBaseName)
 {
     string sFileData = CxString::trim(CxFile::load(sFilePath));
     if (sFileData.empty()) return 0;
@@ -332,7 +332,7 @@ CxJson::loadTable(const string &sFilePath, std::map<string, std::map<string, str
 }
 
 int
-CxJson::saveTable(const string &sFilePath, const std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
+CxRapidJson::saveTable(const string &sFilePath, const std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
 {
     FILE *pFile;
     pFile = fopen(sFilePath.data(), "wb");
@@ -379,7 +379,7 @@ CxJson::saveTable(const string &sFilePath, const std::vector<std::map<string, st
 }
 
 int
-CxJson::loadTable(const Document &doc, std::map<string, std::map<string, string> > &rows, const string &sDataBaseName)
+CxRapidJson::loadTable(const Document &doc, std::map<string, std::map<string, string> > &rows, const string &sDataBaseName)
 {
     if (doc.HasParseError()) return -1;
 
@@ -427,7 +427,7 @@ CxJson::loadTable(const Document &doc, std::map<string, std::map<string, string>
 }
 
 int
-CxJson::loadTable(const std::string &sFilePath, std::map<std::string, std::vector<std::map<std::string, std::string> > > &tables, const string &sDataBaseName)
+CxRapidJson::loadTable(const std::string &sFilePath, std::map<std::string, std::vector<std::map<std::string, std::string> > > &tables, const string &sDataBaseName)
 {
     string sFileData = CxString::trim(CxFile::load(sFilePath));
     if (sFileData.empty()) return 0;
@@ -441,7 +441,7 @@ CxJson::loadTable(const std::string &sFilePath, std::map<std::string, std::vecto
 }
 
 int
-CxJson::loadTable(const rapidjson::Document &doc, std::map<std::string, std::vector<std::map<std::string, std::string> > > &tables, const string &sDataBaseName)
+CxRapidJson::loadTable(const rapidjson::Document &doc, std::map<std::string, std::vector<std::map<std::string, std::string> > > &tables, const string &sDataBaseName)
 {
     if (doc.HasParseError()) return -1;
 
@@ -491,7 +491,7 @@ CxJson::loadTable(const rapidjson::Document &doc, std::map<std::string, std::vec
 }
 
 int
-CxJson::saveTable(const string &sFilePath, const std::map<string, std::map<string, string> > &rows, const string &sDataBaseName, int iFormat)
+CxRapidJson::saveTable(const string &sFilePath, const std::map<string, std::map<string, string> > &rows, const string &sDataBaseName, int iFormat)
 {
     FILE *pFile;
     pFile = fopen(sFilePath.data(), "wb");
@@ -558,7 +558,7 @@ CxJson::saveTable(const string &sFilePath, const std::map<string, std::map<strin
 }
 
 int
-CxJson::saveTable(const std::string &sFilePath, std::map<std::string, std::vector<std::map<std::string, std::string> > > &tables, const string &sDataBaseName, int iFormat)
+CxRapidJson::saveTable(const std::string &sFilePath, std::map<std::string, std::vector<std::map<std::string, std::string> > > &tables, const string &sDataBaseName, int iFormat)
 {
     FILE *pFile;
     pFile = fopen(sFilePath.data(), "wb");
@@ -629,7 +629,7 @@ CxJson::saveTable(const std::string &sFilePath, std::map<std::string, std::vecto
     return iWroteTotal;
 }
 
-std::string CxJson::formatJson(const std::string &sSource, size_t *pLevel, int iFormat)
+std::string CxRapidJson::formatJson(const std::string &sSource, size_t *pLevel, int iFormat)
 {
     if (sSource.size() <= 0) return sSource;
     string r = sSource;

@@ -2,7 +2,7 @@
 #define CXEFILE_H
 
 
-#include "cxxml.h"
+#include "cxtinyxml.h"
 #include "cxstring.h"
 #include "cxcontainer.h"
 #include "cxfile.h"

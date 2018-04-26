@@ -1,11 +1,11 @@
-#ifndef CXXML_H
-#define CXXML_H
+#ifndef CXTINYXML_H
+#define CXTINYXML_H
 
 #include "cxglobal.h"
 
 #include "tinyxml/tinyxml.h"
 
-class GM_CCXX_CORE_API CxXml
+class GM_CCXX_CORE_API CxTinyXml
 {
 public:
     inline static std::string attribute(const TiXmlElement * element, const std::string & sName) {
@@ -46,7 +46,7 @@ public:
     </Prop>
 </CONFIG>
 */
-//<!-- CxXml::loadTable(sFilePath, "YGCT", "CONFIG", rows); -->
+//<!-- CxTinyXml::loadTable(sFilePath, "YGCT", "CONFIG", rows); -->
     static void loadTable1LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<std::string, std::string> > & rows, const std::string & sTableName = std::string());
 
     static void loadTable1Level(const std::string & sFilePath, std::vector<std::map<std::string, std::string> > & rows, const std::string & sTableName = std::string());
@@ -70,7 +70,7 @@ public:
     </CONFIG>
 </YGCT>
 */
-//<!-- CxXml::loadTable(sFilePath, "YGCT", "CONFIG", rows); -->
+//<!-- CxTinyXml::loadTable(sFilePath, "YGCT", "CONFIG", rows); -->
     static void loadTable2LevelByDocument(const TiXmlDocument & doc, std::vector<std::map<std::string, std::string> > & rows, const std::string & sDataBaseName = std::string(), const std::string & sTableName = std::string());
 
     static void loadTable2Level(const std::string & sFilePath, std::vector<std::map<std::string, std::string> > & rows, const std::string & sDataBaseName = std::string(), const std::string & sTableName = std::string());
@@ -95,7 +95,7 @@ public:
     </CONFIG>
 </YGCT>
 */
-//<!-- CxXml::loadTable(sFilePath, "YGCT", "CONFIG", "cmd", rows); -->
+//<!-- CxTinyXml::loadTable(sFilePath, "YGCT", "CONFIG", "cmd", rows); -->
     static void loadTable3LevelByDocument(const TiXmlDocument & doc, std::vector<std::map<std::string, std::string> > & rows, const std::string & sDataBaseName, const std::string & sTableName, const std::string & sLevel1Key);
 
     static void loadTable3Level(const std::string & sFilePath, std::vector<std::map<std::string, std::string> > & rows, const std::string & sDataBaseName = std::string(), const std::string & sTableName = std::string(), const std::string & sLevel1Key = std::string());
@@ -121,7 +121,7 @@ public:
     </CONFIG>
 </YGCT>
 */
-//<!-- CxXml::loadTable(sFilePath, "YGCT", "CONFIG", "cmd", "measure", rows); -->
+//<!-- CxTinyXml::loadTable(sFilePath, "YGCT", "CONFIG", "cmd", "measure", rows); -->
     static void loadTable4LevelByDocument(const TiXmlDocument & doc, std::vector<std::map<std::string, std::string> > & rows, const std::string & sDataBaseName = std::string(), const std::string & sTableName = std::string(), const std::string & sLevel1Key = std::string(), const std::string & sLevel2Key = std::string());
 
     static void loadTable4Level(const std::string & sFilePath, std::vector<std::map<std::string, std::string> > & rows, const std::string & sDataBaseName = std::string(), const std::string & sTableName = std::string(), const std::string & sLevel1Key = std::string(), const std::string & sLevel2Key = std::string());
@@ -151,4 +151,4 @@ public:
 
 };
 
-#endif // CXXML_H
+#endif // CXTINYXML_H

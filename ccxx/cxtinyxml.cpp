@@ -1,11 +1,11 @@
-#include "cxxml.h"
+#include "cxtinyxml.h"
 
 #include "cxstring.h"
 
 using namespace std;
 
 
-void CxXml::loadTable1LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sTableName)
+void CxTinyXml::loadTable1LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sTableName)
 {
     const TiXmlElement * oElementLevel1 = doc.FirstChildElement();
     while (oElementLevel1)
@@ -32,7 +32,7 @@ void CxXml::loadTable1LevelByDocument(const TiXmlDocument &doc, std::vector<std:
     }
 }
 
-void CxXml::loadTable1Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sTableName)
+void CxTinyXml::loadTable1Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sTableName)
 {
     TiXmlDocument doc;
     if(doc.LoadFile(sFilePath))
@@ -41,7 +41,7 @@ void CxXml::loadTable1Level(const string &sFilePath, std::vector<std::map<string
     }
 }
 
-void CxXml::loadTable1Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sTableName)
+void CxTinyXml::loadTable1Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sTableName)
 {
     if (pData && iLength > 5)
     {
@@ -57,7 +57,7 @@ void CxXml::loadTable1Level(const char *pData, int iLength, std::vector<std::map
     }
 }
 
-void CxXml::loadTable2LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
+void CxTinyXml::loadTable2LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
 {
     const TiXmlElement * oElementLevel1 = doc.FirstChildElement();
     while (oElementLevel1)
@@ -96,7 +96,7 @@ void CxXml::loadTable2LevelByDocument(const TiXmlDocument &doc, std::vector<std:
     }
 }
 
-void CxXml::loadTable2Level(const std::string &sFilePath, std::vector<std::map<string, string> > &rows, const std::string &sDataBaseName, const std::string &sTableName)
+void CxTinyXml::loadTable2Level(const std::string &sFilePath, std::vector<std::map<string, string> > &rows, const std::string &sDataBaseName, const std::string &sTableName)
 {
     TiXmlDocument doc;
     if(doc.LoadFile(sFilePath))
@@ -105,7 +105,7 @@ void CxXml::loadTable2Level(const std::string &sFilePath, std::vector<std::map<s
     }
 }
 
-void CxXml::loadTable2Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
+void CxTinyXml::loadTable2Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
 {
     if (pData && iLength > 5)
     {
@@ -115,7 +115,7 @@ void CxXml::loadTable2Level(const char *pData, int iLength, std::vector<std::map
     }
 }
 
-void CxXml::loadTable3LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key)
+void CxTinyXml::loadTable3LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key)
 {
     const TiXmlElement * oElementLevel1 = doc.FirstChildElement();
     while (oElementLevel1)
@@ -163,7 +163,7 @@ void CxXml::loadTable3LevelByDocument(const TiXmlDocument &doc, std::vector<std:
     }
 }
 
-void CxXml::loadTable3Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key)
+void CxTinyXml::loadTable3Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key)
 {
     TiXmlDocument doc;
     if(doc.LoadFile(sFilePath))
@@ -172,7 +172,7 @@ void CxXml::loadTable3Level(const string &sFilePath, std::vector<std::map<string
     }
 }
 
-void CxXml::loadTable3Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key)
+void CxTinyXml::loadTable3Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key)
 {
     if (pData && iLength > 5)
     {
@@ -182,7 +182,7 @@ void CxXml::loadTable3Level(const char *pData, int iLength, std::vector<std::map
     }
 }
 
-void CxXml::loadTable4LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key)
+void CxTinyXml::loadTable4LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key)
 {
     const TiXmlElement * oElementLevel1 = doc.FirstChildElement();
     while (oElementLevel1)
@@ -238,7 +238,7 @@ void CxXml::loadTable4LevelByDocument(const TiXmlDocument &doc, std::vector<std:
     }
 }
 
-void CxXml::loadTable4Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key)
+void CxTinyXml::loadTable4Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key)
 {
     TiXmlDocument doc;
     if(doc.LoadFile(sFilePath))
@@ -247,7 +247,7 @@ void CxXml::loadTable4Level(const string &sFilePath, std::vector<std::map<string
     }
 }
 
-void CxXml::loadTable4Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key)
+void CxTinyXml::loadTable4Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key)
 {
     if (pData && iLength > 5)
     {
@@ -257,7 +257,7 @@ void CxXml::loadTable4Level(const char *pData, int iLength, std::vector<std::map
     }
 }
 
-void CxXml::loadTable5LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key, const string &sLevel3Key)
+void CxTinyXml::loadTable5LevelByDocument(const TiXmlDocument &doc, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key, const string &sLevel3Key)
 {
     const TiXmlElement * oElementLevel1 = doc.FirstChildElement();
     while (oElementLevel1)
@@ -321,7 +321,7 @@ void CxXml::loadTable5LevelByDocument(const TiXmlDocument &doc, std::vector<std:
     }
 }
 
-void CxXml::loadTable5Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key, const string &sLevel3Key)
+void CxTinyXml::loadTable5Level(const string &sFilePath, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key, const string &sLevel3Key)
 {
     TiXmlDocument doc;
     if(doc.LoadFile(sFilePath))
@@ -330,7 +330,7 @@ void CxXml::loadTable5Level(const string &sFilePath, std::vector<std::map<string
     }
 }
 
-void CxXml::loadTable5Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key, const string &sLevel3Key)
+void CxTinyXml::loadTable5Level(const char *pData, int iLength, std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName, const string &sLevel1Key, const string &sLevel2Key, const string &sLevel3Key)
 {
     if (pData && iLength > 5)
     {
@@ -341,7 +341,7 @@ void CxXml::loadTable5Level(const char *pData, int iLength, std::vector<std::map
 }
 
 //key=value node.name=text
-void CxXml::loadRowByElement(const TiXmlElement *oElementLevel, std::map<std::string, std::string> & row)
+void CxTinyXml::loadRowByElement(const TiXmlElement *oElementLevel, std::map<std::string, std::string> & row)
 {
     if (oElementLevel)
     {
@@ -357,7 +357,7 @@ void CxXml::loadRowByElement(const TiXmlElement *oElementLevel, std::map<std::st
     }
 }
 
-void CxXml::loadRowByAttribute(const TiXmlElement *oElementLevel, std::map<string, string> &row)
+void CxTinyXml::loadRowByAttribute(const TiXmlElement *oElementLevel, std::map<string, string> &row)
 {
     if (oElementLevel)
     {
@@ -372,7 +372,7 @@ void CxXml::loadRowByAttribute(const TiXmlElement *oElementLevel, std::map<strin
     }
 }
 
-bool CxXml::saveTable4Level(const string &sFilePath, const std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
+bool CxTinyXml::saveTable4Level(const string &sFilePath, const std::vector<std::map<string, string> > &rows, const string &sDataBaseName, const string &sTableName)
 {
     string sLevel1Name = sDataBaseName;
     if (sLevel1Name.empty())
@@ -409,7 +409,7 @@ bool CxXml::saveTable4Level(const string &sFilePath, const std::vector<std::map<
     return iWroteTotal;
 }
 
-string CxXml::toXmlBuffer1(const std::vector<string> &sFields, const std::vector<std::vector<string> > &sRows, const string &sLevel1Name, const string &sLevel2Name, const string &sLevel3Name)
+string CxTinyXml::toXmlBuffer1(const std::vector<string> &sFields, const std::vector<std::vector<string> > &sRows, const string &sLevel1Name, const string &sLevel2Name, const string &sLevel3Name)
 {
     vector<string> sLines;
     string sLine = CxString::format("<?xml version=\"1.0\" encoding=\"utf-8\" ?><%s><%s>", sLevel1Name.c_str(), sLevel2Name.c_str());
@@ -434,7 +434,7 @@ string CxXml::toXmlBuffer1(const std::vector<string> &sFields, const std::vector
     return CxString::join(sLines, 0);
 }
 
-string CxXml::toXmlBuffer2(const std::vector<string> &sFields, const std::vector<std::vector<string> > &sRows, const string &sLevel1Name, const string &sLevel2Name, const string &sLevel3Name)
+string CxTinyXml::toXmlBuffer2(const std::vector<string> &sFields, const std::vector<std::vector<string> > &sRows, const string &sLevel1Name, const string &sLevel2Name, const string &sLevel3Name)
 {
     vector<string> sLines;
     string sLine = CxString::format("<?xml version=\"1.0\" encoding=\"utf-8\" ?><%s><%s>", sLevel1Name.c_str(), sLevel2Name.c_str());

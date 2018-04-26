@@ -43,7 +43,7 @@ HEADERS += \
     $$PWD/cxcontext.h \
     $$PWD/cxdescribe.h \
     $$PWD/cxprofile.h \
-    $$PWD/cxxml.h \
+    $$PWD/cxtinyxml.h \
     $$PWD/cxefile.h \
     $$PWD/cxsharememory.h \
     $$PWD/cxsocket.h \
@@ -67,7 +67,7 @@ HEADERS += \
     $$PWD/cxbusiness.h \
     $$PWD/cxencoding.h \
     $$PWD/cxresource.h \
-    $$PWD/cxjson.h \
+    $$PWD/cxrapidjson.h \
     $$PWD/cxuuid.h \
     $$PWD/cxprocmutex.h \
     $$PWD/cxwinreg.h \
@@ -94,7 +94,7 @@ SOURCES += \
     $$PWD/tinyxml/tinyxml.cpp \
     $$PWD/tinyxml/tinyxmlerror.cpp \
     $$PWD/tinyxml/tinyxmlparser.cpp \
-    $$PWD/cxxml.cpp \
+    $$PWD/cxtinyxml.cpp \
     $$PWD/cxefile.cpp \
     $$PWD/cxsharememory.cpp \
     $$PWD/cxsocket.cpp \
@@ -118,7 +118,7 @@ SOURCES += \
     $$PWD/cxprofile_factorymanager.cpp \
     $$PWD/cxdescribe_factorymanager.cpp \
     $$PWD/cxresource.cpp \
-    $$PWD/cxjson.cpp \
+    $$PWD/cxrapidjson.cpp \
     $$PWD/cxuuid.cpp \
     $$PWD/cxprocmutex.cpp \
     $$PWD/cxwinreg.cpp \

@@ -1,7 +1,7 @@
 #include "cxprofile_skv_xml.h"
 
 
-#include "cxxml.h"
+#include "cxtinyxml.h"
 
 
 using namespace std;
@@ -47,7 +47,7 @@ bool CxSkverXml::loadImpl(std::map<string, std::map<string, string> > &sectionEn
         map<string, string> sDataParams = CxString::splitToMap(skvParam(), '=', ',');
         string sTableName = CxContainer::value(sDataParams, string("TableName"));
         std::vector<std::map<string, string> > rows;
-        CxXml::loadTable4Level(sFilePath, rows, "", sTableName);
+        CxTinyXml::loadTable4Level(sFilePath, rows, "", sTableName);
         for (size_t i = 0; i < rows.size(); ++i)
         {
             sectionEntryValues[CxString::toString(i)] = rows.at(i);
@@ -67,7 +67,7 @@ bool CxSkverXml::saveImpl(const std::map<string, std::map<string, string> > &sec
     {
         map<string, string> sDataParams = CxString::splitToMap(skvParam(), '=', ',');
         string sTableName = CxContainer::value(sDataParams, string("TableName"));
-        return CxXml::saveTable4Level(sFilePath, CxString::sortToLines(sectionEntryValues), "", sTableName);
+        return CxTinyXml::saveTable4Level(sFilePath, CxString::sortToLines(sectionEntryValues), "", sTableName);
     }
     return false;
 }

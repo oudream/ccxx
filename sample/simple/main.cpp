@@ -1,7 +1,7 @@
 
 #include <ccxx/cxappenv.h>
 #include <ccxx/cxinterinfo.h>
-#include <ccxx/cxxml.h>
+#include <ccxx/cxtinyxml.h>
 #include <ccxx/cxsocket.h>
 
 using namespace std;

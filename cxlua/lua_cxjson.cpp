@@ -1,4 +1,4 @@
-#include "lua_cxjson.h"
+#include "lua_cxrapidjson.h"
 
 using namespace std;
 

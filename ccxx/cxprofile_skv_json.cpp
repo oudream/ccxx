@@ -1,7 +1,7 @@
 #include "cxprofile_skv_json.h"
 
 
-#include "cxjson.h"
+#include "cxrapidjson.h"
 
 
 using namespace std;
@@ -29,11 +29,11 @@ CxSkverJson::~CxSkverJson()
 
 bool CxSkverJson::loadImpl(std::map<string, std::map<string, string> > &sectionEntryValues, const string &sFilePath)
 {
-    CxJson::loadTable(sFilePath, sectionEntryValues);
+    CxRapidJson::loadTable(sFilePath, sectionEntryValues);
     return sectionEntryValues.size()>0;
 }
 
 bool CxSkverJson::saveImpl(const std::map<string, std::map<string, string> > &sectionEntryValues, const string &sFilePath, bool bRenew) const
 {
-    return CxJson::saveTable(sFilePath, sectionEntryValues, "", 1) > 0;
+    return CxRapidJson::saveTable(sFilePath, sectionEntryValues, "", 1) > 0;
 }

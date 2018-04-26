@@ -1,4 +1,4 @@
-#include <ccxx/cxjson.h>
+#include <ccxx/cxrapidjson.h>
 
 using namespace std;
 using namespace rapidjson;
@@ -6,7 +6,7 @@ using namespace rapidjson;
 int f_argc = 0;
 char * * f_argv = NULL;
 
-int testCxJsonDataType11(int argc, char * argv[])
+int testCxRapidJsonDataType11(int argc, char * argv[])
 {
     f_argc = argc;
     f_argv = argv;
@@ -60,12 +60,12 @@ int testCxJsonDataType11(int argc, char * argv[])
     return 0;
 }
 
-int testCxJsonPointer11()
+int testCxRapidJsonPointer11()
 {
     Document d;
 
     //*加载文件
-    if (! CxJson::load("f:/000.json", d) )
+    if (! CxRapidJson::load("f:/000.json", d) )
     {
         cout << "load json fail." << endl;
         return 0;
@@ -138,7 +138,7 @@ int testCxJsonPointer11()
 
 
     //*保存文件
-    if (! CxJson::save("f:/100.json", d) )
+    if (! CxRapidJson::save("f:/100.json", d) )
     {
         cout << "load json fail." << endl;
     }

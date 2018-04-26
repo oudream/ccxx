@@ -6,7 +6,7 @@ HEADERS += \
         $$PWD/cxfile.h                       \
         $$PWD/cxappenv.h                     \
         $$PWD/cxprofile.h                    \
-        $$PWD/cxjson.h                       \
+        $$PWD/cxrapidjson.h                       \
         $$PWD/cxprofile_skv_json.h           \
         $$PWD/cxthread.h                     \
         $$PWD/cxinterinfo.h                  \
@@ -16,7 +16,7 @@ HEADERS += \
         $$PWD/cxmath.h                       \
         $$PWD/cxbuffer.h                     \
         $$PWD/cxcrc.h                        \
-        $$PWD/cxxml.h                        \
+        $$PWD/cxtinyxml.h                        \
         $$PWD/cxprofile_skv_xml.h            \
         $$PWD/cxsocket.h                     \
         $$PWD/cxprocess.h                    \
@@ -34,7 +34,7 @@ SOURCES += \
         $$PWD/cxfile.cpp                     \
         $$PWD/cxappenv.cpp                   \
         $$PWD/cxprofile.cpp                  \
-        $$PWD/cxjson.cpp                     \
+        $$PWD/cxrapidjson.cpp                     \
         $$PWD/cxprofile_skv_json.cpp         \
         $$PWD/cxprofile_factorymanager.cpp   \
         $$PWD/cxthread.cpp                   \
@@ -44,7 +44,7 @@ SOURCES += \
         $$PWD/cxmath.cpp                     \
         $$PWD/cxbuffer.cpp                   \
         $$PWD/cxcrc.cpp                      \
-        $$PWD/cxxml.cpp                      \
+        $$PWD/cxtinyxml.cpp                      \
         $$PWD/tinyxml/tinyxml.cpp            \
         $$PWD/tinyxml/tinyxmlerror.cpp       \
         $$PWD/tinyxml/tinyxmlparser.cpp      \

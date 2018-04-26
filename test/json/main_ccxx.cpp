@@ -1,12 +1,12 @@
 
-#include <ccxx/cxjson.h>
+#include <ccxx/cxrapidjson.h>
 
-#include "cxjson_test.hpp"
+#include "cxrapidjson_test.hpp"
 
 int main(int argc, char * argv[])
 {
-//    testCxJsonDataType11(argc, argv);
-    testCxJsonPointer11();
+//    testCxRapidJsonDataType11(argc, argv);
+    testCxRapidJsonPointer11();
 
     return 0;
 }

@@ -6,7 +6,7 @@
 
 /*
  *
- * 中文帮助： http://rapidjson.org/zh-cn/ ，简单的加载与保存请看 CxJson::load 与 CxJson::save
+ * 中文帮助： http://rapidjson.org/zh-cn/ ，简单的加载与保存请看 CxRapidJson::load 与 CxRapidJson::save
  ***注意1：
  ***注意1：
  ***注意1：

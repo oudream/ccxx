@@ -6,7 +6,7 @@ HEADERS += \
         $$PWD/cxfile.h                       \
         $$PWD/cxappenv.h                     \
         $$PWD/cxprofile.h                    \
-        $$PWD/cxjson.h                       \
+        $$PWD/cxrapidjson.h                       \
         $$PWD/cxprofile_skv_json.h           \
         $$PWD/cxthread.h                     \
         $$PWD/cxinterinfo.h                  \
@@ -20,7 +20,7 @@ SOURCES += \
         $$PWD/cxfile.cpp                     \
         $$PWD/cxappenv.cpp                   \
         $$PWD/cxprofile.cpp                  \
-        $$PWD/cxjson.cpp                     \
+        $$PWD/cxrapidjson.cpp                     \
         $$PWD/cxprofile_skv_json.cpp         \
         $$PWD/cxprofile_factorymanager.cpp   \
         $$PWD/cxthread.cpp                     \
