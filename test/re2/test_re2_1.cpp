@@ -78,14 +78,6 @@ public:
 };
 }  // namespace testing
 
-namespace re2 {
-int64 VirtualProcessSize();
-} // namespace re2
-
-
-
-
-
 
 
 
@@ -106,7 +98,7 @@ void RegisterTest(void (*fn)(void), const char *name) {
 }
 
 namespace re2 {
-int64 VirtualProcessSize() {
+long long VirtualProcessSize() {
 #ifdef WIN32
     return 0;
 #else
