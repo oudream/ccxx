@@ -1,7 +1,7 @@
 
 ###has ccxx
 set(fslSourceCcxxs
-        json/main_ccxx.cpp
+        rapidjson/main_ccxx.cpp
         )
 
 mc_merge_file_path(${gs_ccxx_test_path} "${fslSourceCcxxs}" fslSourceCcxxPaths)
@@ -23,7 +23,7 @@ set_target_properties(cxtest_json PROPERTIES FOLDER ccxx/test)
 
 ###no ccxx
 set(fslSources
-        json/main.cpp
+        rapidjson/main.cpp
         )
 
 mc_merge_file_path(${gs_ccxx_test_path} "${fslSources}" fslSourcePaths)

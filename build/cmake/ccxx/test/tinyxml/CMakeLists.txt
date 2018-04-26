@@ -1,7 +1,7 @@
 
 ###has ccxx
 set(fslSourceCcxxs
-        xml/main.cpp
+        tinyxml/main.cpp
         )
 
 mc_merge_file_path(${gs_ccxx_test_path} "${fslSourceCcxxs}" fslSourceCcxxPaths)
