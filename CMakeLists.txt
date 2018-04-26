@@ -45,8 +45,8 @@ include(./gtest/googletest/googletest/cmake/internal_utils.cmake)
 
 config_compiler_and_linker()  # Defined in internal_utils.cmake.
 
+add_subdirectory(./3rd)
+
 add_subdirectory(./gtest)
 
 add_subdirectory(./build/cmake)
-
-add_subdirectory(./3rd)
