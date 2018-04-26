@@ -32,7 +32,7 @@ int main(int argc, const char*argv[])
             row[CxString::toString(j)] = CxString::toString(i << 8 | j);
         }
     }
-    CxXml::saveTable4Level(sFilePath, rows);
+    CxTinyXml::saveTable4Level(sFilePath, rows);
 
 	while (1) {
 		string s1 = ginput();
