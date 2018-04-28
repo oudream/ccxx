@@ -104,7 +104,7 @@ long long VirtualProcessSize() {
 #else
     struct rusage ru;
     getrusage(RUSAGE_SELF, &ru);
-    return (int64)ru.ru_maxrss*1024;
+    return (long long)ru.ru_maxrss*1024;
 #endif
 }
 }  // namespace re2
@@ -117,21 +117,11 @@ int main(int argc, char **argv)
     cout << "begin test xxx : " << endl;
 
 
-
-
-
-
-
-
     for (int i = 0; i < ntests; i++) {
         printf("%s\n", tests[i].name);
         tests[i].fn();
     }
     printf("PASS\n");
-
-
-
-
 
 
     std::string sLine;

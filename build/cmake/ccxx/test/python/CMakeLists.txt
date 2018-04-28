@@ -22,22 +22,11 @@ add_library(noddy SHARED
         ${gsl_noddy_files_filepaths}
         )
 
-if (WIN32)
-#    target_link_libraries(noddy wsock32 ws2_32 psapi ${PYTHON_LIBRARIES})
-    if (MSVC)
-        target_link_libraries(noddy
-                ${PYTHON_LIBRARIES}
-                )
-    else()
-        #        target_link_libraries( IcsRt2Stack debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/libgcl_sdk.dll)
-        #        target_link_libraries( IcsRt2Stack optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libgcl_sdk.dll)
-        target_link_libraries(noddy
-                C:/Python/Python36-32/libs/libpython36.a
-                )
-    endif()
-else()
-    target_link_libraries(noddy dl rt uuid ${PYTHON_LIBRARIES})
-endif ()
+target_link_libraries(noddy
+        ${PYTHON_LIBRARIES}
+        )
+
+mc_target_link_libraries(noddy)
 
 set_target_properties(noddy PROPERTIES FOLDER ccxx/test)
 
@@ -57,22 +46,12 @@ add_library(shoddy SHARED
         ${gsl_shoddy_files_filepaths}
         )
 
-if (WIN32)
-    #    target_link_libraries(shoddy wsock32 ws2_32 psapi ${PYTHON_LIBRARIES})
-    if (MSVC)
-        target_link_libraries(shoddy
-                ${PYTHON_LIBRARIES}
-                )
-    else()
-        #        target_link_libraries( IcsRt2Stack debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/libgcl_sdk.dll)
-        #        target_link_libraries( IcsRt2Stack optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libgcl_sdk.dll)
-        target_link_libraries(shoddy
-                C:/Python/Python36-32/libs/libpython36.a
-                )
-    endif()
-else()
-    target_link_libraries(shoddy dl rt uuid ${PYTHON_LIBRARIES})
-endif ()
+target_link_libraries(shoddy
+        ${PYTHON_LIBRARIES}
+        )
+
+mc_target_link_libraries(shoddy)
+
 
 set_target_properties(shoddy PROPERTIES FOLDER ccxx/test)
 

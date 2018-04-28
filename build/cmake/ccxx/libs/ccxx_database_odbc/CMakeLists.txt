@@ -20,6 +20,13 @@ if (WIN32)
             odbc32
             Ole32
             )
+elseif(APPLE)
+    add_definitions(-D"OTL_ODBC_UNIX")
+    INCLUDE_DIRECTORIES(/usr/local/include)
+    LINK_DIRECTORIES(/usr/local/lib)
+    target_link_libraries(ccxx_database_odbc
+            /usr/local/lib/libodbc.dylib
+            )
 else()
     add_definitions(-D"OTL_ODBC_UNIX")
     target_link_libraries(ccxx_database_odbc

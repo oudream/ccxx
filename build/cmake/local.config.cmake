@@ -1,4 +1,15 @@
 
+### mac
+### brew install unixodbc
+
+### Ubuntu: -D"OTL_ODBC_UNIX" -lodbc
+### sudo apt-get install unixodbc unixodbc-dev
+### sudo apt-get install uuid-dev
+
+### CentOS: -D"OTL_ODBC_UNIX" -lodbc
+### sudo yum install unixODBC-devel
+
+
 ###setting cmake option:
 ##-DQT_QMAKE_EXECUTABLE:FILEPATH=F:/qt5.5.1mingw4.9/5.5/mingw492_32/bin/qmake.exe
 ##-DCMAKE_PREFIX_PATH:FILEPATH=F:/qt5.5.1mingw4.9/5.5/mingw492_32

@@ -5,9 +5,11 @@
 #cmake . -G "Visual Studio 15 2017 Win64" --build "C:\ddd\ccpp\ccxx" -B"C:\ddd\ccpp\ccxx\build\cmake-vs2017-win64"
 #cmake . --build "C:\ddd\ccpp\ccxx\build\cmake" -B"C:\ddd\ccpp\ccxx\build\cmake-vs-local"
 #cd /d "C:\ddd\ccpp\ccxx\build\cmake-vs-local"
+
+#cmake . -G "Xcode" --build "/ddd/ccpp/ccxx" -B"/ddd/ccpp/ccxx/build/cmake-xcode"
+
 #cmake --build .
-#-DQT_QMAKE_EXECUTABLE:FILEPATH=F:/qt5.5.1mingw4.9/5.5/mingw492_32/bin/qmake.exe
-#-DCMAKE_PREFIX_PATH:FILEPATH=F:/qt5.5.1mingw4.9/5.5/mingw492_32
+
 
 cmake_minimum_required(VERSION 3.0)
 

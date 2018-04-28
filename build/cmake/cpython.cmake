@@ -8,4 +8,8 @@ else()
     include_directories(${PYTHON_INCLUDE_DIRS})
 endif ()
 
-
+if (WIN32 AND NOT MSVC AND gs_prefix_path_python)
+    #        target_link_libraries( IcsRt2Stack debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/libgcl_sdk.dll)
+    #        target_link_libraries( IcsRt2Stack optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libgcl_sdk.dll)
+    set(PYTHON_LIBRARIES ${gs_prefix_path_python}/libs/libpython36.a)
+endif()
