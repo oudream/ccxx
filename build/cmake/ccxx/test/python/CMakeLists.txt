@@ -1,7 +1,5 @@
 
-find_package (PythonInterp REQUIRED)
-find_package (PythonLibs REQUIRED)
-include_directories(${PYTHON_INCLUDE_DIRS})
+include(./../../../cpython.cmake)
 
 ### noddy
 set(gsl_noddy_files

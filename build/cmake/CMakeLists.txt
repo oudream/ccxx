@@ -13,12 +13,6 @@ cmake_minimum_required(VERSION 3.0)
 
 project(CCXX VERSION 1.0.1 LANGUAGES CXX C)
 
-###qt
-###if enable qt, then config "build/ccpro/local.config.cmake" 's CMAKE_PREFIX_PATH to your dir of qt
-set(gs_project_enable_qt 1)
-#set(gs_project_enable_qt 0)
-#set(gs_project_qt_version 4)
-
 ### depend path
 #CMAKE_CURRENT_SOURCE_DIR (current file path)
 if (NOT gs_project_path)
@@ -63,12 +57,8 @@ endif()
 
 message("----------------------------------------------------------------------")
 
-set(CMAKE_CXX_STANDARD 11)
-
-include(common.cmake)
 include(local.config.cmake)
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+include(common.cmake)
 
 include_directories(${gs_project_include_path})
 

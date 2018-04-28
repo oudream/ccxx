@@ -77,8 +77,6 @@ inline void TestVector21 ()
   while (str != "CC");
 }
 
-#include <windows.h>
-
 #include "test_check_sum1.cpp"
 
 int main (int argc, char *agrv[])

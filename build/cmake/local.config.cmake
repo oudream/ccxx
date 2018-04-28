@@ -6,14 +6,15 @@
 # Find the QtWidgets library
 if(APPLE)
     list(APPEND CMAKE_PREFIX_PATH /Users/oudream/Qt5.5.1/5.5/clang_64)
+    set(gs_prefix_path_python /Library/Frameworks/Python.framework/Versions/3.6)
 elseif(UNIX)
     list(APPEND CMAKE_PREFIX_PATH /fff/qt5.6.3/5.6.3/gcc_64)
 elseif(WIN32)
     message("CMAKE_SIZEOF_VOID_P:" ${CMAKE_SIZEOF_VOID_P})
     if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-        list(APPEND CMAKE_PREFIX_PATH C:/Python/Python36-64)
+        set(gs_prefix_path_python C:/Python/Python36-64)
     else()
-        list(APPEND CMAKE_PREFIX_PATH C:/Python/Python36-32)
+        set(gs_prefix_path_python C:/Python/Python36-32)
     endif()
     if(MSVC)
         message(${MSVC_VERSION})
@@ -32,4 +33,30 @@ elseif(WIN32)
     endif()
 endif()
 
+set(CMAKE_CXX_STANDARD 11)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+if(APPLE)
+    # http://kescoode.com/cmake-rpath-problem/
+    # https://stackoverflow.com/questions/31561309/cmake-warnings-under-os-x-macosx-rpath-is-not-specified-for-the-following-targe
+    set(CMAKE_MACOSX_RPATH 0)
+endif()
+
+### qt
+### if enable qt, then config "build/ccpro/local.config.cmake" 's CMAKE_PREFIX_PATH to your dir of qt
+set(gs_project_enable_qt 1)
+# set(gs_project_enable_qt 0)
+# set(gs_project_qt_version 4)
+
+### cpython
+set(gs_project_enable_cpython 1)
+#set(gs_project_enable_cpython 0)
+# set(gs_project_cpython_version 2)
+
+if (gs_project_enable_cpython AND gs_prefix_path_python)
+    list(APPEND CMAKE_PREFIX_PATH ${gs_prefix_path_python})
+endif()
+
 message("CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
+

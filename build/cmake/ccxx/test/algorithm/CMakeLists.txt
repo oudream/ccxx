@@ -13,10 +13,4 @@ add_executable(test_algorithm
 
 set_target_properties(test_algorithm PROPERTIES FOLDER ccxx/test)
 
-if (WIN32)
-    target_link_libraries(test_algorithm wsock32 ws2_32 psapi)
-endif ()
-
-if (UNIX)
-    target_link_libraries(test_algorithm dl rt uuid)
-endif ()
+mc_target_link_libraries(test_algorithm)

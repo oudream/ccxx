@@ -34,7 +34,7 @@ std::string ginput()
 
 int main2(int argc, const char*argv[])
 {
-	//应用初始化
+	//应锟矫筹拷始锟斤拷
 	CxApplication::init(argc, argv);
 
 	cxPrompt() << CxAppEnv::applicationTargetName();
@@ -66,51 +66,15 @@ void fn_test(int, int, const void *, int, void *, void *)
 	cxDebug() << "hello";
 }
 
-BOOL WINAPI ConsoleHandler(DWORD CEvent)
-{
-	char mesg[128];
-
-	switch(CEvent)
-	{
-		case CTRL_C_EVENT:
-			MessageBox(NULL,
-					   "CTRL+C received!","CEvent",MB_OK);
-			break;
-		case CTRL_BREAK_EVENT:
-			MessageBox(NULL,
-					   "CTRL+BREAK received!","CEvent",MB_OK);
-			break;
-		case CTRL_CLOSE_EVENT:
-			MessageBox(NULL,
-					   "Program being closed!","CEvent",MB_OK);
-			break;
-		case CTRL_LOGOFF_EVENT:
-			MessageBox(NULL,
-					   "User is logging off!","CEvent",MB_OK);
-			break;
-		case CTRL_SHUTDOWN_EVENT:
-			MessageBox(NULL,
-					   "User is logging off!","CEvent",MB_OK);
-			break;
-
-	}
-	return TRUE;
-}
+#ifdef GM_OS_WIN
+#include "windows_consolehandler.hpp"
+#endif
 
 void fn_timer_timeout11(int iInterval)
 {
-	return;
-
-	if (SetConsoleCtrlHandler(
-		(PHANDLER_ROUTINE)ConsoleHandler,TRUE)==FALSE)
-	{
-		// unable to install handler...
-		// display message to the user
-		printf("Unable to install handler!\n");
-		return;
-	}
-
-
+#ifdef GM_OS_WIN
+	testConsoleHandler1(iInterval);
+#endif
 
     cout << "fn_timer_timeout11 -- 1 " << endl;
 

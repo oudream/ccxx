@@ -26,10 +26,6 @@
 #include <assert.h>
 #include <errno.h>
 
-// VC++ 6.0
-#include <stdio.h>
-#include <direct.h>
-#include <stdlib.h>
 
 using namespace std;
 

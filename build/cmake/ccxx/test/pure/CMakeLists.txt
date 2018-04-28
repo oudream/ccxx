@@ -127,13 +127,7 @@ add_executable(cxtest_pure
         ${gsl_ccxx_pure_head_filepaths} ${gsl_ccxx_pure_source_filepaths}
         )
 
-if (WIN32)
-    target_link_libraries(cxtest_pure wsock32 ws2_32 psapi ntdll)
-endif ()
-
-if (UNIX)
-    target_link_libraries(cxtest_pure dl rt)
-endif ()
+mc_target_link_libraries(cxtest_pure)
 
 set_target_properties(cxtest_pure PROPERTIES FOLDER ccxx/test)
 

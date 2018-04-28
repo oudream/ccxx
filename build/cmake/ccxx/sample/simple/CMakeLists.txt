@@ -13,13 +13,7 @@ add_executable(ccxx_sample_simple
         ${gsl_ccxx_simple_head_filepaths} ${gsl_ccxx_simple_source_filepaths}
         )
 
-if (WIN32)
-    target_link_libraries(ccxx_sample_simple wsock32 ws2_32 psapi)
-endif ()
-
-if (UNIX)
-    target_link_libraries(ccxx_sample_simple dl rt uuid)
-endif ()
+mc_target_link_libraries(ccxx_sample_simple)
 
 set_target_properties(ccxx_sample_simple PROPERTIES FOLDER ccxx/sample)
 

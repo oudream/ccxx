@@ -15,4 +15,7 @@ add_subdirectory(sample)
 add_subdirectory(test)
 add_subdirectory(tools)
 add_subdirectory(lua)
-add_subdirectory(python)
+
+if (${gs_project_enable_cpython})
+    add_subdirectory(python)
+endif()
