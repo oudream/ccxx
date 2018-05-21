@@ -1901,7 +1901,7 @@ string CxFileSystem::extractFilePrefixName(const string &sFilePath)
             //* /tmp/dir/filename
         else
         {
-            return sFilePath.substr(foundl);
+            return sFilePath.substr(foundl + 1);
         }
     }
     else
