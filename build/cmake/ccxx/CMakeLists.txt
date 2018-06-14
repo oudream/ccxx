@@ -1,8 +1,4 @@
 
-set(gs_ccxx_sample_path ${gs_ccxx_path}/sample)
-set(gs_ccxx_test_path ${gs_ccxx_path}/test)
-set(gs_ccxx_tools_path ${gs_ccxx_path}/tools)
-
 include(ccxx.cmake)
 
 if (MSVC)
