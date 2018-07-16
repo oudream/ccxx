@@ -1639,6 +1639,7 @@ void CxFileSystem::scanDir(const std::string &sPath, vector<PathInfo> &pathInfos
 //            cout<<ent->d_name<<endl;
         }
     }
+    closedir(pDir);
 #endif
 }
 
@@ -1725,6 +1726,7 @@ CxFileSystem::scanDir(const std::string &sPath, CxFileSystem::fn_scan_result_t f
 //            cout<<ent->d_name<<endl;
         }
     }
+    closedir(pDir);
 #endif
 }
 

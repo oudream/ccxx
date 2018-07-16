@@ -37,7 +37,7 @@ int fn_test_procMutex()
     }
 }
 
-void fn_timer_timeout(int iInterval)
+void fn_timer_timeout_procMutex(int iInterval)
 {
     int iWrote = fn_test_procMutex();
 
@@ -46,6 +46,55 @@ void fn_timer_timeout(int iInterval)
 
     int iPing = CxNetwork::ping("10.31.58.5");
     cxPrompt() << "ping : " << iPing;
+}
+
+void fn_timer_timeout_scandir(int iInterval)
+{
+#ifdef GM_OS_WIN
+    string sDir = "f:/tmp";
+#else
+    string sDir = "/fff/tmp";
+#endif
+    cxPrompt() << "scanDir : " << sDir;
+    std::vector<CxFilePathInfo> pathInfos;
+    CxFileSystem::scanDir(sDir, pathInfos, true, true);
+    for (int i = 0; i < pathInfos.size(); ++i)
+    {
+        const CxFilePathInfo &pathInfo = pathInfos.at(i);
+        cxPrompt() << pathInfo.fileName;
+        cxPrompt() << pathInfo.lastWriteTime;
+    }
+}
+
+void fn_timer_timeout_database(int iInterval)
+{
+    CxDatabase * pDb = CxDatabaseManager::getDefaultDb();
+
+    string sSql = "Select * From ha_appconfig;";
+
+    if (pDb == NULL)
+    {
+        return;
+    }
+    int nRst = 0;
+    {
+        cxPrompt() << sSql;
+        vector<std::vector<std::string> > tRows;
+        vector<std::string> tFields;
+        nRst += pDb->loadSql(sSql, tRows, &tFields);
+        cxPrompt() << nRst;
+        cxPrompt() << tFields;
+        for (int i = 0; i < tRows.size(); ++i)
+        {
+            const vector<string> &tRow = tRows.at(i);
+            cxPrompt() << tRow;
+            if (i > 10)
+            {
+                cxPrompt() << "... .end.";
+                break;
+            }
+        }
+    }
 }
 
 int main(int argc, const char*argv[])
@@ -67,7 +116,7 @@ int main(int argc, const char*argv[])
         cxPrompt() << "No DefaultDb!";
     }
 
-    CxTimerManager::startTimer(fn_timer_timeout, 30);
+    CxTimerManager::startTimer(fn_timer_timeout_database, 1000);
 
     int iResult = CxApplication::exec();
 

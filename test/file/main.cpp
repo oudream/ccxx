@@ -62,9 +62,23 @@ void testFileSuffixName()
     cout << CxFileSystem::extractFileName(s4) << endl;
 }
 
+void fn_test_scandir()
+{
+	vector<CxFilePathInfo> pathInfos;
+	CxFileSystem::scanDir("T:\\deploy\\data\\IcsRtDataSpy", pathInfos, true, false);
+	int64 r = 0;
+	for (size_t i = 0; i < pathInfos.size(); ++i)
+	{
+		const CxFilePathInfo &pathInfo = pathInfos.at(i);
+		cxPrompt() << pathInfo.fileName << " : " << pathInfo.creationTime << pathInfo.lastWriteTime;
+	}
+}
+
 void fn_timer_timeout(int iInterval)
 {
-    cxLog() << CxTime::currentSystemTimeString();
+	cxPrompt() << CxTime::currentSystemTimeString();
+
+	//fn_test_scandir();
 }
 
 int main(int argc,const char *argv[])
@@ -77,12 +91,19 @@ int main(int argc,const char *argv[])
     string s4 = "../l";
     string s5 = "..m";
 
-    cout << CxFileSystem::cd(s2, s1) << endl;
-    cout << CxFileSystem::cd(s3, s1) << endl;
-    cout << CxFileSystem::cd(s4, s1) << endl;
-    cout << CxFileSystem::cd(s5, s1) << endl;
+ //   string sMsg = CxFileSystem::cd(s2, s1);
+ //   cout << sMsg << endl;
+ //   sMsg = CxFileSystem::cd(s3, s1);
+ //   cout << sMsg << endl;
+ //   sMsg = CxFileSystem::cd(s4, s1);
+ //   cout << sMsg << endl;
+ //   sMsg = CxFileSystem::cd(s5, s1);
+ //   cout << sMsg << endl;
+// 	  cout << CxFileSystem::cd(s3, s1) << endl;
+//    cout << CxFileSystem::cd(s4, s1) << endl;
+//    cout << CxFileSystem::cd(s5, s1) << endl;
 
-    CxTimerManager::startTimer(fn_timer_timeout, 100);
+    CxTimerManager::startTimer(fn_timer_timeout, 30);
 
     CxApplication::exec();
 

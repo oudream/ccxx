@@ -11,12 +11,12 @@ add_executable(cxtest_re2_1
 
 add_dependencies(cxtest_re2_1
         ccxx
-        uv
+        re2
         )
 
 target_link_libraries(cxtest_re2_1
         ccxx
-        uv
+        re2
         )
 
 set_target_properties(cxtest_re2_1 PROPERTIES FOLDER ccxx/test/re2)

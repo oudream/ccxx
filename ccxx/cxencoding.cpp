@@ -16073,7 +16073,7 @@ CxEncoding::isValidUtf8(unsigned char* s, size_t length)
 {
     for (unsigned char* e = s + length; s != e;)
     {
-        if (s + 4 <= e && ((*(uint32_t*) s) & 0x80808080) == 0)
+        if (s + 4 <= e && ((*(uint32*) s) & 0x80808080) == 0)
         {
             s += 4;
         }

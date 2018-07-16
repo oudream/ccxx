@@ -236,6 +236,43 @@ void test8()
 	cout << "test8 end." << endl;
 }
 
+void fn_timer_timeout(int iInterval)
+{
+	static int iIndex = 0;
+	++ iIndex;
+	msepoch_t dtNow = CxTime::currentMsepoch();
+	CxDatabase * pDb = CxDatabaseManager::getDefaultDb();
+	if (pDb == NULL)
+	{
+		cxPrompt() << "can not open database!";
+		return;
+	}
+
+	string sSql = "select * from ha_appconfig";
+	vector<std::vector<std::string> > tRows;
+	vector<std::string> tFields;
+	int nRst = pDb->loadSql(sSql, tRows, &tFields);
+	if (nRst < 0)
+	{
+		cxPrompt() << "locad sql data empty!";
+		return;
+	}
+
+	int jIndex = iIndex % tRows.size();
+	const vector<std::string> & tRow = tRows.at(jIndex);
+
+	vector<string> row = CxEncoding::utf8ToGb2312(tRow);
+
+	cxPrompt() << "locad sql data row count : " << tRows.size()
+		<< " , print row index: " << jIndex
+		<< " , print line new-old: " << tRow.size() << " - " << row.size();
+	cxPrompt() << row;
+
+	cxPrompt() << CxTime::milliSecondDifferToNow(dtNow);
+	cxPrompt() << " --- --- --- --- ---";
+}
+
+
 int main(int argc,const char * argv[])
 {
     cout << "begin test CxDatabase : ";
@@ -258,7 +295,9 @@ int main(int argc,const char * argv[])
 
 	test8();
 
-    cout << "end test CxDatabase !!!";
+	CxTimerManager::startTimer(fn_timer_timeout, 200);
+
+//    cout << "end test CxDatabase !!!";
 
     return CxApplication::exec();
 }
