@@ -1,23 +1,46 @@
 ###ccxx_odbc
 
-set(fslSources
-        database/main.cpp
+set(fslOdbcSources
+        database/main-odbc1.cpp
         )
 
-mc_merge_file_path(${gs_ccxx_test_path} "${fslSources}" fslSourcePaths)
+mc_merge_file_path(${gs_ccxx_test_path} "${fslOdbcSources}" fslSourcePaths)
 
-add_executable(cxtest_database
+add_executable(cxtest_database_odbc
         ${fslSourcePaths})
 
-add_dependencies(cxtest_database
+add_dependencies(cxtest_database_odbc
         ccxx
         ccxx_database_odbc
-        ccxx_database_sqlite)
+        )
 
-target_link_libraries(cxtest_database
+target_link_libraries(cxtest_database_odbc
         ccxx
         ccxx_database_odbc
+        )
+
+set_target_properties(cxtest_database_odbc PROPERTIES FOLDER ccxx/test)
+
+
+
+
+###ccxx_sqlite
+
+set(fslSqliteSources
+        database/main-sqlite1.cpp
+        )
+
+mc_merge_file_path(${gs_ccxx_test_path} "${fslSqliteSources}" fslSourcePaths)
+
+add_executable(cxtest_database_sqlite
+        ${fslSourcePaths})
+
+add_dependencies(cxtest_database_sqlite
+        ccxx
         ccxx_database_sqlite)
 
-set_target_properties(cxtest_database PROPERTIES FOLDER ccxx/test)
+target_link_libraries(cxtest_database_sqlite
+        ccxx
+        ccxx_database_sqlite)
 
+set_target_properties(cxtest_database_sqlite PROPERTIES FOLDER ccxx/test)

@@ -23,7 +23,8 @@
 
 using namespace std;
 
-vector<string> fn_getDdlStrings()
+vector<string>
+fn_getDdlStrings()
 {
     vector<string> r;
     r.push_back("create");
@@ -38,13 +39,15 @@ static vector<string> f_sDdlStrings = fn_getDdlStrings();
 
 bool g_bHasRegistDatabaseConstructorOdbc = CxDatabaseOdbcFactory::registDatabaseConstructor();
 
-struct OdbcColumnDesc {
+struct OdbcColumnDesc
+{
     std::string columnName;
     int ftype;
     int fsize;
 };
 
-static OdbcColumnDesc fn_getEmptyOdbcColumnDesc()
+static OdbcColumnDesc
+fn_getEmptyOdbcColumnDesc()
 {
     OdbcColumnDesc m;
     m.columnName.clear();
@@ -55,10 +58,34 @@ static OdbcColumnDesc fn_getEmptyOdbcColumnDesc()
 
 static OdbcColumnDesc c_mEmptyOdbcColumnDesc = fn_getEmptyOdbcColumnDesc();
 
-class CxDatabaseOdbc : public CxDatabase {
+class CxDatabaseOdbc : public CxDatabase
+{
 private:
     otl_connect _db;
     string _sqlTableInfo;
+
+public:
+    class CursorOdbc : public CursorBase
+    {
+    public:
+        CursorOdbc(int iPrefetchArraySize=100):
+            CursorBase(CursorTypeOdbc, iPrefetchArraySize),
+            _stream(NULL){}
+        virtual ~CursorOdbc(){
+            if (_stream)
+            {
+                delete _stream;
+                _stream = NULL;
+            }
+        }
+
+    protected:
+        otl_stream * _stream;
+        vector<OdbcColumnDesc> _columnDescs;
+
+        friend class CxDatabaseOdbc;
+
+    };
 
 public:
     CxDatabaseOdbc()
@@ -76,7 +103,10 @@ public:
 
 protected:
     bool
-    openDatabaseImpl(const std::string &sConnectSource, const std::string &sDatabaseType, bool bCreate, const std::map<std::string, std::string> *oParams)
+    openDatabaseImpl(const std::string& sConnectSource,
+                     const std::string& sDatabaseType,
+                     bool bCreate,
+                     const std::map<std::string, std::string>* oParams)
     {
         otl_connect::otl_initialize();                  // initialize ODBC environment
         //    _db.logoff();
@@ -87,7 +117,7 @@ protected:
                 cxDebug() << "OpenDatabase.odbc: rlogon-begin: " << sConnectSource;
                 _db.rlogon(sConnectSource.c_str(), 1);                      // connect to ODBC
             }
-            catch (otl_exception &p)
+            catch (otl_exception& p)
             {                        // intercept OTL exceptions
                 cxDebug() << p.msg << p.stm_text << p.sqlstate << p.var_info;
                 return false;
@@ -106,14 +136,16 @@ protected:
                 sql_select = "select top 1 * from %s;";
             }
             string sHeartJumpSql = CxString::trim(CxContainer::valueTo(*oParams, string("HeartJumpSql"), string()));
-            if (CxString::equalIgnoreAll(sDatabaseType, "access") || CxString::equalIgnoreAll(sDatabaseType, "sqlite") ||
-                (sHeartJumpSql.empty() && CxContainer::contain(*oParams, string("HeartJumpSql"))))
+            if (CxString::equalIgnoreAll(sDatabaseType, "access") || CxString::equalIgnoreAll(sDatabaseType, "sqlite")
+                ||
+                    (sHeartJumpSql.empty() && CxContainer::contain(*oParams, string("HeartJumpSql"))))
             {
                 cxDebug() << "OpenDatabase HeartJumpSql Disabled. ";
             }
             else
             {
-                if (sHeartJumpSql.empty()) sHeartJumpSql = sql_user;
+                if (sHeartJumpSql.empty())
+                    sHeartJumpSql = sql_user;
                 bool bOk = execSqlImpl(sql_user);
                 _sqlTableInfo = bOk ? sql_select : "SELECT TOP 1 * FROM %s;";
                 if (bOk)
@@ -134,7 +166,8 @@ protected:
         return _db.connected;
     }
 
-    void closeDatabaseImpl()
+    void
+    closeDatabaseImpl()
     {
         if (_db.connected)
         {
@@ -142,12 +175,14 @@ protected:
         }
     }
 
-    bool isOpenImpl() const
+    bool
+    isOpenImpl() const
     {
         return _db.connected;
     }
 
-    bool createTableImpl(const std::string &sTableName, const std::map<std::string, std::string> &columns)
+    bool
+    createTableImpl(const std::string& sTableName, const std::map<std::string, std::string>& columns)
     {
         string sSql = CxString::format("CREATE TABLE [%s] (", sTableName.c_str());
         int iCount = 0;
@@ -159,14 +194,15 @@ protected:
         }
         if (iCount > 0)
         {
-            char *pch = (char *) sSql.data();
+            char* pch = (char*) sSql.data();
             pch[sSql.size() - 1] = ')';
             return execSql(sSql);
         }
         return true;
     }
 
-    bool alterPrimaryKeyAddImpl(const std::string &sTableName, const std::vector<std::string> &columns)
+    bool
+    alterPrimaryKeyAddImpl(const std::string& sTableName, const std::vector<std::string>& columns)
     {
         string sSql = CxString::format("ALTER TABLE ADD CONSTRAINT %s PRIMARY KEY (", sTableName.c_str());
         int iCount = 0;
@@ -177,7 +213,7 @@ protected:
         }
         if (iCount > 0)
         {
-            char *pch = (char *) sSql.data();
+            char* pch = (char*) sSql.data();
             pch[sSql.size() - 1] = ')';
             return execSql(sSql);
         }
@@ -185,7 +221,10 @@ protected:
     }
 
     int
-    loadTableImpl(const std::string &sTableName, std::vector<std::vector<std::string> > &rows, std::vector<std::string> *oColumnNames = NULL, int iMaxRowCount = -1)
+    loadTableImpl(const std::string& sTableName,
+                  std::vector<std::vector<std::string> >& rows,
+                  std::vector<std::string>* oColumnNames = NULL,
+                  int iMaxRowCount = -1)
     {
         string sSql = "SELECT ";
         if (oColumnNames && oColumnNames->size() > 0)
@@ -208,7 +247,11 @@ protected:
     }
 
     int
-    saveTableImpl(const std::string &sTableName, const std::vector<std::string> &columnNames, const std::vector<std::vector<std::string> > &rows, const std::vector<int> &columnTypes = std::vector<int>(), bool bTransaction = true)
+    saveTableImpl(const std::string& sTableName,
+                  const std::vector<std::string>& columnNames,
+                  const std::vector<std::vector<std::string> >& rows,
+                  const std::vector<int>& columnTypes = std::vector<int>(),
+                  bool bTransaction = true)
     {
         if (!_db.connected)
         {
@@ -221,29 +264,9 @@ protected:
         std::vector<OdbcColumnDesc> columnDescs;
         getColumnDescs(sTableName, columnDescs);
 
-//        bool bBlod = false;
-//        map<string, string> columnTypeNames;
-//        for (size_t i = 0; i < columnNames.size(); ++i)
-//        {
-//            const string & sColumnName = columnNames.at(i);
-//            int ftype = CxString::findValueCase(ftypes, sColumnName, ci_int_zero);
-//            if (ftype == 0 && columnTypes.size()>=i)
-//                ftype = columnTypes.at(i);
-//            if (ftype == 0)
-//                return -2;
-//            string sTypeName = otl_var_type_name(ftype);
-//            if (sTypeName.empty())
-//                return -3;
-//            columnTypeNames[sColumnName] = sTypeName;
-////            if (ftype == otl_var_blob || ftype == otl_var_clob)
-//        }
-
-//        msepoch_t dt0 = 0, dt1 = 0, dt2 = 0, dt3 = 0, dt4 = 0, dt5 = 0, dt6 = 0, dt7 = 0;
-
         try
         {
 //            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
-
             string sSql = CxString::format("insert into %s ", sTableName.c_str());
             string sColumnes = "(";
             string sValues = "(";
@@ -251,7 +274,7 @@ protected:
             vector<int> columnTypes2;
             for (size_t i = 0; i < columnNames.size(); ++i)
             {
-                const string &sColumnName = columnNames.at(i);
+                const string& sColumnName = columnNames.at(i);
                 OdbcColumnDesc columnDesc = findColumnDesc(columnDescs, sColumnName);
                 if (columnDesc.ftype == 0 && columnTypes.size() >= i)
                     columnDesc.ftype = columnTypes.at(i);
@@ -261,86 +284,69 @@ protected:
 
                 sColumnes += sColumnName + " ,";
                 if (columnDesc.ftype == otl_var_char)
-                    sValues += CxString::format(":%s<%s[%d]> ,", sColumnName.c_str(), otl_var_type_name(columnDesc.ftype), columnDesc.fsize);
+                    sValues += CxString::format(":%s<%s[%d]> ,",
+                                                sColumnName.c_str(),
+                                                otl_var_type_name(columnDesc.ftype),
+                                                columnDesc.fsize);
                 else
                     sValues += CxString::format(":%s<%s> ,", sColumnName.c_str(), otl_var_type_name(columnDesc.ftype));
                 ++iCount;
             }
             if (iCount > 0)
             {
-                char *pch = (char *) sColumnes.data();
+                char* pch = (char*) sColumnes.data();
                 pch[sColumnes.size() - 1] = ')';
-                pch = (char *) sValues.data();
+                pch = (char*) sValues.data();
                 pch[sValues.size() - 1] = ')';
             }
             sSql = sSql + sColumnes + " VALUES " + sValues + " ;";
 
-//            sSql = "insert into t1 (f1 ,f2 ,f3 ,f4 ,f5 ,f6 ,f7 ) VALUES (:f1<SHORT INT> ,:f2<INT> ,:f3<DOUBLE> ,:f4<DOUBLE> ,:f5<CHAR[31]> ,:f6<VARCHAR LONG> ,:f7<RAW LONG> )";
-//            cout<<"CxDatabaseOdbc->saveTableImpl sql : "<<sSql;
-
-            // referto : ex702_odbc.cpp
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
-//                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
                          sSql.c_str(),
-                // SQL statement
                          _db // connect object
             );
-//            o.set_flush(false);
-//            o.get_shell()->io->set_flush_flag(false);
-//            o.get_shell()->io->set_flush_flag2(false);
-//            (* o.io)->set_flush_flag2(false);
-//            o.setBufSize(1024 * 1024 * 2);
-//            o.get_shell()
 
             if (bTransaction)
             {
                 _db.auto_commit_off();
                 o.set_commit(0); // setting stream "auto-commit" to "off". It is required
-//                o.get_shell()->adb->auto_commit_off();
             }
 
             for (size_t i = 0; i < rows.size(); ++i)
             {
-                const vector<string> &row = rows.at(i);
+                const vector<string>& row = rows.at(i);
                 if (row.size() < columnTypes2.size())
                     continue;
 
                 for (size_t j = 0; j < row.size(); ++j)
                 {
-                    const string &sValue = row.at(j);
+                    const string& sValue = row.at(j);
                     int iFtype = columnTypes2.at(j);
                     switch (iFtype)
                     {
-                        case otl_var_short:
-                            o << (short) CxString::toInt32(sValue);
+                        case otl_var_short:o << (short) CxString::toInt32(sValue);
                             break;
                         case otl_var_int:
-                        case otl_var_unsigned_int:
-                            o << CxString::toInt32(sValue);
+                        case otl_var_unsigned_int:o << CxString::toInt32(sValue);
                             break;
                         case otl_var_long_int:
                         case otl_var_bigint:
-                        case otl_var_ubigint:
-                            o << (long int) CxString::toInt64(sValue);
+                        case otl_var_ubigint:o << (long int) CxString::toInt64(sValue);
                             break;
                         case otl_var_float:
-                        case otl_var_bfloat:
-                            o << CxString::toFloat(sValue);
+                        case otl_var_bfloat:o << CxString::toFloat(sValue);
                             break;
                         case otl_var_double:
-                        case otl_var_bdouble:
-                            o << CxString::toDouble(sValue);
+                        case otl_var_bdouble:o << CxString::toDouble(sValue);
                             break;
                         case otl_var_raw:
                         case otl_var_char:
                         case otl_var_varchar_long:
                         case otl_var_raw_long:
                         case otl_var_blob:
-                        case otl_var_clob:
-                            o << sValue;
+                        case otl_var_clob:o << sValue;
                             break;
-                        default:
-                            o << sValue;
+                        default:o << sValue;
                     }
                 }
             }
@@ -351,7 +357,7 @@ protected:
             }
         }
 
-        catch (otl_exception &p)
+        catch (otl_exception& p)
         {                        // intercept OTL exceptions
             if (bTransaction)
             {
@@ -369,14 +375,21 @@ protected:
     }
 
     int
-    saveTableImpl(const std::string &sSql, const std::vector<std::vector<std::string> > &rows, const std::vector<int> *oColumnTypes, bool bTransaction = false)
+    saveTableImpl(const std::string& sSql,
+                  const std::vector<std::vector<std::string> >& rows,
+                  const std::vector<int>* oColumnTypes,
+                  bool bTransaction = false)
     {
         cxWarning() << "CxDatabaseOdbc->saveTableImpl by sql is not impl";
         return -1;
     }
 
     int
-    updateTableImpl(const std::string &sTableName, const std::vector<std::string> &columnNames, const std::vector<std::vector<std::string> > &rows, const std::vector<int> &columnTypes = std::vector<int>(), bool bTransaction = true)
+    updateTableImpl(const std::string& sTableName,
+                    const std::vector<std::string>& columnNames,
+                    const std::vector<std::vector<std::string> >& rows,
+                    const std::vector<int>& columnTypes = std::vector<int>(),
+                    bool bTransaction = true)
     {
         if (!_db.connected)
         {
@@ -396,35 +409,14 @@ protected:
         std::vector<OdbcColumnDesc> columnDescs;
         getColumnDescs(sTableName, columnDescs);
 
-//        bool bBlod = false;
-//        map<string, string> columnTypeNames;
-//        for (size_t i = 0; i < columnNames.size(); ++i)
-//        {
-//            const string & sColumnName = columnNames.at(i);
-//            int ftype = CxString::findValueCase(ftypes, sColumnName, ci_int_zero);
-//            if (ftype == 0 && columnTypes.size()>=i)
-//                ftype = columnTypes.at(i);
-//            if (ftype == 0)
-//                return -2;
-//            string sTypeName = otl_var_type_name(ftype);
-//            if (sTypeName.empty())
-//                return -3;
-//            columnTypeNames[sColumnName] = sTypeName;
-////            if (ftype == otl_var_blob || ftype == otl_var_clob)
-//        }
-
-//        msepoch_t dt0 = 0, dt1 = 0, dt2 = 0, dt3 = 0, dt4 = 0, dt5 = 0, dt6 = 0, dt7 = 0;
-
         try
         {
-//            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
-
             string sSql = CxString::format("UPDATE %s ", sTableName.c_str());
             string sColumnes = "(";
             vector<int> columnTypes2;
             for (size_t i = 0; i < columnNames.size(); ++i)
             {
-                const string &sColumnName = columnNames.at(i);
+                const string& sColumnName = columnNames.at(i);
                 OdbcColumnDesc columnDesc = findColumnDesc(columnDescs, sColumnName);
                 if (columnDesc.ftype == 0 && columnTypes.size() >= i)
                     columnDesc.ftype = columnTypes.at(i);
@@ -434,7 +426,7 @@ protected:
 
                 if (i == columnNames.size() - 1)
                 {
-                    char *pch = (char *) sColumnes.data();
+                    char* pch = (char*) sColumnes.data();
                     pch[sColumnes.size() - 1] = ' ';
                     sColumnes += CxString::format(" WHERE %s = ", sColumnName.c_str());
                 }
@@ -443,79 +435,61 @@ protected:
                     sColumnes += sColumnName + " = ";
                 }
                 if (columnDesc.ftype == otl_var_char)
-                    sColumnes += CxString::format(":%s<%s[%d]> ,", sColumnName.c_str(), otl_var_type_name(columnDesc.ftype), columnDesc.fsize);
+                    sColumnes += CxString::format(":%s<%s[%d]> ,",
+                                                  sColumnName.c_str(),
+                                                  otl_var_type_name(columnDesc.ftype),
+                                                  columnDesc.fsize);
                 else
-                    sColumnes += CxString::format(":%s<%s> ,", sColumnName.c_str(), otl_var_type_name(columnDesc.ftype));
+                    sColumnes +=
+                        CxString::format(":%s<%s> ,", sColumnName.c_str(), otl_var_type_name(columnDesc.ftype));
             }
             sSql = sSql + sColumnes;
 
-//            sSql = "insert into t1 (f1 ,f2 ,f3 ,f4 ,f5 ,f6 ,f7 ) VALUES (:f1<SHORT INT> ,:f2<INT> ,:f3<DOUBLE> ,:f4<DOUBLE> ,:f5<CHAR[31]> ,:f6<VARCHAR LONG> ,:f7<RAW LONG> )";
-//            cout<<"CxDatabaseOdbc->saveTableImpl sql : "<<sSql;
-
-            // referto : ex702_odbc.cpp
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
-//                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
                          sSql.c_str(),
-                // SQL statement
                          _db // connect object
             );
-//            o.set_flush(false);
-//            o.get_shell()->io->set_flush_flag(false);
-//            o.get_shell()->io->set_flush_flag2(false);
-//            (* o.io)->set_flush_flag2(false);
-//            o.setBufSize(1024 * 1024 * 2);
-//            o.get_shell()
-
-            //
             if (bTransaction)
             {
                 _db.auto_commit_off();
                 o.set_commit(0); // setting stream "auto-commit" to "off". It is required
-//                o.get_shell()->adb->auto_commit_off();
             }
 
             for (size_t i = 0; i < rows.size(); ++i)
             {
-                const vector<string> &row = rows.at(i);
+                const vector<string>& row = rows.at(i);
                 if (row.size() < columnTypes2.size())
                     continue;
 
                 for (size_t j = 0; j < row.size(); ++j)
                 {
-                    const string &sValue = row.at(j);
+                    const string& sValue = row.at(j);
                     int iFtype = columnTypes2.at(j);
                     switch (iFtype)
                     {
-                        case otl_var_short:
-                            o << (short) CxString::toInt32(sValue);
+                        case otl_var_short:o << (short) CxString::toInt32(sValue);
                             break;
                         case otl_var_int:
-                        case otl_var_unsigned_int:
-                            o << CxString::toInt32(sValue);
+                        case otl_var_unsigned_int:o << CxString::toInt32(sValue);
                             break;
                         case otl_var_long_int:
                         case otl_var_bigint:
-                        case otl_var_ubigint:
-                            o << (long int) CxString::toInt64(sValue);
+                        case otl_var_ubigint:o << (long int) CxString::toInt64(sValue);
                             break;
                         case otl_var_float:
-                        case otl_var_bfloat:
-                            o << CxString::toFloat(sValue);
+                        case otl_var_bfloat:o << CxString::toFloat(sValue);
                             break;
                         case otl_var_double:
-                        case otl_var_bdouble:
-                            o << CxString::toDouble(sValue);
+                        case otl_var_bdouble:o << CxString::toDouble(sValue);
                             break;
                         case otl_var_raw:
                         case otl_var_char:
                         case otl_var_varchar_long:
                         case otl_var_raw_long:
                         case otl_var_blob:
-                        case otl_var_clob:
-                            o << sValue;
+                        case otl_var_clob:o << sValue;
                             break;
-                        default:
-                            o << sValue;
+                        default:o << sValue;
                     }
                 }
             }
@@ -526,7 +500,7 @@ protected:
             }
         }
 
-        catch (otl_exception &p)
+        catch (otl_exception& p)
         {                        // intercept OTL exceptions
             if (bTransaction)
             {
@@ -543,7 +517,8 @@ protected:
         return rows.size();
     }
 
-    int execSqlImpl(const string &sSql)
+    int
+    execSqlImpl(const string& sSql)
     {
         int iResult = -1;
 
@@ -561,7 +536,6 @@ protected:
                             sSql.c_str(),
                             otl_exception::disabled
                         );
-//                    _db.commit();
                 }
                 else
                 {
@@ -570,7 +544,7 @@ protected:
                     iResult = o.get_rpc(); // rpc : row count
                 }
             }
-            catch (otl_exception &p)
+            catch (otl_exception& p)
             {                        // intercept OTL exceptions
                 cxDebug() << "odbc execSqlImpl exception: " << p.msg << p.stm_text << p.sqlstate << p.var_info
                           << cxEndLine;
@@ -585,7 +559,8 @@ protected:
         return iResult;
     }
 
-    int execSqlListImpl(const std::vector<std::string> &sqlList)
+    int
+    execSqlListImpl(const std::vector<std::string>& sqlList)
     {
         int iResult = FALSE;
 
@@ -597,7 +572,7 @@ protected:
 
                 for (size_t i = 0; i < sqlList.size(); ++i)
                 {
-                    const std::string &sSql = sqlList.at(i);
+                    const std::string& sSql = sqlList.at(i);
 
                     otl_stream o;
                     o.set_commit(0);
@@ -608,30 +583,22 @@ protected:
 
                 iResult = TRUE;
 
-//                if (CxString::existCase(sSql, "delete"))
-//                {
-//                    iResult = otl_cursor::direct_exec(_db,sSql.c_str());
-//                }
-//                else
-//                {
-//                    otl_stream o(1,sSql.c_str(),_db); // buffer size , SQL statement,connect object
-//                    iResult = TRUE;
-//                }
             }
-            catch (otl_exception &p)
+            catch (otl_exception& p)
             {
                 _db.rollback();
                 // intercept OTL exceptions
                 cxDebug() << "odbc execSqlImpl : " << p.msg << p.stm_text << p.sqlstate << p.var_info << cxEndLine;
             }
-
         }
-
         return iResult;
     }
 
     int
-    loadSqlImpl(const std::string &sSql, std::vector<std::vector<std::string> > &rows, std::vector<std::string> *oColumnNames = NULL, int iMaxRowCount = -1)
+    loadSqlImpl(const std::string& sSql,
+                std::vector<std::vector<std::string> >& rows,
+                std::vector<std::string>* oColumnNames = NULL,
+                int iMaxRowCount = -1)
     {
         if (!_db.connected)
         {
@@ -646,15 +613,12 @@ protected:
         try
         {
 //            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
-
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
-//                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
                          sSql.c_str(),
-                // SQL statement
                          _db // connect object
             );
 
-            otl_column_desc *desc;
+            otl_column_desc* desc;
             int desc_len;
 
             desc = o.describe_select(desc_len);
@@ -679,7 +643,7 @@ protected:
                 std::vector<std::string> row;
                 for (size_t i = 0; i < columnDescs.size(); i++)
                 {
-                    OdbcColumnDesc &columnDesc = columnDescs.at(i);
+                    OdbcColumnDesc& columnDesc = columnDescs.at(i);
 
                     switch (columnDesc.ftype)
                     {
@@ -749,7 +713,15 @@ protected:
                             if (o.is_null())
                                 row.push_back(string());
                             else
-                                row.push_back(CxTime::toString(value.year, value.month, value.day, value.hour, value.minute, value.second, '-', ' ', ':'));
+                                row.push_back(CxTime::toString(value.year,
+                                                               value.month,
+                                                               value.day,
+                                                               value.hour,
+                                                               value.minute,
+                                                               value.second,
+                                                               '-',
+                                                               ' ',
+                                                               ':'));
                         }
                             break;
                         case otl_var_char:
@@ -792,19 +764,20 @@ protected:
                     break;
             }
         }
-        catch (otl_exception &p)
+        catch (otl_exception& p)
         {                        // intercept OTL exceptions
             cxDebug() << p.msg << p.stm_text << p.sqlstate << p.var_info;
             return -9;
         }
-
-//        cxLog() << "CxDatabaseOdbc->loadSqlImpl end " << rows.size();
-
         return rows.size();
     }
 
     int
-    loadSql2Impl(const std::string &sSql, std::vector<std::vector<std::string> > &rows, std::vector<std::string> *oColumnNames = NULL, std::vector<int> *oColumnTypes = NULL, int iMaxRowCount = -1)
+    loadSql2Impl(const std::string& sSql,
+                 std::vector<std::vector<std::string> >& rows,
+                 std::vector<std::string>* oColumnNames = NULL,
+                 std::vector<int>* oColumnTypes = NULL,
+                 int iMaxRowCount = -1)
     {
         if (!_db.connected)
         {
@@ -821,13 +794,11 @@ protected:
 //            cxLog() << "CxDatabaseOdbc->saveTableImpl begin : " << connectSource();
 
             otl_stream o(1, // buffer size has to be set to 1 for operations with LONGTEXTs
-                //                   "insert into test_tab values(:f1<int>,:f2<varchar_long>)",
                          sSql.c_str(),
-                // SQL statement
                          _db // connect object
             );
 
-            otl_column_desc *desc;
+            otl_column_desc* desc;
             int desc_len;
 
             desc = o.describe_select(desc_len);
@@ -843,20 +814,21 @@ protected:
                     oColumnNames->push_back(string(desc[i].name));
                 if (oColumnTypes)
                 {
+                    int iColumnType = ColumnTypeNone;
                     switch (desc[i].otl_var_dbtype)
                     {
                         case otl_var_short:
                         case otl_var_int:
                         case otl_var_unsigned_int:
                         {
-                            oColumnTypes->push_back(column_type_int);
+                            iColumnType = ColumnTypeInt;
                         }
                             break;
                         case otl_var_long_int:
                         case otl_var_bigint:
                         case otl_var_ubigint:
                         {
-                            oColumnTypes->push_back(column_type_longint);
+                            iColumnType = ColumnTypeLongint;
                         }
                             break;
                         case otl_var_float:
@@ -864,7 +836,7 @@ protected:
                         case otl_var_double:
                         case otl_var_bdouble:
                         {
-                            oColumnTypes->push_back(column_type_double);
+                            iColumnType = ColumnTypeDouble;
                         }
                             break;
                         case otl_var_timestamp:
@@ -873,13 +845,13 @@ protected:
                         case otl_var_db2time:
                         case otl_var_db2date:
                         {
-                            oColumnTypes->push_back(column_type_datetime);
+                            iColumnType = ColumnTypeDatetime;
                         }
                             break;
                         case otl_var_char:
                         case otl_var_varchar_long:
                         {
-                            oColumnTypes->push_back(column_type_string);
+                            iColumnType = ColumnTypeString;
                         }
                             break;
                         case otl_var_raw:
@@ -887,14 +859,15 @@ protected:
                         case otl_var_blob:
                         case otl_var_clob:
                         {
-                            oColumnTypes->push_back(column_type_blob);
+                            iColumnType = ColumnTypeBlob;
                         }
                             break;
                         default:
                         {
-                            oColumnTypes->push_back(column_type_string);
+                            iColumnType = ColumnTypeString;
                         }
                     }
+                    oColumnTypes->push_back(iColumnType);
                 }
                 columnDesc.columnName = desc[i].name;
                 columnDesc.ftype = desc[i].otl_var_dbtype;
@@ -909,7 +882,7 @@ protected:
                 std::vector<std::string> row;
                 for (size_t i = 0; i < columnDescs.size(); i++)
                 {
-                    OdbcColumnDesc &columnDesc = columnDescs.at(i);
+                    OdbcColumnDesc& columnDesc = columnDescs.at(i);
 
                     switch (columnDesc.ftype)
                     {
@@ -979,7 +952,15 @@ protected:
                             if (o.is_null())
                                 row.push_back(string());
                             else
-                                row.push_back(CxTime::toString(value.year, value.month, value.day, value.hour, value.minute, value.second, '-', ' ', ':'));
+                                row.push_back(CxTime::toString(value.year,
+                                                               value.month,
+                                                               value.day,
+                                                               value.hour,
+                                                               value.minute,
+                                                               value.second,
+                                                               '-',
+                                                               ' ',
+                                                               ':'));
                         }
                             break;
                         case otl_var_char:
@@ -1022,7 +1003,7 @@ protected:
                     break;
             }
         }
-        catch (otl_exception &p)
+        catch (otl_exception& p)
         {                        // intercept OTL exceptions
             cxDebug() << p.msg << p.stm_text << p.sqlstate << p.var_info;
             return -9;
@@ -1033,10 +1014,311 @@ protected:
         return rows.size();
     }
 
-    virtual void * getDbImpl() { return & _db; }
+    void*
+    getDbImpl()
+    {
+        return &_db;
+    }
+
+    CursorBase*
+    cursorLoadImpl(const std::string& sSql, int iPrefetchArraySize)
+    {
+        if (!_db.connected)
+        {
+            string sErrorString = ", error : db is not open sql!";
+            setLastError(-1, sErrorString);
+            cxDebug() << "CxDatabaseOdbc->saveTableImpl connectSource:" << connectSource() << sErrorString;
+            return NULL;
+        }
+
+        CursorOdbc * r = new CursorOdbc(iPrefetchArraySize);
+        otl_stream * oo = new otl_stream();
+        r->_stream = oo;
+        otl_stream & o = * oo;
+        try
+        {
+            o.open(iPrefetchArraySize, // buffer size has to be set to 1 for operations with LONGTEXTs
+                         sSql.c_str(),
+                         _db // connect object
+            );
+
+            otl_column_desc* desc;
+            int desc_len;
+
+            desc = o.describe_select(desc_len);
+
+            OdbcColumnDesc columnDesc;
+            for (int i = 0; i < desc_len; ++i)
+            {
+                string sColumnName = desc[i].name;
+                columnDesc.columnName = sColumnName;
+                columnDesc.ftype = desc[i].otl_var_dbtype;
+                columnDesc.fsize = desc[i].dbsize;
+                r->_columnDescs.push_back(columnDesc);
+                r->_columnNames.push_back(sColumnName);
+                int iColumnType = ColumnTypeNone;
+                switch (desc[i].otl_var_dbtype)
+                {
+                    case otl_var_short:
+                    case otl_var_int:
+                    case otl_var_unsigned_int:
+                    {
+                        iColumnType = ColumnTypeInt;
+                    }
+                        break;
+                    case otl_var_long_int:
+                    case otl_var_bigint:
+                    case otl_var_ubigint:
+                    {
+                        iColumnType = ColumnTypeLongint;
+                    }
+                        break;
+                    case otl_var_float:
+                    case otl_var_bfloat:
+                    case otl_var_double:
+                    case otl_var_bdouble:
+                    {
+                        iColumnType = ColumnTypeDouble;
+                    }
+                        break;
+                    case otl_var_timestamp:
+                    case otl_var_tz_timestamp:
+                    case otl_var_ltz_timestamp:
+                    case otl_var_db2time:
+                    case otl_var_db2date:
+                    {
+                        iColumnType = ColumnTypeDatetime;
+                    }
+                        break;
+                    case otl_var_char:
+                    case otl_var_varchar_long:
+                    {
+                        iColumnType = ColumnTypeString;
+                    }
+                        break;
+                    case otl_var_raw:
+                    case otl_var_raw_long:
+                    case otl_var_blob:
+                    case otl_var_clob:
+                    {
+                        iColumnType = ColumnTypeBlob;
+                    }
+                        break;
+                    default:
+                    {
+                        iColumnType = ColumnTypeString;
+                    }
+                }
+                r->_columnTypes.push_back(iColumnType);
+            }
+        }
+        catch (otl_exception& p)
+        {
+            // intercept OTL exceptions
+            cxDebug() << p.msg << p.stm_text << p.sqlstate << p.var_info;
+            delete oo;
+            delete r;
+            r = NULL;
+        }
+
+        return r;
+    }
+
+    bool
+    cursorIsEndImpl(CursorBase * oCursor)
+    {
+        if (oCursor == NULL) return true;
+        if (oCursor->_cursorType != CursorTypeOdbc)
+        {
+            return true;
+        }
+        CursorOdbc * oCursorOdbc = (CursorOdbc *)oCursor;
+        otl_stream * oo = oCursorOdbc->_stream;
+        otl_stream & o = * oo;
+        return o.eof();
+    }
+
+    int
+    cursorPutImpl(CursorBase* oCursor, std::vector<std::vector<std::string> >& rows, int iMaxRowCount)
+    {
+        int r = 0;
+        if (!_db.connected)
+        {
+            string sErrorString = ", error : db is not open sql!";
+            setLastError(-1, sErrorString);
+            cxDebug() << "CxDatabaseOdbc->saveTableImpl connectSource:" << connectSource() << sErrorString;
+            return r;
+        }
+
+        if (oCursor == NULL) return r;
+        if (oCursor->_cursorType != CursorTypeOdbc)
+        {
+            return r;
+        }
+        CursorOdbc * oCursorOdbc = (CursorOdbc *)oCursor;
+        otl_stream * oo = oCursorOdbc->_stream;
+        otl_stream & o = * oo;
+        vector<OdbcColumnDesc> & columnDescs = oCursorOdbc->_columnDescs;
+        int iPutRowCount = iMaxRowCount > 0 ? iMaxRowCount : oCursorOdbc->_prefetchArraySize;
+        try
+        {
+            while (!o.eof())
+            {
+                std::vector<std::string> row;
+                for (size_t i = 0; i < columnDescs.size(); i++)
+                {
+                    OdbcColumnDesc& columnDesc = columnDescs.at(i);
+
+                    switch (columnDesc.ftype)
+                    {
+                        case otl_var_short:
+                        {
+                            short value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string(""));
+                            else
+                                row.push_back(CxString::toString(value));
+                        }
+                            break;
+                        case otl_var_int:
+                        case otl_var_unsigned_int:
+                        {
+                            int value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(CxString::toString(value));
+                        }
+                            break;
+                        case otl_var_long_int:
+                        case otl_var_bigint:
+                        case otl_var_ubigint:
+                        {
+                            OTL_BIGINT value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(CxString::toString(value));
+                        }
+                            break;
+                        case otl_var_float:
+                        case otl_var_bfloat:
+                        {
+                            float value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(CxString::toString(value));
+                        }
+                            break;
+                        case otl_var_double:
+                        case otl_var_bdouble:
+                        {
+                            double value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(CxString::toString(value));
+                        }
+                            break;
+                        case otl_var_timestamp:
+                        case otl_var_tz_timestamp:
+                        case otl_var_ltz_timestamp:
+                        case otl_var_db2time:
+                        case otl_var_db2date:
+                        {
+                            otl_datetime value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(CxTime::toString(value.year,
+                                                               value.month,
+                                                               value.day,
+                                                               value.hour,
+                                                               value.minute,
+                                                               value.second,
+                                                               '-',
+                                                               ' ',
+                                                               ':'));
+                        }
+                            break;
+                        case otl_var_char:
+                        case otl_var_varchar_long:
+                        {
+                            string value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(value);
+                        }
+                            break;
+                        case otl_var_raw:
+                        case otl_var_raw_long:
+                        case otl_var_blob:
+                        case otl_var_clob:
+                        {
+                            string value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(CxString::toString(value));
+                        }
+                            break;
+                        default:
+                        {
+                            string value;
+                            o >> value;
+                            if (o.is_null())
+                                row.push_back(string());
+                            else
+                                row.push_back(CxString::toString(value));
+                        }
+                    }
+                }
+                rows.push_back(row);
+                ++r;
+                if (r >= iPutRowCount)
+                {
+                    break;
+                }
+            }
+        }
+        catch (otl_exception& p)
+        {                        // intercept OTL exceptions
+            cxDebug() << p.msg << p.stm_text << p.sqlstate << p.var_info;
+            return -9;
+        }
+        return r;
+    }
+
+    int
+    cursorCloseImpl(CursorBase* oCursor)
+    {
+        return TRUE;
+//        int r = FALSE;
+//        if (oCursor == NULL) return r;
+//        if (oCursor->_cursorType != CursorTypeOdbc)
+//        {
+//            return r;
+//        }
+//        CursorOdbc * oCursorOdbc = (CursorOdbc *)oCursor;
+//        otl_stream * oo = oCursorOdbc->_stream;
+//        delete oo;
+//        r = TRUE;
+//        return r;
+    }
 
 private:
-    void getColumnDescs(const std::string &sTableName, std::vector<OdbcColumnDesc> &fieldTypes)
+    void
+    getColumnDescs(const std::string& sTableName, std::vector<OdbcColumnDesc>& fieldTypes)
     {
         if (_db.connected)
         {
@@ -1047,7 +1329,7 @@ private:
 
                 otl_stream o(1, sSql.c_str(), _db); // buffer size , SQL statement,connect object
 
-                otl_column_desc *desc;
+                otl_column_desc* desc;
                 int desc_len;
 
                 desc = o.describe_select(desc_len);
@@ -1058,31 +1340,23 @@ private:
                     columnDesc.columnName = string(desc[i].name);
                     columnDesc.ftype = desc[i].otl_var_dbtype;
                     columnDesc.fsize = desc[i].dbsize;
-//                    cout<<"========== COLUMN #"<<i+1<<" ==========="<<endl;
-//                    cout<<"name="<<desc[i].name<<endl;
-//                    cout<<"dbtype="<<desc[i].dbtype<<endl;
-//                    cout<<"otl_var_dbtype="<<desc[i].otl_var_dbtype<<endl;
-//                    cout<<"dbsize="<<desc[i].dbsize<<endl;
-//                    cout<<"scale="<<desc[i].scale<<endl;
-//                    cout<<"prec="<<desc[i].prec<<endl;
-//                    cout<<"nullok="<<desc[i].nullok<<endl;
                     fieldTypes.push_back(columnDesc);
-//                    otl_var_type_name(columnDesc.ftype);
                 }
             }
 
-            catch (otl_exception &p)
+            catch (otl_exception& p)
             {                        // intercept OTL exceptions
                 cxDebug() << "odbc getFieldTypes : " << p.msg << p.stm_text << p.sqlstate << p.var_info << cxEndLine;
             }
         }
     }
 
-    OdbcColumnDesc findColumnDesc(const vector<OdbcColumnDesc> &columnDescs, const std::string &sColumnName)
+    OdbcColumnDesc
+    findColumnDesc(const vector<OdbcColumnDesc>& columnDescs, const std::string& sColumnName)
     {
         for (size_t i = 0; i < columnDescs.size(); ++i)
         {
-            const OdbcColumnDesc &columnDesc = columnDescs.at(i);
+            const OdbcColumnDesc& columnDesc = columnDescs.at(i);
             if (CxString::equalCase(columnDesc.columnName, sColumnName))
                 return columnDesc;
         }
@@ -1091,23 +1365,22 @@ private:
 
 };
 
-
-
-
-//insert into T_ATM330_MCXX (F_DXID,F_DXMC,F_MCLX,F_CZBZW) values ('aa', 'bb', 'cc', 9966);
-
-bool CxDatabaseOdbcFactory::registDatabaseConstructor()
+bool
+CxDatabaseOdbcFactory::registDatabaseConstructor()
 {
-    CxDatabaseManager::registDatabaseConstructor(CxDatabaseOdbcFactory::isMyDatabase, CxDatabaseOdbcFactory::createDatabase);
+    CxDatabaseManager::registDatabaseConstructor(CxDatabaseOdbcFactory::isMyDatabase,
+                                                 CxDatabaseOdbcFactory::createDatabase);
     return true;
 }
 
-bool CxDatabaseOdbcFactory::isMyDatabase(const std::string &sConnectSource)
+bool
+CxDatabaseOdbcFactory::isMyDatabase(const std::string& sConnectSource)
 {
     return CxString::containCase(sConnectSource, "DSN");
 }
 
-CxDatabase *CxDatabaseOdbcFactory::createDatabase(void)
+CxDatabase*
+CxDatabaseOdbcFactory::createDatabase(void)
 {
     return new CxDatabaseOdbc();
 }

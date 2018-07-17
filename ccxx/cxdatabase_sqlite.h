@@ -15,11 +15,14 @@
 class GM_CCXX_SQLITE_API CxDatabaseSqliteFactory
 {
 public:
-    static bool registDatabaseConstructor();
+    static bool
+    registDatabaseConstructor();
 
-    static bool isMyDatabase(const std::string& sConnectSource);
+    static bool
+    isMyDatabase(const std::string& sConnectSource);
 
-    static CxDatabase* createDatabase(void);
+    static CxDatabase*
+    createDatabase(void);
 
 };
 

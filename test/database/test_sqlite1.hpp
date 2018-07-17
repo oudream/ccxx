@@ -1,8 +1,3 @@
-#include <iostream>
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
 
 #include <ccxx/ccxx.h>
 #include <ccxx/sqlite3.h>
@@ -21,7 +16,7 @@ int testQuery1(int argc,char **argv)
     sqlite3_stmt *stmt;
     char *sql;
     const char*tail;
-    // æ‰“å¼€æ•°æ®
+    // ´ò¿ªÊý¾Ý
     rc=sqlite3_open("foods.db",&db);
     if(rc){
         fprintf(stderr,"Can'topendatabase:%sn",sqlite3_errmsg(db));
@@ -29,7 +24,7 @@ int testQuery1(int argc,char **argv)
         exit(1);
     }
     sql="select * from episodes";
-    // é¢„å¤„ç†
+    // Ô¤´¦Àí
     rc=sqlite3_prepare(db,sql,(int)strlen(sql),&stmt,&tail);
     if(rc!=SQLITE_OK){
         fprintf(stderr,"SQLerror:%sn",sqlite3_errmsg(db));
@@ -43,9 +38,9 @@ int testQuery1(int argc,char **argv)
         fprintf(stderr,"\n");
         rc=sqlite3_step(stmt);
     }
-    // é‡Šæ”¾ statement
+    // ÊÍ·Å statement
     sqlite3_finalize(stmt);
-    // å…³é—­æ•°æ®åº“
+    // ¹Ø±ÕÊý¾Ý¿â
     sqlite3_close(db);
 
     printf("\n");
@@ -71,7 +66,7 @@ int testExec1(int argc, char **argv)
     }
     data = "Callback function called";
     sql = "insert into episodes (name, cid) values ('Mackinaw Peaches', 1);"
-            "select * from episodes;";
+        "select * from episodes;";
     rc = sqlite3_exec(db, sql, callback, data, &zErr);
     if(rc != SQLITE_OK) {
         if (zErr != NULL) {
@@ -108,10 +103,10 @@ int testCreateTable1()
         exit(1);
     }
     sql =   "CREATE TABLE [t3] ("
-            "[i] BIGINT ,"
-            "[dt] UNSIGNED BIGINT,"
-            ")"
-            ;
+        "[i] BIGINT ,"
+        "[dt] UNSIGNED BIGINT,"
+        ")"
+        ;
     rc = sqlite3_exec(db, sql, NULL, NULL, &zErr);
     if(rc != SQLITE_OK) {
         if (zErr != NULL) {
@@ -138,7 +133,7 @@ int testInsert1()
     }
     data = "Callback function called";
     sql = "insert into episodes (name, cid) values ('Mackinaw Peaches', 1);"
-            "select * from episodes;";
+        "select * from episodes;";
     rc = sqlite3_exec(db, sql, callback, data, &zErr);
     if(rc != SQLITE_OK) {
         if (zErr != NULL) {
@@ -151,15 +146,15 @@ int testInsert1()
 }
 
 const std::string cs_sql_insert_monsb_changed =
-        " INSERT INTO [T_MONSB_CHANGED_LOG] ( F_MeasureId, F_Value, F_Quality, F_ChangedTime, F_ChangedSourceId, F_ChangedReasonId )"
+    " INSERT INTO [T_MONSB_CHANGED_LOG] ( F_MeasureId, F_Value, F_Quality, F_ChangedTime, F_ChangedSourceId, F_ChangedReasonId )"
         " VALUES ( ? ,? ,? ,? ,? ,? )";
 
 const std::string cs_sql_insert_ycadd_changed =
-        " INSERT INTO [T_YCADD_CHANGED_LOG] ( F_MeasureId, F_Value, F_Quality, F_ChangedTime, F_ChangedSourceId, F_ChangedReasonId )"
+    " INSERT INTO [T_YCADD_CHANGED_LOG] ( F_MeasureId, F_Value, F_Quality, F_ChangedTime, F_ChangedSourceId, F_ChangedReasonId )"
         " VALUES ( ? ,? ,? ,? ,? ,? )";
 
 const std::string cs_sql_insert_straw_changed =
-        " INSERT INTO [T_STRAW_CHANGED_LOG] ( F_MeasureId, F_Value, F_Quality, F_ChangedTime, F_ChangedSourceId, F_ChangedReasonId )"
+    " INSERT INTO [T_STRAW_CHANGED_LOG] ( F_MeasureId, F_Value, F_Quality, F_ChangedTime, F_ChangedSourceId, F_ChangedReasonId )"
         " VALUES ( ? ,? ,? ,? ,? ,? )";
 
 char f_sLastError[1024];
@@ -303,5 +298,4 @@ int main(int argc,char **argv)
     cin >> s;
     return 0;
 }
-
 
