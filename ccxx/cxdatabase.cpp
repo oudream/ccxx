@@ -12,20 +12,21 @@
 #include "cxapplication.h"
 #endif
 
-
 using namespace std;
 
-static map<string, CxDatabase *> f_oDatabases;
+static map<string, CxDatabase*> f_oDatabases;
 static string f_sDefaultDatabasePath;
 static string f_sDefaultDatabaseSource;
 
-map<fn_isMyDatabase_t, fn_createDatabase_t> &fn_databaseConstructors()
+map<fn_isMyDatabase_t, fn_createDatabase_t>&
+fn_databaseConstructors()
 {
     static map<fn_isMyDatabase_t, fn_createDatabase_t> m;
     return m;
 }
 
-CxDatabaseManager *fn_oDatabaseManager()
+CxDatabaseManager*
+fn_oDatabaseManager()
 {
 #ifndef GM_PROJECT_CXAPPLICATION_NULL
     CxApplication::registStartFunction(CxDatabaseManager::start);
@@ -34,9 +35,10 @@ CxDatabaseManager *fn_oDatabaseManager()
     static CxDatabaseManager m;
     return &m;
 }
-static CxDatabaseManager *f_oDatabaseManager = fn_oDatabaseManager();
+static CxDatabaseManager* f_oDatabaseManager = fn_oDatabaseManager();
 
-CxDatabase *CxDatabase::getDefaultDb()
+CxDatabase*
+CxDatabase::getDefaultDb()
 {
     return CxDatabaseManager::getDefaultDb();
 }
@@ -52,7 +54,10 @@ CxDatabase::~CxDatabase()
 }
 
 bool
-CxDatabase::openDatabase(const string &sConnectSource, string sConnectType, bool bCreate, const std::map<string, string> *oParams)
+CxDatabase::openDatabase(const string& sConnectSource,
+                         string sConnectType,
+                         bool bCreate,
+                         const std::map<string, string>* oParams)
 {
     bool r = openDatabaseImpl(sConnectSource, sConnectType, bCreate, oParams);
     if (r)
@@ -64,7 +69,8 @@ CxDatabase::openDatabase(const string &sConnectSource, string sConnectType, bool
     return r;
 }
 
-bool CxDatabase::openDatabase()
+bool
+CxDatabase::openDatabase()
 {
     bool r = false;
     if (_connectSource.size() > 0)
@@ -74,7 +80,8 @@ bool CxDatabase::openDatabase()
     return r;
 }
 
-void CxDatabase::closeDatabase()
+void
+CxDatabase::closeDatabase()
 {
     closeDatabaseImpl();
 //    _connectSource.clear();
@@ -82,167 +89,228 @@ void CxDatabase::closeDatabase()
 }
 
 int
-CxDatabase::loadTable(const string &sTableName, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames, int iMaxRowCount)
+CxDatabase::loadTable(const string& sTableName,
+                      std::vector<std::vector<string> >& rows,
+                      std::vector<string>* oColumnNames,
+                      int iMaxRowCount)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = loadTableImpl(sTableName, rows, oColumnNames);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = loadTableImpl(sTableName, rows, oColumnNames);
     }
     return r;
 }
 
 int
-CxDatabase::saveTable(const string &sTableName, const std::vector<string> &columnNames, const std::vector<std::vector<string> > &rows, const std::vector<int> &columnTypes, bool bTransaction)
+CxDatabase::saveTable(const string& sTableName,
+                      const std::vector<string>& columnNames,
+                      const std::vector<std::vector<string> >& rows,
+                      const std::vector<int>& columnTypes,
+                      bool bTransaction)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = saveTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = saveTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
     }
     return r;
 }
 
 int
-CxDatabase::saveTable(const string &sSql, const std::vector<std::vector<string> > &rows, const std::vector<int> *oColumnTypes, bool bTransaction)
+CxDatabase::saveTable(const string& sSql,
+                      const std::vector<std::vector<string> >& rows,
+                      const std::vector<int>* oColumnTypes,
+                      bool bTransaction)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = saveTableImpl(sSql, rows, oColumnTypes, bTransaction);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = saveTableImpl(sSql, rows, oColumnTypes, bTransaction);
     }
     return r;
 }
 
 int
-CxDatabase::updateTable(const string &sTableName, const std::vector<string> &columnNames, const std::vector<std::vector<string> > &rows, const std::vector<int> &columnTypes, bool bTransaction)
+CxDatabase::updateTable(const string& sTableName,
+                        const std::vector<string>& columnNames,
+                        const std::vector<std::vector<string> >& rows,
+                        const std::vector<int>& columnTypes,
+                        bool bTransaction)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = updateTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = updateTableImpl(sTableName, columnNames, rows, columnTypes, bTransaction);
     }
     return r;
 }
 
-int CxDatabase::execSql(const string &sSql)
+int
+CxDatabase::execSql(const string& sSql)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = execSqlImpl(sSql);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = execSqlImpl(sSql);
     }
     return r;
 }
 
-int CxDatabase::execSqlList(const std::vector<string> &sqlList)
+int
+CxDatabase::execSqlList(const std::vector<string>& sqlList)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = execSqlListImpl(sqlList);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = execSqlListImpl(sqlList);
     }
     return r;
 }
 
-int CxDatabase::loadSql(const string &sSql, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames)
+int
+CxDatabase::loadSql(const string& sSql, std::vector<std::vector<string> >& rows, std::vector<string>* oColumnNames)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = loadSqlImpl(sSql, rows, oColumnNames);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = loadSqlImpl(sSql, rows, oColumnNames);
     }
     return r;
 }
 
 int
-CxDatabase::loadSql1(const string &sSql, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames, int iMaxRowCount)
+CxDatabase::loadSql1(const string& sSql,
+                     std::vector<std::vector<string> >& rows,
+                     std::vector<string>* oColumnNames,
+                     int iMaxRowCount)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = loadSqlImpl(sSql, rows, oColumnNames, iMaxRowCount);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = loadSqlImpl(sSql, rows, oColumnNames, iMaxRowCount);
     }
     return r;
 }
 
 int
-CxDatabase::loadSql2(const string &sSql, std::vector<std::vector<string> > &rows, std::vector<string> *oColumnNames, std::vector<int> *oColumnTypes)
+CxDatabase::loadSql2(const string& sSql,
+                     std::vector<std::vector<string> >& rows,
+                     std::vector<string>* oColumnNames,
+                     std::vector<int>* oColumnTypes)
 {
     // Check open and open it
-    if (!isOpen()) openDatabase();
-    if (!isOpen()) return -1;
+    if (!isOpen())
+        openDatabase();
+    if (!isOpen())
+        return -1;
     int r = loadSql2Impl(sSql, rows, oColumnNames);
     for (int i = 0; i < 1; ++i)
     {
-        if (r >= 0) return r;
+        if (r >= 0)
+            return r;
         // fail, rerun after open
         setSqlLastSuccessTime(r);
-        if (!isOpen()) continue;
+        if (!isOpen())
+            continue;
         r = loadSql2Impl(sSql, rows, oColumnNames);
     }
     return r;
 }
 
-string CxDatabase::queryToJsonString(const string &sSql)
+string
+CxDatabase::queryToJsonString(const string& sSql)
 {
-    if (sSql.empty()) return std::string();
+    if (sSql.empty())
+        return std::string();
 
     vector<string> sLines;
     string sLine = "[";
@@ -257,21 +325,23 @@ string CxDatabase::queryToJsonString(const string &sSql)
 
     for (size_t i = 0; i < rows.size(); ++i)
     {
-        const std::vector<std::string> &row = rows.at(i);
-        if (columns.size() < row.size()) continue;
-        if (columnTypes.size() < row.size()) continue;
+        const std::vector<std::string>& row = rows.at(i);
+        if (columns.size() < row.size())
+            continue;
+        if (columnTypes.size() < row.size())
+            continue;
         sLine = "{";
         for (size_t j = 0; j < row.size(); ++j)
         {
             int iValueType = columnTypes.at(j);
-            const string &sKey = columns.at(j);
-            const string &sValue = row.at(j);
-            if (iValueType == column_type_string || iValueType == column_type_datetime)
+            const string& sKey = columns.at(j);
+            const string& sValue = row.at(j);
+            if (iValueType == ColumnTypeString || iValueType == ColumnTypeDatetime)
             {
                 string sValue2 = CxString::replace(sValue, '\"', '\'');
                 sLine += CxString::format("\"%s\":\"%s\",", sKey.c_str(), sValue2.c_str());
             }
-            else if (iValueType == column_type_blob)
+            else if (iValueType == ColumnTypeBlob)
             {
                 string sValue2 = CxEncoding::base64Encode(sValue);
                 sLine += CxString::format("\"%s\":\"%s\",", sKey.c_str(), sValue2.c_str());
@@ -302,7 +372,8 @@ string CxDatabase::queryToJsonString(const string &sSql)
     return CxString::join(sLines, 0);
 }
 
-std::map<std::string, std::string> CxDatabase::loadVerticalTableObject(const std::string &sSql)
+std::map<std::string, std::string>
+CxDatabase::loadVerticalTableObject(const std::string& sSql)
 {
     map<string, string> r;
     std::vector<std::vector<std::string> > rows;
@@ -310,7 +381,7 @@ std::map<std::string, std::string> CxDatabase::loadVerticalTableObject(const std
     loadSql(sSql, rows, &columnNames);
     for (int i = 0; i < rows.size(); ++i)
     {
-        const vector<string> &row = rows.at(i);
+        const vector<string>& row = rows.at(i);
         if (row.size() < 2)
         {
             break;
@@ -320,7 +391,8 @@ std::map<std::string, std::string> CxDatabase::loadVerticalTableObject(const std
     return r;
 }
 
-void CxDatabase::setSqlLastSuccessTime(int rSqlExec)
+void
+CxDatabase::setSqlLastSuccessTime(int rSqlExec)
 {
     if (rSqlExec > 0)
     {
@@ -339,12 +411,183 @@ void CxDatabase::setSqlLastSuccessTime(int rSqlExec)
     }
 }
 
-CxDatabase *CxDatabaseManager::createDatabase(const string &sConnectSource, std::string sConnectType)
+std::string
+CxDatabase::queryValue(const std::string& sSql)
 {
-    if (sConnectSource.empty()) return NULL;
-    CxDatabase *r = CxDatabaseManager::findDb(sConnectSource);
-    if (r != NULL) return r;
-    map<fn_isMyDatabase_t, fn_createDatabase_t> &databaseConstructors = fn_databaseConstructors();
+    std::vector<std::vector<std::string> > rows;
+    loadSqlImpl(sSql, rows, NULL, 1);
+    if (rows.size())
+    {
+        const std::vector<std::string>& row = rows.at(0);
+        if (row.size() > 0)
+        {
+            return row.at(0);
+        }
+    }
+    return std::string();
+}
+
+bool
+CxDatabase::queryValue(const std::string& sSql, std::string& sValue)
+{
+    std::vector<std::vector<std::string> > rows;
+    loadSql1(sSql, rows, NULL, 1);
+    if (rows.size())
+    {
+        const std::vector<std::string>& row = rows.at(0);
+        if (row.size() > 0)
+        {
+            sValue = row.at(0);
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<std::string>
+CxDatabase::queryValueToList(const std::string& sSql)
+{
+    std::vector<std::vector<std::string> > rows;
+    loadSql1(sSql, rows, NULL, 1);
+    if (rows.size() > 0)
+    {
+        return rows.at(0);
+    }
+    return std::vector<std::string>();
+}
+
+std::map<std::string, std::string>
+CxDatabase::queryValueToMap(const std::string& sSql)
+{
+    std::map<std::string, std::string> r;
+    std::vector<std::vector<std::string> > rows;
+    std::vector<std::string> columns;
+    loadSql1(sSql, rows, &columns, 1);
+    if (rows.size() > 0)
+    {
+        const std::vector<std::string>& row = rows.at(0);
+        if (row.size() > 0 && row.size() == columns.size())
+        {
+            for (size_t i = 0; i < columns.size(); ++i)
+            {
+                r[columns.at(i)] = row.at(i);
+            }
+            return r;
+        }
+    }
+    return r;
+}
+
+std::vector<std::map<std::string, std::string> >
+CxDatabase::queryToMapVector(const std::string& sSql)
+{
+    std::vector<std::map<std::string, std::string> > v;
+    std::map<std::string, std::string> r;
+    std::vector<std::vector<std::string> > rows;
+    std::vector<std::string> columns;
+
+    loadSql(sSql, rows, &columns);
+    if (rows.size() > 0)
+    {
+        for (size_t j = 0; j < rows.size(); ++j)
+        {
+            const std::vector<std::string>& row = rows.at(j);
+            if (row.size() > 0 && row.size() == columns.size())
+            {
+                r.clear();
+                for (size_t i = 0; i < columns.size(); ++i)
+                {
+                    r[columns.at(i)] = row.at(i);
+                }
+                v.push_back(r);
+            }
+        }
+    }
+    return v;
+}
+
+CxDatabase::CursorBase*
+CxDatabase::cursorLoad(const std::string& sSql, int iPrefetchArraySize)
+{
+    if (_cursors.size() > 100)
+    {
+        msepoch_t dtNow = CxTime::currentSystemTime();
+        cxPrompt() << "DB[" << _connectSource << "] cursor count > 100, clear and delete all cursor";
+        for (int i = 0; i < _cursors.size(); ++i)
+        {
+            CursorBase* oCursor = _cursors.at(i);
+            if (cursorCloseImpl(oCursor) != FALSE)
+            {
+                delete oCursor;
+            }
+        }
+        _cursors.clear();
+        cxPrompt() << "cursor clear complete, cost time : " << CxTime::milliSecondDifferToNow(dtNow);
+    }
+    CursorBase* r = cursorLoadImpl(sSql, iPrefetchArraySize);
+    if (r != NULL)
+    {
+        _cursors.push_back(r);
+    }
+    return r;
+}
+
+int
+CxDatabase::cursorClose(CxDatabase::CursorBase* oCursor)
+{
+    int r = FALSE;
+    if (oCursor && CxContainer::contain(_cursors, oCursor))
+    {
+        r = cursorCloseImpl(oCursor);
+        if (r != FALSE)
+        {
+            CxContainer::remove(_cursors, oCursor);
+            delete oCursor;
+        }
+    }
+    return r;
+}
+
+int
+CxDatabase::cursorPut(CxDatabase::CursorBase* oCursor, std::vector<std::vector<std::string> >& rows, int iMaxRowCount)
+{
+    if (std::find(_cursors.begin(), _cursors.end(), oCursor) != _cursors.end())
+    {
+        return cursorPutImpl(oCursor, rows, iMaxRowCount);
+    }
+    return 0;
+}
+
+std::vector<std::string>
+CxDatabase::cursorNext(CxDatabase::CursorBase* oCursor)
+{
+    std::vector<std::vector<std::string> > rows;
+    if (cursorPutImpl(oCursor, rows, 1) > 0)
+    {
+        return rows.at(0);
+    }
+    return std::vector<std::string>();
+}
+
+bool
+CxDatabase::cursorIsEnd(CxDatabase::CursorBase* oCursor)
+{
+    if (std::find(_cursors.begin(), _cursors.end(), oCursor) != _cursors.end())
+    {
+        return cursorIsEndImpl(oCursor);
+    }
+    return true;
+}
+
+CxDatabase*
+CxDatabaseManager::createDatabase(const string& sConnectSource, std::string sConnectType)
+{
+    if (sConnectSource.empty())
+        return NULL;
+    CxDatabase* r = CxDatabaseManager::findDb(sConnectSource);
+    if (r != NULL)
+        return r;
+    map<fn_isMyDatabase_t, fn_createDatabase_t>& databaseConstructors = fn_databaseConstructors();
     for (std::map<fn_isMyDatabase_t, fn_createDatabase_t>::const_iterator it = databaseConstructors.begin();
          it != databaseConstructors.end(); ++it)
     {
@@ -352,7 +595,7 @@ CxDatabase *CxDatabaseManager::createDatabase(const string &sConnectSource, std:
         fn_createDatabase_t fn_createDatabase = it->second;
         if (fn_isMyDatabase && fn_createDatabase && fn_isMyDatabase(sConnectSource))
         {
-            CxDatabase *oDb = fn_createDatabase();
+            CxDatabase* oDb = fn_createDatabase();
             oDb->_connectSource = sConnectSource;
             oDb->_connectType = sConnectType;
             f_oDatabases[sConnectSource] = oDb;
@@ -367,11 +610,12 @@ CxDatabase *CxDatabaseManager::createDatabase(const string &sConnectSource, std:
     return r;
 }
 
-CxDatabase *CxDatabaseManager::findDb(const string &sSource)
+CxDatabase*
+CxDatabaseManager::findDb(const string& sSource)
 {
-    for (std::map<string, CxDatabase *>::const_iterator it = f_oDatabases.begin(); it != f_oDatabases.end(); ++it)
+    for (std::map<string, CxDatabase*>::const_iterator it = f_oDatabases.begin(); it != f_oDatabases.end(); ++it)
     {
-        const string &sConnectSource = it->first;
+        const string& sConnectSource = it->first;
         if (CxString::equalCase(sConnectSource, sSource))
         {
             return it->second;
@@ -380,15 +624,17 @@ CxDatabase *CxDatabaseManager::findDb(const string &sSource)
     return NULL;
 }
 
-CxDatabase *CxDatabaseManager::getDefaultDb()
+CxDatabase*
+CxDatabaseManager::getDefaultDb()
 {
-    CxDatabase *oDb = findDb(f_sDefaultDatabaseSource);
+    CxDatabase* oDb = findDb(f_sDefaultDatabaseSource);
     return oDb;
 }
 
-CxDatabase *CxDatabaseManager::getDbByIndex(int index)
+CxDatabase*
+CxDatabaseManager::getDbByIndex(int index)
 {
-    CxDatabase *oDb = NULL;
+    CxDatabase* oDb = NULL;
     string sConnectSourceIndex = CxString::format("ConnectSource%d", index);
     string sConnectTypeIndex = CxString::format("ConnectType%d", index);
     string sConnectSource = CxAppEnv::findConfig(CS_SectionDataBase, sConnectSourceIndex, std::string());
@@ -406,29 +652,36 @@ CxDatabase *CxDatabaseManager::getDbByIndex(int index)
     return oDb;
 }
 
-void CxDatabaseManager::start()
+void
+CxDatabaseManager::start()
 {
     f_sDefaultDatabasePath = CxFileSystem::mergeFilePath(CxAppEnv::applicationDeployPath(), "db");
 
-    CxDatabase *oDb = NULL;
+    CxDatabase* oDb = NULL;
     for (size_t i = 1; i < 30; ++i)
     {
-        string sConnectSource = CxAppEnv::findConfig(CS_SectionDataBase, CxString::format("ConnectSource%d", i), std::string());
-        string sConnectType = CxAppEnv::findConfig(CS_SectionDataBase, CxString::format("ConnectType%d", i), std::string());
-        string sConnectParams = CxAppEnv::findConfig(CS_SectionDataBase, CxString::format("ConnectParams%d", i), std::string());
+        string sConnectSource =
+            CxAppEnv::findConfig(CS_SectionDataBase, CxString::format("ConnectSource%d", i), std::string());
+        string sConnectType =
+            CxAppEnv::findConfig(CS_SectionDataBase, CxString::format("ConnectType%d", i), std::string());
+        string sConnectParams =
+            CxAppEnv::findConfig(CS_SectionDataBase, CxString::format("ConnectParams%d", i), std::string());
         if (sConnectSource.empty())
         {
             sConnectSource = CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultDbName"), std::string());
             if (sConnectSource.empty())
             {
-                sConnectSource = CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultDatabaseName"), std::string());
+                sConnectSource =
+                    CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultDatabaseName"), std::string());
             }
             if (sConnectSource.empty())
             {
-                sConnectSource = CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultConnectSource"), std::string());
+                sConnectSource =
+                    CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultConnectSource"), std::string());
             }
             sConnectType = CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultConnectType"), std::string());
-            sConnectParams = CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultConnectParams"), std::string());
+            sConnectParams =
+                CxAppEnv::findConfig(CS_SectionProgramConfig, string("DefaultConnectParams"), std::string());
         }
         if (sConnectSource.size() > 0)
         {
@@ -444,7 +697,8 @@ void CxDatabaseManager::start()
                                                                   "db\\" + sConnectSource);
                     if (CxFileSystem::isExist(sFilePath))
                         sConnectSource = sFilePath;
-                    map<string, string> sConnectParams2 = CxString::splitToMap(sConnectParams, CxGlobal::middleChar, CxGlobal::splitChar);
+                    map<string, string> sConnectParams2 =
+                        CxString::splitToMap(sConnectParams, CxGlobal::middleChar, CxGlobal::splitChar);
                     oDb->openDatabase(sConnectSource, sConnectType, true, &sConnectParams2);
                 }
             }
@@ -452,11 +706,12 @@ void CxDatabaseManager::start()
     }
 }
 
-void CxDatabaseManager::stop()
+void
+CxDatabaseManager::stop()
 {
-    for (std::map<string, CxDatabase *>::iterator iter = f_oDatabases.begin(); iter != f_oDatabases.end();)
+    for (std::map<string, CxDatabase*>::iterator iter = f_oDatabases.begin(); iter != f_oDatabases.end();)
     {
-        CxDatabase *oDb = iter->second;
+        CxDatabase* oDb = iter->second;
         if (oDb)
         {
             oDb->closeDatabase();
@@ -469,12 +724,13 @@ void CxDatabaseManager::stop()
     }
 }
 
-void CxDatabaseManager::connectCheck(int iInterval)
+void
+CxDatabaseManager::connectCheck(int iInterval)
 {
-    for (std::map<string, CxDatabase *>::const_iterator it = f_oDatabases.begin(); it != f_oDatabases.end(); ++it)
+    for (std::map<string, CxDatabase*>::const_iterator it = f_oDatabases.begin(); it != f_oDatabases.end(); ++it)
     {
 //        const string & sConnectSource = it->first;
-        CxDatabase *oDb = it->second;
+        CxDatabase* oDb = it->second;
         if (oDb)
         {
 
@@ -510,35 +766,15 @@ void CxDatabaseManager::connectCheck(int iInterval)
     }
 }
 
-
-//int CxDatabaseManager::openDatabase(const string &sConnectSource, const string &sConnectParams, bool bCreate)
-//{
-//    map<string, string> sConnectParams2 = CxString::splitToMap(sConnectParams, CxGlobal::middleChar, CxGlobal::splitChar);
-//    return openDatabase(sConnectSource, sConnectParams2, bCreate);
-//}
-
-//int CxDatabaseManager::openDatabase(const string &sConnectSource, const std::map<string, string> &sConnectParams, bool bCreate)
-//{
-//    CxDatabase * oDb = findDb(sConnectSource);
-//    if (! oDb)
-//    {
-//        oDb = createDatabase(sConnectSource);
-//    }
-//    if (oDb)
-//    {
-//        return oDb->openDatabase(sConnectSource, bCreate, &sConnectParams);
-//    }
-//    return FALSE;
-//}
-
-bool CxDatabaseManager::closeDatabase(const string &sConnectSource)
+bool
+CxDatabaseManager::closeDatabase(const string& sConnectSource)
 {
-    for (std::map<string, CxDatabase *>::iterator iter = f_oDatabases.begin(); iter != f_oDatabases.end();)
+    for (std::map<string, CxDatabase*>::iterator iter = f_oDatabases.begin(); iter != f_oDatabases.end();)
     {
-        const string &sSource = iter->first;
+        const string& sSource = iter->first;
         if (CxString::equalCase(sSource, sConnectSource))
         {
-            CxDatabase *oDb = iter->second;
+            CxDatabase* oDb = iter->second;
             if (oDb)
             {
                 oDb->closeDatabase();
@@ -554,7 +790,8 @@ bool CxDatabaseManager::closeDatabase(const string &sConnectSource)
     return false;
 }
 
-const std::map<string, CxDatabase *> &CxDatabaseManager::dbs()
+const std::map<string, CxDatabase*>&
+CxDatabaseManager::dbs()
 {
     return f_oDatabases;
 }
@@ -562,11 +799,12 @@ const std::map<string, CxDatabase *> &CxDatabaseManager::dbs()
 void
 CxDatabaseManager::registDatabaseConstructor(fn_isMyDatabase_t fn_isMyDatabase, fn_createDatabase_t fn_createDatabase)
 {
-    map<fn_isMyDatabase_t, fn_createDatabase_t> &databaseConstructors = fn_databaseConstructors();
+    map<fn_isMyDatabase_t, fn_createDatabase_t>& databaseConstructors = fn_databaseConstructors();
     databaseConstructors[fn_isMyDatabase] = fn_createDatabase;
 }
 
-std::string CxDatabaseManager::getDefaultDatabasePath()
+std::string
+CxDatabaseManager::getDefaultDatabasePath()
 {
     return f_sDefaultDatabasePath;
 }
