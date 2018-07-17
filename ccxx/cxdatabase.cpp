@@ -509,6 +509,21 @@ CxDatabase::queryToMapVector(const std::string& sSql)
 CxDatabase::CursorBase*
 CxDatabase::cursorLoad(const std::string& sSql, int iPrefetchArraySize)
 {
+    if (_cursors.size() > 100)
+    {
+        msepoch_t dtNow = CxTime::currentSystemTime();
+        cxPrompt() << "DB[" << _connectSource << "] cursor count > 100, clear and delete all cursor";
+        for (int i = 0; i < _cursors.size(); ++i)
+        {
+            CursorBase* oCursor = _cursors.at(i);
+            if (cursorCloseImpl(oCursor) != FALSE)
+            {
+                delete oCursor;
+            }
+        }
+        _cursors.clear();
+        cxPrompt() << "cursor clear complete, cost time : " << CxTime::milliSecondDifferToNow(dtNow);
+    }
     CursorBase* r = cursorLoadImpl(sSql, iPrefetchArraySize);
     if (r != NULL)
     {

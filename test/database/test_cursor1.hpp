@@ -18,6 +18,8 @@ void timerCursor1(int iInterval)
         return;
     }
 
+    cxPrompt() << "DB has cursor count : " << oDb->cursorGetOnlineAll().size();
+
     if (f_oCursor1 == NULL)
     {
         string sSql = "select * from ha_appconfig";
@@ -68,18 +70,48 @@ void timerCursor1(int iInterval)
 
     cxPrompt() << CxTime::milliSecondDifferToNow(dtNow);
     cxPrompt() << " --- --- --- --- ---";
-
-    if (iIndex % 100 == 0)
-    {
-        cxPrompt() << "DB has cursor count : " << oDb->cursorGetOnlineAll().size();
-        cxPrompt() << " --- --- --- --- ---";
-    }
 }
+
+void timerCursor2(int iInterval)
+{
+    static int iIndex = 0;
+    ++ iIndex;
+    msepoch_t dtNow = CxTime::currentMsepoch();
+    CxDatabase * oDb = CxDatabaseManager::getDefaultDb();
+    if (oDb == NULL)
+    {
+        cxPrompt() << "can not open database!";
+        return;
+    }
+
+    cxPrompt() << "DB has cursor count : " << oDb->cursorGetOnlineAll().size();
+
+    string sSql = "select * from omc_performancedata";
+    CxDatabase::CursorBase * oCursor = oDb->cursorLoad(sSql, 100);
+
+    cxPrompt() << "oDb->cursorLoad(sSql, 100); " << CxTime::milliSecondDifferToNow(dtNow);
+
+    int iCount = 0;
+    while (! oDb->cursorIsEnd(oCursor))
+    {
+        vector<string> row = oDb->cursorNext(oCursor);
+        ++iCount;
+    }
+    oDb->cursorClose(oCursor);
+
+    cxPrompt() << "oDb->cursorNext(sSql).count :  " << iCount;
+    cxPrompt() << "oDb->cursorNext(sSql).all : " << CxTime::milliSecondDifferToNow(dtNow);
+
+    cxPrompt() << " --- --- --- --- ---";
+}
+
 
 void testCursor1()
 {
     cxPrompt() << "TEST Cursor1 start : " << CxTime::currentSystemTimeString();
     CxTimerManager::startTimer(timerCursor1, 200);
+
+    CxTimerManager::startTimer(timerCursor2, 5000);
 }
 
 
