@@ -1,4 +1,20 @@
+# 例如 arm-linux-gnueabihf，下载解压改名成 /fff/gnueabihf
 https://releases.linaro.org/components/toolchain/binaries/latest-5/arm-linux-gnueabihf/
+
+~/.bashrc
+export PATH=$PATH:/fff/gnueabihf/bin
+
+source ~/.bashrc
+
+$export CC=arm-linux-gnueabihf-gcc  
+$export CXX=arm-linux-gnueabihf-g++ 
+
+./configure --host=arm-linux --target=mipsel-linux --prefix=/fff/gnueabihf/arm-linux-gnueabihf
+
+make 
+make install
+
+# 以下是参数的文件
 
 #defined SIZEOF_LONG_INT 4
 
