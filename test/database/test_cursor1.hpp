@@ -111,8 +111,57 @@ void testCursor1()
     cxPrompt() << "TEST Cursor1 start : " << CxTime::currentSystemTimeString();
     CxTimerManager::startTimer(timerCursor1, 200);
 
-    CxTimerManager::startTimer(timerCursor2, 5000);
+    CxTimerManager::startTimer(timerCursor2, 1000);
 }
 
+
+void timerCursor3(int iInterval)
+{
+    static int iIndex = 0;
+    ++ iIndex;
+    msepoch_t dtNow = CxTime::currentMsepoch();
+    CxDatabase * oDb = CxDatabaseManager::getDefaultDb();
+    if (oDb == NULL)
+    {
+        cxPrompt() << "can not open database!";
+        return;
+    }
+
+    cxPrompt() << "DB has cursor count : " << oDb->cursorGetOnlineAll().size();
+
+    string sSql = "select * from t1";
+    CxDatabase::CursorBase * oCursor1 = oDb->cursorLoad(sSql, 10);
+
+    if (oCursor1)
+    {
+        cxPrompt() << "getColumnNames: ";
+        cxPrompt() << oCursor1->getColumnNames();
+        cxPrompt() << "getColumnTypes: ";
+        cxPrompt() << oCursor1->getColumnTypes();
+        cxPrompt() << "getColumnSizes: ";
+        cxPrompt() << oCursor1->getColumnSizes();
+    }
+    if (! oDb->cursorIsEnd(oCursor1)){}
+    {
+        vector<std::vector<std::string> > rows;
+        oDb->cursorPut(oCursor1, rows);
+        for (int i = 0; i < rows.size(); ++i)
+        {
+            vector<string> row = CxEncoding::utf8ToGb2312(rows[i]);
+            cxPrompt() << "cursor1 cursorPut row count : " << rows.size()
+                       << " , print line" << i << " :";
+            cxPrompt() << row;
+        }
+    }
+
+    cxPrompt() << CxTime::milliSecondDifferToNow(dtNow);
+    cxPrompt() << " --- --- --- --- ---";
+}
+
+void testCursor2()
+{
+    cxPrompt() << "TEST Cursor2 start : " << CxTime::currentSystemTimeString();
+    CxTimerManager::startTimer(timerCursor3, 1000);
+}
 
 

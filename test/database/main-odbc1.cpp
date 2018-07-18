@@ -18,6 +18,9 @@ int main(int argc,const char * argv[])
 
 	string g_sDBSource = "UID=root;PWD=123456;DSN=ics_mysql_dsn";
 	string g_sDBType = "MySQL";
+
+//	string g_sDBSource = "DSN=ics_access_dsn";
+//	string g_sDBType = "access";
 //
 	CxDatabase * pDb = CxDatabaseManager::createDatabase(g_sDBSource, g_sDBType);
 	if (pDb == NULL)
@@ -27,7 +30,8 @@ int main(int argc,const char * argv[])
 	}
 	cout << " pDb->openDatabase() : " << pDb->openDatabase();
 
-	testCursor1();
+    testCursor1();
+    testCursor2();
 
 //    cout << "end test CxDatabase !!!";
 
