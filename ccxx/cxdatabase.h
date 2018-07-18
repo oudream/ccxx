@@ -41,12 +41,14 @@ public:
         inline CursorTypeEnum getCursorType() { return _cursorType; }
         inline int getPrefetchArraySize() { return _prefetchArraySize; }
         inline const std::vector<std::string> & getColumnNames() { return _columnNames; };
-        inline const std::vector<int> & columnTypes() { return _columnTypes; };
+        inline const std::vector<int> & getColumnTypes() { return _columnTypes; };
+        inline const std::vector<int> & getColumnSizes() { return _columnSizes; };
     protected:
         CursorTypeEnum _cursorType;
         int _prefetchArraySize;
         std::vector<std::string> _columnNames;
         std::vector<int> _columnTypes;
+        std::vector<int> _columnSizes;
 
         friend class CxDatabaseOdbc;
         friend class CxDatabaseSqlite;
@@ -210,7 +212,7 @@ protected:
     long long _sqlLastSuccessTime;
     long long _reconnectTime;
 
-private:
+protected:
     int _lastErrorId;
     std::string _lastErrorString;
     std::string _connectSource;

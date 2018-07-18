@@ -15608,7 +15608,8 @@ fn_utf8ToGb2312(const char* sUtf8, char* sGb2312, int& iOutGb2312Length)
             case 6:byteCount = 6;
                 break;
 
-            default:break;
+            default:byteCount = 1;
+                break;
         }
 
         i += byteCount;

@@ -1110,12 +1110,20 @@ protected:
                     }
                 }
                 r->_columnTypes.push_back(iColumnType);
+                r->_columnSizes.push_back(desc[i].dbsize);
             }
         }
         catch (otl_exception& p)
         {
             // intercept OTL exceptions
             cxDebug() << p.msg << p.stm_text << p.sqlstate << p.var_info;
+            delete oo;
+            delete r;
+            r = NULL;
+        }
+        catch (...)
+        {
+            cxDebug() << _connectSource <<  " : do not know exception.";
             delete oo;
             delete r;
             r = NULL;
