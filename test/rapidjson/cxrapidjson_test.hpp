@@ -151,3 +151,57 @@ int testCxRapidJsonPointer11()
 }
 
 
+int testCxRapidJsonPointer12()
+{
+    Document d;
+
+    //*加载文件
+    if (! CxRapidJson::load("/fff/tmp/100.json", d) )
+    {
+        cout << "load json fail." << endl;
+        return 0;
+    }
+    else
+    {
+        cout << "load json success." << endl;
+    }
+
+    //*查找数据
+    //以 '/' 为分隔符，以下是：查找 根对象的属性为"tables"数组index为0的...
+    //eg: {"tables":[{"rows":[{"ServerId":6}]}]}
+    if (Pointer("/tables/0/rows/0/ServerId").Get(d))
+    {
+        cout << "has!";
+        return FALSE;
+    }
+    else
+    {
+        Value* stars = & Pointer("/tables/0/rowss/0/ServerId").Create(d);
+        //*删除数据
+        if (stars->IsObject())
+        {
+            stars->RemoveMember("a");
+        }
+        //*修改数据
+        stars->SetObject();
+        stars->AddMember("i1", 11, d.GetAllocator());
+        stars->AddMember("f1", Value(1.23), d.GetAllocator());
+        stars->AddMember("f1", Value(1.23), d.GetAllocator());
+        stars->AddMember("s1", "s_-s\"", d.GetAllocator());
+        stars->AddMember("b1", true, d.GetAllocator());
+    }
+
+    //*保存文件
+    if (! CxRapidJson::save("/fff/tmp/100.json", d) )
+    {
+        cout << "load json fail." << endl;
+    }
+    else
+    {
+        cout << "load json success." << endl;
+    }
+
+    return 0;
+}
+
+

@@ -6,7 +6,7 @@
 int main(int argc, char * argv[])
 {
 //    testCxRapidJsonDataType11(argc, argv);
-    testCxRapidJsonPointer11();
+    testCxRapidJsonPointer12();
 
     return 0;
 }
