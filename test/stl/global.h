@@ -32,52 +32,10 @@
 
 using namespace std;
 
-static void gprint(std::string msg)
-{
-    std::cout << msg << std::endl;
-}
+extern void gprint(std::string msg);
 
-std::string ginput()
-{
-    std::string msg;
-    std::cin >> msg;
-    return msg;
-}
+extern std::string ginput();
 
-inline void TestVector21()
-{
-    string str;
-    do
-    {
-        str = ginput();
-
-        if (str[0] == 'C')
-        {
-            if (str[1] == 'B')
-            {
-                if (str[2] == '0')
-                {
-
-                }
-            }
-            else if (str[1] == 'E')
-            {
-            }
-            else if (str[1] == 'T')
-            {
-            }
-            else if (str[1] == 'R')
-            {
-            }
-            else if (str[1] == 'C')
-            {
-                break;
-            }
-        }
-        else
-        {
-        }
-    } while (str != "CC");
-}
+extern void testVector21();
 
 #endif //PROJECT_GLOBAL_H

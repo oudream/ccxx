@@ -130,7 +130,7 @@ int testPointer11()
 //    Document d;
 //    d.Parse(json);
 // ...
-    FILE *fp = fopen("f:/001.json", "wb"); // 非 Windows 平台使用 "w"
+    FILE *fp = fopen("/fff/tmp/001.json", "wb"); // 非 Windows 平台使用 "w"
     char writeBuffer[65536];
     FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
     Writer<FileWriteStream> writer(os);
