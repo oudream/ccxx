@@ -66,6 +66,7 @@ set(gsl_ccxx_heads
         cxprocess.h
         cxprocmutex.h
         cxwinreg.h
+        cxzip.h
         )
 
 set(gsl_ccxx_sources
@@ -118,6 +119,8 @@ set(gsl_ccxx_sources
         cxprocess.cpp
         cxprocmutex.cpp
         cxwinreg.cpp
+        cxzip.cpp
+        lz4/lz4.c
         )
 
 mc_merge_file_path(${gs_ccxx_source_path} "${gsl_ccxx_heads}" gsl_ccxx_head_filepaths)
@@ -262,6 +265,7 @@ set(gsl_ccxx_simple_sources
         cxprocmutex.cpp
         cxwinreg.cpp
         cxzip.cpp
+        lz4/lz4.c
         )
 
 mc_merge_file_path(${gs_ccxx_source_path} "${gsl_ccxx_simple_heads}" gsl_ccxx_simple_head_filepaths)
