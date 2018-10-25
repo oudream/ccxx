@@ -229,6 +229,7 @@ set(gsl_ccxx_simple_heads
         cxuuid.h
         cxprocmutex.h
         cxwinreg.h
+        cxzip.h
         )
 
 set(gsl_ccxx_simple_sources
@@ -260,6 +261,7 @@ set(gsl_ccxx_simple_sources
         cxuuid.cpp
         cxprocmutex.cpp
         cxwinreg.cpp
+        cxzip.cpp
         )
 
 mc_merge_file_path(${gs_ccxx_source_path} "${gsl_ccxx_simple_heads}" gsl_ccxx_simple_head_filepaths)

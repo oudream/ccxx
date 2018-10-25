@@ -63,18 +63,19 @@ void CxLuaRun::registInitFunction(fn_void_t fn)
 }
 
 void CxLuaRun::init()
-{	
-    /*//ScriptName
-    string sScriptName = CxAppEnv::findArgument("sn");
+{
+    // arg{lun(lua name), lup(lua path)}
+//    /*//ScriptName
+    string sScriptName = CxAppEnv::findArgument("lun");
     if (sScriptName.empty())
     {
         sScriptName = CxAppEnv::findConfig(CS_SectionProgramConfig, string("ScriptName"), string());
     }
     //ScriptPath
-    string sScriptPath = CxAppEnv::findArgument("sp");
+    string sScriptPath = CxAppEnv::findArgument("lup");
     if (sScriptPath.empty())
     {
-        sScriptPath = CxAppEnv::findConfig(CS_SectionProgramConfig, string("ScriptPath"), string("models"));
+        sScriptPath = CxAppEnv::findConfig(CS_SectionProgramConfig, string("ScriptPath"), string("lua"));
     }
     if (! CxFileSystem::hasRootPath(sScriptPath))
     {
@@ -82,11 +83,11 @@ void CxLuaRun::init()
     }
     if (sScriptName.size() > 0)
     {
-        sScriptPath = CxFileSystem::mergeFilePath(sScriptPath, sScriptPath);
+        sScriptPath = CxFileSystem::mergeFilePath(sScriptPath, sScriptName);
     }
     /**/
     
-	string sScriptPath = "D:/ics4000/deploy/models";   
+//	string sScriptPath = "D:/ics4000/deploy/models";
 
     cxPrompt() << "ScriptPath : " << sScriptPath;
 

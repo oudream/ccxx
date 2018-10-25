@@ -59,5 +59,5 @@ int main(int argc, char *agrv[])
     testClass11();
     
     gprint("stl end!");
-    return 0;
+    return 1;
 }

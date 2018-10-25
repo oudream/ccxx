@@ -27,20 +27,20 @@ source_group("qt" FILES ${qt_source_paths} ${qt_header_paths} ${qt_form_paths})
 
 
 ###add ccxx
-add_executable(ccxx_sample_qt
+add_executable(cxsample_qt
         ${qt_source_paths} ${qt_header_paths} ${qt_form_paths}
         ${gsl_ccxx_qt_filepaths}
         )
 
-set_target_properties(ccxx_sample_qt PROPERTIES FOLDER ccxx/sample)
+set_target_properties(cxsample_qt PROPERTIES FOLDER ccxx/sample)
 
-add_dependencies(ccxx_sample_qt
+add_dependencies(cxsample_qt
         ccxx
         ccxx_database_odbc
         ccxx_database_sqlite
         )
 
-target_link_libraries(ccxx_sample_qt
+target_link_libraries(cxsample_qt
         ccxx
         ccxx_database_odbc
         ccxx_database_sqlite

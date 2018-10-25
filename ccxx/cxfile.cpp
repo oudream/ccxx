@@ -26,51 +26,12 @@ struct LOCAL_REPARSE_DATA_BUFFER {
 #endif
 #endif
 
+
 #if !defined(__S_IFMT)
 #ifdef _S_IFMT
 #define __S_IFMT _S_IFMT
 #else
-#define __S_IFMT 0
-#endif
-#endif
-
-#if !defined(__S_IFREG)
-#ifdef _S_IFREG
-#define __S_IFREG _S_IFREG
-#else
-#define __S_IFREG 1
-#endif
-#endif
-
-#if !defined(__S_IFDIR)
-#ifdef _S_IFDIR
-#define __S_IFDIR _S_IFDIR
-#else
-#define __S_IFDIR 2
-#endif
-#endif
-
-#if !defined(__S_IFLNK)
-#ifdef _S_IFLNK
-#define __S_IFLNK _S_IFLNK
-#else
-#define __S_IFLNK 3
-#endif
-#endif
-
-#if !defined(__S_IFCHR)
-#ifdef _S_IFCHR
-#define __S_IFCHR _S_IFCHR
-#else
-#define __S_IFCHR 4
-#endif
-#endif
-
-#if !defined(__S_IFBLK)
-#ifdef _S_IFBLK
-#define __S_IFBLK _S_IFBLK
-#else
-#define __S_IFBLK 5
+#define __S_IFMT 0170000		/* [XSI] type of file mask */
 #endif
 #endif
 
@@ -78,7 +39,47 @@ struct LOCAL_REPARSE_DATA_BUFFER {
 #ifdef _S_IFFIFO
 #define __S_IFFIFO _S_IFFIFO
 #else
-#define __S_IFFIFO 6
+#define __S_IFFIFO 0010000		/* [XSI] named pipe (fifo) */
+#endif
+#endif
+
+#if !defined(__S_IFCHR)
+#ifdef _S_IFCHR
+#define __S_IFCHR _S_IFCHR
+#else
+#define __S_IFCHR 0020000		/* [XSI] character special */
+#endif
+#endif
+
+#if !defined(__S_IFDIR)
+#ifdef _S_IFDIR
+#define __S_IFDIR _S_IFDIR
+#else
+#define __S_IFDIR 0040000		/* [XSI] directory */
+#endif
+#endif
+
+#if !defined(__S_IFBLK)
+#ifdef _S_IFBLK
+#define __S_IFBLK _S_IFBLK
+#else
+#define __S_IFBLK 0060000		/* [XSI] block special */
+#endif
+#endif
+
+#if !defined(__S_IFREG)
+#ifdef _S_IFREG
+#define __S_IFREG _S_IFREG
+#else
+#define __S_IFREG 0100000		/* [XSI] regular */
+#endif
+#endif
+
+#if !defined(__S_IFLNK)
+#ifdef _S_IFLNK
+#define __S_IFLNK _S_IFLNK
+#else
+#define __S_IFLNK 0120000		/* [XSI] symbolic link */
 #endif
 #endif
 
@@ -86,7 +87,7 @@ struct LOCAL_REPARSE_DATA_BUFFER {
 #ifdef _S_IFSOCK
 #define __S_IFSOCK _S_IFSOCK
 #else
-#define __S_IFSOCK 7
+#define __S_IFSOCK 0140000		/* [XSI] socket */
 #endif
 #endif
 

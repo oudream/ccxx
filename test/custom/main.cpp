@@ -104,7 +104,7 @@ void fn_test(int, int, const void *, int, void *, void *)
     fn_test_encoding3();
 }
 
-void fn_timer1(int)
+void fn_testScan1(int)
 {
     cxPrompt() << "begin time1:";
     vector<CxFilePathInfo> pathInfos;
@@ -122,6 +122,13 @@ void fn_timer1(int)
         }
     }
     cxPrompt() << CxTime::currentSystemTimeString();
+}
+
+void fn_timer1(int)
+{
+    cxPrompt() << "begin time1:";
+
+    testStringFormat1();
 }
 
 int main(int argc, const char * argv[])

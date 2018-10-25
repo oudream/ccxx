@@ -39,3 +39,11 @@ int testString12()
 
     return 0;
 }
+
+int testStringFormat1()
+{
+    string sSession = "xxxxx";
+    string sStructType = "bbbbb";
+    string sOutBegin = CxString::format("{\"session\":\"%s\",\"structtype\":\"%s\",\"data\":[", sSession.c_str());
+    cxPrompt() << "test format2";
+}

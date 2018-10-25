@@ -1,7 +1,6 @@
 /cmake-*
 /.idea
 /build/deploy
-/build/cmake-*
 /build/cmake/cmake-*
 /deploy
 /.svn
