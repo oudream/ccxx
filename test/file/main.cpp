@@ -62,48 +62,95 @@ void testFileSuffixName()
     cout << CxFileSystem::extractFileName(s4) << endl;
 }
 
-void fn_test_scandir()
+void fn_test_scandir(const string& sScanPath)
 {
-	vector<CxFilePathInfo> pathInfos;
-	CxFileSystem::scanDir("T:\\deploy\\data\\IcsRtDataSpy", pathInfos, true, false);
-	int64 r = 0;
-	for (size_t i = 0; i < pathInfos.size(); ++i)
-	{
-		const CxFilePathInfo &pathInfo = pathInfos.at(i);
-		cxPrompt() << pathInfo.fileName << " : " << pathInfo.creationTime << pathInfo.lastWriteTime;
-	}
+    vector<CxFilePathInfo> pathInfos;
+    CxFileSystem::scanDir(sScanPath, pathInfos, true, true);
+    int64 r = 0;
+    cxPrompt() << "sScanPath=" << sScanPath;
+    cxPrompt() << "pathInfos.size=" << pathInfos.size();
+    cxPrompt() << "print top 20:";
+    for (size_t i = 0; i< 20 && i < pathInfos.size(); ++i)
+    {
+        const CxFilePathInfo &pathInfo = pathInfos.at(i);
+        cxPrompt() << pathInfo.filePath();
+    }
 }
 
-void fn_timer_timeout(int iInterval)
+void fn_test_create(const string& sScanPath)
 {
-	cxPrompt() << CxTime::currentSystemTimeString();
+    CxFileSystem::createDirMultiLevel(sScanPath);
+    for (int j = 0; j < 20; ++j)
+    {
+        string sNow = CxTime::currentSystemTimeString('-', 'd', '-');
+        string sFilePath = CxFileSystem::mergeFilePath(sScanPath, CxString::format("²âÊÔ-Ö®-%s-%d.log", sNow.c_str(), j));
+        string sText;
+        for (int i = 0; i < j; ++i)
+        {
+            sText += "²âÊÔµÄÄÚÈÝabc123-";
+        }
+        CxFile::save(sFilePath, sText);
+        cxPrompt() << "Create File: " << sFilePath;
+    }
+}
 
-	//fn_test_scandir();
+void fn_test_delete(const string& sScanPath)
+{
+    CxFileSystem::removeDir(sScanPath);
+    cxPrompt() << "removeDir: " << sScanPath;
+}
+
+void fn_timer_timeout_create_delete(int iInterval)
+{
+    static int iIndex = 0;
+    msepoch_t dtNow = CxTime::currentSystemTime();
+    if (iIndex++ % 2)
+    {
+        fn_test_create("D:\\ics4000-ÂÀÅàÁú\\deploy\\log\\tmp01");
+    }
+    else
+    {
+        fn_test_delete("D:\\ics4000-ÂÀÅàÁú\\deploy\\log\\tmp01");
+    }
+    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
+    cxPrompt() << "";
+}
+
+void fn_timer_timeout_scan(int iInterval)
+{
+    msepoch_t dtNow = CxTime::currentSystemTime();
+    fn_test_scandir("D:\\ics4000-ÂÀÅàÁú\\deploy\\history");
+    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
+    cxPrompt() << "";
+    fn_test_scandir("D:\\ics4000-ÂÀÅàÁú\\deploy\\log");
+    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
+    cxPrompt() << "";
 }
 
 int main(int argc,const char *argv[])
 {
     CxApplication::init(argc, argv);
 
-    string s1 = "c:/temp/a/b/e\\f/g";
-    string s2 = "./h";
-    string s3 = "./../k";
-    string s4 = "../l";
-    string s5 = "..m";
-
- //   string sMsg = CxFileSystem::cd(s2, s1);
- //   cout << sMsg << endl;
- //   sMsg = CxFileSystem::cd(s3, s1);
- //   cout << sMsg << endl;
- //   sMsg = CxFileSystem::cd(s4, s1);
- //   cout << sMsg << endl;
- //   sMsg = CxFileSystem::cd(s5, s1);
- //   cout << sMsg << endl;
+//    string s1 = "c:/temp/a/b/e\\f/g";
+//    string s2 = "./h";
+//    string s3 = "./../k";
+//    string s4 = "../l";
+//    string s5 = "..m";
+//
+//    string sMsg = CxFileSystem::cd(s2, s1);
+//    cout << sMsg << endl;
+//    sMsg = CxFileSystem::cd(s3, s1);
+//    cout << sMsg << endl;
+//    sMsg = CxFileSystem::cd(s4, s1);
+//    cout << sMsg << endl;
+//    sMsg = CxFileSystem::cd(s5, s1);
+//    cout << sMsg << endl;
 // 	  cout << CxFileSystem::cd(s3, s1) << endl;
 //    cout << CxFileSystem::cd(s4, s1) << endl;
 //    cout << CxFileSystem::cd(s5, s1) << endl;
 
-    CxTimerManager::startTimer(fn_timer_timeout, 30);
+//    CxTimerManager::startTimer(fn_timer_timeout_create_delete, 1000);
+    CxTimerManager::startTimer(fn_timer_timeout_scan, 1000);
 
     CxApplication::exec();
 

@@ -1,7 +1,7 @@
 /cmake-*
 /.idea
 /build/deploy
-/build/cmake/cmake-*
+/build/cmake-*
 /deploy
 /.svn
 /cxpython/build

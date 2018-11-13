@@ -1571,12 +1571,9 @@ void CxFileSystem::scanDir(const std::string &sPath, vector<PathInfo> &pathInfos
                         pathInfos.push_back(pathInfo);
                     }
                 }
-                strcpy(szFile, path);
-                strcat(szFile, "//");
-                strcat(szFile, FindFileData.cFileName);
                 if (bIncludeSubDir)
                 {
-                    scanDir(szFile, pathInfos, bIncludeSubDir, bContainDir, ignoreDirNames);
+                    scanDir(mergeFilePath(path,FindFileData.cFileName), pathInfos, bIncludeSubDir, bContainDir, ignoreDirNames);
                 }
             }
         }
