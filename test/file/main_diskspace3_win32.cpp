@@ -82,7 +82,7 @@ public:
     std::string device;             // \Device\HarddiskVolume5
     std::string type;               // Fixed
     std::vector<std::string> paths; // F:\       //
-    std::string label;              // �¼Ӿ�
+    std::string label;              // 新加卷
     std::string serial;             // 2674BF26
     std::string format;             // NTFS
     std::string flags;              // 3E700FF
@@ -91,7 +91,7 @@ public:
 
     DiskInfo():totalSize(0),freeSize(){}
     ~DiskInfo(){}
-    inline DiskInfo(const DiskInfo &o) : 
+    inline DiskInfo(const DiskInfo &o) :
         volume(o.volume),
         device(o.device),
         type(o.type),
