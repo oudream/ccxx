@@ -65,15 +65,17 @@ void testFileSuffixName()
 void fn_test_scandir(const string& sScanPath)
 {
     vector<CxFilePathInfo> pathInfos;
-    CxFileSystem::scanDir(sScanPath, pathInfos, true, true);
+    CxFileSystem::scanDir(sScanPath, pathInfos, false, true);
     int64 r = 0;
     cxPrompt() << "sScanPath=" << sScanPath;
     cxPrompt() << "pathInfos.size=" << pathInfos.size();
     cxPrompt() << "print top 20:";
-    for (size_t i = 0; i< 20 && i < pathInfos.size(); ++i)
+    for (size_t i = 0; i< 100 && i < pathInfos.size(); ++i)
     {
         const CxFilePathInfo &pathInfo = pathInfos.at(i);
         cxPrompt() << pathInfo.filePath();
+        cxPrompt() << ", creationTime=" << CxTime::toString(pathInfo.creationTime) << ", lastWriteTime=" << CxTime::toString(pathInfo.lastWriteTime);
+        cxPrompt() << "";
     }
 }
 
@@ -119,18 +121,25 @@ void fn_timer_timeout_create_delete(int iInterval)
 void fn_timer_timeout_scan(int iInterval)
 {
     msepoch_t dtNow = CxTime::currentSystemTime();
-    fn_test_scandir("D:\\ics4000-ÂÀÅàÁú\\deploy\\history");
+//    fn_test_scandir("D:\\ics4000-ÂÀÅàÁú\\deploy\\history");
+//    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
+//    cxPrompt() << "";
+//    fn_test_scandir("D:\\ics4000-ÂÀÅàÁú\\deploy\\log");
+//    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
+//    cxPrompt() << "";
+    fn_test_scandir("C:\\ddd\\ygct\\nodejs3\\node_modules\\oracledb");
     cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
     cxPrompt() << "";
-    fn_test_scandir("D:\\ics4000-ÂÀÅàÁú\\deploy\\log");
-    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
-    cxPrompt() << "";
+    CxTimerManager::stopTimer(fn_timer_timeout_scan);
 }
 
 int main(int argc,const char *argv[])
 {
     CxApplication::init(argc, argv);
 
+    cxPrompt() << CxTime::currentSystemTime();
+    cxPrompt() << CxTime::currentSystemTimeString();
+    cxPrompt() << CxTime::toString(CxTime::currentSystemTime());
 //    string s1 = "c:/temp/a/b/e\\f/g";
 //    string s2 = "./h";
 //    string s3 = "./../k";
