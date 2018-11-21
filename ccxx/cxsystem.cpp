@@ -219,7 +219,7 @@ public:
         {
             for (int i = 0; i < paths.size(); ++i)
             {
-                char cDrive2 = extractRoot(sPath);
+                char cDrive2 = extractRoot(paths[i]);
                 if (tolower(cDrive) == tolower(cDrive2))
                 {
                     return true;
