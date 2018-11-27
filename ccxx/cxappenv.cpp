@@ -362,6 +362,8 @@ map<string, string> CxAppEnv::argumentsFromArgcv(int argc, const char *argv[])
             {
                 sValue.resize(sValue.size() - 1);
                 r[sName] = sValue;
+                f_argument.append(sValue);
+                f_argument.push_back(' ');
             }
         }
         else
@@ -474,7 +476,8 @@ bool CxAppEnv::singleInstance(int argc, const char *argv[])
                 if (ERROR_ALREADY_EXISTS == dwRet)
                 {
                     string sInfo = sApplicationFilePath+string(" is running!!!");
-                    ::MessageBox(NULL,sInfo.c_str(),"SingleInstance error",MB_OKCANCEL);
+                    ::cout<<"SingleInstance error: "<<sInfo<<endl; 
+//                    ::MessageBox(NULL,sInfo.c_str(),"SingleInstance error",MB_OKCANCEL);
                     ::CloseHandle(m_hMutex);
                     bRet = false;
                 }
