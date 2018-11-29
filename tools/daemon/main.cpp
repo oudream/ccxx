@@ -1,14 +1,3 @@
-/* ---------------------------------------------------------------------------
-*file:      GCDaemon
-*ingroup:   tools
-*author:    oudream , luliangbin
-*date:      2013/10/29
-*brief:     window only
-*           GCDaemon.exe -n 5561;5562 -t 6000 -p a.exe;b.exe
-*           UDP Port  5561  TimeOut 6000 ms
-*modify:    2013/10/29 create
----------------------------------------------------------------------------*/
-
 #include "common.cpp"
 
 #define GM_BUFFER_SZIE 4096

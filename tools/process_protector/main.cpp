@@ -54,8 +54,8 @@ DWORD WINAPI MyThreadFun2( LPVOID lpParam )
         }
         else
         {
-            if (f_tFirstRec == 0) f_tFirstRec = CxTime::currentMsepoch();
-            f_tLastRec = CxTime::currentMsepoch();
+            if (f_tFirstRec == 0) f_tFirstRec = CxTime::currentSystemTime();
+            f_tLastRec = CxTime::currentSystemTime();
             cout << "接收数据长度：" << iRecLen << endl;
         }
     }
@@ -186,7 +186,7 @@ int main(int argc, const char *argv[])
                 break;
 
             //大于3秒没收到数据重启进程
-            if (f_tFirstRec != 0 && (CxTime::currentMsepoch() - f_tLastRec > 3000))
+            if (f_tFirstRec != 0 && (CxTime::currentSystemTime() - f_tLastRec > 3000))
             {
                 closesocket(f_sk);   //关闭套接字
                 f_bMyThreadFun2Cancel = true;

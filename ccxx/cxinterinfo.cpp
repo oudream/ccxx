@@ -891,7 +891,7 @@ string CxConsoleInterinfo::waitInputLine(fn_void_t fnProcessEvents, int iTimeOut
     f_pConsoleInputTag = pTag;
     try
     {
-        msepoch_t dtNow = CxTime::currentMsepoch();
+        msepoch_t dtNow = CxTime::currentSystemTime();
         while (1)
         {
             if (sLine.size()>0)
@@ -944,7 +944,7 @@ string CxConsoleInterinfo::waitInputCmd(fn_void_t fnProcessEvents, int iTimeOut,
     try
     {
 
-        msepoch_t dtNow = CxTime::currentMsepoch();
+        msepoch_t dtNow = CxTime::currentSystemTime();
         while (1)
         {
             if (sCmd.size()>0)

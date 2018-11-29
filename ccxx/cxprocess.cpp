@@ -518,6 +518,36 @@ bool CxProcess::isRunning(const std::string &sProcessName)
 #endif
 }
 
+bool CxProcess::isRunning(pid_os_t pid)
+{
+    bool r = false;
+#ifdef GM_OS_WIN
+    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnapShot == INVALID_HANDLE_VALUE)
+    {
+        return r;
+    }
+    PROCESSENTRY32 pe;
+    pe.dwSize = sizeof(PROCESSENTRY32);
+    if(Process32First(hSnapShot,&pe))
+    {
+        while (Process32Next(hSnapShot,&pe))
+        {
+            if(pid.dwProcessId == pe.th32ProcessID)
+            {
+                r = true;
+                break;
+            }
+        }
+    }
+    ::CloseHandle(hSnapShot);
+    return r;
+#else
+    //needtodo
+    return -1;
+#endif
+}
+
 int CxProcess::kill(const std::string &sProcessName)
 {
     int r = -1;

@@ -32,6 +32,8 @@ cd /d %sExecPath%
 #nt [network timeout]是网络超时，没有收到数据的超时 --{默认为"5000"}
 #nh [network heart]是网络心跳报文 --{默认为"a55aa55a"}
 #pp [process param]进程的参数
+#pm [process mode]进程模式 0 无窗口 1 控制台
+#dm [damon  mode]守护方式  0 正常守护,1 不许运行
 #注意 : 多个应用程序之间用分隔符';',参数不填为默认值
 #-config pf=%sPathYgct_rtdb%;pf=%sPathYgct_104_v100%,pt=1,pw=3000,np=5566,nt=6600,nh=a55aa55a
 start %sExecPath%gcdaemon.exe -config pf=%sPathYgct_104_v100%,pt=1,pw=3000,np=5566,nt=6600,nh=a55aa55a;pf=%sPathYgct_rtdb%

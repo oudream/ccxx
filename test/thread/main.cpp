@@ -24,7 +24,7 @@ protected:
         while (_isStarted)
         {
             cxPrompt() << "this thread say: ";
-            cxPrompt() << CxTime::currentMsepochString();
+            cxPrompt() << CxTime::currentSystemTimeString();
             CxThread::sleep(1000);
         }
     }

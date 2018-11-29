@@ -44,7 +44,7 @@ void DoWork()
 
 void fn_timer_timeout(int iInterval)
 {
-	cxPrompt() << CxTime::currentMsepochString();
+	cxPrompt() << CxTime::currentSystemTimeString();
 	DoWork();
 }
 

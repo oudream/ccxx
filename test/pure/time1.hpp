@@ -12,7 +12,7 @@ void testTime1()
     msepoch_t l2;
     for (size_t i = 0; i < 1000 * 100; ++i)
     {
-        l1 = CxTime::currentMsepoch();
+        l1 = CxTime::currentSystemTime();
         l2 = CxTime::currentSystemTime();
         ls1.push_back(l1);
         ls2.push_back(l2);

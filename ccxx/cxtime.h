@@ -45,7 +45,7 @@ public:
      */
     static msepoch_t currentMsepoch();
 
-    inline static std::string currentMsepochString(char sSplit1 = '/', char sSplit2 = ' ', char sSplit3 = ':') { return toString(currentMsepoch(), sSplit1, sSplit2, sSplit3); }
+    inline static std::string currentMsepochString(char sSplit1 = '/', char sSplit2 = ' ', char sSplit3 = ':') { return toString(currentSystemTime(), sSplit1, sSplit2, sSplit3); }
 
     /**
      * @brief os.time count seconds(since 1970-01-01 's count ms)

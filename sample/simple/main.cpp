@@ -101,7 +101,7 @@ int main(int argc, const char*argv[])
 
     cxPrompt() << CxNetwork::getHostName();
 
-    std::string sFilePath = CxFileSystem::mergeFilePath(CxAppEnv::tempPath(), CxTime::currentMsepochString(0, 0, 0)+".xml");
+    std::string sFilePath = CxFileSystem::mergeFilePath(CxAppEnv::tempPath(), CxTime::currentSystemTimeString(0, 0, 0)+".xml");
     std::vector<std::map<std::string, std::string> > rows;
     for (size_t i = 0; i < 100; ++i)
     {

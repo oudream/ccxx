@@ -45,7 +45,7 @@ CxDatabase::getDefaultDb()
 
 CxDatabase::CxDatabase()
 {
-    _sqlLastSuccessTime = CxTime::currentMsepoch();
+    _sqlLastSuccessTime = CxTime::currentSystemTime();
     _reconnectTime = 0;
 }
 
@@ -396,7 +396,7 @@ CxDatabase::setSqlLastSuccessTime(int rSqlExec)
 {
     if (rSqlExec > 0)
     {
-        _sqlLastSuccessTime = CxTime::currentMsepoch();
+        _sqlLastSuccessTime = CxTime::currentSystemTime();
     }
     else
     {
@@ -405,7 +405,7 @@ CxDatabase::setSqlLastSuccessTime(int rSqlExec)
         {
             closeDatabase();
             openDatabase();
-            _reconnectTime = CxTime::currentMsepoch();
+            _reconnectTime = CxTime::currentSystemTime();
             cxPrompt() << _connectSource << " [warn:re open database 2]";
         }
     }
@@ -746,7 +746,7 @@ CxDatabaseManager::connectCheck(int iInterval)
                     oDb->closeDatabase();
                     oDb->openDatabase();
                     cxPrompt() << oDb->connectSource() << " [warn:re open database 1]";
-                    oDb->_reconnectTime = CxTime::currentMsepoch();
+                    oDb->_reconnectTime = CxTime::currentSystemTime();
                 }
             }
             //

@@ -64,7 +64,7 @@ public:
 
     CxProcMutexScope(CxProcMutex& mutex, long milliseconds): _mutex(& mutex)
     {
-        msepoch_t dtNow = CxTime::currentMsepoch();
+        msepoch_t dtNow = CxTime::currentSystemTime();
         do
         {
             try
@@ -84,7 +84,7 @@ public:
 
     CxProcMutexScope(CxProcMutex * mutex, long milliseconds): _mutex(mutex)
     {
-        msepoch_t dtNow = CxTime::currentMsepoch();
+        msepoch_t dtNow = CxTime::currentSystemTime();
         do
         {
             try

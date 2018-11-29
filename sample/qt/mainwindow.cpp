@@ -41,7 +41,7 @@ void MainWindow::timer_timeOut(const CxTimer *oTimer)
 {
     if (oTimer == &_timer1)
     {
-        outInfo(CxString::toString(CxTime::currentMsepoch()));
+        outInfo(CxString::toString(CxTime::currentSystemTime()));
     }
 }
 
@@ -59,7 +59,7 @@ void MainWindow::outInfo(const QString &sInfo)
 
 void MainWindow::on_pushButton_1_clicked()
 {
-    outInfo(CxTime::currentMsepochString());
+    outInfo(CxTime::currentSystemTimeString());
 }
 
 void MainWindow::on_pushButton_2_clicked()

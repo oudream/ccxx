@@ -83,6 +83,8 @@ public:
 
     static bool isRunning(const std::string & sProcessName);
 
+    static bool isRunning(pid_os_t pid);
+
     /**
      * get system cpu usage
      * @return nanosecond

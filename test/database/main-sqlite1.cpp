@@ -9,7 +9,7 @@ void fn_timer_timeout(int iInterval)
 {
 	static int iIndex = 0;
 	++ iIndex;
-	msepoch_t dtNow = CxTime::currentMsepoch();
+	msepoch_t dtNow = CxTime::currentSystemTime();
 	CxDatabase * pDb = CxDatabaseManager::getDefaultDb();
 	if (pDb == NULL)
 	{

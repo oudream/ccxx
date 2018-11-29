@@ -67,9 +67,9 @@ static msepoch_t f_dtApplicationExecute = 0;
 long   __stdcall   fn_Windows_Exception_callback(EXCEPTION_POINTERS* excp)
 {
     string sMsg = "Windows_Exception(Unhandled) : [CxApplication will exit]";
-    sMsg += "\nException_Time= " + CxTime::currentMsepochString();
+    sMsg += "\nException_Time= " + CxTime::currentSystemTimeString();
     sMsg += CxString::format("\nException_Address= %x" , excp->ExceptionRecord->ExceptionAddress);
-    sMsg += "\nCPU_Register: " + CxTime::currentMsepochString();
+    sMsg += "\nCPU_Register: " + CxTime::currentSystemTimeString();
     sMsg += CxString::format("\nException_Time=eax   %x   ebx   %x   ecx   %x   edx   %x",
         excp->ContextRecord->SegGs,
         excp->ContextRecord->SegFs,
@@ -338,7 +338,7 @@ void CxApplication::init(int argc, const char *argv[], int iProjectType)
         return;
     }
 
-    f_dtApplicationInit = CxTime::currentMsepoch();
+    f_dtApplicationInit = CxTime::currentSystemTime();
 
     f_applicationProcessId = CxProcess::getCurrentPid();
 
@@ -434,7 +434,7 @@ int CxApplication::exec(int iTag)
     if (f_iApplicationStatus != 1)
 		return iResult;
 
-    f_dtApplicationStart = CxTime::currentMsepoch();
+    f_dtApplicationStart = CxTime::currentSystemTime();
 
     f_applicationThreadId = cx_pthread_self();
 
@@ -447,7 +447,7 @@ int CxApplication::exec(int iTag)
         fn();
     }
 
-    f_dtApplicationExecute = CxTime::currentMsepoch();
+    f_dtApplicationExecute = CxTime::currentSystemTime();
 
     //*running
     f_iApplicationStatus = 2;
@@ -510,11 +510,11 @@ int CxApplication::exec(int iTag)
 #endif
 	if (iResult > 0)
 	{
-		cxDebug() << "CxApplication::doLoopEvents end " << CxTime::currentMsepochString();
+		cxDebug() << "CxApplication::doLoopEvents end " << CxTime::currentSystemTimeString();
 	}
 	else
 	{
-		cxPrompt() << "Unknow_Exception(by throw and catch) : [CxApplication will exit] at " << CxTime::currentMsepochString();
+		cxPrompt() << "Unknow_Exception(by throw and catch) : [CxApplication will exit] at " << CxTime::currentSystemTimeString();
 	}
     if (! f_bApplicationHasStop)
     {
@@ -683,7 +683,7 @@ std::vector<fn_void_t> * CxApplication::getFnStops()
 void CxApplication::assertDeal(int, int, const void *_Expression, int _line, void *_file, void *)
 {
     string sFilePath = CxFileSystem::mergeFilePath( CxAppEnv::logPath(), "error.log" );
-    string dtNow = CxTime::currentMsepochString();
+    string dtNow = CxTime::currentSystemTimeString();
     string sHead = CxString::format("assert\r\n%s\r\n%s\r\n", dtNow.c_str(), CxAppEnv::applicationFilePath().c_str());
     FILE * pFile;
     pFile = fopen (sFilePath.c_str(), "ab+");
@@ -699,14 +699,14 @@ void CxApplication::raiseFnStops()
 {
     vector<fn_void_t> * oFnStops = getFnStops();
     cxDebug() << "CxApplication::stop >> " << "oFnStops.size=" << oFnStops->size();
-    cxDebug() << "CxApplication::stop >> " << CxTime::currentMsepochString();
+    cxDebug() << "CxApplication::stop >> " << CxTime::currentSystemTimeString();
     for (size_t i = 0; i < oFnStops->size(); ++i)
     {
         fn_void_t fn = oFnStops->at(i);
         fn();
-        cxDebug() << "CxApplication::stop >> " << i << " datetime=" << CxTime::currentMsepochString();
+        cxDebug() << "CxApplication::stop >> " << i << " datetime=" << CxTime::currentSystemTimeString();
     }
-    cxDebug() << "CxApplication::stop >> " << CxTime::currentMsepochString();
+    cxDebug() << "CxApplication::stop >> " << CxTime::currentSystemTimeString();
     CxLogManager::stopLog();
     CxInterinfo::stopInterInfo();
 }

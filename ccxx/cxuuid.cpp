@@ -66,7 +66,7 @@ GUID CxUuid::guidFromString(const string &sGuidString)
 
 string CxUuid::createRandString()
 {
-    string r = CxString::toString(CxTime::currentMsepoch());
+    string r = CxString::toString(CxTime::currentSystemTime());
 
     int i1 = (CxMath::random(255) << 24) & 0xFF000000;
     int i2 = (CxMath::random(255) << 24) & 0x00FF0000;

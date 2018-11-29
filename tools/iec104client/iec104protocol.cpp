@@ -141,7 +141,7 @@ int IEC104Protocol::SendCallUp(unsigned short reason, unsigned short stationId, 
     data[14] = (address >> 16);
     data[15] = 0x14;
 
-    _lastCallUpTime = CxTime::currentMsepoch();
+    _lastCallUpTime = CxTime::currentSystemTime();
     return SendFrameI(data, 16);
 }
 

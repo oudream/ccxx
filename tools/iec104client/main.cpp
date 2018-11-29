@@ -155,7 +155,7 @@ int main(void)
             iec104.ProtocolReceivedData(pData, data.size());
         }
 
-        iec104.ProtocolTimerTimeOut(CxTime::currentMsepoch());
+        iec104.ProtocolTimerTimeOut(CxTime::currentSystemTime());
         sleep(5);
     }
 

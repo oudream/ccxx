@@ -99,9 +99,14 @@ void fn_test_encoding3()
     CxFile::save("/fff/901.txt", sFileString2);
 }
 
+void fn_test_alert()
+{
+    assert(1 < 0);
+}
+
 void fn_test(int, int, const void *, int, void *, void *)
 {
-    fn_test_encoding3();
+    fn_test_alert();
 }
 
 void fn_testScan1(int)

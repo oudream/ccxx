@@ -41,7 +41,7 @@ void fn_timer_timeout_procMutex(int iInterval)
 {
     int iWrote = fn_test_procMutex();
 
-    cxPrompt() << CxTime::currentMsepochString();
+    cxPrompt() << CxTime::currentSystemTimeString();
     cxPrompt() << "fn_test_procMutex.result=" << iWrote << ++iCount;
 
     int iPing = CxNetwork::ping("10.31.58.5");

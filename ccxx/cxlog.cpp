@@ -402,7 +402,7 @@ CxLogRealtime::interinfo_out(const string &sInfo, const std::string &sTitle, int
             sText = fn_getLogString(sInfo, type, reason, source, target, tag);
         else
             sText = fn_getLogString(sInfo, sTitle, type, reason, source, target, tag);
-        sText = CxTime::currentMsepochString() + " " + sText + "\r\n";
+        sText = CxTime::currentSystemTimeString() + " " + sText + "\r\n";
         size_t iWrote = fwrite(const_cast<char *>(sText.data()), 1, sText.size(), oFile);
 //        fflush(_fileRt);
         _fileCountRt += sText.size();
@@ -445,10 +445,10 @@ void CxLogThread::run()
         else
         {
             //period 1 hour
-            static msepoch_t dtNextChecktTime = CxTime::currentMsepoch();
-            if (CxTime::currentMsepoch() > dtNextChecktTime)
+            static msepoch_t dtNextChecktTime = CxTime::currentSystemTime();
+            if (CxTime::currentSystemTime() > dtNextChecktTime)
             {
-                dtNextChecktTime = CxTime::currentMsepoch() + (1000 * 60 * 60);
+                dtNextChecktTime = CxTime::currentSystemTime() + (1000 * 60 * 60);
                 fn_clearLogFiles();
             }
             CxThread::sleep(15);
@@ -490,7 +490,7 @@ void CxLogThread::doSaveLog()
             const string &sLogString = _logStringsPop->at(i);
             FILE *oFile = _logFilesPop->at(i);
 
-            string sText = CxTime::currentMsepochString() + " " + sLogString + "\r\n";
+            string sText = CxTime::currentSystemTimeString() + " " + sLogString + "\r\n";
             size_t iWrote = fwrite(const_cast<char *>(sText.data()), 1, sText.size(), oFile);
 
             fflush(oFile);

@@ -10,7 +10,7 @@ void timerCursor1(int iInterval)
 {
     static int iIndex = 0;
     ++ iIndex;
-    msepoch_t dtNow = CxTime::currentMsepoch();
+    msepoch_t dtNow = CxTime::currentSystemTime();
     CxDatabase * oDb = CxDatabaseManager::getDefaultDb();
     if (oDb == NULL)
     {
@@ -76,7 +76,7 @@ void timerCursor2(int iInterval)
 {
     static int iIndex = 0;
     ++ iIndex;
-    msepoch_t dtNow = CxTime::currentMsepoch();
+    msepoch_t dtNow = CxTime::currentSystemTime();
     CxDatabase * oDb = CxDatabaseManager::getDefaultDb();
     if (oDb == NULL)
     {
@@ -119,7 +119,7 @@ void timerCursor3(int iInterval)
 {
     static int iIndex = 0;
     ++ iIndex;
-    msepoch_t dtNow = CxTime::currentMsepoch();
+    msepoch_t dtNow = CxTime::currentSystemTime();
     CxDatabase * oDb = CxDatabaseManager::getDefaultDb();
     if (oDb == NULL)
     {
