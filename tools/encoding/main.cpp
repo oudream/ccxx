@@ -40,15 +40,28 @@ void testFileUtf8ToGb2312()
     string sText = CxFile::load(sFilePath);
     string sGbkText = CxEncoding::utf8ToGb2312(sText);
     CxFile::save(sFilePath2, sGbkText);
-
     system("set");
 }
 
-void fn_test(int, int, const void *, int, void *, void *)
+void testFileBase64Decode1()
+{
+    string sFilePath = "F:\\tmp\\license.txt";
+    string sFilePath2 = "F:\\tmp\\license.bin";
+    string sText = CxFile::load(sFilePath);
+    string sBase64Decode = CxEncoding::base64Decode(sText);
+    CxFile::save(sFilePath2, sBase64Decode);
+    cxPrompt() << "decode from [" << sFilePath << "] to [" << sFilePath2 << "]." ;
+}
+
+void fn_test1(int, int, const void *, int, void *, void *)
 {
     testFileGb2312ToUtf8();
-
     testFileUtf8ToGb2312();
+}
+
+void fn_test2(int, int, const void *, int, void *, void *)
+{
+    testFileBase64Decode1();
 }
 
 void fn_timer1(int)
@@ -106,7 +119,7 @@ int main(int argc, const char *argv[])
 
     CxApplication::init(argc, argv);
 
-    CxApplication::pushProcessCallBack(fn_test);
+    CxApplication::pushProcessCallBack(fn_test2);
 
     CxInterinfoIn::addObserver(fn_interinfo_in_cmd);
 

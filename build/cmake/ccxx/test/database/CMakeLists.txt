@@ -4,10 +4,10 @@ set(fslOdbcSources
         database/main-odbc1.cpp
         )
 
-mc_merge_file_path(${gs_ccxx_test_path} "${fslOdbcSources}" fslSourcePaths)
+mc_merge_file_path(${gs_ccxx_test_path} "${fslOdbcSources}" fslOdbcSourcePaths)
 
 add_executable(cxtest_database_odbc
-        ${fslSourcePaths})
+        ${fslOdbcSourcePaths})
 
 add_dependencies(cxtest_database_odbc
         ccxx
@@ -30,10 +30,10 @@ set(fslSqliteSources
         database/main-sqlite1.cpp
         )
 
-mc_merge_file_path(${gs_ccxx_test_path} "${fslSqliteSources}" fslSourcePaths)
+mc_merge_file_path(${gs_ccxx_test_path} "${fslSqliteSources}" fslSqliteSourcePaths)
 
 add_executable(cxtest_database_sqlite
-        ${fslSourcePaths})
+        ${fslSqliteSourcePaths})
 
 add_dependencies(cxtest_database_sqlite
         ccxx

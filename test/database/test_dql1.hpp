@@ -175,3 +175,24 @@ void timerDql1(int iInterval)
     cxPrompt() << CxTime::milliSecondDifferToNow(dtNow);
     cxPrompt() << " --- --- --- --- ---";
 }
+
+void testDql6()
+{
+    CxDatabase * pDb = CxDatabaseManager::getDefaultDb();
+
+    string sSql = "select * from ICS.\"t1\"";
+
+    if (pDb == NULL)
+    {
+        return;
+    }
+    int nRst = 0;
+    vector<std::vector<std::string> > tRows;
+    vector<std::string> tFields;
+    nRst += pDb->loadSql(sSql, tRows, &tFields);
+    cxPrompt() << "tRows.size() : " << tRows.size();
+    for (int i = 0; i < tRows.size() && i < 10; ++i)
+    {
+        cxPrompt() << tRows[i];
+    }
+}
