@@ -151,7 +151,7 @@ public:
     std::string device;             // \Device\HarddiskVolume5
     std::string type;               // Fixed
     std::vector<std::string> paths; // F:\       //
-    std::string label;              // �¼Ӿ�
+    std::string label;              // �¼Ӿ�
     std::string serial;             // 2674BF26
     std::string format;             // NTFS
     std::string flags;              // 3E700FF
@@ -568,14 +568,6 @@ CxSystem::getDiskInfos()
 }
 
 #else
-
-CxSystem::SysInfo CxSystem::getSysInfo()
-{
-    CxSystem::SysInfo r;
-
-    //todo oudream
-    return r;
-}
 
 CxSystem::SysInfo CxSystem::getSysInfo()
 {

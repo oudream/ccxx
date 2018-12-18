@@ -45,8 +45,8 @@ void testFileUtf8ToGb2312()
 
 void testFileBase64Decode1()
 {
-    string sFilePath = "F:\\tmp\\license.txt";
-    string sFilePath2 = "F:\\tmp\\license.bin";
+    string sFilePath = "/fff/tmp/license/pubkey.txt";
+    string sFilePath2 = "/fff/tmp/license/pubkey.bin";
     string sText = CxFile::load(sFilePath);
     string sBase64Decode = CxEncoding::base64Decode(sText);
     CxFile::save(sFilePath2, sBase64Decode);
