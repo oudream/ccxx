@@ -46,4 +46,5 @@ int testStringFormat1()
     string sStructType = "bbbbb";
     string sOutBegin = CxString::format("{\"session\":\"%s\",\"structtype\":\"%s\",\"data\":[", sSession.c_str());
     cxPrompt() << "test format2";
+    return 0;
 }

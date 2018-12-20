@@ -5,14 +5,15 @@
 
 using namespace std;
 
-RSA* createRSA(unsigned char * key) {
-    RSA *rsa = NULL;
-    BIO *keybio = NULL;
-    keybio = BIO_new_mem_buf(key, -1);
+RSA* createRSA(unsigned char * key)
+{
+    BIO *keybio = BIO_new_mem_buf(key, -1);
     if (keybio == NULL) {
         return 0;
     }
-    return PEM_read_bio_RSA_PUBKEY(keybio, &rsa, NULL, NULL);
+    RSA * r = PEM_read_bio_RSA_PUBKEY(keybio, NULL, NULL, NULL);
+    BIO_free(keybio);
+    return r;
 }
 
 int main_0() {
@@ -33,13 +34,16 @@ int main_0() {
     printf("\n");
 }
 
-int main() {
+int main_1()
+{
 
-    string sEncrypted = CxFile::load("/fff/tmp/license/license2.txt");
+//    string sEncrypted = CxFile::load("/fff/tmp/license/license2.txt");
+    string sEncrypted = CxFile::load("f:/tmp/ygctlicense1.txt");
     sEncrypted = CxEncoding::base64Decode(sEncrypted);
 
     string sPublicKey = "-----BEGIN PUBLIC KEY-----\n" +
-                        CxFile::load("/fff/tmp/license/pubkey.txt") +
+//                        CxFile::load("/fff/tmp/license/pubkey.txt") +
+                        CxFile::load("f:/tmp/pubkey.txt") +
                         "\n-----END PUBLIC KEY-----\n";
 
     unsigned char decrypted[1024]= {0};
@@ -52,4 +56,68 @@ int main() {
         printf("%02x ",(unsigned char)decrypted[i]);
     }
     printf("\n");
+}
+
+string getRsaDecrypt(const string& sFilePath)
+{
+    string sEncrypted = CxFile::load(sFilePath);
+    sEncrypted = CxEncoding::base64Decode(sEncrypted);
+
+    string sPublicKey = "-----BEGIN PUBLIC KEY-----\n";
+    sPublicKey += "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCQmIxVuzxn2Je5LweL6aZxs7Y9QUBnciFS2cveEH+eKPEdQbp0KaswGAbT127g0ofoCcApyQEiV+cc40dsyD5kDn+fzzejt96rGo00bYR+8t6P57YqaPFfjjt+rVE4nWFADdt5ft6xjFM7OC1BJi3HyBm5ul9n1U8zhdHGyOXmGQIDAQAB";
+    sPublicKey += "\n-----END PUBLIC KEY-----\n";
+
+    unsigned char decrypted[1024]= {0};
+    RSA * oRSA = createRSA((unsigned char *)(sPublicKey.c_str()));
+    int decrypted_length = RSA_public_decrypt(sEncrypted.size(), (unsigned char*)(sEncrypted.c_str()), decrypted, oRSA, RSA_PKCS1_PADDING);
+    RSA_free(oRSA);
+    if(decrypted_length < 0 || decrypted_length > 1024)
+    {
+        return string();
+    }
+    return string((char*)decrypted, decrypted_length);
+}
+
+void fn_test(int, int, const void *, int, void *, void *)
+{
+}
+
+int fn_interinfo_in_cmd( const std::string & sCommand, const std::map<std::string, std::string> & sParams, const msepoch_t & dtIn, int iSource, int eInType, int iTag)
+{
+    if (sCommand == "exit")
+    {
+        CxApplication::exit();
+        return TRUE;
+    }
+    else
+    {
+        cxPrompt() << "in : " << sCommand;
+    }
+    return FALSE;
+}
+
+void fn_timer1(int)
+{
+    string sRsaDecrypt;
+    sRsaDecrypt = getRsaDecrypt("f:/tmp/ygctlicense1.txt");
+    cxPrompt() << sRsaDecrypt;
+    sRsaDecrypt = getRsaDecrypt("f:/tmp/ygctlicense2.txt");
+    cxPrompt() << sRsaDecrypt;
+    sRsaDecrypt = getRsaDecrypt("f:/tmp/ygctlicense3.txt");
+    cxPrompt() << sRsaDecrypt;
+    static int iCount = 0;
+    cxPrompt() << CxTime::currentSystemTimeString() << " - count = " << iCount++;
+}
+
+int main(int argc, const char *argv[])
+{
+    CxApplication::init(argc, argv);
+
+    CxApplication::pushProcessCallBack(fn_test);
+
+    CxInterinfoIn::addObserver(fn_interinfo_in_cmd);
+
+    CxTimerManager::startTimer(fn_timer1, 100);
+
+    CxApplication::exec();
 }

@@ -1,4 +1,3 @@
-
 #include <ccxx/ccxx.h>
 
 //#include <ucommon/file.h>
@@ -13,7 +12,6 @@ using namespace std;
 #include "timer1.hpp"
 #include "string1.hpp"
 */
-
 
 BOOL WINAPI ConsoleHandler(DWORD CEvent)
 {
@@ -48,16 +46,13 @@ BOOL WINAPI ConsoleHandler(DWORD CEvent)
 
 void testConsoleHandler1(int iInterval)
 {
-	if (SetConsoleCtrlHandler(
-		(PHANDLER_ROUTINE)ConsoleHandler,TRUE)==FALSE)
+	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler,TRUE)==FALSE)
 	{
 		// unable to install handler...
 		// display message to the user
 		printf("Unable to install handler!\n");
 		return;
 	}
-
-
 
     cout << "fn_timer_timeout11 -- 1 " << endl;
 
@@ -71,6 +66,5 @@ void testConsoleHandler1(int iInterval)
 	ungetc('\n', stdin);
 
     cout << "fn_timer_timeout11 -- 2 " << endl;
-
 }
 

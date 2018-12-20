@@ -96,7 +96,7 @@ public:
         device(o.device),
         type(o.type),
         label(o.label),
-        serial(o.serial),
+     //   serial(o.serial),
         format(o.format),
         flags(o.flags),
         totalSize(o.totalSize),
@@ -116,7 +116,7 @@ public:
             device = o.device;
             type = o.type;
             label = o.label;
-            serial = o.serial;
+//            serial = o.serial;
             format = o.format;
             flags = o.flags;
             totalSize = o.totalSize;
@@ -261,7 +261,7 @@ std::vector<DiskInfo> getDiskInfos()
 //            _tprintf(TEXT("Format: %s\n"), fsname);
 //            _tprintf(TEXT("Flags:  %X\n"), flags);
             diskInfo.label = std::string(label);
-            diskInfo.serial = CxString::toString(serial);
+//            diskInfo.serial = CxString::toString(serial);
             diskInfo.format = std::string(fsname);
             diskInfo.flags = CxString::toString(flags);
 //            print_flags(flags);
@@ -308,7 +308,7 @@ int main(int argc, const char* argv[])
         cxDebug() << diskInfo.type;     ;
         cxDebug() << diskInfo.paths;     ;
         cxDebug() << diskInfo.label;    ;
-        cxDebug() << diskInfo.serial;   ;
+        //cxDebug() << diskInfo.serial;   ;
         cxDebug() << diskInfo.format;   ;
         cxDebug() << diskInfo.flags;    ;
         cxDebug() << diskInfo.totalSize;;

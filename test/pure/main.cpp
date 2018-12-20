@@ -67,7 +67,7 @@ void fn_test(int, int, const void *, int, void *, void *)
 }
 
 #ifdef GM_OS_WIN
-#include "windows_consolehandler.hpp"
+#include "windows_consolehandler1.hpp"
 #endif
 
 void fn_timer_timeout11(int iInterval)

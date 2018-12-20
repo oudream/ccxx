@@ -28,6 +28,7 @@ message(${CMAKE_CXX_COMPILER_ID})
 
 set(gs_project_include_path ${gs_project_path}/include)
 set(gs_project_3rd_path ${gs_project_path}/3rd)
+set(gs_project_cross_compile_path ${gs_project_path}/build/cross-compile)
 
 if (NOT gs_project_deploy_path)
     set(gs_project_deploy_path ${gs_project_path}/build/deploy)
@@ -63,6 +64,7 @@ include(local.config.cmake)
 include(common.cmake)
 
 include_directories(${gs_project_include_path})
+include_directories(${gs_project_cross_compile_path}/include)
 
 ###lib exe
 set(gs_ccxx_path ${gs_project_path})
