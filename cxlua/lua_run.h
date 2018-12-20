@@ -3,7 +3,7 @@
 
 #include "lua_common.h"
 
-class CxLuaRun
+class GM_CCXX_LUA_API CxLuaRun
 {
 public:
     static void registInitFunction(fn_void_t fn);

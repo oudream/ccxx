@@ -3,7 +3,7 @@
 
 #include "lua_base.h"
 
-class CxLuaInterInfo
+class GM_CCXX_LUA_API CxLuaInterInfo
 {
 protected:
     std::string tableNameImpl();

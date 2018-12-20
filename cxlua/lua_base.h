@@ -5,7 +5,7 @@
 
 
 
-class CxLuaBase
+class GM_CCXX_LUA_API CxLuaBase
 {
 public:
     CxLuaBase();

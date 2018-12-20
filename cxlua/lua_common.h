@@ -28,10 +28,17 @@ const std::string CS_Lua_Empty  = "empty";
 typedef int (*fn_int_lua_t)(lua_State *);
 
  
+#if defined(GM_BUILD_CCXX_LUA_LIB)
+#define GM_CCXX_LUA_API  GM_DECL_EXPORT
+#elif defined(GM_BUILD_CCXX_LUA_CODE)
+#define GM_CCXX_LUA_API
+#else
+#define GM_CCXX_LUA_API  GM_DECL_IMPORT
+// GM_BUILD_CCXX_LUA_INCLUDE
+#endif
 
 
-
-class CxLuaOutInfo
+class GM_CCXX_LUA_API CxLuaOutInfo
 {
 public:
     static inline CxInterinfoOutStream outScriptPrompt() {
@@ -52,7 +59,7 @@ public:
 };
 
 
-class CxLuaCommon
+class GM_CCXX_LUA_API CxLuaCommon
 {
 public:
     //*dofile : run lua file

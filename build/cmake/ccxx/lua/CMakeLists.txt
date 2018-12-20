@@ -5,6 +5,8 @@ mc_clua_include()
 mc_cxlua_base_include()
 mc_cxlua_all_include()
 
+add_definitions(-D"GM_BUILD_CCXX_LUA_LIB")
+
 add_library(cxlua SHARED
         ${gsl_clua_header_filepaths} ${gsl_clua_source_filepaths}
         ${gsl_cxlua_base_head_filepaths} ${gsl_cxlua_base_source_filepaths}
