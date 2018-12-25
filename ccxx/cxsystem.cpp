@@ -573,8 +573,22 @@ CxSystem::SysInfo CxSystem::getSysInfo()
 {
     CxSystem::SysInfo r;
 
-    //todo oudream
     return r;
+}
+
+vector<CxSystem::DiskInfo> CxSystem::getDiskInfos()
+{
+    return vector<CxSystem::DiskInfo>();
+}
+
+int64 CxSystem::getDiskFreeSpace(const std::string &sDisk)
+{
+    return 0;
+}
+
+int64 CxSystem::getDiskSpace(const std::string &sDisk)
+{
+    return 0;
 }
 
 #endif

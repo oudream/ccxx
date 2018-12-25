@@ -1,5 +1,7 @@
 
 add_subdirectory(encoding)
 add_subdirectory(filetail)
-add_subdirectory(daemon)
+if (WIN32)
+    add_subdirectory(daemon)
+endif ()
 add_subdirectory(openssl)

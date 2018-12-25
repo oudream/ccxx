@@ -9,19 +9,19 @@ macro(mc_create_test1 sCppName)
 
     mc_merge_file_path(${gs_ccxx_test_path} "${gsl_test_${sCppName}_sources}" gsl_test_${sCppName}_source_filepaths)
 
-    add_executable(cxtest_${sCppName}
+    add_executable(cxtest_fs_${sCppName}
             ${gsl_test_${sCppName}_head_filepaths} ${gsl_test_${sCppName}_source_filepaths}
             )
 
-    add_dependencies(cxtest_${sCppName}
+    add_dependencies(cxtest_fs_${sCppName}
             ccxx
             )
 
-    target_link_libraries(cxtest_${sCppName}
+    target_link_libraries(cxtest_fs_${sCppName}
             ccxx
             )
 
-    set_target_properties(cxtest_${sCppName} PROPERTIES FOLDER ccxx/test)
+    set_target_properties(cxtest_fs_${sCppName} PROPERTIES FOLDER ccxx/test)
 endmacro()
 
 #set(v_name1 "ou")
@@ -34,7 +34,9 @@ endmacro()
 
 mc_create_test1(fs1)
 mc_create_test1(scan1)
-mc_create_test1(diskspace1_win32)
-mc_create_test1(diskspace2_win32)
-mc_create_test1(diskspace3_win32)
+if (WIN32)
+    mc_create_test1(diskspace1_win32)
+    mc_create_test1(diskspace2_win32)
+    mc_create_test1(diskspace3_win32)
+endif ()
 mc_create_test1(system1)

@@ -28,6 +28,5 @@ int main(int argc, const char* argv[])
     cxDebug() << (CxSystem::getDiskSpace("D:\\") / 1024 / 1024) << "MB" ;
     cxDebug() << (CxSystem::getDiskFreeSpace("D:\\") / 1024 / 1024) << "MB" ;
 
-
     return 0;
 }

@@ -7,14 +7,14 @@ class GM_CCXX_CORE_API CxSystem
 {
 public:
     struct SysInfo {
-        unsigned char syscpu; // 0 - 100
-        unsigned char sysmem; // 0 - 100
+        unsigned char syscpu;  // 0 - 100
+        unsigned char sysmem;  // 0 - 100
     };
 
     struct DiskInfo {
-        std::string name;               // win32[c:\ d:\] unix[/dev/disk1s1]
-        int64       totalSize;          // 143588847616
-        int64       freeSize;           // 49181224960
+        std::string name;      // win32[c:\ d:\] unix[/dev/disk1s1]
+        int64       totalSize; // 143588847616
+        int64       freeSize;  // 49181224960
     };
 
 public:
