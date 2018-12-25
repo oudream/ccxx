@@ -101,7 +101,7 @@ FilePath FilePath::GetCurrentDir() {
   return FilePath(kCurrentDirectoryString);
 #elif GTEST_OS_WINDOWS
   char cwd[GTEST_PATH_MAX_ + 1] = { '\0' };
-  return FilePath(_getcwd(cwd, sizeof(cwd)) == NULL ? "" : cwd);
+  return FilePath(_getcwd(cwd, sizeof(cwd)) == nullptr ? "" : cwd);
 #else
   char cwd[GTEST_PATH_MAX_ + 1] = { '\0' };
   char* result = getcwd(cwd, sizeof(cwd));
@@ -109,9 +109,9 @@ FilePath FilePath::GetCurrentDir() {
   // getcwd will likely fail in NaCl due to the sandbox, so return something
   // reasonable. The user may have provided a shim implementation for getcwd,
   // however, so fallback only when failure is detected.
-  return FilePath(result == NULL ? kCurrentDirectoryString : cwd);
+  return FilePath(result == nullptr ? kCurrentDirectoryString : cwd);
 # endif  // GTEST_OS_NACL
-  return FilePath(result == NULL ? "" : cwd);
+  return FilePath(result == nullptr ? "" : cwd);
 #endif  // GTEST_OS_WINDOWS_MOBILE
 }
 
@@ -128,7 +128,7 @@ FilePath FilePath::RemoveExtension(const char* extension) const {
   return *this;
 }
 
-// Returns a pointer to the last occurence of a valid path separator in
+// Returns a pointer to the last occurrence of a valid path separator in
 // the FilePath. On Windows, for example, both '/' and '\' are valid path
 // separators. Returns NULL if no path separator was found.
 const char* FilePath::FindLastPathSeparator() const {
@@ -136,8 +136,8 @@ const char* FilePath::FindLastPathSeparator() const {
 #if GTEST_HAS_ALT_PATH_SEP_
   const char* const last_alt_sep = strrchr(c_str(), kAlternatePathSeparator);
   // Comparing two pointers of which only one is NULL is undefined.
-  if (last_alt_sep != NULL &&
-      (last_sep == NULL || last_alt_sep > last_sep)) {
+  if (last_alt_sep != nullptr &&
+      (last_sep == nullptr || last_alt_sep > last_sep)) {
     return last_alt_sep;
   }
 #endif
@@ -250,7 +250,7 @@ bool FilePath::DirectoryExists() const {
 // root directory per disk drive.)
 bool FilePath::IsRootDirectory() const {
 #if GTEST_OS_WINDOWS
-  // TODO(wan@google.com): on Windows a network share like
+  // FIXME: on Windows a network share like
   // \\server\share can be a root directory, although it cannot be the
   // current directory.  Handle this properly.
   return pathname_.length() == 3 && IsAbsolutePath();
@@ -324,7 +324,7 @@ bool FilePath::CreateFolder() const {
 #if GTEST_OS_WINDOWS_MOBILE
   FilePath removed_sep(this->RemoveTrailingPathSeparator());
   LPCWSTR unicode = String::AnsiToUtf16(removed_sep.c_str());
-  int result = CreateDirectory(unicode, NULL) ? 0 : -1;
+  int result = CreateDirectory(unicode, nullptr) ? 0 : -1;
   delete [] unicode;
 #elif GTEST_OS_WINDOWS
   int result = _mkdir(pathname_.c_str());
@@ -350,9 +350,9 @@ FilePath FilePath::RemoveTrailingPathSeparator() const {
 // Removes any redundant separators that might be in the pathname.
 // For example, "bar///foo" becomes "bar/foo". Does not eliminate other
 // redundancies that might be in a pathname involving "." or "..".
-// TODO(wan@google.com): handle Windows network shares (e.g. \\server\share).
+// FIXME: handle Windows network shares (e.g. \\server\share).
 void FilePath::Normalize() {
-  if (pathname_.c_str() == NULL) {
+  if (pathname_.c_str() == nullptr) {
     pathname_ = "";
     return;
   }

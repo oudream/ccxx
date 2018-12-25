@@ -28,14 +28,26 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
-
 #include "gtest/gtest.h"
 
-GTEST_API_ int main(int argc, char **argv) {
-  printf("Running main() from gtest_main.cc\n");
+#ifdef ARDUINO
+void setup() {
+  // Since Arduino doesn't have a command line, fake out the argc/argv arguments
+  int argc = 1;
+  const auto arg0 = "PlatformIO";
+  char* argv0 = const_cast<char*>(arg0);
+  char** argv = &argv0;
+
   testing::InitGoogleTest(&argc, argv);
-  int r = RUN_ALL_TESTS();
-  int c = getchar();
-  putchar(c);
-  return r;
 }
+
+void loop() { RUN_ALL_TESTS(); }
+
+#else
+
+GTEST_API_ int main(int argc, char **argv) {
+  printf("Running main() from %s\n", __FILE__);
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
+#endif

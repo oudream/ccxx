@@ -26,15 +26,14 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
 
-#include "gmock/gmock-generated-nice-strict.h"
+#include "gmock/gmock-nice-strict.h"
 
 #include <string>
+#include <utility>
 #include "gmock/gmock.h"
-#include "gtest/gtest.h"
 #include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
 
 // This must not be defined inside the ::testing namespace, or it will
 // clash with ::testing::Mock.
@@ -114,6 +113,23 @@ class MockBar {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(MockBar);
 };
 
+
+class MockBaz {
+ public:
+  class MoveOnly {
+   public:
+    MoveOnly() = default;
+
+    MoveOnly(const MoveOnly&) = delete;
+    MoveOnly& operator=(const MoveOnly&) = delete;
+
+    MoveOnly(MoveOnly&&) = default;
+    MoveOnly& operator=(MoveOnly&&) = default;
+  };
+
+  MockBaz(MoveOnly) {}
+};
+
 #if GTEST_HAS_STREAM_REDIRECTION
 
 // Tests that a raw mock generates warnings for uninteresting calls.
@@ -166,6 +182,13 @@ TEST(RawMockTest, InfoForUninterestingCall) {
   GMOCK_FLAG(verbose) = saved_flag;
 }
 
+TEST(RawMockTest, IsNaggy_IsNice_IsStrict) {
+  MockFoo raw_foo;
+  EXPECT_TRUE(Mock::IsNaggy(&raw_foo));
+  EXPECT_FALSE(Mock::IsNice(&raw_foo));
+  EXPECT_FALSE(Mock::IsStrict(&raw_foo));
+}
+
 // Tests that a nice mock generates no warning for uninteresting calls.
 TEST(NiceMockTest, NoWarningForUninterestingCall) {
   NiceMock<MockFoo> nice_foo;
@@ -214,8 +237,9 @@ TEST(NiceMockTest, AllowsExpectedCall) {
   nice_foo.DoThis();
 }
 
-// Tests that an unexpected call on a nice mock which returns a not-default-constructible
-// type throws an exception and the exception contains the method's name.
+// Tests that an unexpected call on a nice mock which returns a
+// not-default-constructible type throws an exception and the exception contains
+// the method's name.
 TEST(NiceMockTest, ThrowsExceptionForUnknownReturnTypes) {
   NiceMock<MockFoo> nice_foo;
 #if GTEST_HAS_EXCEPTIONS
@@ -259,6 +283,17 @@ TEST(NiceMockTest, NonDefaultConstructor10) {
   nice_bar.That(5, true);
 }
 
+TEST(NiceMockTest, AllowLeak) {
+  NiceMock<MockFoo>* leaked = new NiceMock<MockFoo>;
+  Mock::AllowLeak(leaked);
+  EXPECT_CALL(*leaked, DoThis());
+  leaked->DoThis();
+}
+
+TEST(NiceMockTest, MoveOnlyConstructor) {
+  NiceMock<MockBaz> nice_baz(MockBaz::MoveOnly{});
+}
+
 #if !GTEST_OS_SYMBIAN && !GTEST_OS_WINDOWS_MOBILE
 // Tests that NiceMock<Mock> compiles where Mock is a user-defined
 // class (as opposed to ::testing::Mock).  We had to work around an
@@ -274,6 +309,13 @@ TEST(NiceMockTest, AcceptsClassNamedMock) {
   nice.DoThis();
 }
 #endif  // !GTEST_OS_SYMBIAN && !GTEST_OS_WINDOWS_MOBILE
+
+TEST(NiceMockTest, IsNaggy_IsNice_IsStrict) {
+  NiceMock<MockFoo> nice_foo;
+  EXPECT_FALSE(Mock::IsNaggy(&nice_foo));
+  EXPECT_TRUE(Mock::IsNice(&nice_foo));
+  EXPECT_FALSE(Mock::IsStrict(&nice_foo));
+}
 
 #if GTEST_HAS_STREAM_REDIRECTION
 
@@ -352,6 +394,17 @@ TEST(NaggyMockTest, NonDefaultConstructor10) {
   naggy_bar.That(5, true);
 }
 
+TEST(NaggyMockTest, AllowLeak) {
+  NaggyMock<MockFoo>* leaked = new NaggyMock<MockFoo>;
+  Mock::AllowLeak(leaked);
+  EXPECT_CALL(*leaked, DoThis());
+  leaked->DoThis();
+}
+
+TEST(NaggyMockTest, MoveOnlyConstructor) {
+  NaggyMock<MockBaz> naggy_baz(MockBaz::MoveOnly{});
+}
+
 #if !GTEST_OS_SYMBIAN && !GTEST_OS_WINDOWS_MOBILE
 // Tests that NaggyMock<Mock> compiles where Mock is a user-defined
 // class (as opposed to ::testing::Mock).  We had to work around an
@@ -367,6 +420,13 @@ TEST(NaggyMockTest, AcceptsClassNamedMock) {
   naggy.DoThis();
 }
 #endif  // !GTEST_OS_SYMBIAN && !GTEST_OS_WINDOWS_MOBILE
+
+TEST(NaggyMockTest, IsNaggy_IsNice_IsStrict) {
+  NaggyMock<MockFoo> naggy_foo;
+  EXPECT_TRUE(Mock::IsNaggy(&naggy_foo));
+  EXPECT_FALSE(Mock::IsNice(&naggy_foo));
+  EXPECT_FALSE(Mock::IsStrict(&naggy_foo));
+}
 
 // Tests that a strict mock allows expected calls.
 TEST(StrictMockTest, AllowsExpectedCall) {
@@ -426,6 +486,17 @@ TEST(StrictMockTest, NonDefaultConstructor10) {
                           "Uninteresting mock function call");
 }
 
+TEST(StrictMockTest, AllowLeak) {
+  StrictMock<MockFoo>* leaked = new StrictMock<MockFoo>;
+  Mock::AllowLeak(leaked);
+  EXPECT_CALL(*leaked, DoThis());
+  leaked->DoThis();
+}
+
+TEST(StrictMockTest, MoveOnlyConstructor) {
+  StrictMock<MockBaz> strict_baz(MockBaz::MoveOnly{});
+}
+
 #if !GTEST_OS_SYMBIAN && !GTEST_OS_WINDOWS_MOBILE
 // Tests that StrictMock<Mock> compiles where Mock is a user-defined
 // class (as opposed to ::testing::Mock).  We had to work around an
@@ -441,6 +512,13 @@ TEST(StrictMockTest, AcceptsClassNamedMock) {
   strict.DoThis();
 }
 #endif  // !GTEST_OS_SYMBIAN && !GTEST_OS_WINDOWS_MOBILE
+
+TEST(StrictMockTest, IsNaggy_IsNice_IsStrict) {
+  StrictMock<MockFoo> strict_foo;
+  EXPECT_FALSE(Mock::IsNaggy(&strict_foo));
+  EXPECT_FALSE(Mock::IsNice(&strict_foo));
+  EXPECT_TRUE(Mock::IsStrict(&strict_foo));
+}
 
 }  // namespace gmock_nice_strict_test
 }  // namespace testing

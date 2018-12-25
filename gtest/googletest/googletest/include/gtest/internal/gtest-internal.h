@@ -27,11 +27,12 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-//
-// The Google C++ Testing Framework (Google Test)
+// The Google C++ Testing and Mocking Framework (Google Test)
 //
 // This header file declares functions and macros used internally by
 // Google Test.  They are subject to change without notice.
+
+// GOOGLETEST_CM0001 DO NOT DELETE
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
@@ -74,6 +75,9 @@
 // http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.6
 #define GTEST_CONCAT_TOKEN_(foo, bar) GTEST_CONCAT_TOKEN_IMPL_(foo, bar)
 #define GTEST_CONCAT_TOKEN_IMPL_(foo, bar) foo ## bar
+
+// Stringifies its argument.
+#define GTEST_STRINGIFY_(name) #name
 
 class ProtocolMessage;
 namespace proto2 { class Message; }
@@ -137,6 +141,9 @@ GTEST_API_ std::string AppendUserMessage(
 
 #if GTEST_HAS_EXCEPTIONS
 
+GTEST_DISABLE_MSC_WARNINGS_PUSH_(4275 \
+/* an exported class was derived from a class that was not exported */)
+
 // This exception is thrown by (and only by) a failed Google Test
 // assertion when GTEST_FLAG(throw_on_failure) is true (if exceptions
 // are enabled).  We derive it from std::runtime_error, which is for
@@ -148,13 +155,15 @@ class GTEST_API_ GoogleTestFailureException : public ::std::runtime_error {
   explicit GoogleTestFailureException(const TestPartResult& failure);
 };
 
+GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4275
+
 #endif  // GTEST_HAS_EXCEPTIONS
 
 namespace edit_distance {
 // Returns the optimal edits to go from 'left' to 'right'.
 // All edits cost the same, with replace having lower priority than
 // add/remove.
-// Simple implementation of the Wagner–Fischer algorithm.
+// Simple implementation of the Wagner-Fischer algorithm.
 // See http://en.wikipedia.org/wiki/Wagner-Fischer_algorithm
 enum EditType { kMatch, kAdd, kRemove, kReplace };
 GTEST_API_ std::vector<EditType> CalculateOptimalEdits(
@@ -460,7 +469,7 @@ class TestFactoryBase {
 template <class TestClass>
 class TestFactoryImpl : public TestFactoryBase {
  public:
-  virtual Test* CreateTest() { return new TestClass; }
+  Test* CreateTest() override { return new TestClass; }
 };
 
 #if GTEST_OS_WINDOWS
@@ -524,6 +533,9 @@ GTEST_API_ bool SkipPrefix(const char* prefix, const char** pstr);
 
 #if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
+GTEST_DISABLE_MSC_WARNINGS_PUSH_(4251 \
+/* class A needs to have dll-interface to be used by clients of class B */)
+
 // State of the definition of a type-parameterized test case.
 class GTEST_API_ TypedTestCasePState {
  public:
@@ -569,12 +581,14 @@ class GTEST_API_ TypedTestCasePState {
   RegisteredTestsMap registered_tests_;
 };
 
+GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251
+
 // Skips to the first non-space char after the first comma in 'str';
 // returns NULL if no comma is found in 'str'.
 inline const char* SkipComma(const char* str) {
   const char* comma = strchr(str, ',');
-  if (comma == NULL) {
-    return NULL;
+  if (comma == nullptr) {
+    return nullptr;
   }
   while (IsSpace(*(++comma))) {}
   return comma;
@@ -584,13 +598,44 @@ inline const char* SkipComma(const char* str) {
 // the entire string if it contains no comma.
 inline std::string GetPrefixUntilComma(const char* str) {
   const char* comma = strchr(str, ',');
-  return comma == NULL ? str : std::string(str, comma);
+  return comma == nullptr ? str : std::string(str, comma);
 }
 
 // Splits a given string on a given delimiter, populating a given
 // vector with the fields.
 void SplitString(const ::std::string& str, char delimiter,
                  ::std::vector< ::std::string>* dest);
+
+// The default argument to the template below for the case when the user does
+// not provide a name generator.
+struct DefaultNameGenerator {
+  template <typename T>
+  static std::string GetName(int i) {
+    return StreamableToString(i);
+  }
+};
+
+template <typename Provided = DefaultNameGenerator>
+struct NameGeneratorSelector {
+  typedef Provided type;
+};
+
+template <typename NameGenerator>
+void GenerateNamesRecursively(Types0, std::vector<std::string>*, int) {}
+
+template <typename NameGenerator, typename Types>
+void GenerateNamesRecursively(Types, std::vector<std::string>* result, int i) {
+  result->push_back(NameGenerator::template GetName<typename Types::Head>(i));
+  GenerateNamesRecursively<NameGenerator>(typename Types::Tail(), result,
+                                          i + 1);
+}
+
+template <typename NameGenerator, typename Types>
+std::vector<std::string> GenerateNames() {
+  std::vector<std::string> result;
+  GenerateNamesRecursively<NameGenerator>(Types(), &result, 0);
+  return result;
+}
 
 // TypeParameterizedTest<Fixture, TestSel, Types>::Register()
 // registers a list of type-parameterized tests with Google Test.  The
@@ -606,10 +651,10 @@ class TypeParameterizedTest {
   // specified in INSTANTIATE_TYPED_TEST_CASE_P(Prefix, TestCase,
   // Types).  Valid values for 'index' are [0, N - 1] where N is the
   // length of Types.
-  static bool Register(const char* prefix,
-                       const CodeLocation& code_location,
-                       const char* case_name, const char* test_names,
-                       int index) {
+  static bool Register(const char* prefix, const CodeLocation& code_location,
+                       const char* case_name, const char* test_names, int index,
+                       const std::vector<std::string>& type_names =
+                           GenerateNames<DefaultNameGenerator, Types>()) {
     typedef typename Types::Head Type;
     typedef Fixture<Type> FixtureClass;
     typedef typename GTEST_BIND_(TestSel, Type) TestClass;
@@ -617,20 +662,23 @@ class TypeParameterizedTest {
     // First, registers the first type-parameterized test in the type
     // list.
     MakeAndRegisterTestInfo(
-        (std::string(prefix) + (prefix[0] == '\0' ? "" : "/") + case_name + "/"
-         + StreamableToString(index)).c_str(),
+        (std::string(prefix) + (prefix[0] == '\0' ? "" : "/") + case_name +
+         "/" + type_names[index])
+            .c_str(),
         StripTrailingSpaces(GetPrefixUntilComma(test_names)).c_str(),
         GetTypeName<Type>().c_str(),
-        NULL,  // No value parameter.
-        code_location,
-        GetTypeId<FixtureClass>(),
-        TestClass::SetUpTestCase,
-        TestClass::TearDownTestCase,
-        new TestFactoryImpl<TestClass>);
+        nullptr,  // No value parameter.
+        code_location, GetTypeId<FixtureClass>(), TestClass::SetUpTestCase,
+        TestClass::TearDownTestCase, new TestFactoryImpl<TestClass>);
 
     // Next, recurses (at compile time) with the tail of the type list.
-    return TypeParameterizedTest<Fixture, TestSel, typename Types::Tail>
-        ::Register(prefix, code_location, case_name, test_names, index + 1);
+    return TypeParameterizedTest<Fixture, TestSel,
+                                 typename Types::Tail>::Register(prefix,
+                                                                 code_location,
+                                                                 case_name,
+                                                                 test_names,
+                                                                 index + 1,
+                                                                 type_names);
   }
 };
 
@@ -640,7 +688,9 @@ class TypeParameterizedTest<Fixture, TestSel, Types0> {
  public:
   static bool Register(const char* /*prefix*/, const CodeLocation&,
                        const char* /*case_name*/, const char* /*test_names*/,
-                       int /*index*/) {
+                       int /*index*/,
+                       const std::vector<std::string>& =
+                           std::vector<std::string>() /*type_names*/) {
     return true;
   }
 };
@@ -653,8 +703,10 @@ template <GTEST_TEMPLATE_ Fixture, typename Tests, typename Types>
 class TypeParameterizedTestCase {
  public:
   static bool Register(const char* prefix, CodeLocation code_location,
-                       const TypedTestCasePState* state,
-                       const char* case_name, const char* test_names) {
+                       const TypedTestCasePState* state, const char* case_name,
+                       const char* test_names,
+                       const std::vector<std::string>& type_names =
+                           GenerateNames<DefaultNameGenerator, Types>()) {
     std::string test_name = StripTrailingSpaces(
         GetPrefixUntilComma(test_names));
     if (!state->TestExists(test_name)) {
@@ -671,12 +723,14 @@ class TypeParameterizedTestCase {
 
     // First, register the first test in 'Test' for each type in 'Types'.
     TypeParameterizedTest<Fixture, Head, Types>::Register(
-        prefix, test_location, case_name, test_names, 0);
+        prefix, test_location, case_name, test_names, 0, type_names);
 
     // Next, recurses (at compile time) with the tail of the test list.
-    return TypeParameterizedTestCase<Fixture, typename Tests::Tail, Types>
-        ::Register(prefix, code_location, state,
-                   case_name, SkipComma(test_names));
+    return TypeParameterizedTestCase<Fixture, typename Tests::Tail,
+                                     Types>::Register(prefix, code_location,
+                                                      state, case_name,
+                                                      SkipComma(test_names),
+                                                      type_names);
   }
 };
 
@@ -686,7 +740,9 @@ class TypeParameterizedTestCase<Fixture, Templates0, Types> {
  public:
   static bool Register(const char* /*prefix*/, const CodeLocation&,
                        const TypedTestCasePState* /*state*/,
-                       const char* /*case_name*/, const char* /*test_names*/) {
+                       const char* /*case_name*/, const char* /*test_names*/,
+                       const std::vector<std::string>& =
+                           std::vector<std::string>() /*type_names*/) {
     return true;
   }
 };
@@ -784,16 +840,6 @@ struct RemoveConst<const T[N]> {
   typedef typename RemoveConst<T>::type type[N];
 };
 
-#if defined(_MSC_VER) && _MSC_VER < 1400
-// This is the only specialization that allows VC++ 7.1 to remove const in
-// 'const int[3] and 'const int[3][4]'.  However, it causes trouble with GCC
-// and thus needs to be conditionally compiled.
-template <typename T, size_t N>
-struct RemoveConst<T[N]> {
-  typedef typename RemoveConst<T>::type type[N];
-};
-#endif
-
 // A handy wrapper around RemoveConst that works when the argument
 // T depends on template parameters.
 #define GTEST_REMOVE_CONST_(T) \
@@ -802,31 +848,6 @@ struct RemoveConst<T[N]> {
 // Turns const U&, U&, const U, and U all into U.
 #define GTEST_REMOVE_REFERENCE_AND_CONST_(T) \
     GTEST_REMOVE_CONST_(GTEST_REMOVE_REFERENCE_(T))
-
-// Adds reference to a type if it is not a reference type,
-// otherwise leaves it unchanged.  This is the same as
-// tr1::add_reference, which is not widely available yet.
-template <typename T>
-struct AddReference { typedef T& type; };  // NOLINT
-template <typename T>
-struct AddReference<T&> { typedef T& type; };  // NOLINT
-
-// A handy wrapper around AddReference that works when the argument T
-// depends on template parameters.
-#define GTEST_ADD_REFERENCE_(T) \
-    typename ::testing::internal::AddReference<T>::type
-
-// Adds a reference to const on top of T as necessary.  For example,
-// it transforms
-//
-//   char         ==> const char&
-//   const char   ==> const char&
-//   char&        ==> const char&
-//   const char&  ==> const char&
-//
-// The argument T must depend on some template parameters.
-#define GTEST_REFERENCE_TO_CONST_(T) \
-    GTEST_ADD_REFERENCE_(const GTEST_REMOVE_REFERENCE_(T))
 
 // ImplicitlyConvertible<From, To>::value is a compile-time bool
 // constant that's true iff type From can be implicitly converted to
@@ -897,8 +918,11 @@ struct IsAProtocolMessage
 // a container class by checking the type of IsContainerTest<C>(0).
 // The value of the expression is insignificant.
 //
-// Note that we look for both C::iterator and C::const_iterator.  The
-// reason is that C++ injects the name of a class as a member of the
+// In C++11 mode we check the existence of a const_iterator and that an
+// iterator is properly implemented for the container.
+//
+// For pre-C++11 that we look for both C::iterator and C::const_iterator.
+// The reason is that C++ injects the name of a class as a member of the
 // class itself (e.g. you can refer to class iterator as either
 // 'iterator' or 'iterator::iterator').  If we look for C::iterator
 // only, for example, we would mistakenly think that a class named
@@ -908,10 +932,13 @@ struct IsAProtocolMessage
 // IsContainerTest(typename C::const_iterator*) and
 // IsContainerTest(...) doesn't work with Visual Age C++ and Sun C++.
 typedef int IsContainer;
-template <class C>
-IsContainer IsContainerTest(int /* dummy */,
-                            typename C::iterator* /* it */ = NULL,
-                            typename C::const_iterator* /* const_it */ = NULL) {
+template <class C,
+          class Iterator = decltype(::std::declval<const C&>().begin()),
+          class = decltype(::std::declval<const C&>().end()),
+          class = decltype(++::std::declval<Iterator&>()),
+          class = decltype(*::std::declval<Iterator>()),
+          class = typename C::const_iterator>
+IsContainer IsContainerTest(int /* dummy */) {
   return 0;
 }
 
@@ -919,29 +946,67 @@ typedef char IsNotContainer;
 template <class C>
 IsNotContainer IsContainerTest(long /* dummy */) { return '\0'; }
 
-template <typename C, bool = 
-  sizeof(IsContainerTest<C>(0)) == sizeof(IsContainer)
->
+// Trait to detect whether a type T is a hash table.
+// The heuristic used is that the type contains an inner type `hasher` and does
+// not contain an inner type `reverse_iterator`.
+// If the container is iterable in reverse, then order might actually matter.
+template <typename T>
+struct IsHashTable {
+ private:
+  template <typename U>
+  static char test(typename U::hasher*, typename U::reverse_iterator*);
+  template <typename U>
+  static int test(typename U::hasher*, ...);
+  template <typename U>
+  static char test(...);
+
+ public:
+  static const bool value = sizeof(test<T>(nullptr, nullptr)) == sizeof(int);
+};
+
+template <typename T>
+const bool IsHashTable<T>::value;
+
+template<typename T>
+struct VoidT {
+    typedef void value_type;
+};
+
+template <typename T, typename = void>
+struct HasValueType : false_type {};
+template <typename T>
+struct HasValueType<T, VoidT<typename T::value_type> > : true_type {
+};
+
+template <typename C,
+          bool = sizeof(IsContainerTest<C>(0)) == sizeof(IsContainer),
+          bool = HasValueType<C>::value>
 struct IsRecursiveContainerImpl;
 
+template <typename C, bool HV>
+struct IsRecursiveContainerImpl<C, false, HV> : public false_type {};
+
+// Since the IsRecursiveContainerImpl depends on the IsContainerTest we need to
+// obey the same inconsistencies as the IsContainerTest, namely check if
+// something is a container is relying on only const_iterator in C++11 and
+// is relying on both const_iterator and iterator otherwise
 template <typename C>
-struct IsRecursiveContainerImpl<C, false> : public false_type {};
+struct IsRecursiveContainerImpl<C, true, false> : public false_type {};
 
 template <typename C>
-struct IsRecursiveContainerImpl<C, true> {
-  typedef
-    typename IteratorTraits<typename C::iterator>::value_type
-  value_type;
+struct IsRecursiveContainerImpl<C, true, true> {
+  typedef typename IteratorTraits<typename C::const_iterator>::value_type
+      value_type;
   typedef is_same<value_type, C> type;
 };
 
 // IsRecursiveContainer<Type> is a unary compile-time predicate that
-// evaluates whether C is a recursive container type. A recursive container 
+// evaluates whether C is a recursive container type. A recursive container
 // type is a container type whose value_type is equal to the container type
-// itself. An example for a recursive container type is 
-// boost::filesystem::path, whose iterator has a value_type that is equal to 
+// itself. An example for a recursive container type is
+// boost::filesystem::path, whose iterator has a value_type that is equal to
 // boost::filesystem::path.
-template<typename C>
+template <typename C>
 struct IsRecursiveContainer : public IsRecursiveContainerImpl<C>::type {};
 
 // EnableIf<condition>::type is void when 'Cond' is true, and
@@ -1075,7 +1140,7 @@ class NativeArray {
  private:
   enum {
     kCheckTypeIsNotConstOrAReference = StaticAssertTypeEqHelper<
-        Element, GTEST_REMOVE_REFERENCE_AND_CONST_(Element)>::value,
+        Element, GTEST_REMOVE_REFERENCE_AND_CONST_(Element)>::value
   };
 
   // Initializes this object with a copy of the input.
@@ -1101,6 +1166,112 @@ class NativeArray {
   GTEST_DISALLOW_ASSIGN_(NativeArray);
 };
 
+// Backport of std::index_sequence.
+template <size_t... Is>
+struct IndexSequence {
+  using type = IndexSequence;
+};
+
+// Double the IndexSequence, and one if plus_one is true.
+template <bool plus_one, typename T, size_t sizeofT>
+struct DoubleSequence;
+template <size_t... I, size_t sizeofT>
+struct DoubleSequence<true, IndexSequence<I...>, sizeofT> {
+  using type = IndexSequence<I..., (sizeofT + I)..., 2 * sizeofT>;
+};
+template <size_t... I, size_t sizeofT>
+struct DoubleSequence<false, IndexSequence<I...>, sizeofT> {
+  using type = IndexSequence<I..., (sizeofT + I)...>;
+};
+
+// Backport of std::make_index_sequence.
+// It uses O(ln(N)) instantiation depth.
+template <size_t N>
+struct MakeIndexSequence
+    : DoubleSequence<N % 2 == 1, typename MakeIndexSequence<N / 2>::type,
+                     N / 2>::type {};
+
+template <>
+struct MakeIndexSequence<0> : IndexSequence<> {};
+
+// FIXME: This implementation of ElemFromList is O(1) in instantiation depth,
+// but it is O(N^2) in total instantiations. Not sure if this is the best
+// tradeoff, as it will make it somewhat slow to compile.
+template <typename T, size_t, size_t>
+struct ElemFromListImpl {};
+
+template <typename T, size_t I>
+struct ElemFromListImpl<T, I, I> {
+  using type = T;
+};
+
+// Get the Nth element from T...
+// It uses O(1) instantiation depth.
+template <size_t N, typename I, typename... T>
+struct ElemFromList;
+
+template <size_t N, size_t... I, typename... T>
+struct ElemFromList<N, IndexSequence<I...>, T...>
+    : ElemFromListImpl<T, N, I>... {};
+
+template <typename... T>
+class FlatTuple;
+
+template <typename Derived, size_t I>
+struct FlatTupleElemBase;
+
+template <typename... T, size_t I>
+struct FlatTupleElemBase<FlatTuple<T...>, I> {
+  using value_type =
+      typename ElemFromList<I, typename MakeIndexSequence<sizeof...(T)>::type,
+                            T...>::type;
+  FlatTupleElemBase() = default;
+  explicit FlatTupleElemBase(value_type t) : value(std::move(t)) {}
+  value_type value;
+};
+
+template <typename Derived, typename Idx>
+struct FlatTupleBase;
+
+template <size_t... Idx, typename... T>
+struct FlatTupleBase<FlatTuple<T...>, IndexSequence<Idx...>>
+    : FlatTupleElemBase<FlatTuple<T...>, Idx>... {
+  using Indices = IndexSequence<Idx...>;
+  FlatTupleBase() = default;
+  explicit FlatTupleBase(T... t)
+      : FlatTupleElemBase<FlatTuple<T...>, Idx>(std::move(t))... {}
+};
+
+// Analog to std::tuple but with different tradeoffs.
+// This class minimizes the template instantiation depth, thus allowing more
+// elements that std::tuple would. std::tuple has been seen to require an
+// instantiation depth of more than 10x the number of elements in some
+// implementations.
+// FlatTuple and ElemFromList are not recursive and have a fixed depth
+// regardless of T...
+// MakeIndexSequence, on the other hand, it is recursive but with an
+// instantiation depth of O(ln(N)).
+template <typename... T>
+class FlatTuple
+    : private FlatTupleBase<FlatTuple<T...>,
+                            typename MakeIndexSequence<sizeof...(T)>::type> {
+  using Indices = typename FlatTuple::FlatTupleBase::Indices;
+
+ public:
+  FlatTuple() = default;
+  explicit FlatTuple(T... t) : FlatTuple::FlatTupleBase(std::move(t)...) {}
+
+  template <size_t I>
+  const typename ElemFromList<I, Indices, T...>::type& Get() const {
+    return static_cast<const FlatTupleElemBase<FlatTuple, I>*>(this)->value;
+  }
+
+  template <size_t I>
+  typename ElemFromList<I, Indices, T...>::type& Get() {
+    return static_cast<FlatTupleElemBase<FlatTuple, I>*>(this)->value;
+  }
+};
+
 }  // namespace internal
 }  // namespace testing
 
@@ -1120,7 +1291,10 @@ class NativeArray {
 #define GTEST_SUCCESS_(message) \
   GTEST_MESSAGE_(message, ::testing::TestPartResult::kSuccess)
 
-// Suppresses MSVC warnings 4072 (unreachable code) for the code following
+#define GTEST_SKIP_(message) \
+  return GTEST_MESSAGE_(message, ::testing::TestPartResult::kSkip)
+
+// Suppress MSVC warning 4072 (unreachable code) for the code following
 // statement if it returns or throws (or doesn't return or throw in some
 // situations).
 #define GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement) \
@@ -1216,28 +1390,42 @@ class NativeArray {
   test_case_name##_##test_name##_Test
 
 // Helper macro for defining tests.
-#define GTEST_TEST_(test_case_name, test_name, parent_class, parent_id)\
-class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\
- public:\
-  GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}\
- private:\
-  virtual void TestBody();\
-  static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;\
-  GTEST_DISALLOW_COPY_AND_ASSIGN_(\
-      GTEST_TEST_CLASS_NAME_(test_case_name, test_name));\
-};\
-\
-::testing::TestInfo* const GTEST_TEST_CLASS_NAME_(test_case_name, test_name)\
-  ::test_info_ =\
-    ::testing::internal::MakeAndRegisterTestInfo(\
-        #test_case_name, #test_name, NULL, NULL, \
-        ::testing::internal::CodeLocation(__FILE__, __LINE__), \
-        (parent_id), \
-        parent_class::SetUpTestCase, \
-        parent_class::TearDownTestCase, \
-        new ::testing::internal::TestFactoryImpl<\
-            GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>);\
-void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
+#define GTEST_TEST_(test_case_name, test_name, parent_class, parent_id)       \
+  class GTEST_TEST_CLASS_NAME_(test_case_name, test_name)                     \
+      : public parent_class {                                                 \
+   public:                                                                    \
+    GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}                    \
+                                                                              \
+   private:                                                                   \
+    virtual void TestBody();                                                  \
+    static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;     \
+    GTEST_DISALLOW_COPY_AND_ASSIGN_(GTEST_TEST_CLASS_NAME_(test_case_name,    \
+                                                           test_name));       \
+  };                                                                          \
+                                                                              \
+  ::testing::TestInfo* const GTEST_TEST_CLASS_NAME_(test_case_name,           \
+                                                    test_name)::test_info_ =  \
+      ::testing::internal::MakeAndRegisterTestInfo(                           \
+          #test_case_name, #test_name, nullptr, nullptr,                      \
+          ::testing::internal::CodeLocation(__FILE__, __LINE__), (parent_id), \
+          parent_class::SetUpTestCase, parent_class::TearDownTestCase,        \
+          new ::testing::internal::TestFactoryImpl<GTEST_TEST_CLASS_NAME_(    \
+              test_case_name, test_name)>);                                   \
+  void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
 
+// Internal Macro to mark an API deprecated, for googletest usage only
+// Usage: class GTEST_INTERNAL_DEPRECATED(message) MyClass or
+// GTEST_INTERNAL_DEPRECATED(message) <return_type> myFunction(); Every usage of
+// a deprecated entity will trigger a warning when compiled with
+// `-Wdeprecated-declarations` option (clang, gcc, any __GNUC__ compiler).
+// For msvc /W3 option will need to be used
+// Note that for 'other' compilers this macro evaluates to nothing to prevent
+// compilations errors.
+#if defined(_MSC_VER)
+#define GTEST_INTERNAL_DEPRECATED(message) __declspec(deprecated(message))
+#elif defined(__GNUC__)
+#define GTEST_INTERNAL_DEPRECATED(message) __attribute__((deprecated(message)))
+#else
+#define GTEST_INTERNAL_DEPRECATED(message)
+#endif
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
-
