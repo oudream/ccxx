@@ -1,23 +1,21 @@
 
-include(lua.cmake)
+include(htop.cmake)
 
-mc_clua_include()
-mc_cxlua_base_include()
-mc_cxlua_all_include()
+mc_chtop_include()
+mc_cxhtop_darwin_include()
 
-add_definitions(-D"GM_BUILD_CCXX_LUA_LIB")
+add_definitions(-D"GM_BUILD_CCXX_HTOP_LIB")
 
-add_library(cxlua SHARED
-        ${gsl_clua_header_filepaths} ${gsl_clua_source_filepaths}
-        ${gsl_cxlua_base_head_filepaths} ${gsl_cxlua_base_source_filepaths}
-        ${gsl_cxlua_all_head_filepaths} ${gsl_cxlua_all_source_filepaths}
+add_library(cxhtop SHARED
+        ${gsl_chtop_header_filepaths} ${gsl_chtop_source_filepaths}
+        ${gsl_cxhtop_darwin_head_filepaths} ${gsl_cxhtop_darwin_source_filepaths}
         )
 
-add_dependencies(cxlua
+add_dependencies(cxhtop
         ccxx
         )
 
-target_link_libraries(cxlua
+target_link_libraries(cxhtop
         ccxx
         )
 
@@ -28,6 +26,6 @@ endif ()
 
 #add_definitions( "/W3 /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /nologo" )
 
-mc_target_link_libraries(cxlua)
+mc_target_link_libraries(cxhtop)
 
-set_target_properties(cxlua PROPERTIES FOLDER ccxx/lib)
+set_target_properties(cxhtop PROPERTIES FOLDER ccxx/lib)
