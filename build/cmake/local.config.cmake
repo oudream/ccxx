@@ -68,6 +68,10 @@ set(gs_project_enable_cpython 1)
 #set(gs_project_enable_cpython 0)
 # set(gs_project_cpython_version 2)
 
+### libuv
+set(gs_project_enable_uv 1)
+#set(gs_project_enable_uv 0)
+
 if (gs_project_enable_cpython AND gs_prefix_path_python)
     list(APPEND CMAKE_PREFIX_PATH ${gs_prefix_path_python})
 endif()

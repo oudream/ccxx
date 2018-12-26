@@ -1,5 +1,5 @@
 
-set(gs_re2_path ${gs_project_path}/3rd/re2-2018-04-01)
+set(gs_re2_path ${gs_project_path}/3rd/re2/re2)
 
 set(gs_re2_src_path ${gs_re2_path})
 set(gs_re2_include_path ${gs_re2_path})

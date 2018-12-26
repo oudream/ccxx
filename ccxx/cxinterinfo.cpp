@@ -152,7 +152,7 @@ private:
 
 int * fn_oConsoleInputThreadStartCondition()
 {
-    static int m;
+    static int m = 0;
     return &m;
 }
 
@@ -166,7 +166,7 @@ void CxConsoleInputThread::startConsoleInputThread(CxConsoleInputThread::StartCo
 {
     int * pStartCondition = fn_oConsoleInputThreadStartCondition();
     * pStartCondition |= eStartCondition;
-    if (* pStartCondition < StartCondition_InfoStart | StartCondition_Observer) return;
+    if (* pStartCondition < ( StartCondition_InfoStart | StartCondition_Observer)) return;
 
 //    if (!(fn_getConsoleInSubjects()->size()>0 && fn_getConsoleInCallbacks_line()->size()>0 && fn_getConsoleInCallbacks_cmd()->size()>0))
 //    {

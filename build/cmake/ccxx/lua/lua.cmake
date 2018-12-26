@@ -5,8 +5,8 @@
 
 
 #1, lua
-set(gs_ccxx_lua_path ${gs_project_3rd_path}/lua-5.3.4)
-set(gs_clua_include_path ${gs_project_include_path}/lua-5.3.4)
+set(gs_ccxx_lua_path ${gs_project_3rd_path}/lua/lua)
+set(gs_clua_include_path ${gs_project_include_path}/lua/lua)
 
 set(gsl_lua_headers
         src/lapi.h
