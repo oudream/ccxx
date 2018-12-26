@@ -2,8 +2,6 @@
 
 //using namespace std;
 
-
-
 bool CxLuaCommon::runScript(lua_State *L, const string &sFilePath)
 {
     assert(L != NULL);
@@ -12,13 +10,13 @@ bool CxLuaCommon::runScript(lua_State *L, const string &sFilePath)
     if( iResult != 0 )
     {
         string sError = CxString::format(" luaL_dofile[%s] failed : [%s]", sFilePath.c_str(), lua_tostring(L,-1));
-        CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << sError;
+        cxLuaOutScriptPrompt() << CxTime::currentSepochString() << sError;
         return false;
     }
     else
     {
         string sInfo = CxString::format(" luaL_dofile[%s] success !!!", sFilePath.c_str());
-        CxLuaOutInfo::outScriptDebug() << CxTime::currentSepochString() << sInfo;
+        cxLuaOutScriptDebug() << CxTime::currentSepochString() << sInfo;
     }
     return true;
 }
@@ -711,7 +709,7 @@ bool CxLuaCommon::callLuaFunction(lua_State *L , int iParamCount, int iResultCou
     else
     {
         string sError = lua_tostring(L, -1);
-        CxLuaOutInfo::outScriptPrompt() << "error running function `f': " << sError;
+        cxLuaOutScriptPrompt() << "error running function `f': " << sError;
         r = false;
     }
     //清空

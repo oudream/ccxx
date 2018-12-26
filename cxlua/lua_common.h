@@ -37,24 +37,29 @@ typedef int (*fn_int_lua_t)(lua_State *);
 // GM_BUILD_CCXX_LUA_INCLUDE
 #endif
 
+inline CxInterinfoOutStream cxLuaOutScriptPrompt() {
+    CxInterinfoOutStream r;
+    r.noend();
+    r.type(CxInterinfo::Type_Script);
+    r << CxGlobal::promptString << " Script : ";
+    return r;
+}
+
+#if defined(GM_DEBUG)
+inline CxInterinfoOutStream cxLuaOutScriptDebug() {
+        CxInterinfoOutStream r; r.noend(); r.type(CxInterinfo::Type_Script); r << CxGlobal::debugString << " Script : "; return r;
+    }
+#else
+#undef cxLuaOutScriptDebug
+inline CxInterinfoNoOutStream cxLuaOutScriptDebug() { return CxInterinfoNoOutStream(); }
+#define CX_NO_outScriptDebug_MACRO while (false) cxLuaOutScriptDebug
+#define cxLuaOutScriptDebug CX_NO_outScriptDebug_MACRO
+#endif
 
 class GM_CCXX_LUA_API CxLuaOutInfo
 {
 public:
-    static inline CxInterinfoOutStream outScriptPrompt() {
-		CxInterinfoOutStream r; r.noend(); r.type(CxInterinfo::Type_Script); r << CxGlobal::promptString << " Script : "; return r;
-    }
 
-#if defined(GM_DEBUG)
-    static inline CxInterinfoOutStream outScriptDebug() {
-        CxInterinfoOutStream r; r.noend(); r.type(CxInterinfo::Type_Script); r << CxGlobal::debugString << " Script : "; return r;
-    }
-#else
-#undef outScriptDebug
-    static inline CxInterinfoNoOutStream outScriptDebug() { return CxInterinfoNoOutStream(); }
-#define CX_NO_outScriptDebug_MACRO while (false) outScriptDebug
-#define outScriptDebug CX_NO_outScriptDebug_MACRO
-#endif
 
 };
 

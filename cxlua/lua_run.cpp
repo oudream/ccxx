@@ -118,7 +118,7 @@ lua_State * CxLuaRun::luaState()
 
 void CxLuaRun::start()
 {
-    CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << "GclLua::start().";
+    cxLuaOutScriptPrompt() << CxTime::currentSepochString() << "GclLua::start().";
 }
 
 void CxLuaRun::stop()
@@ -136,7 +136,7 @@ void CxLuaRun::stop()
             CxLuaCommon::callLuaFunction(L,0,0,iResult);
         }
     }
-    CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << "GclLua::stop()."<<iResult;
+    cxLuaOutScriptPrompt() << CxTime::currentSepochString() << "GclLua::stop()."<<iResult;
 }
 
 
@@ -284,13 +284,13 @@ void CxLuaRun::loadLuaFiles(bool bLocalCommon, bool bLocadTask)
             if( iResult != 0 )
             {
                 string sError = CxString::format(" luaL_dofile[%s] failed : [%s]", sFilePath.c_str(), lua_tostring(L,-1));
-                CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << sError;
+                cxLuaOutScriptPrompt() << CxTime::currentSepochString() << sError;
                 afterLoadLuaFile(sFilePath, iResult, sError);
             }
             else
             {
                 string sInfo = CxString::format(" luaL_dofile[%s] success !!!", sFilePath.c_str());
-                CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << sInfo;
+                cxLuaOutScriptPrompt() << CxTime::currentSepochString() << sInfo;
                 afterLoadLuaFile(sFilePath, iResult, sInfo);
             }
         }
@@ -304,13 +304,13 @@ void CxLuaRun::loadLuaFiles(bool bLocalCommon, bool bLocadTask)
             if( iResult != 0 )
             {
                 string sError = CxString::format(" luaL_dofile[%s] failed : [%s]", sFilePath.c_str(), lua_tostring(L,-1));
-                CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << sError;
+                cxLuaOutScriptPrompt() << CxTime::currentSepochString() << sError;
                 afterLoadLuaFile(sFilePath, iResult, sError);
             }
             else
             {
                 string sInfo = CxString::format(" luaL_dofile[%s] success !!!", sFilePath.c_str());
-                CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << sInfo;
+                cxLuaOutScriptPrompt() << CxTime::currentSepochString() << sInfo;
                 afterLoadLuaFile(sFilePath, iResult, sInfo);
             }
         }
@@ -334,19 +334,19 @@ void CxLuaRun::loadLuaFiles(bool bLocalCommon, bool bLocadTask)
                 {
                     sDeleteFileNames.push_back(sFileName);
                     string sError = CxString::format(" luaL_dofile[%s] failed : [%s]", sFilePath.c_str(), lua_tostring(L,-1));
-                    CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << sError;
+                    cxLuaOutScriptPrompt() << CxTime::currentSepochString() << sError;
                     afterLoadLuaFile(sFilePath, iResult, sError);
                 }
                 else
                 {
                     string sInfo = CxString::format(" luaL_dofile[%s] success !!!", sFilePath.c_str());
-//                    CxLuaOutInfo::outScriptPrompt() << CxTime::currentSepochString() << sInfo;
+//                    cxLuaOutScriptPrompt() << CxTime::currentSepochString() << sInfo;
                     afterLoadLuaFile(sFilePath, iResult, sInfo);
                 }
                 timems_t dtDiff = CxTime::currentSystemTime() - dtNow;
                 if (dtDiff > 100)
                 {
-                    CxLuaOutInfo::outScriptPrompt() << sFilePath << " from " << CxTime::toString(dtNow) << " to "  << CxTime::currentSystemTimeString() << " spend time millsecond : " << dtDiff ;
+                    cxLuaOutScriptPrompt() << sFilePath << " from " << CxTime::toString(dtNow) << " to "  << CxTime::currentSystemTimeString() << " spend time millsecond : " << dtDiff ;
                 }
 //                else
 //                {
@@ -358,7 +358,7 @@ void CxLuaRun::loadLuaFiles(bool bLocalCommon, bool bLocadTask)
             {
                 sDeleteFileNames.push_back(sFileName);
                 string sError = CxString::format(" lua timer task fileName[%s] do not exist !!!", sFileName.data());
-                CxLuaOutInfo::outScriptDebug() << CxTime::currentSepochString() << sError;
+                cxLuaOutScriptDebug() << CxTime::currentSepochString() << sError;
             }
         }
     }

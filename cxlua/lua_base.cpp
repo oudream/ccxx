@@ -30,7 +30,7 @@ void CxLuaManager::registLua(CxLuaBase * oLua)
 }
 void CxLuaManager::loadCxLuas(lua_State *L)
 {
-    CxLuaOutInfo::outScriptPrompt() << "loadCxLuas begin:";
+    cxLuaOutScriptPrompt() << "loadCxLuas begin:";
 
     vector<CxLuaBase *> & cxluas2 = fn_getCxLuas();
     for (size_t i = 0; i < cxluas2.size(); ++i)
@@ -41,7 +41,7 @@ void CxLuaManager::loadCxLuas(lua_State *L)
         {
             continue;
         }
-        CxLuaOutInfo::outScriptPrompt() << "  tableName : " << sTableName << ", count: " << oCxLua->tableMethods().size() << " : ...";
+        cxLuaOutScriptPrompt() << "  tableName : " << sTableName << ", count: " << oCxLua->tableMethods().size() << " : ...";
         lua_newtable(L);
         const std::map<std::string, fn_int_lua_t> &tableMethods = oCxLua->tableMethods();
         for (std::map<std::string, fn_int_lua_t>::const_iterator it = tableMethods.begin(); it != tableMethods.end(); ++it)
@@ -53,10 +53,10 @@ void CxLuaManager::loadCxLuas(lua_State *L)
                 continue;
             }
             CxLuaCommon::setTable(L, sName, fn);
-            CxLuaOutInfo::outScriptPrompt() << "    functionName : " << sName;
+            cxLuaOutScriptPrompt() << "    functionName : " << sName;
         }
         lua_setglobal(L, sTableName.c_str()); 
     }
 
-    CxLuaOutInfo::outScriptPrompt() << "loadCxLuas end.";
+    cxLuaOutScriptPrompt() << "loadCxLuas end.";
 }

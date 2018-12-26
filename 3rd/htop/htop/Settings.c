@@ -553,7 +553,7 @@ Settings* Settings_new(int cpuCount) {
    if (!ok) {
       this->changed = true;
       // TODO: how to get SYSCONFDIR correctly through Autoconf?
-      char* systemSettings = String_cat(SYSCONFDIR, "/htoprc");
+      char* systemSettings = String_cat("/usr/local/etc", "/htoprc");
       ok = Settings_read(this, systemSettings);
       free(systemSettings);
    }
