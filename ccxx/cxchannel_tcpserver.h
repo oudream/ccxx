@@ -362,7 +362,7 @@ protected:
                 socket_t so = _sockets.at(i);
                 if (FD_ISSET(so, oFds))
                 {
-                    typename std::map<socket_t, struct sockaddr>::const_iterator it = _socketAddres.find(so);
+                    std::map<socket_t, struct sockaddr>::const_iterator it = _socketAddres.find(so);
                     if (it != _socketAddres.end())
                     {
                         * _recSockAddr = it->second;
