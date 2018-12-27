@@ -401,9 +401,9 @@ protected:
         bool b = _channel->connected();
         if (b)
         {
-//      _channel->sendText("aaa!!!");
+            _channel->sendData(pData, iLength);
         }
-        HandleSvrRecv((BYTE *)pData, iLength);
+//        HandleSvrRecv((BYTE *)pData, iLength);
     }
 
     /*-----------------------------------------------------------------------------

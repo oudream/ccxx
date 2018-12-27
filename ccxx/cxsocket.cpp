@@ -1048,6 +1048,51 @@ unsigned CxSocket::pending(socket_t so)
 
 #endif
 
+
+int CxSocket::sendTimeout(socket_t so, msepoch_t to)
+{
+    assert(so != INVALID_SOCKET);
+
+#ifdef  SO_SNDTIMEO
+    struct timeval tv;
+
+    tv.tv_sec = to / 1000;
+    tv.tv_usec = (to % 1000) * 1000;
+
+    if(! setsockopt(so, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv, sizeof(tv)))
+        return 0;
+
+    int err = CxSocket::error();
+    if(!err)
+        err = EIO;
+    return err;
+#else
+    return errServiceUnavailable;
+#endif
+}
+
+int CxSocket::receiveTimeout(socket_t so, msepoch_t to)
+{
+    assert(so != INVALID_SOCKET);
+
+#ifdef  SO_RCVTIMEO
+    struct timeval tv;
+
+    tv.tv_sec = to / 1000;
+    tv.tv_usec = (to % 1000) * 1000;
+
+    if(! setsockopt(so, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv)))
+        return 0;
+
+    int err = CxSocket::error();
+    if(!err)
+        err = EIO;
+    return err;
+#else
+    return ENOSYS;
+#endif
+}
+
 int CxSocket::sendsize(socket_t so, unsigned size)
 {
     assert(so != INVALID_SOCKET);
@@ -1055,6 +1100,7 @@ int CxSocket::sendsize(socket_t so, unsigned size)
 #ifdef  SO_SNDBUF
     if(!setsockopt(so, SOL_SOCKET, SO_SNDBUF, (caddr_t)&size, sizeof(size)))
         return 0;
+
     int err = CxSocket::error();
     if(!err)
         err = EIO;

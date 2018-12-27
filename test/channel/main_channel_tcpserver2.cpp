@@ -1,5 +1,5 @@
 
-#include <cxmain.h>
+#include <ccxx/ccxx.h>
 
 using namespace std;
 
@@ -14,7 +14,8 @@ public:
 
         _channel->setLocalIp("127.0.0.1");
         _channel->setLocalPort(5556);
-        _channel->setAutoOpen(true);
+        _channel->setAutoOpenInterval(5000);
+        _channel->setIsMultiRoad(true);
         _channel->open();
 //        _channel->close();
 //        _channel->open();
@@ -28,12 +29,12 @@ public:
     }
 
 protected:
-    void channel_receivedData(const uchar* pData, int iLength)
+    void channel_receivedData(const uchar* pData, int iLength, void * oSource)
     {
         bool b = _channel->connected();
         if (b)
         {
-            _channel->sendText("aaa!!!");
+            _channel->sendText(string("0123 i am tcp server.")+CxTime::currentSystemTimeString());
         }
     }
 
@@ -43,7 +44,7 @@ private:
 };
 
 
-int main(int argc, char * argv[])
+int main(int argc, const char * argv[])
 {
     cout << "begin test tcp server" << endl;
 

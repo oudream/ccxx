@@ -127,19 +127,20 @@ protected:
             _listenStatus = ThreadStatus_Running;
             while (1)
             {
-              socket_t iConnectFD = CxSocket::acceptfrom(_listenSocket);
-              if(INVALID_SOCKET == iConnectFD)
-              {
-                  if (_listenStatus != ThreadStatus_Stop)
-                  {
-                      std::string sError = CxString::format("[ip]=%s [port]=%d accept error : %s\n", sLocalIp.c_str(), iLocalPost, strerror(iError));
-                      threadEventNotify(_channel, ChannelEvent_Connect_Fail, 0, sError.c_str(), sError.size());
-                      CxSocket::release(_listenSocket);
-                  }
-                  return;
-              }
+                socket_t iConnectFD = CxSocket::acceptfrom(_listenSocket);
+                if(INVALID_SOCKET == iConnectFD)
+                {
+                    if (_listenStatus != ThreadStatus_Stop)
+                    {
+                        std::string sError = CxString::format("[ip]=%s [port]=%d accept error : %s\n", sLocalIp.c_str(), iLocalPost, strerror(iError));
+                        threadEventNotify(_channel, ChannelEvent_Connect_Fail, 0, sError.c_str(), sError.size());
+                        CxSocket::release(_listenSocket);
+                    }
+                    return;
+                }
 
-              threadEventNotify(_channel, ChannelEvent_Connect_Success, iConnectFD);
+                CxSocket::sendTimeout(iConnectFD, 1000);
+                threadEventNotify(_channel, ChannelEvent_Connect_Success, iConnectFD);
             }
         }
 
@@ -234,14 +235,14 @@ protected:
             _socketsChanngeState |= 0x01;
         }
 
-        inline void pushRemove(socket_t so)
+        inline void pushRemoveSock(socket_t so)
         {
             CxMutexScope lock(_socketsChanngeLock);
             _socketsRemove.push_back(so);
             _socketsChanngeState |= 0x02;
         }
 
-        inline void pushClear(const std::vector<socket_t> sockets)
+        inline void pushClearSocks(const std::vector<socket_t> sockets)
         {
             CxMutexScope lock(_socketsChanngeLock);
             CxContainer::append(_socketsRemove, sockets);
@@ -284,11 +285,21 @@ protected:
                         if ((_socketsChanngeState & 0x01) == 0x01)
                         {
                             CxContainer::append(_sockets, _socketsAdd);
+                            for (int i = 0; i < _socketsAdd.size(); ++i)
+                            {
+                                socket_t so = _socketsAdd[i];
+                                struct sockaddr addr;
+                                if (CxSocket::remote(so, (struct sockaddr_storage *)&addr) == 0)
+                                {
+                                    _socketAddres[_socketsAdd[i]] = addr;
+                                }
+                            }
                             _socketsAdd.clear();
                         }
                         else if ((_socketsChanngeState & 0x02) == 0x02)
                         {
                             CxContainer::remove(_sockets, _socketsRemove);
+                            CxContainer::remove(_socketAddres, _socketsRemove);
                             _socketsRemove.clear();
                         }
                         _socketsChanngeState = 0;
@@ -346,27 +357,29 @@ protected:
     private:
         inline void raiseSelectRecv(fd_set * oFds)
         {
-            socklen_t iSenderAddrSize = CxSockAddrMaxSize;
             for (size_t i = 0; i < _sockets.size(); ++i)
             {
                 socket_t so = _sockets.at(i);
                 if (FD_ISSET(so, oFds))
                 {
-                    size_t iSize = ::recvfrom(so,
-                             _recBuffer,
-                             sizeof(_buffer)-CxSockAddrMaxSize,
-                             0,
-                             _recSockAddr,
-                             &iSenderAddrSize);
-
+                    typename std::map<socket_t, struct sockaddr>::const_iterator it = _socketAddres.find(so);
+                    if (it != _socketAddres.end())
+                    {
+                        * _recSockAddr = it->second;
+                    }
+                    ssize_t iSize = CxSocket::recvfrom(so,
+                                                       _recBuffer, sizeof(_buffer)-CxSockAddrMaxSize,
+                                                       0,
+                                                       (struct sockaddr_storage *)_recSockAddr);
                     if ((iSize > 0) && (iSize <= (sizeof(_buffer)-CxSockAddrMaxSize)))
                     {
-                        threadEventNotify(_channel, ChannelEvent_Received_Data, so, _buffer, iSize+CxSockAddrMaxSize, this);
+                        threadEventNotify(_channel, ChannelEvent_Received_Data, so, _buffer, iSize+CxSockAddrMaxSize,
+                                          this);
                     }
                     else if (iSize == 0)
                     {
                         cxPrompt() << "TCP Server : remote client stop 001 Shutdown";
-                        pushRemove(so);
+                        pushRemoveSock(so);
                         threadEventNotify(_channel, ChannelEvent_Receive_ShutdownR, so);
                         break;
                     }
@@ -378,7 +391,7 @@ protected:
                             if (iErrorCode != EAGAIN)
                             {
                                 cxPrompt() << "TCP Server : remote client stop 001 Error By Rec";
-                                pushRemove(so);
+                                pushRemoveSock(so);
                                 threadEventNotify(_channel, ChannelEvent_Receive_Error, so);
                                 continue;
                             }
@@ -399,7 +412,7 @@ protected:
                     if (iErrorCode != EAGAIN)
                     {
                         cxPrompt() << "TCP Server : remote client stop 001 Error By Error";
-                        pushRemove(so);
+                        pushRemoveSock(so);
                         threadEventNotify(_channel, ChannelEvent_Platform_Error, so);
                         continue;
                     }
@@ -413,6 +426,7 @@ protected:
         volatile int _socketsChanngeState;
         CxMutex _socketsChanngeLock;
         std::vector<socket_t> _sockets;
+        std::map<socket_t, struct sockaddr> _socketAddres;
         std::vector<socket_t> _socketsAdd;
         std::vector<socket_t> _socketsRemove;
         char _buffer[1024 * 4];

@@ -234,7 +234,7 @@ void CxChannelTcpserver::stopAndDeleteSocket(socket_t so)
 {
     cxPrompt() << "TCP Server : remote client stop 003";
     //sync to thread select(reader) and sender
-    if (_selecter) _selecter->pushRemove(so);
+    if (_selecter) _selecter->pushRemoveSock(so);
     if (_sender) ((SenderThread2*)_sender)->pushRemove(so);
 
     bool bIsExist = false;
@@ -258,7 +258,7 @@ void CxChannelTcpserver::stopAndClearSockets()
     vector<socket_t> sockets = _sockets;
 
     //sync to thread select(reader) and sender
-    if (_selecter) _selecter->pushClear(sockets);
+    if (_selecter) _selecter->pushClearSocks(sockets);
     if (_sender) ((SenderThread2*)_sender)->pushClear(sockets);
 
     _sockets.clear();
@@ -294,6 +294,3 @@ bool CxChannelTcpserver::getConnectedImpl() const
 {
     return _accepterStatus == ServerAcceptStatus_Accepting/* && _receiver != NULL*/;
 }
-
-
-

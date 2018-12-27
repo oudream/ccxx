@@ -1,93 +1,32 @@
 ###environment
 
-set(fslSources
-        channel/test_channel_udp1.cpp
-        )
+macro(mc_create_test1 sCppName)
+    set(gsl_test_${sCppName}_sources
+            channel/main_${sCppName}.cpp
+            )
 
-mc_merge_file_path(${gs_ccxx_test_path} "${fslSources}" fslSourcePaths)
+    mc_merge_file_path(${gs_ccxx_test_path} "${gsl_test_${sCppName}_sources}" gsl_test_${sCppName}_source_filepaths)
 
-add_executable(cxtest_channel
-        ${fslSourcePaths}
-        )
+    add_executable(cxtest_channel_${sCppName}
+            ${gsl_test_${sCppName}_head_filepaths} ${gsl_test_${sCppName}_source_filepaths}
+            )
 
-add_dependencies(cxtest_channel
-        ccxx
-        )
+    add_dependencies(cxtest_channel_${sCppName}
+            ccxx
+            )
 
-target_link_libraries(cxtest_channel
-        ccxx
-        )
+    target_link_libraries(cxtest_channel_${sCppName}
+            ccxx
+            )
 
-set_target_properties(cxtest_channel PROPERTIES FOLDER ccxx/test)
+    set_target_properties(cxtest_channel_${sCppName} PROPERTIES FOLDER ccxx/test)
+endmacro()
 
-
-
-### test channel udp client
-set(fslUdpClient
-        channel/test_channel_udp_client1.cpp
-        )
-
-mc_merge_file_path(${gs_ccxx_test_path} "${fslUdpClient}" fslUdpClientPath)
-
-add_executable(cxtest_udp_client
-        ${fslUdpClientPath}
-        )
-
-add_dependencies(cxtest_udp_client
-        ccxx
-        )
-
-target_link_libraries(cxtest_udp_client
-        ccxx
-        )
-
-set_target_properties(cxtest_udp_client PROPERTIES FOLDER ccxx/test)
-
-
-
-### test channel udp server
-set(fslUdpServer
-        channel/test_channel_udp_server1.cpp
-        )
-
-mc_merge_file_path(${gs_ccxx_test_path} "${fslUdpServer}" fslUdpServerPath)
-
-add_executable(cxtest_udp_server
-        ${fslUdpServerPath}
-        )
-
-add_dependencies(cxtest_udp_server
-        ccxx
-        )
-
-target_link_libraries(cxtest_udp_server
-        ccxx
-        )
-
-set_target_properties(cxtest_udp_server PROPERTIES FOLDER ccxx/test)
-
-
-
-
-### test channel serial
-set(fslSerial
-        channel/test_channel_serial1.cpp
-#        channel/test_serial1.cpp
-        )
-
-mc_merge_file_path(${gs_ccxx_test_path} "${fslSerial}" fslSerialPath)
-
-add_executable(cxtest_serial
-        ${fslSerialPath}
-        )
-
-add_dependencies(cxtest_serial
-        ccxx
-        )
-
-target_link_libraries(cxtest_serial
-        ccxx
-        )
-
-set_target_properties(cxtest_serial PROPERTIES FOLDER ccxx/test)
-
+mc_create_test1(channel_serial1)
+mc_create_test1(channel_tcpclient1)
+mc_create_test1(channel_tcpclient2)
+mc_create_test1(channel_tcpserver1)
+mc_create_test1(channel_tcpserver2)
+mc_create_test1(channel_udp1)
+mc_create_test1(channel_udp_client1)
+mc_create_test1(channel_udp_server1)

@@ -207,6 +207,22 @@ public:
     static unsigned pending(socket_t socket);
 
     /**
+     * receiveTimeout
+     * @param so : socket descriptor.
+     * @param to : millisecond
+     * @return 0 on success, -1 on error.
+     */
+    static int receiveTimeout(socket_t so, msepoch_t to);
+
+    /**
+     * sendTimeout
+     * @param so : socket descriptor.
+     * @param to : millisecond
+     * @return 0 on success, -1 on error.
+     */
+    static int sendTimeout(socket_t so, msepoch_t to);
+
+    /**
      * Set the send size of a socket descriptor.
      * @param socket descriptor.
      * @param size of send buffer to set.

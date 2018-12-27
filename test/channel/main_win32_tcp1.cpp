@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #define DEFAULT_BUFLEN 512
+#define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_PORT "27015"
 
 int __cdecl testTcpClient(int argc, char **argv)
@@ -144,7 +145,7 @@ int __cdecl testTcpServer(void)
     hints.ai_flags = AI_PASSIVE;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+    iResult = getaddrinfo(DEFAULT_IP, DEFAULT_PORT, &hints, &result);
     if ( iResult != 0 ) {
         printf("getaddrinfo failed: %d\n", iResult);
         WSACleanup();
@@ -239,6 +240,6 @@ int __cdecl testTcpServer(void)
 
 int __cdecl main1(int argc, char **argv)
 {
-    testTcpClient(argc, argv);
-//    testTcpServer();
+//    testTcpClient(argc, argv);
+    testTcpServer();
 }

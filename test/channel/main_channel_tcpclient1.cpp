@@ -10,7 +10,7 @@ class Protocol : public CxIChannelSubject {
   {
     _channel = new CxChannelTcpclient();
     _channel->setRemoteIp("127.0.0.1");
-    _channel->setAutoOpen(true);
+    _channel->setAutoOpenInterval(5000);
     _channel->open();
     _channel->close();
     _channel->open();
@@ -33,3 +33,24 @@ class Protocol : public CxIChannelSubject {
 
 };
 
+Protocol * f_oProtocol = NULL;
+
+void fn_timer_timeout(int iInterval)
+{
+}
+
+int main(int argc, const char * argv[])
+{
+  CxApplication::init(argc, argv);
+
+  f_oProtocol = new Protocol();
+
+  CxTimerManager::startTimer(fn_timer_timeout, 100);
+
+  int r = CxApplication::exec();
+
+  delete f_oProtocol;
+  f_oProtocol = NULL;
+
+  return r;
+}
