@@ -75,6 +75,7 @@ CxChannelRoad * CxChannelRoadManager::allocate(const struct sockaddr * oRecSockA
     CxChannelRoad * oChannelRoad = find(oRecSockAddr, oLocalChannel);
     if (!oChannelRoad)
     {
+        CxChannelRoadManager::cleanUp();
         oChannelRoad = new CxChannelRoad(oRecSockAddr, oLocalChannel);
         oChannelRoad->setLocalSocket(iLocalSocket);
         f_oChannelRoads.push_back(oChannelRoad);
@@ -88,6 +89,7 @@ CxChannelRoad *CxChannelRoadManager::allocate(const string &sRemoteIp, ushort iR
     CxChannelRoad * oChannelRoad = find(sRemoteIp, iRemotePort);
     if (!oChannelRoad)
     {
+        CxChannelRoadManager::cleanUp();
         oChannelRoad = new CxChannelRoad(sRemoteIp, iRemotePort, oLocalChannel);
         oChannelRoad->setSourceId(iSourceId);
         f_oChannelRoads.push_back(oChannelRoad);
@@ -207,6 +209,31 @@ int CxChannelRoadManager::updateRemote(int iSourceId, int iTargetPort)
         return TRUE;
     }
     return FALSE;
+}
+
+void CxChannelRoadManager::cleanUp()
+{
+    msepoch_t dtDiff = f_oChannelRoads.size() > 255 ? (30 * 1000) : (30 * 60 * 1000);
+    int iClean = 0;
+    for(typename std::vector<CxChannelRoad*>::iterator it = f_oChannelRoads.begin(); it != f_oChannelRoads.end();)
+    {
+        CxChannelRoad * oChannelRoad = * it;
+        msepoch_t dtNow = CxTime::currentSystemTime();
+        if (dtNow - oChannelRoad->_lastTime > dtDiff)
+        {
+            it = f_oChannelRoads.erase(it);
+            delete oChannelRoad;
+            ++iClean;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    if (iClean > 0)
+    {
+        cxPrompt() << "CxChannelRoadManager::cleanUp.Count=" << iClean << "; remain=" << f_oChannelRoads.size();
+    }
 }
 
 
