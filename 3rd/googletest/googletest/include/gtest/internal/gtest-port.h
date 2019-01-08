@@ -130,7 +130,6 @@
 //   GTEST_OS_OS2      - OS/2
 //   GTEST_OS_QNX      - QNX
 //   GTEST_OS_SOLARIS  - Sun Solaris
-//   GTEST_OS_SYMBIAN  - Symbian
 //   GTEST_OS_WINDOWS  - Windows (Desktop, MinGW, or Mobile)
 //     GTEST_OS_WINDOWS_DESKTOP  - Windows Desktop
 //     GTEST_OS_WINDOWS_MINGW    - MinGW
@@ -175,7 +174,6 @@
 //                            define themselves.
 //   GTEST_USES_SIMPLE_RE   - our own simple regex is used;
 //                            the above RE\b(s) are mutually exclusive.
-//   GTEST_CAN_COMPARE_NULL - accepts untyped NULL in EXPECT_EQ().
 
 // Misc public macros
 // ------------------
@@ -206,7 +204,6 @@
 //                            - synchronization primitives.
 //
 // Template meta programming:
-//   is_pointer     - as in TR1; needed on Symbian and IBM XL C/C++ only.
 //   IteratorTraits - partial implementation of std::iterator_traits, which
 //                    is not available in libCstd when compiled with Sun C++.
 //
@@ -253,6 +250,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <memory>
+#include <type_traits>
 
 #ifndef _WIN32_WCE
 # include <sys/types.h>
@@ -460,9 +458,6 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 #ifndef GTEST_HAS_STD_WSTRING
 // The user didn't tell us whether ::std::wstring is available, so we need
 // to figure it out.
-// FIXME: uses autoconf to detect whether ::std::wstring
-//   is available.
-
 // Cygwin 1.7 and below doesn't support ::std::wstring.
 // Solaris' libc++ doesn't support it either.  Android has
 // no support for it at least as recent as Froyo (2.2).
@@ -492,7 +487,7 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 #  endif
 
 // Starting with version 4.3.2, gcc defines __GXX_RTTI iff RTTI is enabled.
-# elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40302)
+# elif defined(__GNUC__)
 
 #  ifdef __GXX_RTTI
 // When building against STLport with the Android NDK and with
@@ -595,12 +590,11 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 #ifndef GTEST_HAS_STREAM_REDIRECTION
 // By default, we assume that stream redirection is supported on all
 // platforms except known mobile ones.
-# if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_SYMBIAN || \
-    GTEST_OS_WINDOWS_PHONE || GTEST_OS_WINDOWS_RT
+# if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_WINDOWS_PHONE || GTEST_OS_WINDOWS_RT
 #  define GTEST_HAS_STREAM_REDIRECTION 0
 # else
 #  define GTEST_HAS_STREAM_REDIRECTION 1
-# endif  // !GTEST_OS_WINDOWS_MOBILE && !GTEST_OS_SYMBIAN
+# endif  // !GTEST_OS_WINDOWS_MOBILE
 #endif  // GTEST_HAS_STREAM_REDIRECTION
 
 // Determines whether to support death tests.
@@ -626,8 +620,7 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 
 // Determines whether the system compiler uses UTF-16 for encoding wide strings.
 #define GTEST_WIDE_STRING_USES_UTF16_ \
-    (GTEST_OS_WINDOWS || GTEST_OS_CYGWIN || GTEST_OS_SYMBIAN || \
-     GTEST_OS_AIX || GTEST_OS_OS2)
+  (GTEST_OS_WINDOWS || GTEST_OS_CYGWIN || GTEST_OS_AIX || GTEST_OS_OS2)
 
 // Determines whether test results can be streamed to a socket.
 #if GTEST_OS_LINUX
@@ -706,11 +699,11 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 // following the argument list:
 //
 //   Sprocket* AllocateSprocket() GTEST_MUST_USE_RESULT_;
-#if defined(__GNUC__) && (GTEST_GCC_VER_ >= 30400) && !defined(COMPILER_ICC)
+#if defined(__GNUC__) && !defined(COMPILER_ICC)
 # define GTEST_MUST_USE_RESULT_ __attribute__ ((warn_unused_result))
 #else
 # define GTEST_MUST_USE_RESULT_
-#endif  // __GNUC__ && (GTEST_GCC_VER_ >= 30400) && !COMPILER_ICC
+#endif  // __GNUC__ && !COMPILER_ICC
 
 // MS C++ compiler emits warning when a conditional expression is compile time
 // constant. In some contexts this warning is false positive and needs to be
@@ -931,9 +924,6 @@ class GTEST_API_ RE {
   // the entire str.
   // PartialMatch(str, re) returns true iff regular expression re
   // matches a substring of str (including str itself).
-  //
-  // FIXME: make FullMatch() and PartialMatch() work
-  // when str contains NUL characters.
   static bool FullMatch(const ::std::string& str, const RE& re) {
     return FullMatch(str.c_str(), re);
   }
@@ -957,10 +947,6 @@ class GTEST_API_ RE {
 
  private:
   void Init(const char* regex);
-
-  // We use a const char* instead of an std::string, as Google Test used to be
-  // used where std::string is not available.  FIXME: change to
-  // std::string.
   const char* pattern_;
   bool is_valid_;
 
@@ -1960,29 +1946,6 @@ class GTEST_API_ ThreadLocal {
 // we cannot detect it.
 GTEST_API_ size_t GetThreadCount();
 
-// Passing non-POD classes through ellipsis (...) crashes the ARM
-// compiler and generates a warning in Sun Studio before 12u4. The Nokia Symbian
-// and the IBM XL C/C++ compiler try to instantiate a copy constructor
-// for objects passed through ellipsis (...), failing for uncopyable
-// objects.  We define this to ensure that only POD is passed through
-// ellipsis on these systems.
-#if defined(__SYMBIAN32__) || defined(__IBMCPP__) || \
-     (defined(__SUNPRO_CC) && __SUNPRO_CC < 0x5130)
-// We lose support for NULL detection where the compiler doesn't like
-// passing non-POD classes through ellipsis (...).
-# define GTEST_ELLIPSIS_NEEDS_POD_ 1
-#else
-# define GTEST_CAN_COMPARE_NULL 1
-#endif
-
-// The Nokia Symbian and IBM XL C/C++ compilers cannot decide between
-// const T& and const T* in a function template.  These compilers
-// _can_ decide between class template specializations for T and T*,
-// so a tr1::type_traits-like is_pointer works.
-#if defined(__SYMBIAN32__) || defined(__IBMCPP__)
-# define GTEST_NEEDS_IS_POINTER_ 1
-#endif
-
 template <bool bool_value>
 struct bool_constant {
   typedef bool_constant<bool_value> type;
@@ -1998,13 +1961,6 @@ struct is_same : public false_type {};
 
 template <typename T>
 struct is_same<T, T> : public true_type {};
-
-
-template <typename T>
-struct is_pointer : public false_type {};
-
-template <typename T>
-struct is_pointer<T*> : public true_type {};
 
 template <typename Iterator>
 struct IteratorTraits {
@@ -2328,9 +2284,6 @@ typedef TypeWithSize<8>::Int TimeInMillis;  // Represents time in milliseconds.
 // Parses 'str' for a 32-bit signed integer.  If successful, writes the result
 // to *value and returns true; otherwise leaves *value unchanged and returns
 // false.
-// FIXME: Find a better way to refactor flag and environment parsing
-// out of both gtest-port.cc and gtest.cc to avoid exporting this utility
-// function.
 bool ParseInt32(const Message& src_text, const char* str, Int32* value);
 
 // Parses a bool/Int32/string from the environment variable
