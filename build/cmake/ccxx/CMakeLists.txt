@@ -17,3 +17,4 @@ if (${gs_project_enable_cpython})
 endif()
 
 add_subdirectory(gtest)
+add_subdirectory(benchmark)
