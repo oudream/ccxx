@@ -15,3 +15,5 @@ add_subdirectory(lua)
 if (${gs_project_enable_cpython})
     add_subdirectory(python)
 endif()
+
+add_subdirectory(gtest)
