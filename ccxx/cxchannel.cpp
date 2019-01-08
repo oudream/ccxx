@@ -215,7 +215,7 @@ void CxChannelRoadManager::cleanUp()
 {
     msepoch_t dtDiff = f_oChannelRoads.size() > 255 ? (30 * 1000) : (30 * 60 * 1000);
     int iClean = 0;
-    for(typename std::vector<CxChannelRoad*>::iterator it = f_oChannelRoads.begin(); it != f_oChannelRoads.end();)
+    for(std::vector<CxChannelRoad*>::iterator it = f_oChannelRoads.begin(); it != f_oChannelRoads.end();)
     {
         CxChannelRoad * oChannelRoad = * it;
         msepoch_t dtNow = CxTime::currentSystemTime();

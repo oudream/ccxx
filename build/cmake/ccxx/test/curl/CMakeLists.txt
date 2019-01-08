@@ -1,6 +1,6 @@
 
 #set(CURL_LIBRARY "-lcurl")
-find_package(CURL REQUIRED)
+#find_package(CURL REQUIRED)
 #add_executable (curl-demo convert.cpp)
 #include_directories(${CURL_INCLUDE_DIR})
 #target_link_libraries(curl-demo ${CURL_LIBRARIES})
@@ -31,10 +31,11 @@ macro(mc_create_test1 sCppName)
         if (CYGWIN OR MINGW)
             target_link_libraries(cxtest_curl_${sCppName}
                     ${gs_project_lib_path}/mingw/libcurl.a
+                    ${gs_project_lib_path}/mingw/libcurl.dll.a
                     )
         else()
             target_link_libraries(cxtest_curl_${sCppName}
-                    ${gs_project_lib_path}/mingw/libcurl.dll
+                    ${gs_project_lib_path}/vc/libcurl.lib
                     )
         endif ()
 #    elseif(APPLE)
@@ -45,6 +46,7 @@ macro(mc_create_test1 sCppName)
 #        target_link_libraries(cxtest_curl_${sCppName}
 #                ${gs_project_lib_path}/libcurl.a
 #                )
+        find_package(CURL REQUIRED)
         target_link_libraries(cxtest_curl_${sCppName}
                 ${CURL_LIBRARIES}
                 )
