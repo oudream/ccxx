@@ -1,3 +1,4 @@
+#cmake . -G "Visual Studio 12 2013" --build "C:\ddd\ccpp\ccxx" -B"C:\ddd\ccpp\ccxx\build\cmake-vs2013-win32"
 #cmake . -G "Visual Studio 12 2013" --build "C:\ddd\ccpp\ccxx\build\cmake" -B"C:\ddd\ccpp\ccxx\build\cmake-vs2013-win32"
 #cmake . -G "Visual Studio 14 2015" --build "C:\ddd\ccpp\ccxx\build\cmake" -B"C:\ddd\ccpp\ccxx\build\cmake-vs2015-win32"
 #cmake . -G "Visual Studio 14 2015 Win64" --build "C:\ddd\ccpp\ccxx\build\cmake" -B"C:\ddd\ccpp\ccxx\build\cmake-vs2015-win64"

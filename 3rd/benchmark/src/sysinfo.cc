@@ -17,9 +17,9 @@
 #ifdef BENCHMARK_OS_WINDOWS
 #include <shlwapi.h>
 #undef StrCat  // Don't let StrCat in string_util.h be renamed to lstrcatA
-#include <versionhelpers.h>
+//#include <versionhelpers.h>
 #include <windows.h>
-#include <codecvt>
+//#include <codecvt>
 #else
 #include <fcntl.h>
 #ifndef BENCHMARK_OS_FUCHSIA
@@ -564,8 +564,7 @@ double GetCPUCyclesPerSecond() {
   // In NT, read MHz from the registry. If we fail to do so or we're in win9x
   // then make a crude estimate.
   DWORD data, data_size = sizeof(data);
-  if (IsWindowsXPOrGreater() &&
-      SUCCEEDED(
+  if (SUCCEEDED(
           SHGetValueA(HKEY_LOCAL_MACHINE,
                       "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
                       "~MHz", nullptr, &data, &data_size)))
