@@ -35,7 +35,6 @@ set(gsl_htop_headers
         htop/ListItem.h
         htop/Header.h
         htop/ScreenManager.h
-        htop/FunctionBar.h
         )
 
 set(gsl_htop_sources
@@ -68,7 +67,6 @@ set(gsl_htop_sources
         htop/ListItem.h
         htop/Header.c
         htop/ScreenManager.c
-        htop/FunctionBar.c
         )
 
 
@@ -146,8 +144,8 @@ macro(mc_htop_linux_include)
 endmacro()
 
 
-#3, htop_main
-set(gsl_htop_main_heads
+#3, htop_gui
+set(gsl_htop_gui_heads
         htop/ColumnsPanel.h
         htop/MainPanel.h
         htop/Action.h
@@ -164,10 +162,9 @@ set(gsl_htop_main_heads
         htop/OpenFilesScreen.h
         htop/SignalsPanel.h
         htop/TraceScreen.h
-        htop/htop.h
         )
 
-set(gsl_htop_main_sources
+set(gsl_htop_gui_sources
         htop/ColumnsPanel.c
         htop/MainPanel.c
         htop/Action.c
@@ -184,9 +181,25 @@ set(gsl_htop_main_sources
         htop/OpenFilesScreen.c
         htop/SignalsPanel.c
         htop/TraceScreen.c
-        htop/htop.c
         )
 
+mc_merge_file_path(${gs_htop_path} "${gsl_htop_gui_heads}" gsl_htop_gui_head_filepaths)
+mc_merge_file_path(${gs_htop_path} "${gsl_htop_gui_sources}" gsl_htop_gui_source_filepaths)
+
+macro(mc_htop_gui_include)
+    source_group("htop_gui" FILES ${gsl_htop_gui_head_filepaths} ${gsl_htop_gui_source_filepaths})
+endmacro()
+
+
+
+#4, htop_main
+set(gsl_htop_main_heads
+        htop/main_htop.h
+        )
+
+set(gsl_htop_main_sources
+        htop/htop.c
+        )
 
 mc_merge_file_path(${gs_htop_path} "${gsl_htop_main_heads}" gsl_htop_main_head_filepaths)
 mc_merge_file_path(${gs_htop_path} "${gsl_htop_main_sources}" gsl_htop_main_source_filepaths)

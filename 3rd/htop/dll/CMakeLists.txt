@@ -59,7 +59,7 @@ else()
             )
 endif ()
 
-set_target_properties(htop_dyl PROPERTIES FOLDER 3rd)
+set_target_properties(htop_dyl PROPERTIES FOLDER 3rd/htop)
 
 
 

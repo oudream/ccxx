@@ -1,4 +1,5 @@
 
+mc_htop_gui_include()
 mc_htop_main_include()
 
 if (WIN32)
@@ -14,6 +15,7 @@ endif ()
 
 add_executable(htop_main
         ${gsl_htop_main_head_filepaths} ${gsl_htop_main_source_filepaths}
+        ${gsl_htop_gui_head_filepaths} ${gsl_htop_gui_source_filepaths}
         ${gsl_htop_header_filepaths} ${gsl_htop_source_filepaths}
         ${gsl_htop_os_head_filepaths} ${gsl_htop_os_source_filepaths}
         )
@@ -68,4 +70,4 @@ else()
             )
 endif ()
 
-set_target_properties(htop_main PROPERTIES FOLDER 3rd)
+set_target_properties(htop_main PROPERTIES FOLDER 3rd/htop)
