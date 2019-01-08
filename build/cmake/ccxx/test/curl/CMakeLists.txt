@@ -34,7 +34,7 @@ macro(mc_create_test1 sCppName)
                     )
         else()
             target_link_libraries(cxtest_curl_${sCppName}
-                    ${gs_project_lib_path}/mingw/libcurl.lib
+                    ${gs_project_lib_path}/mingw/libcurl.dll
                     )
         endif ()
 #    elseif(APPLE)
