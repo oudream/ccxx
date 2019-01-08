@@ -15,10 +15,11 @@
 #include "internal_macros.h"
 
 #ifdef BENCHMARK_OS_WINDOWS
-#include <Shlwapi.h>
+#include <shlwapi.h>
 #undef StrCat  // Don't let StrCat in string_util.h be renamed to lstrcatA
-#include <VersionHelpers.h>
-#include <Windows.h>
+#include <versionhelpers.h>
+#include <windows.h>
+#include <codecvt>
 #else
 #include <fcntl.h>
 #ifndef BENCHMARK_OS_FUCHSIA
@@ -52,6 +53,7 @@
 #include <limits>
 #include <memory>
 #include <sstream>
+#include <locale>
 
 #include "check.h"
 #include "cycleclock.h"
@@ -225,7 +227,7 @@ int CountSetBitsInCPUMap(std::string Val) {
   auto CountBits = [](std::string Part) {
     using CPUMask = std::bitset<sizeof(std::uintptr_t) * CHAR_BIT>;
     Part = "0x" + Part;
-    CPUMask Mask(std::stoul(Part, nullptr, 16));
+    CPUMask Mask(benchmark::stoul(Part, nullptr, 16));
     return static_cast<int>(Mask.count());
   };
   size_t Pos;
@@ -288,7 +290,7 @@ std::vector<CPUInfo::CacheInfo> GetCacheSizesMacOSX() {
     std::string name;
     std::string type;
     int level;
-    size_t num_sharing;
+    uint64_t num_sharing;
   } Cases[] = {{"hw.l1dcachesize", "Data", 1, CacheCounts[1]},
                {"hw.l1icachesize", "Instruction", 1, CacheCounts[1]},
                {"hw.l2cachesize", "Unified", 2, CacheCounts[2]},
@@ -366,6 +368,35 @@ std::vector<CPUInfo::CacheInfo> GetCacheSizes() {
 #endif
 }
 
+std::string GetSystemName() {
+#if defined(BENCHMARK_OS_WINDOWS)
+  std::string str;
+  const unsigned COUNT = MAX_COMPUTERNAME_LENGTH+1;
+  TCHAR  hostname[COUNT] = {'\0'};
+  DWORD DWCOUNT = COUNT;
+  if (!GetComputerName(hostname, &DWCOUNT))
+    return std::string("");
+#ifndef UNICODE
+  str = std::string(hostname, DWCOUNT);
+#else
+  //Using wstring_convert, Is deprecated in C++17
+  using convert_type = std::codecvt_utf8<wchar_t>;
+  std::wstring_convert<convert_type, wchar_t> converter;
+  std::wstring wStr(hostname, DWCOUNT);
+  str = converter.to_bytes(wStr);
+#endif
+  return str;
+#else // defined(BENCHMARK_OS_WINDOWS)
+#ifdef BENCHMARK_OS_MACOSX //Mac Doesnt have HOST_NAME_MAX defined
+#define HOST_NAME_MAX 64
+#endif
+  char hostname[HOST_NAME_MAX];
+  int retVal = gethostname(hostname, HOST_NAME_MAX);
+  if (retVal != 0) return std::string("");
+  return std::string(hostname);
+#endif // Catch-all POSIX block.
+}
+
 int GetNumCPUs() {
 #ifdef BENCHMARK_HAS_SYSCTL
   int NumCPU = -1;
@@ -404,11 +435,17 @@ int GetNumCPUs() {
     if (ln.empty()) continue;
     size_t SplitIdx = ln.find(':');
     std::string value;
+#if defined(__s390__)
+    // s390 has another format in /proc/cpuinfo
+    // it needs to be parsed differently
+    if (SplitIdx != std::string::npos) value = ln.substr(Key.size()+1,SplitIdx-Key.size()-1);
+#else
     if (SplitIdx != std::string::npos) value = ln.substr(SplitIdx + 1);
+#endif
     if (ln.size() >= Key.size() && ln.compare(0, Key.size(), Key) == 0) {
       NumCPUs++;
       if (!value.empty()) {
-        int CurID = std::stoi(value);
+        int CurID = benchmark::stoi(value);
         MaxID = std::max(CurID, MaxID);
       }
     }
@@ -481,12 +518,12 @@ double GetCPUCyclesPerSecond() {
     // which would cause infinite looping in WallTime_Init.
     if (startsWithKey(ln, "cpu MHz")) {
       if (!value.empty()) {
-        double cycles_per_second = std::stod(value) * 1000000.0;
+        double cycles_per_second = benchmark::stod(value) * 1000000.0;
         if (cycles_per_second > 0) return cycles_per_second;
       }
     } else if (startsWithKey(ln, "bogomips")) {
       if (!value.empty()) {
-        bogo_clock = std::stod(value) * 1000000.0;
+        bogo_clock = benchmark::stod(value) * 1000000.0;
         if (bogo_clock < 0.0) bogo_clock = error_value;
       }
     }
@@ -571,6 +608,24 @@ double GetCPUCyclesPerSecond() {
   return static_cast<double>(cycleclock::Now() - start_ticks);
 }
 
+std::vector<double> GetLoadAvg() {
+#if defined BENCHMARK_OS_FREEBSD || defined(BENCHMARK_OS_LINUX) || \
+    defined BENCHMARK_OS_MACOSX || defined BENCHMARK_OS_NETBSD ||  \
+    defined BENCHMARK_OS_OPENBSD
+  constexpr int kMaxSamples = 3;
+  std::vector<double> res(kMaxSamples, 0.0);
+  const int nelem = getloadavg(res.data(), kMaxSamples);
+  if (nelem < 1) {
+    res.clear();
+  } else {
+    res.resize(nelem);
+  }
+  return res;
+#else
+  return {};
+#endif
+}
+
 }  // end namespace
 
 const CPUInfo& CPUInfo::Get() {
@@ -582,6 +637,14 @@ CPUInfo::CPUInfo()
     : num_cpus(GetNumCPUs()),
       cycles_per_second(GetCPUCyclesPerSecond()),
       caches(GetCacheSizes()),
-      scaling_enabled(CpuScalingEnabled(num_cpus)) {}
+      scaling_enabled(CpuScalingEnabled(num_cpus)),
+      load_avg(GetLoadAvg()) {}
 
+
+const SystemInfo& SystemInfo::Get() {
+  static const SystemInfo* info = new SystemInfo();
+  return *info;
+}
+
+SystemInfo::SystemInfo() : name(GetSystemName()) {}
 }  // end namespace benchmark
