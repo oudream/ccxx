@@ -51,7 +51,8 @@ int main(void)
   CURL *curl;
   CURLcode res;
   struct FtpFile ftpfile = {
-    "curl.tar.gz", /* name to store the file as if successful */
+    "/fff/tmp/002.md", /* name to store the file as if successful */
+//    "curl.tar.gz", /* name to store the file as if successful */
     NULL
   };
 
@@ -63,7 +64,8 @@ int main(void)
      * You better replace the URL with one that works!
      */
     curl_easy_setopt(curl, CURLOPT_URL,
-                     "ftp://ftp.example.com/curl/curl-7.9.2.tar.gz");
+                     "ftp://ftp.gnu.org/gnu/gnucash.README");
+//                     "ftp://ftp.example.com/curl/curl-7.9.2.tar.gz");
     /* Define our callback to get called when there's data to be written */
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
     /* Set a pointer to our struct to pass to the callback */
