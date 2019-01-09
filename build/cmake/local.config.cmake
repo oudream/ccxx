@@ -34,7 +34,8 @@ elseif(WIN32)
         elseif(MSVC_VERSION EQUAL 1900)
             list(APPEND CMAKE_PREFIX_PATH F:/qt5.6.1msvc2015/5.6/msvc2015)
         elseif(MSVC_VERSION GREATER 1910)
-            list(APPEND CMAKE_PREFIX_PATH F:/qt5.10.1/5.10.1/msvc2017_64)
+            list(APPEND CMAKE_PREFIX_PATH F:/qt5.10.1/5.10.1/winrt_x86_msvc2017)
+#            list(APPEND CMAKE_PREFIX_PATH F:/qt5.10.1/5.10.1/msvc2017_64)
         else()
             message("can not find qt version!!!")
         endif()
@@ -45,6 +46,7 @@ elseif(WIN32)
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
+set(BUILD_SHARED_LIBS ON)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
@@ -71,6 +73,8 @@ set(gs_project_enable_cpython 1)
 ### libuv
 set(gs_project_enable_uv 1)
 #set(gs_project_enable_uv 0)
+
+set(gmock_build_tests 1)
 
 if (gs_project_enable_cpython AND gs_prefix_path_python)
     list(APPEND CMAKE_PREFIX_PATH ${gs_prefix_path_python})

@@ -42,9 +42,7 @@ endmacro()
 
 #############################################
 
-
-if (APPLE)
+if (NOT WIN32)
+    mc_create_test1(pipe1)
+    mc_create_test1(fork1)
 endif ()
-
-mc_create_test1(pipe1)
-mc_create_test1(fork1)

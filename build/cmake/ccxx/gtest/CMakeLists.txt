@@ -24,5 +24,17 @@ macro(mc_create_test1 sCxxName)
     set_target_properties(gtest_${sCxxName} PROPERTIES FOLDER ccxx/gtest)
 endmacro()
 
+macro(mc_create_test1 sCxxName)
+    aux_source_directory(${gs_gtest_path}/${sCxxName} gsl_${sCxxName}_DIR_SRCS)
+
+    add_executable(gtest_${sCxxName} ${gsl_${sCxxName}_DIR_SRCS})
+
+    add_dependencies(gtest_${sCxxName} gtest gtest_main ccxx)
+
+    target_link_libraries(gtest_${sCxxName} gtest gtest_main ccxx)
+
+    set_target_properties(gtest_${sCxxName} PROPERTIES FOLDER ccxx/gtest)
+endmacro()
+
 
 mc_create_test1(cxstring)
