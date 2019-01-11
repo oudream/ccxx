@@ -74,7 +74,18 @@ set(gs_project_enable_cpython 1)
 set(gs_project_enable_uv 1)
 #set(gs_project_enable_uv 0)
 
+### gtest googletest
+set(gtest_build_tests 1)
+set(gtest_build_samples 1)
 set(gmock_build_tests 1)
+#set(gtest_build_tests 0)
+#set(gtest_build_samples 0)
+#set(gmock_build_tests 0)
+
+### benchmark
+set(BENCHMARK_ENABLE_TESTING ON)
+#set(BENCHMARK_ENABLE_TESTING OFF)
+
 
 if (gs_project_enable_cpython AND gs_prefix_path_python)
     list(APPEND CMAKE_PREFIX_PATH ${gs_prefix_path_python})

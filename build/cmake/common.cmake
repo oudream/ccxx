@@ -29,8 +29,13 @@ macro(mc_build_with_cc_static)
 
     if(MSVC)
         add_definitions(-D"_CRT_SECURE_NO_WARNINGS")
-
-        #
+        # When Target is built as a shared library, it should also use
+        # shared runtime libraries.  Otherwise, it may end up with multiple
+        # copies of runtime library data in different modules, resulting in
+        # hard-to-find crashes. When it is built as a static library, it is
+        # preferable to use CRT as static libraries, as we don't have to rely
+        # on CRT DLLs being available. CMake always defaults to using shared
+        # CRT libraries, so we override that default here.
         foreach(flag_var
                 CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
                 CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
@@ -43,7 +48,6 @@ macro(mc_build_with_cc_static)
                 string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
             endif()
         endforeach(flag_var)
-
         #    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:msvcrtd.lib")
         #    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:libcmt.lib")
         #    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libcmtd.lib")
