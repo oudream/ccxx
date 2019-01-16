@@ -16,14 +16,24 @@ else()
     find_package(Qt5Network REQUIRED)
 endif ()
 
-####do not use qtgui
-##set(QT_DONT_USE_QTGUI TRUE)
 
-###
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
+macro(mc_target_define_qt)
+    ###qt4
+    if (DEFINED gs_project_qt_version AND (gs_project_qt_version LESS_EQUAL 5))
+        include(${QT_USE_FILE})
 
-# Find includes in corresponding build directories
-# CMake automatically adds CMAKE_CURRENT_SOURCE_DIR and CMAKE_CURRENT_BINARY_DIR to the include path for each directory
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#
+        add_definitions(${QT_DEFINITIONS})
+    endif ()
+
+    ####do not use qtgui
+    ##set(QT_DONT_USE_QTGUI TRUE)
+
+    ###
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+
+    # Find includes in corresponding build directories
+    # CMake automatically adds CMAKE_CURRENT_SOURCE_DIR and CMAKE_CURRENT_BINARY_DIR to the include path for each directory
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
+    #
+endmacro()

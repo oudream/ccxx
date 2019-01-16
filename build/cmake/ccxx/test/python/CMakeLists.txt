@@ -1,5 +1,5 @@
 
-include(./../../../cpython.cmake)
+mc_target_define_cpython()
 
 ### noddy
 set(gsl_noddy_files

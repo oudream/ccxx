@@ -1,35 +1,29 @@
 
-#set(CURL_LIBRARY "-lcurl")
-#find_package(CURL REQUIRED)
-#add_executable (curl-demo convert.cpp)
-#include_directories(${CURL_INCLUDE_DIR})
-#target_link_libraries(curl-demo ${CURL_LIBRARIES})
-
 #############################################
 
 macro(mc_create_test1 sCppName)
     set(gsl_test_${sCppName}_sources
-            curl/${sCppName}.c
+            opencv/${sCppName}.cpp
             )
 
     mc_merge_file_path(${gs_ccxx_test_path} "${gsl_test_${sCppName}_sources}"
             gsl_test_${sCppName}_source_filepaths)
 
-    add_executable(cxtest_curl_${sCppName}
+    add_executable(cxtest_opencv_${sCppName}
             ${gsl_test_${sCppName}_head_filepaths} ${gsl_test_${sCppName}_source_filepaths}
             )
 
-    add_dependencies(cxtest_curl_${sCppName}
+    add_dependencies(cxtest_opencv_${sCppName}
             ccxx
             )
 
-    target_link_libraries(cxtest_curl_${sCppName}
+    target_link_libraries(cxtest_opencv_${sCppName}
             ccxx
             )
 
-    mc_target_link_curl(cxtest_curl_${sCppName})
+    mc_target_link_opencv(cxtest_opencv_${sCppName})
 
-    set_target_properties(cxtest_curl_${sCppName} PROPERTIES FOLDER ccxx/test)
+    set_target_properties(cxtest_opencv_${sCppName} PROPERTIES FOLDER ccxx/test)
 endmacro()
 
 #set(v_name1 "ou")
@@ -40,5 +34,5 @@ endmacro()
 
 #############################################
 
-mc_create_test1(ftpget)
-mc_create_test1(post-callback)
+mc_create_test1(example1)
+mc_create_test1(capture1)

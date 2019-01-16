@@ -1,5 +1,5 @@
 
-include(./../../cpython.cmake)
+mc_target_define_cpython()
 
 mc_ccxx_simple_include()
 

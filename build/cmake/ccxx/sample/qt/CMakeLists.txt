@@ -1,6 +1,6 @@
 
 ###add qt ui
-include(./../../../qt.cmake)
+mc_target_define_qt()
 
 ### ccxx qt
 mc_ccxx_qt_include()

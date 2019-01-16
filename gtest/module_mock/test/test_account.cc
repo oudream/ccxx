@@ -45,8 +45,9 @@ void AccountHelper::updateAccount(const Account& account)
 Account AccountHelper::findAccountForUser(const std::string& userId) 
 { 
     if (this->mAccount.find(userId) != this->mAccount.end()) 
-        return this->mAccount[userId]; 
-    else 
+        return this->mAccount[userId];
+//        return Account("C", 4000);
+    else
         return Account(); 
 } 
 
@@ -64,9 +65,13 @@ TEST(AccountServiceTest, transferTest)
     // always invoke AccountHelper::findAccountForUser 
     // when AccountManager::findAccountForUser is invoked 
     EXPECT_CALL(*pManager, findAccountForUser(testing::_)).WillRepeatedly( 
-            testing::Invoke(&helper, &AccountHelper::findAccountForUser)); 
+            testing::Invoke(&helper, &AccountHelper::findAccountForUser));
 
-    // always invoke AccountHelper::updateAccount 
+
+    EXPECT_CALL(*pManager, findAccountForUser(testing::String::EndsWithCaseInsensitive("foobar", "BAR"))).WillRepeatedly(
+            testing::Invoke(&helper, &AccountHelper::findAccountForUser));
+
+    // always invoke AccountHelper::updateAccount
     //when AccountManager::updateAccount is invoked 
     EXPECT_CALL(*pManager, updateAccount(testing::_)).WillRepeatedly( 
             testing::Invoke(&helper, &AccountHelper::updateAccount)); 

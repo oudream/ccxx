@@ -78,8 +78,31 @@ link_directories(${gs_project_lib_path})
 
 message("----------------------------------------------------------------------")
 
-include(local.config.cmake)
+### common cmake
 include(common.cmake)
+
+### cmake config
+include(local.config.cmake)
+
+if (${gs_project_enable_qt})
+    include(qt.cmake)
+endif ()
+
+if (${gs_project_enable_cpython})
+    include(cpython.cmake)
+endif ()
+
+if (${gs_project_enable_curl})
+    include(curl.cmake)
+endif ()
+
+if (${gs_project_enable_openssl})
+    include(openssl.cmake)
+endif ()
+
+if (${gs_project_enable_opencv})
+    include(opencv.cmake)
+endif ()
 
 include_directories(${gs_project_include_path})
 include_directories(${gs_project_cross_compile_path}/include)

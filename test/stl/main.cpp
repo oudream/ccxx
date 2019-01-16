@@ -3,6 +3,8 @@
 
 #include "class1.hpp"
 
+#include "bool1.hpp"
+
 
 void gprint(std::string msg)
 {
@@ -56,7 +58,9 @@ int main(int argc, char *agrv[])
 {
     gprint("stl begin:");
 
-    testClass11();
+//    testClass11();
+
+    testBool1();
     
     gprint("stl end!");
     return 1;

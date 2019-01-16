@@ -1,5 +1,5 @@
 
-include(./../../../../qt.cmake)
+mc_target_define_qt()
 
 set(SOURCES
         qtui1/main.cpp
