@@ -79,3 +79,29 @@ macro(mc_target_link_libraries sTargetName)
         target_link_libraries(${sTargetName}  dl rt uuid)
     endif ()
 endmacro()
+
+
+# remove all matching elements from the list
+macro(mc_list_filterout lst regex)
+    foreach(item ${${lst}})
+        if(item MATCHES "${regex}")
+            list(REMOVE_ITEM ${lst} "${item}")
+        endif()
+    endforeach()
+endmacro()
+
+
+# filter matching elements from the list
+macro(mc_list_filter lst regex)
+    set(dst ${ARGN})
+    if(NOT dst)
+        set(dst ${lst})
+    endif()
+    set(__result ${${lst}})
+    foreach(item ${__result})
+        if(NOT item MATCHES "${regex}")
+            list(REMOVE_ITEM __result "${item}")
+        endif()
+    endforeach()
+    set(${dst} ${__result})
+endmacro()

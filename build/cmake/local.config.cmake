@@ -88,6 +88,10 @@ set(gs_project_enable_opencv 1)
 if (WIN32)
     set(gs_project_enable_opencv 0)
 endif ()
+if (gs_project_enable_opencv)
+    set(gs_project_enable_opencv_sample 1)
+    #set(gs_project_enable_opencv_sample 0)
+endif ()
 
 ### gtest googletest
 set(gtest_build_tests 1)

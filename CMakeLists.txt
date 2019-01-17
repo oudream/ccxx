@@ -52,4 +52,8 @@ add_subdirectory(./3rd)
 
 add_subdirectory(./gtest)
 
+if (${gs_project_enable_opencv_sample})
+    add_subdirectory(./sample/opencv)
+endif ()
+
 add_subdirectory(./build/cmake)

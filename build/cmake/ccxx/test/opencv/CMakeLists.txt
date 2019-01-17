@@ -1,12 +1,14 @@
 
 #############################################
 
+set(gs_opencv_test_path ${gs_ccxx_test_path}/opencv)
+
 macro(mc_create_test1 sCppName)
     set(gsl_test_${sCppName}_sources
-            opencv/${sCppName}.cpp
+            ${sCppName}.cpp
             )
 
-    mc_merge_file_path(${gs_ccxx_test_path} "${gsl_test_${sCppName}_sources}"
+    mc_merge_file_path(${gs_opencv_test_path} "${gsl_test_${sCppName}_sources}"
             gsl_test_${sCppName}_source_filepaths)
 
     add_executable(cxtest_opencv_${sCppName}
@@ -36,3 +38,4 @@ endmacro()
 
 mc_create_test1(example1)
 mc_create_test1(capture1)
+
