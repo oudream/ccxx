@@ -24,11 +24,11 @@
 #
 #project(cpp_samples)
 #ocv_include_modules_recurse(${OPENCV_CPP_SAMPLES_REQUIRED_DEPS})
+#file(GLOB_RECURSE cpp_samples RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 file(GLOB_RECURSE cpp_samples ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 set(gsl_opencv_sample_sources ${cpp_samples} CACHE INTERNAL "opencv sample sources" )
 
-#file(GLOB_RECURSE cpp_samples RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 #if(NOT HAVE_opencv_cudaarithm OR NOT HAVE_opencv_cudafilters)
 #  ocv_list_filterout(cpp_samples "/gpu/")
 #endif()
