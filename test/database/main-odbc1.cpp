@@ -4,6 +4,7 @@
 
 #include "test_cursor1.hpp"
 #include "test_dql1.hpp"
+#include "test_odbc_oracle1.hpp"
 
 using namespace std;
 
@@ -51,6 +52,8 @@ void fn_timer1(int)
 //	cxPrompt() << "begin time1:";
 
 //	testDql6();
+
+	testOdbcOracle1();
 }
 
 void fn_test(int, int, const void *, int, void *, void *)
@@ -63,11 +66,11 @@ int main(int argc,const char * argv[])
 
 	CxApplication::init(argc, argv);
 
-//	string g_sDBSource = "UID=ICS;PWD=ICS;DSN=ics_oracle_dsn";
-//	string g_sDBType = "Oracle";
+	string g_sDBSource = "UID=FMIS9999;PWD=FMIS9999;DSN=cics_oracle_dsn";
+	string g_sDBType = "Oracle";
 
-	string g_sDBSource = "UID=root;PWD=123456;DSN=ics_mysql_dsn";
-	string g_sDBType = "MySQL";
+//	string g_sDBSource = "UID=root;PWD=123456;DSN=ics_mysql_dsn";
+//	string g_sDBType = "MySQL";
 
 //	string g_sDBSource = "DSN=ics_access_dsn";
 //	string g_sDBType = "access";
