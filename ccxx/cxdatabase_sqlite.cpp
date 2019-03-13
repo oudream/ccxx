@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 //********************* ********************* ********************* *********************
 //********************* sqlite begin **********************************************************
 //********************* ********************* ********************* *********************
@@ -16,6 +15,13 @@ using namespace std;
 #include "sqlite3/sqlite3.h"
 
 bool g_bHasRegistDatabaseConstructorSqlite = CxDatabaseSqliteFactory::registDatabaseConstructor();
+
+struct SqliteColumnDesc
+{
+    std::string columnName;
+    int ftype;
+    int fsize;
+};
 
 class CxDatabaseSqlite : public CxDatabase
 {
@@ -25,8 +31,26 @@ private:
 public:
     class CursorSqlite : public CursorBase
     {
-    public:
+        CursorSqlite(int iPrefetchArraySize=100):
+            CursorBase(CursorTypeSqlite, iPrefetchArraySize),
+            _stmt(NULL),
+            _rc(0),
+            _ncols(0){}
+        virtual ~CursorSqlite(){
+            if (_stmt)
+            {
+                sqlite3_finalize(_stmt);
+                _stmt = NULL;
+            }
+        }
 
+    protected:
+        sqlite3_stmt * _stmt;
+        int _rc;
+        int _ncols;
+        vector<SqliteColumnDesc> _columnDescs;
+
+        friend class CxDatabaseSqlite;
     };
 
 public:
@@ -582,19 +606,120 @@ protected:
     CursorBase*
     cursorLoadImpl(const std::string& sSql, int iPrefetchArraySize)
     {
-        return NULL;
+        if (!db)
+        {
+            string sErrorString = "error : db is not open sql!";
+            setLastError(-1, sErrorString);
+            return NULL;
+        }
+        int rc, ncols;
+        sqlite3_stmt* stmt;
+        const char* tail;
+        rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
+        if (rc != SQLITE_OK)
+        {
+            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+            setLastError(rc, sErrorString);
+            return NULL;
+        }
+        rc = sqlite3_step(stmt);
+        ncols = sqlite3_column_count(stmt);
+        CursorSqlite * r = new CursorSqlite(iPrefetchArraySize);
+        r->_stmt = stmt;
+        for (int i = 0; i < ncols; ++i)
+        {
+            SqliteColumnDesc sqliteColumnDesc;
+            sqliteColumnDesc.columnName = sqlite3_column_name(stmt, i);;
+            sqliteColumnDesc.ftype = sqlite3_column_type(stmt, i);
+            sqliteColumnDesc.fsize = sqlite3_column_bytes(stmt, i);
+            r->_columnDescs.push_back(sqliteColumnDesc);
+            r->_columnNames.push_back(sqliteColumnDesc.columnName);
+            int iColumnType = ColumnTypeNone;
+            switch (sqlite3_column_type(stmt, i))
+            {
+                case SQLITE_INTEGER:
+                {
+                    iColumnType = ColumnTypeLongint;
+                }
+                    break;
+                case SQLITE_FLOAT:
+                {
+                    iColumnType = ColumnTypeDouble;
+                }
+                    break;
+                case SQLITE_TEXT:
+                {
+                    iColumnType = ColumnTypeString;
+                }
+                    break;
+                case SQLITE_BLOB:
+                {
+                    iColumnType = ColumnTypeBlob;
+                }
+                    break;
+                default:
+                {
+                    iColumnType = ColumnTypeNone;
+                }
+            }
+            r->_columnTypes.push_back(iColumnType);
+            r->_columnSizes.push_back(sqliteColumnDesc.fsize);
+        }
+        r->_rc = rc;
+        r->_ncols = ncols;
+
+        return r;
     }
 
     bool
     cursorIsEndImpl(CursorBase * oCursor)
     {
-        return true;
+        CursorSqlite * oCursorSqlite = (CursorSqlite *)oCursor;
+        int rc = oCursorSqlite->_rc;
+        return rc != SQLITE_ROW;
     }
 
     int
     cursorPutImpl(CursorBase* oCursor, std::vector<std::vector<std::string> >& rows, int iMaxRowCount)
     {
-        return FALSE;
+        int r = 0;
+        if (!db)
+        {
+            string sErrorString = "error : db is not open sql!";
+            setLastError(-1, sErrorString);
+            return r;
+        }
+
+        if (oCursor == NULL) return r;
+        if (oCursor->_cursorType != CursorTypeSqlite)
+        {
+            return r;
+        }
+        CursorSqlite * oCursorSqlite = (CursorSqlite *)oCursor;
+        sqlite3_stmt * stmt = oCursorSqlite->_stmt;
+        int rc = oCursorSqlite->_rc;
+        int ncols = oCursorSqlite->_ncols;
+        int iPutRowCount = iMaxRowCount > 0 ? iMaxRowCount : oCursorSqlite->_prefetchArraySize;
+        while (rc == SQLITE_ROW)
+        {
+            vector<string> row;
+            for (int i = 0; i < ncols; ++i)
+            {
+                string sValue;
+                const unsigned char* pch = sqlite3_column_text(stmt, i);
+                if (pch)
+                    sValue = string((const char*) pch);
+                row.push_back(sValue);
+            }
+            rows.push_back(row);
+            rc = sqlite3_step(stmt);
+            ++r;
+            if (r >= iPutRowCount)
+            {
+                break;
+            }
+        }
+        return r;
     }
 
     int

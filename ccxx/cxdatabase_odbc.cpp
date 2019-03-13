@@ -2,10 +2,8 @@
 
 #include "cxstring.h"
 #include "cxcontainer.h"
-
-#include "cxapplication.h"
-#include "cxfile.h"
 #include "cxinterinfo.h"
+#include "cxtime.h"
 #include "cxlog.h"
 
 #undef OTL_ORA8I
@@ -157,6 +155,7 @@ protected:
                 }
                 else
                 {
+                    cxDebug() << "OpenDatabase HeartJumpSql : " << sHeartJumpSql;
                     cxDebug() << "OpenDatabase HeartJumpSql ExecSql Fail. HeartJumpSql Disabled.";
                 }
             }
