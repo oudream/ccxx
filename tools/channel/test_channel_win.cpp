@@ -3,7 +3,7 @@
 
 
 #include <ccxx/ccxx.h>
-#include <ccxx/qtcommon.h>
+#include <ccxx/cxqtutil.h>
 
 
 using namespace std;
@@ -39,7 +39,7 @@ TestChannelWin::TestChannelWin(QWidget *parent) :
         string sIp = sLocalIps.at(i);
         if (CxString::isValidIp(sIp))
         {
-            ui->connectIp1Ed->addItem(QtCommonString::gbkToQString(sIp));
+            ui->connectIp1Ed->addItem(CxQString::gbkToQString(sIp));
         }
     }
 }
@@ -62,11 +62,11 @@ void TestChannelWin::on_sendBn_clicked()
 {
     GM_INVALID_RETURE(_channel);
 
-    string sInfo = QtCommonString::gbkToStdString(ui->infoInEd->toPlainText());
+    string sInfo = CxQString::gbkToStdString(ui->infoInEd->toPlainText());
     vector<uchar> data = CxString::fromHexstring(sInfo);
 
-    string sIp = QtCommonString::gbkToStdString(ui->remoteIpEd->text());
-    string sPort = QtCommonString::gbkToStdString(ui->remotePortEd->text());
+    string sIp = CxQString::gbkToStdString(ui->remoteIpEd->text());
+    string sPort = CxQString::gbkToStdString(ui->remotePortEd->text());
     if (CxString::isValidIp(sIp) && CxString::isValidPort(CxString::toInt32(sPort)) && ui->channelTypeCb->currentIndex() == 3 && ui->channelTypeCb->currentIndex() == 4)
     {
         ((CxChannelUdp *)_channel)->writeTo((const char *)data.data(), data.size(), sIp, CxString::toInt32(sPort));
@@ -86,7 +86,7 @@ void TestChannelWin::outInfo(const QString &sInfo)
 
 void TestChannelWin::outInfo(const string &sInfo)
 {
-    outInfo(QtCommonString::gbkToQString(sInfo));
+    outInfo(CxQString::gbkToQString(sInfo));
 }
 
 void TestChannelWin::channel_receivedData(const uchar *pData, int iLength)
@@ -168,8 +168,8 @@ void TestChannelWin::on_connectBn_clicked()
         return;
     }
 
-    string sIp1 = QtCommonString::gbkToStdString(ui->connectIp1Ed->currentText());
-    string sIp2 = QtCommonString::gbkToStdString(ui->connectIp2Ed->text());
+    string sIp1 = CxQString::gbkToStdString(ui->connectIp1Ed->currentText());
+    string sIp2 = CxQString::gbkToStdString(ui->connectIp2Ed->text());
     int iPort1 = ui->connectPort1Ed->value();
     int iPort2 = ui->connectPort2Ed->value();
     if (! CxString::isValidIp(sIp1) || ! CxString::isValidIp(sIp2)

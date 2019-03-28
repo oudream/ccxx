@@ -196,3 +196,41 @@ void testDql6()
         cxPrompt() << tRows[i];
     }
 }
+
+void testDql7()
+{
+    CxDatabase * pDb = CxDatabaseManager::getDefaultDb();
+
+    if (pDb == NULL)
+    {
+        return;
+    }
+    for (int i = 0; i < 10; ++i)
+    {
+        for (int j = 0; j < 5; ++j)
+        {
+            string sSql = "INSERT INTO table1\n"
+                "(column1, column2, column3)\n"
+                "VALUES(%d, 2969567233, 1.123);";
+            sSql = CxString::format(sSql.c_str(), j*i+10);
+            int iResult = pDb->execSql(sSql);
+            //iResult : TRUE==1 | FALSE==0
+            cout << iResult << endl;
+        }
+    }
+
+    for (int i = 0; i < 10; ++i)
+    {
+        for (int j = 0; j < 5; ++j)
+        {
+            string sSql = "INSERT INTO table2\n"
+                "(column1, column2, column3)\n"
+                "VALUES(%d, 2969567233, 1.123);";
+            sSql = CxString::format(sSql.c_str(), j*i+10);
+            int iResult = pDb->execSql(sSql);
+            //iResult : TRUE==1 | FALSE==0
+            cout << iResult << endl;
+        }
+    }
+
+}

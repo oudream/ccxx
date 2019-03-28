@@ -4,7 +4,7 @@
 #include <QMainWindow>
 
 #include <ccxx/ccxx.h>
-#include <ccxx/qtcommon.h>
+#include <ccxx/cxqtutil.h>
 #include <QSystemTrayIcon>
 
 namespace Ui {

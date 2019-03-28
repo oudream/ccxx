@@ -66,7 +66,7 @@ set(gsl_ccxx_heads
         cxprocess.h
         cxprocmutex.h
         cxwinreg.h
-        cxzip.h
+        cxlz4.h
         )
 
 set(gsl_ccxx_sources
@@ -119,7 +119,7 @@ set(gsl_ccxx_sources
         cxprocess.cpp
         cxprocmutex.cpp
         cxwinreg.cpp
-        cxzip.cpp
+        cxlz4.cpp
         lz4/lz4.c
         )
 
@@ -232,7 +232,7 @@ set(gsl_ccxx_simple_heads
         cxuuid.h
         cxprocmutex.h
         cxwinreg.h
-        cxzip.h
+        cxlz4.h
         )
 
 set(gsl_ccxx_simple_sources
@@ -264,7 +264,7 @@ set(gsl_ccxx_simple_sources
         cxuuid.cpp
         cxprocmutex.cpp
         cxwinreg.cpp
-        cxzip.cpp
+        cxlz4.cpp
         lz4/lz4.c
         )
 
@@ -308,10 +308,11 @@ macro(mc_ccxx_sqlite_include)
     source_group("ccxx_sqlite" FILES ${gs_ccxx_sqlite_filepaths})
 endmacro()
 
+
 #5, qt
 set(gsl_ccxx_qt_files
-        qtcommon.h
-        qtcommon.cpp
+        cxqtutil.h
+        cxqtutil.cpp
         cxapplication_qt.h
         cxapplication_qt.cpp
         )
@@ -320,4 +321,17 @@ mc_merge_file_path(${gs_ccxx_source_path} "${gsl_ccxx_qt_files}" gsl_ccxx_qt_fil
 
 macro(mc_ccxx_qt_include)
     source_group("ccxx_qt" FILES ${gsl_ccxx_qt_filepaths})
+endmacro()
+
+
+# curl
+set(gs_ccxx_curl_files
+        cxcurl.h
+        cxcurl.cpp
+        )
+
+mc_merge_file_path(${gs_ccxx_source_path} "${gs_ccxx_curl_files}" gs_ccxx_curl_filepaths)
+
+macro(mc_ccxx_curl_include)
+    source_group("ccxx_curl" FILES ${gs_ccxx_curl_filepaths})
 endmacro()

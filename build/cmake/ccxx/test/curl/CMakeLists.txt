@@ -40,5 +40,36 @@ endmacro()
 
 #############################################
 
+#############################################
+
+macro(mc_create_test2 sCppName)
+    set(gsl_test_${sCppName}_sources
+            curl/main_${sCppName}.cpp
+            )
+
+    mc_merge_file_path(${gs_ccxx_test_path} "${gsl_test_${sCppName}_sources}"
+            gsl_test_${sCppName}_source_filepaths)
+
+    add_executable(cxtest_curl_${sCppName}
+            ${gsl_test_${sCppName}_head_filepaths} ${gsl_test_${sCppName}_source_filepaths}
+            )
+
+    add_dependencies(cxtest_curl_${sCppName}
+            ccxx
+            ccxx_curl
+            )
+
+    target_link_libraries(cxtest_curl_${sCppName}
+            ccxx
+            ccxx_curl
+            )
+
+    set_target_properties(cxtest_curl_${sCppName} PROPERTIES FOLDER ccxx/test)
+endmacro()
+
+#############################################
+
 mc_create_test1(ftpget)
 mc_create_test1(post-callback)
+
+mc_create_test2(cxcurl1)

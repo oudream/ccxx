@@ -47,7 +47,7 @@ void MainWindow::timer_timeOut(const CxTimer *oTimer)
 
 void MainWindow::outInfo(const std::string &sInfo)
 {
-    ui->plainTextEdit->appendPlainText(QtCommonString::gbkToQString(sInfo));
+    ui->plainTextEdit->appendPlainText(CxQString::gbkToQString(sInfo));
     ui->plainTextEdit->appendPlainText("");
 }
 

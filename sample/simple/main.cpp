@@ -3,7 +3,7 @@
 #include <ccxx/cxinterinfo.h>
 #include <ccxx/cxtinyxml.h>
 #include <ccxx/cxsocket.h>
-#include <ccxx/cxzip.h>
+#include <ccxx/cxlz4.h>
 
 using namespace std;
 
