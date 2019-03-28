@@ -2061,11 +2061,11 @@ bool CxString::equalIgnoreAll(const string &s1, const string &s2)
     return str1 == str2;
 }
 
-size_t CxString::findLeftCase(const string &sMaster, const string &sSub)
+size_t CxString::findLeftCase(const string &sMaster, const string &sSub, size_t iPos=0)
 {
     string str1 = toLower(sMaster);
     string str2 = toLower(sSub);
-    return str1.find(str2);
+    return str1.find(str2, iPos);
 }
 
 size_t CxString::findLeftCase(const string &sMaster, const std::vector<string> &sSubs)
@@ -2112,11 +2112,11 @@ size_t CxString::findEqualCase(const std::vector<std::string> &sMaster, const st
     return string::npos;
 }
 
-size_t CxString::findRightCase(const string &sMaster, const string &sSub)
+size_t CxString::findRightCase(const string &sMaster, const string &sSub, size_t iPos=std::string::npos)
 {
     string str1 = toLower(sMaster);
     string str2 = toLower(sSub);
-    return str1.rfind(str2);
+    return str1.rfind(str2, iPos);
 }
 
 bool CxString::exist(const string &sMaster, const string &sSub)

@@ -75,6 +75,10 @@ public:
     static bool fromBuf(uint8 *pBuf,int len,float &val,int mode=0);
     static bool fromBuf(uint8 *pBuf,int len,double &val,int mode=0);
 
+    static int toBuf(uint8 *pBuf, int64 val, std::string fmt, int mode = 0);
+    static int toBuf(uint8 *pBuf,double val,std::string fmt,int mode=0);
+    static int toBuf(uint8 *pBuf,std::string val,std::string fmt,int mode=0);
+
 };
 
 #endif // CXBUFFER_H

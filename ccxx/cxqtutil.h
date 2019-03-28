@@ -1,5 +1,5 @@
-#ifndef QTCOMMON_H
-#define QTCOMMON_H
+#ifndef CXQTUTIL_H
+#define CXQTUTIL_H
 
 
 #include "cxglobal.h"
@@ -32,7 +32,7 @@
 typedef int (*fn_int_widget_t)(QWidget * oWidget);
 
 
-class QtCommonString
+class CxQString
 {
 public:
     static QString gbkToQString(const std::string& s);
@@ -134,7 +134,7 @@ public:
 
 
 
-class QtCommonDialog
+class CxQDialog
 {
 
 public:
@@ -172,7 +172,7 @@ public:
 
 
 
-class QtCommonWidget
+class CxQWidget
 {
 public:
     //set
@@ -253,23 +253,23 @@ public:
 };
 
 
-class QtMutexScope
+class CxQMutexScope
 {
 private:
     QMutex * m_mutex;
 
 public:
-    inline QtMutexScope(QMutex * mutex) : m_mutex(mutex) {
+    inline CxQMutexScope(QMutex * mutex) : m_mutex(mutex) {
         m_mutex->lock();
     }
 
-    inline QtMutexScope(QMutex & mutex) : m_mutex(& mutex) {
+    inline CxQMutexScope(QMutex & mutex) : m_mutex(& mutex) {
         m_mutex->lock();
     }
 
-    inline ~QtMutexScope() { m_mutex->unlock(); }
+    inline ~CxQMutexScope() { m_mutex->unlock(); }
 
 };
 
-#endif // QTCOMMON_H
+#endif // CXQTUTIL_H
 

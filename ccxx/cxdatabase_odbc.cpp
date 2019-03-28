@@ -122,7 +122,7 @@ protected:
             }
 
             string sql_user = "SELECT user() LIMIT 1;";
-            string sql_select = "SELECT * FROM %s LIMIT 1;";
+            string sql_select = "SELECT COUNT(*) FROM information_schema.`TABLES`";
             if (CxString::equalIgnoreAll(sDatabaseType, "Oracle"))
             {
                 sql_user = "select user from dual;";
@@ -138,7 +138,7 @@ protected:
                 ||
                     (sHeartJumpSql.empty() && CxContainer::contain(*oParams, string("HeartJumpSql"))))
             {
-                cxDebug() << "OpenDatabase HeartJumpSql Disabled. ";
+                cxDebug() << "OpenDatabase: HeartJumpSql disabled for databaseType equal access or sqlite !";
             }
             else
             {
@@ -155,8 +155,7 @@ protected:
                 }
                 else
                 {
-                    cxDebug() << "OpenDatabase HeartJumpSql : " << sHeartJumpSql;
-                    cxDebug() << "OpenDatabase HeartJumpSql ExecSql Fail. HeartJumpSql Disabled.";
+                    cxDebug() << "OpenDatabase HeartJumpSql ExecSql Fail. HeartJumpSql Disabled. sql_user= " << sql_user;
                 }
             }
             cxDebug() << "OpenDatabase.odbc: rlogon-end: " << _db.connected;

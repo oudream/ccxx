@@ -295,12 +295,12 @@ public:
      * @param sSub
      * @return
      */
-    static size_t findLeftCase(const std::string& sMaster, const std::string& sSub);
+    static size_t findLeftCase(const std::string& sMaster, const std::string& sSub, size_t iPos=0);
     static size_t findLeftCase(const std::string& sMaster, const std::vector<std::string>& sSubs);
     static size_t findLeftCase(const std::vector<std::string>& sMaster, const std::string& sSubs);
     static size_t findEqualCase(const std::vector<std::string>& sMaster, const std::string& sSubs);
 
-    static size_t findRightCase(const std::string& sMaster, const std::string& sSub);
+    static size_t findRightCase(const std::string& sMaster, const std::string& sSub, size_t iPos=std::string::npos);
 
     inline static bool contain(const std::string& sMaster, const std::string& sSub) { return exist(sMaster, sSub); }
     static bool exist(const std::string& sMaster, const std::string& sSub);

@@ -1,9 +1,9 @@
 
 
 HEADERS += \
-    $$PWD/qtcommon.h \
+    $$PWD/cxqtutil.h \
     $$PWD/cxapplication_qt.h \
 
 SOURCES += \
-    $$PWD/qtcommon.cpp \
+    $$PWD/cxqtutil.cpp \
     $$PWD/cxapplication_qt.cpp \

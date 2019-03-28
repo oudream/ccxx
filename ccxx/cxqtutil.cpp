@@ -1,4 +1,4 @@
-#include "qtcommon.h"
+#include "cxqtutil.h"
 
 
 #include <QApplication>
@@ -21,12 +21,12 @@ QTextCodec * f_gbk = QTextCodec::codecForName("GB18030");
 QTextCodec * f_utf8 = QTextCodec::codecForName("UTF-8");
 
 ///************ ToString begin
-QString QtCommonString::gbkToQString(const std::string &s)
+QString CxQString::gbkToQString(const std::string &s)
 {
     return QString::fromLocal8Bit(s.data(), s.size());
 }
 
-QStringList QtCommonString::gbkToQStrings(const std::vector<std::string> &ss)
+QStringList CxQString::gbkToQStrings(const std::vector<std::string> &ss)
 {
     QStringList r;
     for (size_t i = 0; i < ss.size(); ++i)
@@ -37,7 +37,7 @@ QStringList QtCommonString::gbkToQStrings(const std::vector<std::string> &ss)
     return r;
 }
 
-QStringList QtCommonString::gbkToQStrings(const std::string *oSs, int iCount)
+QStringList CxQString::gbkToQStrings(const std::string *oSs, int iCount)
 {
     QStringList r;
     for (size_t i = 0; i < iCount; ++i)
@@ -48,7 +48,7 @@ QStringList QtCommonString::gbkToQStrings(const std::string *oSs, int iCount)
     return r;
 }
 
-std::vector<std::string> QtCommonString::gbkToStdStrings(const QStringList &ss)
+std::vector<std::string> CxQString::gbkToStdStrings(const QStringList &ss)
 {
     std::vector<std::string> r;
     for (size_t i = 0; i < ss.count(); ++i)
@@ -59,23 +59,23 @@ std::vector<std::string> QtCommonString::gbkToStdStrings(const QStringList &ss)
     return r;
 }
 
-std::string QtCommonString::gbkToStdString(const QString &s)
+std::string CxQString::gbkToStdString(const QString &s)
 {
     QByteArray data = s.toLocal8Bit();
     return std::string( data.data(), data.size() );
 }
 
-QString QtCommonString::ToString(const int& i)
+QString CxQString::ToString(const int& i)
 {
     return QString::number(i);
 }
 
-QString QtCommonString::ToString(const unsigned int &i)
+QString CxQString::ToString(const unsigned int &i)
 {
     return QString::number(i);
 }
 
-QString QtCommonString::ToString(const int &i, int iZeroCount)
+QString CxQString::ToString(const int &i, int iZeroCount)
 {
     QString s = QString::number(i);
     QString v;
@@ -87,34 +87,34 @@ QString QtCommonString::ToString(const int &i, int iZeroCount)
 }
 
 
-QString QtCommonString::ToString(const bool& b)
+QString CxQString::ToString(const bool& b)
 {
     return QString::number(b);
 }
 
 
-QString QtCommonString::ToString(const double& d)
+QString CxQString::ToString(const double& d)
 {
     return QString::number(d);
 }
 
 
-QString QtCommonString::ToString(const QString& s)
+QString CxQString::ToString(const QString& s)
 {
     return s;
 }
 
-QString QtCommonString::ToString(const std::string &s)
+QString CxQString::ToString(const std::string &s)
 {
     return QString::fromLocal8Bit(s.data(), s.size());
 }
 
-QString QtCommonString::ToString(const qlonglong& dt)
+QString CxQString::ToString(const qlonglong& dt)
 {
     return DateTimeToString(dt);
 }
 
-QString QtCommonString::ToString(const QHash<QString, QString>& keyValues)
+QString CxQString::ToString(const QHash<QString, QString>& keyValues)
 {
     QStringList sResults;
     QHash<QString, QString>::const_iterator it = keyValues.constBegin();
@@ -125,11 +125,11 @@ QString QtCommonString::ToString(const QHash<QString, QString>& keyValues)
     return sResults.join("|");
 }
 
-QString QtCommonString::ToString(const QStringList& keyValues){
+QString CxQString::ToString(const QStringList& keyValues){
     return keyValues.join("|");
 }
 
-QString QtCommonString::ToString(const char *pData, int iLength)
+QString CxQString::ToString(const char *pData, int iLength)
 {
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 6))
         QString s = QString::fromLocal8Bit(pData, iLength);
@@ -139,7 +139,7 @@ QString QtCommonString::ToString(const char *pData, int iLength)
         return s;
 }
 
-QString QtCommonString::ToString(const char *pData)
+QString CxQString::ToString(const char *pData)
 {
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 6))
         QString s = QString::fromLocal8Bit(pData, strlen(pData));
@@ -149,7 +149,7 @@ QString QtCommonString::ToString(const char *pData)
         return s;
 }
 
-QString QtCommonString::ToString(const uchar *pData, int iLength)
+QString CxQString::ToString(const uchar *pData, int iLength)
 {
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 6))
         QString s = QString::fromLocal8Bit((char*)pData, iLength);
@@ -163,7 +163,7 @@ QString QtCommonString::ToString(const uchar *pData, int iLength)
 
 
 ///************ FromString begin
-int QtCommonString::FromString(const QString& s, const int& iDefault, bool *ok){
+int CxQString::FromString(const QString& s, const int& iDefault, bool *ok){
     if (s.length()<=0)
         return iDefault;
     bool b;
@@ -176,7 +176,7 @@ int QtCommonString::FromString(const QString& s, const int& iDefault, bool *ok){
 }
 
 
-bool QtCommonString::FromString(const QString& s, const bool& bDefault, bool *ok){
+bool CxQString::FromString(const QString& s, const bool& bDefault, bool *ok){
     if (s.length()<=0)
         return bDefault;
     bool b;
@@ -189,7 +189,7 @@ bool QtCommonString::FromString(const QString& s, const bool& bDefault, bool *ok
 }
 
 
-float QtCommonString::FromString(const QString& s, const float& fDefault, bool *ok){
+float CxQString::FromString(const QString& s, const float& fDefault, bool *ok){
     if (s.length()<=0)
         return fDefault;
     bool b;
@@ -202,7 +202,7 @@ float QtCommonString::FromString(const QString& s, const float& fDefault, bool *
 }
 
 
-double QtCommonString::FromString(const QString& s, const double& dDefault, bool *ok){
+double CxQString::FromString(const QString& s, const double& dDefault, bool *ok){
     if (s.length()<=0)
         return dDefault;
     bool b;
@@ -215,12 +215,12 @@ double QtCommonString::FromString(const QString& s, const double& dDefault, bool
 }
 
 
-QString QtCommonString::FromString(const QString& s, const QString& sDefault, bool *ok){
+QString CxQString::FromString(const QString& s, const QString& sDefault, bool *ok){
     if (ok) *ok=true;
     return s;
 }
 
-qlonglong QtCommonString::FromString(const QString& s, const qlonglong& dtDefault, bool *ok)
+qlonglong CxQString::FromString(const QString& s, const qlonglong& dtDefault, bool *ok)
 {
     if (s.length()<=0)
     {
@@ -234,7 +234,7 @@ qlonglong QtCommonString::FromString(const QString& s, const qlonglong& dtDefaul
     return dt;
 }
 
-QHash<QString, QString> QtCommonString::FromString(const QString& s, const QHash<QString, QString>& hashDefault, bool *ok)
+QHash<QString, QString> CxQString::FromString(const QString& s, const QHash<QString, QString>& hashDefault, bool *ok)
 {
     if (s.length()<=0)
         return hashDefault;
@@ -251,14 +251,14 @@ QHash<QString, QString> QtCommonString::FromString(const QString& s, const QHash
 }
 
 
-QStringList QtCommonString::FromString(const QString& s, const QStringList& hashDefault, bool *ok)
+QStringList CxQString::FromString(const QString& s, const QStringList& hashDefault, bool *ok)
 {
     if (s.length()<=0)
         return hashDefault;
     return s.split("|");
 }
 
-QString QtCommonString::DateTimeToString(const qlonglong &ms)
+QString CxQString::DateTimeToString(const qlonglong &ms)
 {
     QDateTime _g_datetime;
 
@@ -276,7 +276,7 @@ QString QtCommonString::DateTimeToString(const qlonglong &ms)
     return s;
 }
 
-QString QtCommonString::DateTimeToString(int y, int m, int d, int h, int mi, int ms)
+QString CxQString::DateTimeToString(int y, int m, int d, int h, int mi, int ms)
 {
     const QChar HexQChar16[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
@@ -330,7 +330,7 @@ QString QtCommonString::DateTimeToString(int y, int m, int d, int h, int mi, int
     return dts;
 }
 
-qlonglong QtCommonString::DateTimeFromString(const QString &str)
+qlonglong CxQString::DateTimeFromString(const QString &str)
 {
 //    QString dts("2012/12/12 12:12:12");
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 8, 6))
@@ -362,7 +362,7 @@ qlonglong QtCommonString::DateTimeFromString(const QString &str)
     }
 }
 
-QString QtCommonString::FirstToken(QString &s, const QChar &sep)
+QString CxQString::FirstToken(QString &s, const QChar &sep)
 {
     QString sResult;
     int iIndex = s.indexOf(sep);
@@ -373,7 +373,7 @@ QString QtCommonString::FirstToken(QString &s, const QChar &sep)
     return sResult;
 }
 
-QString QtCommonString::RightToken(const QString &s, const QChar &sep)
+QString CxQString::RightToken(const QString &s, const QChar &sep)
 {
     QString sResult;
     int iIndex = s.indexOf(sep);
@@ -383,7 +383,7 @@ QString QtCommonString::RightToken(const QString &s, const QChar &sep)
     return sResult;
 }
 
-QString QtCommonString::ToHexstring(const char *pData, int iLength)
+QString CxQString::ToHexstring(const char *pData, int iLength)
 {
     QByteArray hex(iLength * 3, Qt::Uninitialized);
     char *hexData = hex.data();
@@ -404,7 +404,7 @@ QString QtCommonString::ToHexstring(const char *pData, int iLength)
     return hex;
 }
 
-QString QtCommonString::ToHexstring(const uchar *pData, int iLength)
+QString CxQString::ToHexstring(const uchar *pData, int iLength)
 {
     QByteArray hex(iLength * 3, Qt::Uninitialized);
     char *hexData = hex.data();
@@ -425,12 +425,12 @@ QString QtCommonString::ToHexstring(const uchar *pData, int iLength)
     return hex;
 }
 
-QString QtCommonString::ToHexstring(const QByteArray& data)
+QString CxQString::ToHexstring(const QByteArray& data)
 {
     return ToHexstring(data.data(), data.size());
 }
 
-QString QtCommonString::ToHexstring(const char& v)
+QString CxQString::ToHexstring(const char& v)
 {
     QString s = "0x00";
     QChar* data = s.data();
@@ -441,7 +441,7 @@ QString QtCommonString::ToHexstring(const char& v)
     return s;
 }
 
-QString QtCommonString::ToHexstring(const uchar& v)
+QString CxQString::ToHexstring(const uchar& v)
 {
     QString s = "0x00";
     QChar* data = s.data();
@@ -452,7 +452,7 @@ QString QtCommonString::ToHexstring(const uchar& v)
     return s;
 }
 
-QString QtCommonString::ToHexstring(const short& v)
+QString CxQString::ToHexstring(const short& v)
 {
     QString s = "0x0000";
     QChar* data = s.data();
@@ -467,7 +467,7 @@ QString QtCommonString::ToHexstring(const short& v)
     return s;
 }
 
-QString QtCommonString::ToHexstring(const ushort& v)
+QString CxQString::ToHexstring(const ushort& v)
 {
     QString s = "0x0000";
     QChar* data = s.data();
@@ -482,7 +482,7 @@ QString QtCommonString::ToHexstring(const ushort& v)
     return s;
 }
 
-QString QtCommonString::ToHexstring(const int& v)
+QString CxQString::ToHexstring(const int& v)
 {
     QString s = "0x00000000";
     QChar* data = s.data();
@@ -505,7 +505,7 @@ QString QtCommonString::ToHexstring(const int& v)
     return s;
 }
 
-QString QtCommonString::ToHexstring(const uint& v)
+QString CxQString::ToHexstring(const uint& v)
 {
     QString s = "0x00000000";
     QChar* data = s.data();
@@ -528,21 +528,21 @@ QString QtCommonString::ToHexstring(const uint& v)
     return s;
 }
 
-QString QtCommonString::ToHexstring(const float& v)
+QString CxQString::ToHexstring(const float& v)
 {
     char fData[4];
     memcpy(fData, &v, 4);
     return ToHexstring(fData, 4);
 }
 
-QString QtCommonString::ToHexstring(const double& v)
+QString CxQString::ToHexstring(const double& v)
 {
     char fData[8];
     memcpy(fData, &v, 8);
     return ToHexstring(fData, 8);
 }
 
-QByteArray QtCommonString::FromHexstring(const QString &s)
+QByteArray CxQString::FromHexstring(const QString &s)
 {
     QString s2 = s;
     s2.remove(' ');
@@ -580,7 +580,7 @@ QByteArray QtCommonString::FromHexstring(const QString &s)
     return res;
 }
 
-bool QtCommonString::CompareName(const QString &name1, const QString &name2)
+bool CxQString::CompareName(const QString &name1, const QString &name2)
 {
     QString s1 = name1.trimmed().toLower();
     QString s2 = name2.trimmed().toLower();
@@ -668,23 +668,23 @@ bool QtCommonString::CompareName(const QString &name1, const QString &name2)
 
 
 
-void QtCommonDialog::ShowPrompt(const QString& sText, const QString& sTitle)
+void CxQDialog::ShowPrompt(const QString& sText, const QString& sTitle)
 {
     QMessageBox::information(0, sTitle, sText, GM_QString_TR("OK"));
 }
 
 
-void QtCommonDialog::ShowWarning(const QString& sText){
+void CxQDialog::ShowWarning(const QString& sText){
     QMessageBox::warning(0, "warning", sText, "OK");
 }
 
 
-void QtCommonDialog::ShowError(const QString& sText){
+void CxQDialog::ShowError(const QString& sText){
     QMessageBox::warning(0, "error", sText, "OK");
 }
 
 
-bool QtCommonDialog::ShowQuery(const QString& sQuery){
+bool CxQDialog::ShowQuery(const QString& sQuery){
     int ret = QMessageBox::warning(0, GM_QString_TR("Please Option"),
                                    sQuery,
                                    GM_QString_TR("Yes"),
@@ -693,7 +693,7 @@ bool QtCommonDialog::ShowQuery(const QString& sQuery){
 }
 
 
-int QtCommonDialog::ShowQuery3(const QString& sQuery){
+int CxQDialog::ShowQuery3(const QString& sQuery){
     int ret = QMessageBox::warning(0, GM_QString_TR("Please Option"),
                                    sQuery,
                                    GM_QString_TR("Yes"),
@@ -710,12 +710,12 @@ int QtCommonDialog::ShowQuery3(const QString& sQuery){
 }
 
 
-void QtCommonDialog::ShowTerminate(const QString& sText){
+void CxQDialog::ShowTerminate(const QString& sText){
     QMessageBox::information(0, "terminate", sText, "My God");
 }
 
 //sameple : sExtension = *.png *.jpg *.bmp
-bool QtCommonDialog::DialogOpen(QString& sFileName, const QString& sExtension) {
+bool CxQDialog::DialogOpen(QString& sFileName, const QString& sExtension) {
     QString sExtension2 = sExtension;
     if (sExtension2.length() <= 0) {
         sExtension2 = "*.*";
@@ -726,7 +726,7 @@ bool QtCommonDialog::DialogOpen(QString& sFileName, const QString& sExtension) {
 }
 
 //sameple : sExtension = *.png *.jpg *.bmp
-bool QtCommonDialog::DialogSave(QString& sFileName, const QString& sExtension){
+bool CxQDialog::DialogSave(QString& sFileName, const QString& sExtension){
     QString sExtension2 = sExtension;
     if (sExtension2.length() <= 0) {
         sExtension2 = "*.*";
@@ -736,14 +736,14 @@ bool QtCommonDialog::DialogSave(QString& sFileName, const QString& sExtension){
     return sFileName.length();
 }
 
-QString QtCommonDialog::DialogDir(const QString &sRootDir, const QString &sTitle)
+QString CxQDialog::DialogDir(const QString &sRootDir, const QString &sTitle)
 {
     QString sCaption = sTitle.size()>0 ? sTitle : "Select Dir";
     return QFileDialog::getExistingDirectory(0,
         sCaption, sRootDir);
 }
 
-bool QtCommonDialog::DialogInput(const QString& sPrompt, QString& sVaule){
+bool CxQDialog::DialogInput(const QString& sPrompt, QString& sVaule){
     bool ok;
     QString text = QInputDialog::getText(0, GM_QString_TR("Input Box"),
                                          sPrompt, QLineEdit::Normal,
@@ -755,7 +755,7 @@ bool QtCommonDialog::DialogInput(const QString& sPrompt, QString& sVaule){
         return false;
 }
 
-bool QtCommonDialog::DialogInput2(const QString &sTitle, const QString &sValue1Title, const QString &sValue2Title, QString &sValue1, QString &sValue2, int iValue1EchoMode, int iValue2EchoMode)
+bool CxQDialog::DialogInput2(const QString &sTitle, const QString &sValue1Title, const QString &sValue2Title, QString &sValue1, QString &sValue2, int iValue1EchoMode, int iValue2EchoMode)
 {
     QDialog dialog;
 
@@ -806,7 +806,7 @@ bool QtCommonDialog::DialogInput2(const QString &sTitle, const QString &sValue1T
     }
 }
 
-bool QtCommonDialog::DialogInput3(const QString &sTitle, const QString &sValue1Title, const QString &sValue2Title, const QString &sValue3Title, QString &sValue1, QString &sValue2, QString &sValue3, int iValue1EchoMode, int iValue2EchoMode, int iValue3EchoMode)
+bool CxQDialog::DialogInput3(const QString &sTitle, const QString &sValue1Title, const QString &sValue2Title, const QString &sValue3Title, QString &sValue1, QString &sValue2, QString &sValue3, int iValue1EchoMode, int iValue2EchoMode, int iValue3EchoMode)
 {
     QDialog dialog;
 
@@ -867,7 +867,7 @@ bool QtCommonDialog::DialogInput3(const QString &sTitle, const QString &sValue1T
     }
 }
 
-bool QtCommonDialog::DialogInput4(const QString &sTitle, const QString &sPrompt, QString &sVaule)
+bool CxQDialog::DialogInput4(const QString &sTitle, const QString &sPrompt, QString &sVaule)
 {
     bool ok;
     QString text = QInputDialog::getText(0, sTitle,
@@ -880,7 +880,7 @@ bool QtCommonDialog::DialogInput4(const QString &sTitle, const QString &sPrompt,
         return false;
 }
 
-bool QtCommonDialog::DialogCombox(const QString &sTitle, const QString &sPrompt, const QStringList &sValues, QString& sValue )
+bool CxQDialog::DialogCombox(const QString &sTitle, const QString &sPrompt, const QStringList &sValues, QString& sValue )
 {
     QDialog dialog;
 
@@ -936,7 +936,7 @@ bool QtCommonDialog::DialogCombox(const QString &sTitle, const QString &sPrompt,
 
 
 
-int QtCommonWidget::setItemValue16(QTableWidgetItem* oItem, const int & value)
+int CxQWidget::setItemValue16(QTableWidgetItem* oItem, const int & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -949,7 +949,7 @@ int QtCommonWidget::setItemValue16(QTableWidgetItem* oItem, const int & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const int & value)
+int CxQWidget::setItemValue(QTableWidgetItem* oItem, const int & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -962,7 +962,7 @@ int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const int & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const double & value)
+int CxQWidget::setItemValue(QTableWidgetItem* oItem, const double & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -975,7 +975,7 @@ int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const double & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const long long & value)
+int CxQWidget::setItemValue(QTableWidgetItem* oItem, const long long & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -988,7 +988,7 @@ int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const long long & valu
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const char * value)
+int CxQWidget::setItemValue(QTableWidgetItem* oItem, const char * value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -996,18 +996,18 @@ int QtCommonWidget::setItemValue(QTableWidgetItem* oItem, const char * value)
     {
         QByteArray pData(value);
         oItem->setData(Qt::UserRole, pData);
-        oItem->setText(QtCommonString::ToString(value));
+        oItem->setText(CxQString::ToString(value));
         return TRUE;
     }
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QTableWidgetItem *oItem, const std::string &value)
+int CxQWidget::setItemValue(QTableWidgetItem *oItem, const std::string &value)
 {
     return setItemValue(oItem, value.c_str());
 }
 
-int QtCommonWidget::setItemValue(QTableWidgetItem *oItem, const QString &value)
+int CxQWidget::setItemValue(QTableWidgetItem *oItem, const QString &value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1020,14 +1020,14 @@ int QtCommonWidget::setItemValue(QTableWidgetItem *oItem, const QString &value)
     return FALSE;
 }
 
-void QtCommonWidget::setItemValueDateTime(QTableWidgetItem *oItem, const long long &value)
+void CxQWidget::setItemValueDateTime(QTableWidgetItem *oItem, const long long &value)
 {
     if (! oItem) return;
     QVariant data = oItem->data(Qt::UserRole);
     if (data.type() == QVariant::Invalid || data.toLongLong() != value)
     {
         oItem->setData(Qt::UserRole, value);
-        oItem->setText(QtCommonString::ToString(value));
+        oItem->setText(CxQString::ToString(value));
     }
 }
 
@@ -1036,7 +1036,7 @@ void QtCommonWidget::setItemValueDateTime(QTableWidgetItem *oItem, const long lo
 
 
 
-int QtCommonWidget::getItemValue16(QTableWidgetItem* oItem, const int & value)
+int CxQWidget::getItemValue16(QTableWidgetItem* oItem, const int & value)
 {
     if (oItem)
     {
@@ -1049,7 +1049,7 @@ int QtCommonWidget::getItemValue16(QTableWidgetItem* oItem, const int & value)
     return value;
 }
 
-int QtCommonWidget::getItemValue(QTableWidgetItem* oItem, const int & value)
+int CxQWidget::getItemValue(QTableWidgetItem* oItem, const int & value)
 {
     if (oItem)
     {
@@ -1062,7 +1062,7 @@ int QtCommonWidget::getItemValue(QTableWidgetItem* oItem, const int & value)
     return value;
 }
 
-double QtCommonWidget::getItemValue(QTableWidgetItem* oItem, const double & value)
+double CxQWidget::getItemValue(QTableWidgetItem* oItem, const double & value)
 {
     if (oItem)
     {
@@ -1075,7 +1075,7 @@ double QtCommonWidget::getItemValue(QTableWidgetItem* oItem, const double & valu
     return value;
 }
 
-long long QtCommonWidget::getItemValue(QTableWidgetItem* oItem, const long long & value)
+long long CxQWidget::getItemValue(QTableWidgetItem* oItem, const long long & value)
 {
     if (oItem)
     {
@@ -1088,7 +1088,7 @@ long long QtCommonWidget::getItemValue(QTableWidgetItem* oItem, const long long 
     return value;
 }
 
-std::string QtCommonWidget::getItemValue(QTableWidgetItem *oItem, const std::string &value)
+std::string CxQWidget::getItemValue(QTableWidgetItem *oItem, const std::string &value)
 {
     if (oItem)
     {
@@ -1101,7 +1101,7 @@ std::string QtCommonWidget::getItemValue(QTableWidgetItem *oItem, const std::str
     return value;
 }
 
-QString QtCommonWidget::getItemValue(QTableWidgetItem *oItem, const QString &value)
+QString CxQWidget::getItemValue(QTableWidgetItem *oItem, const QString &value)
 {
     if (oItem)
     {
@@ -1114,7 +1114,7 @@ QString QtCommonWidget::getItemValue(QTableWidgetItem *oItem, const QString &val
     return value;
 }
 
-long long QtCommonWidget::getItemValueDateTime(QTableWidgetItem *oItem, const long long &value)
+long long CxQWidget::getItemValueDateTime(QTableWidgetItem *oItem, const long long &value)
 {
     if (oItem)
     {
@@ -1133,7 +1133,7 @@ long long QtCommonWidget::getItemValueDateTime(QTableWidgetItem *oItem, const lo
 
 
 
-int QtCommonWidget::setItemValue16(QListWidgetItem* oItem, const int & value)
+int CxQWidget::setItemValue16(QListWidgetItem* oItem, const int & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1146,7 +1146,7 @@ int QtCommonWidget::setItemValue16(QListWidgetItem* oItem, const int & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const int & value)
+int CxQWidget::setItemValue(QListWidgetItem* oItem, const int & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1159,7 +1159,7 @@ int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const int & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const double & value)
+int CxQWidget::setItemValue(QListWidgetItem* oItem, const double & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1172,7 +1172,7 @@ int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const double & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const long long & value)
+int CxQWidget::setItemValue(QListWidgetItem* oItem, const long long & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1185,7 +1185,7 @@ int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const long long & value
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const char * value)
+int CxQWidget::setItemValue(QListWidgetItem* oItem, const char * value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1193,18 +1193,18 @@ int QtCommonWidget::setItemValue(QListWidgetItem* oItem, const char * value)
     {
         QByteArray pData(value);
         oItem->setData(Qt::UserRole, pData);
-        oItem->setText(QtCommonString::ToString(value));
+        oItem->setText(CxQString::ToString(value));
         return TRUE;
     }
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QListWidgetItem *oItem, const std::string &value)
+int CxQWidget::setItemValue(QListWidgetItem *oItem, const std::string &value)
 {
-    return setItemValue(oItem, QtCommonString::gbkToQString(value));
+    return setItemValue(oItem, CxQString::gbkToQString(value));
 }
 
-int QtCommonWidget::setItemValue(QListWidgetItem *oItem, const QString &value)
+int CxQWidget::setItemValue(QListWidgetItem *oItem, const QString &value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1217,14 +1217,14 @@ int QtCommonWidget::setItemValue(QListWidgetItem *oItem, const QString &value)
     return FALSE;
 }
 
-void QtCommonWidget::setItemValueDateTime(QListWidgetItem *oItem, const long long &value)
+void CxQWidget::setItemValueDateTime(QListWidgetItem *oItem, const long long &value)
 {
     if (! oItem) return;
     QVariant data = oItem->data(Qt::UserRole);
     if (data.type() == QVariant::Invalid || data.toLongLong() != value)
     {
         oItem->setData(Qt::UserRole, value);
-        oItem->setText(QtCommonString::ToString(value));
+        oItem->setText(CxQString::ToString(value));
     }
 }
 
@@ -1239,7 +1239,7 @@ void QtCommonWidget::setItemValueDateTime(QListWidgetItem *oItem, const long lon
 
 
 
-int QtCommonWidget::setItemValue16(QStandardItem* oItem, const int & value)
+int CxQWidget::setItemValue16(QStandardItem* oItem, const int & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1252,7 +1252,7 @@ int QtCommonWidget::setItemValue16(QStandardItem* oItem, const int & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QStandardItem* oItem, const int & value)
+int CxQWidget::setItemValue(QStandardItem* oItem, const int & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1265,7 +1265,7 @@ int QtCommonWidget::setItemValue(QStandardItem* oItem, const int & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QStandardItem* oItem, const double & value)
+int CxQWidget::setItemValue(QStandardItem* oItem, const double & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1278,7 +1278,7 @@ int QtCommonWidget::setItemValue(QStandardItem* oItem, const double & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QStandardItem* oItem, const long long & value)
+int CxQWidget::setItemValue(QStandardItem* oItem, const long long & value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1291,7 +1291,7 @@ int QtCommonWidget::setItemValue(QStandardItem* oItem, const long long & value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QStandardItem* oItem, const char * value)
+int CxQWidget::setItemValue(QStandardItem* oItem, const char * value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::UserRole);
@@ -1299,18 +1299,18 @@ int QtCommonWidget::setItemValue(QStandardItem* oItem, const char * value)
     {
         QByteArray pData(value);
         oItem->setData(pData, Qt::UserRole);
-        oItem->setText(QtCommonString::ToString(value));
+        oItem->setText(CxQString::ToString(value));
         return TRUE;
     }
     return FALSE;
 }
 
-int QtCommonWidget::setItemValue(QStandardItem *oItem, const std::string &value)
+int CxQWidget::setItemValue(QStandardItem *oItem, const std::string &value)
 {
-    return setItemValue(oItem, QtCommonString::gbkToQString(value));
+    return setItemValue(oItem, CxQString::gbkToQString(value));
 }
 
-int QtCommonWidget::setItemValue(QStandardItem *oItem, const QString &value)
+int CxQWidget::setItemValue(QStandardItem *oItem, const QString &value)
 {
     QVariant data = oItem->data(Qt::UserRole);
     if (data.type() == QVariant::Invalid || data.toString() != value)
@@ -1322,7 +1322,7 @@ int QtCommonWidget::setItemValue(QStandardItem *oItem, const QString &value)
     return FALSE;
 }
 
-int QtCommonWidget::setItemValueEditRole(QStandardItem *oItem, const QString &value)
+int CxQWidget::setItemValueEditRole(QStandardItem *oItem, const QString &value)
 {
     if (! oItem) return FALSE;
     QVariant data = oItem->data(Qt::EditRole);
@@ -1335,20 +1335,20 @@ int QtCommonWidget::setItemValueEditRole(QStandardItem *oItem, const QString &va
     return FALSE;
 }
 
-void QtCommonWidget::setItemValueDateTime(QStandardItem *oItem, const long long &value)
+void CxQWidget::setItemValueDateTime(QStandardItem *oItem, const long long &value)
 {
     if (! oItem) return;
     QVariant data = oItem->data(Qt::UserRole);
     if (data.type() == QVariant::Invalid || data.toLongLong() != value)
     {
         oItem->setData(Qt::UserRole, value);
-        oItem->setText(QtCommonString::ToString(value));
+        oItem->setText(CxQString::ToString(value));
         return;
     }
     return;
 }
 
-std::vector<int> QtCommonWidget::getSelectRows(QTableWidget *oGrid, QString * pRows)
+std::vector<int> CxQWidget::getSelectRows(QTableWidget *oGrid, QString * pRows)
 {
     std::vector<int> r;
     if (! oGrid) return r;
@@ -1374,7 +1374,7 @@ std::vector<int> QtCommonWidget::getSelectRows(QTableWidget *oGrid, QString * pR
     return r;
 }
 
-std::vector<int> QtCommonWidget::deleteSelectRows(QTableWidget *oGrid)
+std::vector<int> CxQWidget::deleteSelectRows(QTableWidget *oGrid)
 {
     QString sRows;
     vector<int> iRows = getSelectRows(oGrid, &sRows);
@@ -1382,7 +1382,7 @@ std::vector<int> QtCommonWidget::deleteSelectRows(QTableWidget *oGrid)
     if (iRows.size()>0)
     {
         QString sMsg = QString::fromUtf8("? Do you sure delete row: \n  %1").arg(sRows);
-        if (QtCommonDialog::ShowQuery(sMsg))
+        if (CxQDialog::ShowQuery(sMsg))
         {
             for (size_t i = 0; i < iRows.size(); ++i)
             {
