@@ -81,7 +81,6 @@ private:
 
 private:
     volatile bool _isStarted;
-    CxMutex * _lockTh;
     std::vector<std::string> * volatile _logStringsPush;
     std::vector<std::string> * volatile _logStringsPop;
     std::vector<std::string> _logStrings1;

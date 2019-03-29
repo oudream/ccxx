@@ -9,6 +9,12 @@ using namespace std;
 
 const string CS_KEY_DIR_LOG = "LogPath";
 
+CxMutex * fn_oLogOutInfoLock()
+{
+    static CxMutex m;
+    return & m;
+}
+
 CxLogRealtime *fn_oLogRealtimeSingleton()
 {
     static CxLogRealtime m;
@@ -358,6 +364,7 @@ FILE *CxLogManager::fileByFileName(const string &sFileName)
 void
 CxLogManager::outLog(const std::string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
 {
+    CxMutexScope lock(fn_oLogOutInfoLock());
 //#ifdef GM_LOG_REALTIME
     if (f_iLogType == 0)
     {
@@ -425,13 +432,10 @@ CxLogThread::CxLogThread()
     _fileOpenTimeTh = 0;
     _fileCountTh = 0;
     _fileSizeTh = 0;
-
-    _lockTh = new CxMutex();
 }
 
 CxLogThread::~CxLogThread()
 {
-    delete _lockTh;
 }
 
 void CxLogThread::run()
@@ -459,7 +463,6 @@ void CxLogThread::run()
 void
 CxLogThread::interinfo_out(const string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
 {
-    CxMutexScope lock(_lockTh);
     std::string sFileName = CxLogManager::fileName(type, reason, source, target, tag);
     FILE *oFile = CxLogManager::fileByFileName(sFileName);
     if (oFile)
@@ -476,7 +479,7 @@ void CxLogThread::doSaveLog()
     if (_logStringsSize > 0)
     {
         {
-            CxMutexScope lock(_lockTh);
+            CxMutexScope lock(fn_oLogOutInfoLock());
             std::vector<std::string> *tmpStrings = _logStringsPush;
             _logStringsPush = _logStringsPop;
             _logStringsPop = tmpStrings;
