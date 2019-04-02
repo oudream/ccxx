@@ -93,6 +93,10 @@ if (gs_project_enable_opencv)
     #set(gs_project_enable_opencv_sample 0)
 endif ()
 
+### yamlcpp yaml-cpp
+set(gs_project_enable_yamlcpp 1)
+#set(gs_project_enable_yamlcpp 0)
+
 ### gtest googletest
 set(gtest_build_tests 1)
 set(gtest_build_samples 1)
@@ -109,6 +113,24 @@ set(BENCHMARK_ENABLE_TESTING ON)
 if (gs_project_enable_cpython AND gs_prefix_path_python)
     list(APPEND CMAKE_PREFIX_PATH ${gs_prefix_path_python})
 endif()
+
+### libuv uv
+if (gs_project_enable_uv)
+    set(gs_libuv_path ${gs_project_path}/3rd/libuv/libuv)
+    set(gs_libuv_src_path ${gs_libuv_path}/src)
+    set(gs_libuv_include_path ${gs_libuv_path}/include)
+    set(gs_libuv_cxtest_path ${gs_project_path}/test/libuv)
+endif()
+
+### yamlcpp yaml-cpp
+if (gs_project_enable_yamlcpp)
+    set(gs_yamlcpp_path ${gs_project_path}/3rd/yaml-cpp)
+    set(gs_yamlcpp_src_path ${gs_yamlcpp_path}/yaml-cpp/src)
+    set(gs_yamlcpp_test_path ${gs_yamlcpp_path}/yaml-cpp/test)
+    set(gs_yamlcpp_include_path ${gs_yamlcpp_path}/yaml-cpp/include)
+    set(gs_yamlcpp_cxtest_path ${gs_project_path}/test/yamlcpp)
+endif()
+
 
 message("CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
 

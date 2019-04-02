@@ -43,6 +43,7 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
 
 include(./build/cmake/local.config.cmake)
 include(./build/cmake/common.cmake)
+include(./3rd/3rd.cmake)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

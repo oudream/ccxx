@@ -2061,7 +2061,7 @@ bool CxString::equalIgnoreAll(const string &s1, const string &s2)
     return str1 == str2;
 }
 
-size_t CxString::findLeftCase(const string &sMaster, const string &sSub, size_t iPos=0)
+size_t CxString::findLeftCase(const string &sMaster, const string &sSub, size_t iPos)
 {
     string str1 = toLower(sMaster);
     string str2 = toLower(sSub);
@@ -2112,7 +2112,7 @@ size_t CxString::findEqualCase(const std::vector<std::string> &sMaster, const st
     return string::npos;
 }
 
-size_t CxString::findRightCase(const string &sMaster, const string &sSub, size_t iPos=std::string::npos)
+size_t CxString::findRightCase(const string &sMaster, const string &sSub, size_t iPos)
 {
     string str1 = toLower(sMaster);
     string str2 = toLower(sSub);

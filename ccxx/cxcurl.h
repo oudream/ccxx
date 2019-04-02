@@ -17,14 +17,15 @@
 
 class GM_CCXX_CURL_API CxCurlFtp {
 public:
-    CxCurl(int iPort=-1, const std::string & sUserPwd = std::string(), const std::string & sDefaultLocalPath = std::string());
+    CxCurlFtp(int iPort=-1, const std::string & sUserPwd = std::string(), const std::string & sDefaultLocalPath = std::string());
 
-    ~CxCurl();
+    ~CxCurlFtp();
 
     int get(const std::string & sUrl, const std::string & sSaveFilePath = std::string());
 
     int put(const std::string & sLocalFilePath, const std::string & sUrl);
 
 };
+
 
 #endif //CXCURL_H

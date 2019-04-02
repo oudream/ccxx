@@ -10,11 +10,11 @@ void fn_test_create(const string& sScanPath)
     for (int j = 0; j < 20; ++j)
     {
         string sNow = CxTime::currentSystemTimeString('-', 'd', '-');
-        string sFilePath = CxFileSystem::mergeFilePath(sScanPath, CxString::format("²âÊÔ-Ö®-%s-%d.log", sNow.c_str(), j));
+        string sFilePath = CxFileSystem::mergeFilePath(sScanPath, CxString::format("ï¿½ï¿½ï¿½ï¿½-Ö®-%s-%d.log", sNow.c_str(), j));
         string sText;
         for (int i = 0; i < j; ++i)
         {
-            sText += "²âÊÔµÄÄÚÈÝabc123-";
+            sText += "ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½ï¿½abc123-";
         }
         CxFile::save(sFilePath, sText);
         cxPrompt() << "Create File: " << sFilePath;
@@ -33,11 +33,11 @@ void fn_timer_timeout_create_delete(int iInterval)
     msepoch_t dtNow = CxTime::currentSystemTime();
     if (iIndex++ % 2)
     {
-        fn_test_create("/fff/tmp/ÖÐÎÄdir1");
+        fn_test_create("/fff/tmp/ï¿½ï¿½ï¿½ï¿½dir1");
     }
     else
     {
-        fn_test_delete("/fff/tmp/ÖÐÎÄdir1/log");
+        fn_test_delete("/fff/tmp/ï¿½ï¿½ï¿½ï¿½dir1/log");
     }
     cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
     cxPrompt() << "";
@@ -85,7 +85,7 @@ int main(int argc,const char *argv[])
 
 
 
-int main(void)
+int main1(void)
 {
     CURL *curl;
     CURLcode res;

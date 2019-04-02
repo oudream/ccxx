@@ -457,8 +457,8 @@ int CxBuffer::toBuf(uint8 *pBuf, int64 val, string fmt, int mode)
     int ret = 0;
     if (fmt == string("BYTE") || fmt == string("UINT8"))
     {
-        *pBuf = (BYTE)val;
-        ret = sizeof(BYTE);
+        *pBuf = (uchar)val;
+        ret = sizeof(uchar);
     }
     else if(fmt == string("CHAR")|| fmt == string("INT8"))
     {
@@ -497,8 +497,8 @@ int CxBuffer::toBuf(uint8 *pBuf, double val, std::string fmt, int mode)
     int ret = 0;
     if (fmt == string("BYTE") || fmt == string("UINT8"))
     {
-        *pBuf = (BYTE)val;
-        ret = sizeof(BYTE);
+        *pBuf = (uchar)val;
+        ret = sizeof(uchar);
     }
     else if(fmt == string("CHAR")|| fmt == string("INT8"))
     {
@@ -545,7 +545,7 @@ int CxBuffer::toBuf(uint8 *pBuf, std::string val, std::string fmt, int mode)
         ret = val.size();
         if (ret > 0xFD) ret = 0xFD;
         pBuf[0] = 0xFE;
-        pBuf[1] = (BYTE)ret;
+        pBuf[1] = (uchar)ret;
         memcpy(&pBuf[2], val.data(), ret);
         ret += 2;
     }
