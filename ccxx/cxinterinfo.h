@@ -4,7 +4,6 @@
 
 #include "cxglobal.h"
 
-
 class GM_CCXX_CORE_API CxInterinfo
 {
 public:
@@ -279,7 +278,11 @@ protected:
         Stream() : ts(), title(), ref(1), enable(true), end(true), space(true), lf(false), type(0), reason(0), source(0), target(0), tag(0) {}
         std::stringstream ts;
         std::string title;
+#if HAVE_CXX11_ATOMIC
+        std::atomic_int ref;
+#else
         volatile int ref;
+#endif
         bool enable;
         bool end;
         bool space;

@@ -3,15 +3,16 @@
 
 /* ---------------------------------------------------------------------------
 list:
-part001 platform dist
-part002 data type           : define data type
-part003 lib dll             : define lib dll
-part004 platform func
-part005 endian functions
-part006 CxGlobal            : string resource
-part007 CxValueType
-part008 CxException
-part009 CxFactory
+part001-1 platform dist
+part001-2 compiler dist
+part002   data type           : define data type
+part003   lib dll             : define lib dll
+part004   platform func
+part005   endian functions
+part006   CxGlobal            : string resource
+part007   CxValueType
+part008   CxException
+part009   CxFactory
 --------------------------------------------------------------------------- */
 
 //stl
@@ -72,6 +73,75 @@ part009 CxFactory
 #if defined(GM_OS_WIN32) || defined(GM_OS_WIN64) || defined(GM_OS_WINCE)
 #  define GM_OS_WIN
 #endif
+
+
+//-----------------------------------------------------------------------------------------
+//
+//part001 platform dist
+//
+//-----------------------------------------------------------------------------------------
+// Detect whether C++11 mode is on (for GCC and Clang).  MSVC does not
+// have a special C++11 mode, so it is always on for Visual C++ 2010 and
+// later.
+#if __cplusplus >= 201103L || \
+    defined(__GXX_EXPERIMENTAL_CXX0X__) || \
+    (defined(_MSC_VER) && _MSC_VER >= 1600)
+#define NVWA_CXX11_MODE 1
+#else
+#define NVWA_CXX11_MODE 0
+#endif
+
+
+/* Feature checks */
+
+#if !defined(HAVE_CXX11_ATOMIC)
+#if NVWA_CXX11_MODE && \
+    (__has_include(<atomic>) || \
+     (defined(_MSC_VER) && _MSC_VER >= 1700) || \
+     (defined(__GNUC__) && __GNUC__ * 100 + __GNUC_MINOR__ >= 405 && \
+      !defined(__MINGW32__)))
+// Note: MinGW GCC does not support atomics out of the box as of 4.8.
+#define HAVE_CXX11_ATOMIC 1
+#else
+#define HAVE_CXX11_ATOMIC 0
+#endif
+#endif
+
+#if !defined(HAVE_CXX11_AUTO_TYPE)
+#if NVWA_CXX11_MODE && \
+    (__has_feature(cxx_auto_type) || \
+     (defined(_MSC_VER) && _MSC_VER >= 1600) || \
+     (defined(__GNUC__) && __GNUC__ * 100 + __GNUC_MINOR__ >= 404))
+#define HAVE_CXX11_AUTO_TYPE 1
+#else
+#define HAVE_CXX11_AUTO_TYPE 0
+#endif
+#endif
+
+#if !defined(HAVE_CXX11_AUTO_TYPE)
+#if NVWA_CXX11_MODE && \
+    (__has_feature(cxx_auto_type) || \
+     (defined(_MSC_VER) && _MSC_VER >= 1600) || \
+     (defined(__GNUC__) && __GNUC__ * 100 + __GNUC_MINOR__ >= 404))
+#define HAVE_CXX11_AUTO_TYPE 1
+#else
+#define HAVE_CXX11_AUTO_TYPE 0
+#endif
+#endif
+
+#if !defined(HAVE_CXX11_THREAD)
+#if NVWA_CXX11_MODE && \
+    (__has_include(<thread>) || \
+     (defined(_MSC_VER) && _MSC_VER >= 1700) || \
+     (defined(__GNUC__) && __GNUC__ * 100 + __GNUC_MINOR__ >= 404 && \
+      !defined(__MINGW32__)))
+// Note: MinGW GCC does not support std::thread out of the box as of 4.8.
+#define HAVE_CXX11_THREAD 1
+#else
+#define HAVE_CXX11_THREAD 0
+#endif
+#endif
+
 
 //-----------------------------------------------------------------------------------------
 //
