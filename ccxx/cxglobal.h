@@ -80,6 +80,18 @@ part009   CxFactory
 //part001 platform dist
 //
 //-----------------------------------------------------------------------------------------
+// Only Clang provides these macros; they need to be defined as follows
+// to get a valid expression in preprocessing by other compilers.
+#ifndef __has_extension
+#define __has_extension(x) 0
+#endif
+#ifndef __has_feature
+#define __has_feature(x) 0
+#endif
+#ifndef __has_include
+#define __has_include(x) 0
+#endif
+
 // Detect whether C++11 mode is on (for GCC and Clang).  MSVC does not
 // have a special C++11 mode, so it is always on for Visual C++ 2010 and
 // later.

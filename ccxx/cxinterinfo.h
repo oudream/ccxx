@@ -4,6 +4,10 @@
 
 #include "cxglobal.h"
 
+#if HAVE_CXX11_ATOMIC
+#include <atomic>
+#endif
+
 class GM_CCXX_CORE_API CxInterinfo
 {
 public:
