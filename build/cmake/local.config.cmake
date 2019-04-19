@@ -97,6 +97,10 @@ endif ()
 set(gs_project_enable_yamlcpp 1)
 #set(gs_project_enable_yamlcpp 0)
 
+### yamlcpp yaml-cpp
+set(gs_project_enable_hiredis 1)
+#set(gs_project_enable_hiredis 0)
+
 ### gtest googletest
 set(gtest_build_tests 1)
 set(gtest_build_samples 1)
@@ -129,6 +133,14 @@ if (gs_project_enable_yamlcpp)
     set(gs_yamlcpp_test_path ${gs_yamlcpp_path}/yaml-cpp/test)
     set(gs_yamlcpp_include_path ${gs_yamlcpp_path}/yaml-cpp/include)
     set(gs_yamlcpp_cxtest_path ${gs_project_path}/test/yamlcpp)
+endif()
+
+### libuv uv
+if (gs_project_enable_hiredis)
+    set(gs_hiredis_path ${gs_project_path}/3rd/hiredis)
+    set(gs_hiredis_src_path ${gs_hiredis_path}/hiredis)
+    set(gs_hiredis_include_path ${gs_hiredis_path})
+    set(gs_hiredis_cxtest_path ${gs_project_path}/test/hiredis)
 endif()
 
 
