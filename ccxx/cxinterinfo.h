@@ -279,7 +279,7 @@ class CxOutStreamBase
 protected:
     struct Stream
     {
-        Stream() : ts(), title(), ref(1), enable(true), end(true), space(true), lf(false), type(0), reason(0), source(0), target(0), tag(0) {}
+        Stream() : ts(), title(), enable(true), end(true), space(true), lf(false), type(0), reason(0), source(0), target(0), tag(0) { ref = 1; }
         std::stringstream ts;
         std::string title;
 #if HAVE_CXX11_ATOMIC
