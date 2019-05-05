@@ -30,9 +30,12 @@ int CxChannelTcpserver::sendDataBySockets(CxChannelBase * oChannel, const char *
                 if (SOCKET_ERROR == iError)
                 {
                     int iErrorCode = CxSocket::error();
-                    if (iErrorCode != EAGAIN)
+                    if (iErrorCode != 0 && iErrorCode != EAGAIN)
                     {
-                        threadEventNotify(oChannel, ChannelEvent_Send_Error, soTarget);
+                        std::string sError = CxString::format("tcpserver error by [send] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                              oRoad->sourceIpAddress().ip().c_str(), oRoad->sourceIpAddress().port(),
+                                                              int64(soTarget), iErrorCode) ;
+                        threadEventNotify(oChannel, ChannelEvent_Send_Error, soTarget, sError.c_str(), sError.size());
                     }
                 }
                 return iError;
@@ -50,9 +53,11 @@ int CxChannelTcpserver::sendDataBySockets(CxChannelBase * oChannel, const char *
             if (SOCKET_ERROR == iSend)
             {
                 int iErrorCode = CxSocket::error();
-                if (iErrorCode != EAGAIN)
+                if (iErrorCode != 0 && iErrorCode != EAGAIN)
                 {
-                    threadEventNotify(oChannel, ChannelEvent_Send_Error, so);
+                    std::string sError = CxString::format("tcpserver error by [send] sock[%lld] errorCode[%d]",
+                                                          int64(so), iErrorCode) ;
+                    threadEventNotify(oChannel, ChannelEvent_Send_Error, so, sError.c_str(), sError.size());
                     continue;
                 }
             }

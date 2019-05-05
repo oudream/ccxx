@@ -90,9 +90,12 @@ int CxChannelTcpclient::writeDataImpl(const char *pData, int iLength, void * oTa
     if (SOCKET_ERROR == r)
     {
         int iErrorCode = CxSocket::error();
-        if (iErrorCode != EAGAIN)
+        if (iErrorCode != 0 && iErrorCode != EAGAIN)
         {
-            threadEventNotify(this, ChannelEvent_Send_Error);
+            std::string sError = CxString::format("tcpclient error by [send] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                  _remoteIp.c_str(), _remotePort,
+                                                  int64(_socket), iErrorCode) ;
+            threadEventNotify(this, ChannelEvent_Send_Error, 0, sError.c_str(), sError.size());
         }
     }
     return r;
@@ -194,9 +197,12 @@ void CxChannelTcpclient::ReceiverThread::run()
         if (SOCKET_ERROR == iSize)
         {
             int iErrorCode = CxSocket::error();
-            if (iErrorCode != EAGAIN)
+            if (iErrorCode != 0 && iErrorCode != EAGAIN)
             {
-                threadEventNotify(_channel, ChannelEvent_Receive_Error);
+                std::string sError = CxString::format("tcpclient error by [send] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                      _channel->_remoteIp.c_str(), _channel->_remotePort,
+                                                      int64(_so), iErrorCode) ;
+                threadEventNotify(_channel, ChannelEvent_Receive_Error, 0, sError.c_str(), sError.size());
                 break;
             }
         }

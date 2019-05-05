@@ -67,9 +67,13 @@ int CxChannelUdp::writeTo(const char *pData, int iLength, const CxIpAddress & mS
     if (SOCKET_ERROR == r)
     {
        int iErrorCode = CxSocket::error();
-       if (iErrorCode != EAGAIN )// &&  iErrorCode!= EINTR) //&& iErrorCode != EDEADLOCK
+       if (iErrorCode != 0 && iErrorCode != EAGAIN)// &&  iErrorCode!= EINTR) //&& iErrorCode != EDEADLOCK
        {
-           outChannelPrompt() << "writeTo fail : " << mSendIp.ip() << mSendIp.port() << cxEndLine;
+           std::string sError = CxString::format("upd error by [sendto] localIpAddress[%s:%d] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                 _localIpAddress.ip().c_str(), _localIpAddress.port(),
+                                                 mSendIp.ip().c_str(), mSendIp.port(),
+                                                 int64(_socketSend), iErrorCode) ;
+           outChannelPrompt() << sError;
        }
     }
 
@@ -150,9 +154,13 @@ int CxChannelUdp::writeDataImpl(const char *pData, int iLength, void * oTarget)
         if (SOCKET_ERROR == r)
         {
             int iErrorCode = CxSocket::error();
-            if (iErrorCode != EAGAIN )// &&  iErrorCode!= EINTR) //&& iErrorCode != EDEADLOCK
+            if (iErrorCode != 0 && iErrorCode != EAGAIN)// &&  iErrorCode!= EINTR) //&& iErrorCode != EDEADLOCK
             {
-                threadEventNotify(this, ChannelEvent_Send_Error);
+                std::string sError = CxString::format("upd error by [sendto] localIpAddress[%s:%d] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                      _localIpAddress.ip().c_str(), _localIpAddress.port(),
+                                                      ipAddress.ip().c_str(), ipAddress.port(),
+                                                      int64(_socketSend), iErrorCode) ;
+                threadEventNotify(this, ChannelEvent_Send_Error, 0, sError.c_str(), sError.size());
             }
         }
 
@@ -167,9 +175,13 @@ int CxChannelUdp::writeDataImpl(const char *pData, int iLength, void * oTarget)
         if (SOCKET_ERROR == r)
         {
             int iErrorCode = CxSocket::error();
-            if (iErrorCode != EAGAIN )// &&  iErrorCode!= EINTR) //&& iErrorCode != EDEADLOCK
+            if (iErrorCode != 0 && iErrorCode != EAGAIN)// &&  iErrorCode!= EINTR) //&& iErrorCode != EDEADLOCK
             {
-                threadEventNotify(this, ChannelEvent_Send_Error);
+                std::string sError = CxString::format("upd error by [sendto] localIpAddress[%s:%d] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                      _localIpAddress.ip().c_str(), _localIpAddress.port(),
+                                                      _remoteIpAddress.ip().c_str(), _remoteIpAddress.port(),
+                                                      int64(_socketSend), iErrorCode) ;
+                threadEventNotify(this, ChannelEvent_Send_Error, 0, sError.c_str(), sError.size());
             }
         }
 
@@ -298,6 +310,8 @@ bool CxChannelUdp::getConnectedImpl() const
 void CxChannelUdp::ReceiverThread::run()
 {
     socket_t iRecvSocket = _channel->_socketBind;
+    CxIpAddress localIpAddress = _channel->_localIpAddress;
+    CxIpAddress remoteIpAddress = _channel->_remoteIpAddress;
     cxPromptCheck(iRecvSocket != INVALID_SOCKET, return);
 
     char mBuffer[4096];
@@ -354,7 +368,7 @@ void CxChannelUdp::ReceiverThread::run()
                 }
                 else if (iSize == 0)
                 {
-                    threadEventNotify(_channel, ChannelEvent_Receive_ShutdownR);
+                    //threadEventNotify(_channel, ChannelEvent_Receive_ShutdownR);
                     break;
                 }
                 else
@@ -362,9 +376,13 @@ void CxChannelUdp::ReceiverThread::run()
                     if (* _status != ThreadStatus_Stop)
                     {
                         int iErrorCode = CxSocket::error(iRecvSocket);
-                        if (iErrorCode != EAGAIN)
+                        if (iErrorCode != 0 && iErrorCode != EAGAIN)
                         {
-                            threadEventNotify(_channel, ChannelEvent_Receive_Error);
+                            std::string sError = CxString::format("upd error by [recvfrom] localIpAddress[%s:%d] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                                  localIpAddress.ip().c_str(), localIpAddress.port(),
+                                                                  remoteIpAddress.ip().c_str(), remoteIpAddress.port(),
+                                                                  int64(iRecvSocket), iErrorCode) ;
+                            threadEventNotify(_channel, ChannelEvent_Receive_Error, 0, sError.c_str(), sError.size());
                             break;
                         }
                     }
@@ -376,9 +394,13 @@ void CxChannelUdp::ReceiverThread::run()
                 if (* _status != ThreadStatus_Stop)
                 {
                     int iErrorCode = CxSocket::error(iRecvSocket);
-                    if (iErrorCode != EAGAIN)
+                    if (iErrorCode != 0 && iErrorCode != EAGAIN)
                     {
-                        threadEventNotify(_channel, ChannelEvent_Receive_Error);
+                        std::string sError = CxString::format("upd error by [recvfrom] localIpAddress[%s:%d] remoteIpAddress[%s:%d] sock[%lld] errorCode[%d]",
+                                                              localIpAddress.ip().c_str(), localIpAddress.port(),
+                                                              remoteIpAddress.ip().c_str(), remoteIpAddress.port(),
+                                                              int64(iRecvSocket), iErrorCode) ;
+                        threadEventNotify(_channel, ChannelEvent_Receive_Error, 0, sError.c_str(), sError.size());
                         break;
                     }
                 }

@@ -388,9 +388,9 @@ protected:
                         if (* _status != ThreadStatus_Stop)
                         {
                             int iErrorCode = CxSocket::error();
-                            if (iErrorCode != EAGAIN)
+                            if (iErrorCode != 0 && iErrorCode != EAGAIN)
                             {
-                                cxPrompt() << "TCP Server : remote client stop 001 Error By Rec";
+                                cxPrompt() << "TCP Server : remote client stop 001 Error By Rec - iErrorCode: " << iErrorCode;
                                 pushRemoveSock(so);
                                 threadEventNotify(_channel, ChannelEvent_Receive_Error, so);
                                 continue;
@@ -409,9 +409,9 @@ protected:
                 if (FD_ISSET(so, oFds))
                 {
                     int iErrorCode = CxSocket::error(so);
-                    if (iErrorCode != EAGAIN)
+                    if (iErrorCode != 0 && iErrorCode != EAGAIN)
                     {
-                        cxPrompt() << "TCP Server : remote client stop 001 Error By Error";
+                        cxPrompt() << "TCP Server : remote client stop 001 Error By Error - iErrorCode: " << iErrorCode;
                         pushRemoveSock(so);
                         threadEventNotify(_channel, ChannelEvent_Platform_Error, so);
                         continue;
