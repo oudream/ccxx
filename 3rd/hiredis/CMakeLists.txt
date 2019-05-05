@@ -1,4 +1,8 @@
 
 if (${gs_project_enable_hiredis})
-    add_subdirectory(./hiredis)
+    if (MSVC)
+        add_subdirectory(./hiredis-msvc)
+    else()
+        add_subdirectory(./hiredis)
+    endif()
 endif()

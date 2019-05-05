@@ -61,6 +61,8 @@ int main1(int argc, char*agrv[])
     }
 
     gprint("hello end!");
+
+    return 0;
 }
 
 #include <stdio.h>

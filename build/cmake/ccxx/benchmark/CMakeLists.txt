@@ -20,11 +20,11 @@ if( NOT uppercase_CMAKE_BUILD_TYPE STREQUAL "DEBUG" )
     endforeach()
 endif()
 
-check_cxx_compiler_flag(-O3 BENCHMARK_HAS_O3_FLAG)
-set(BENCHMARK_O3_FLAG "")
-if (BENCHMARK_HAS_O3_FLAG)
-    set(BENCHMARK_O3_FLAG "-O3")
-endif()
+#check_cxx_compiler_flag(-O3 BENCHMARK_HAS_O3_FLAG)
+#set(BENCHMARK_O3_FLAG "")
+#if (BENCHMARK_HAS_O3_FLAG)
+#    set(BENCHMARK_O3_FLAG "-O3")
+#endif()
 
 # NOTE: These flags must be added after find_package(Threads REQUIRED) otherwise
 # they will break the configuration check.

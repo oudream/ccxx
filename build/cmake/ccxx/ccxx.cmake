@@ -324,7 +324,7 @@ macro(mc_ccxx_qt_include)
 endmacro()
 
 
-# curl
+#, curl
 set(gs_ccxx_curl_files
         cxcurl.h
         cxcurl.cpp
@@ -334,4 +334,16 @@ mc_merge_file_path(${gs_ccxx_source_path} "${gs_ccxx_curl_files}" gs_ccxx_curl_f
 
 macro(mc_ccxx_curl_include)
     source_group("ccxx_curl" FILES ${gs_ccxx_curl_filepaths})
+endmacro()
+
+#, hiredis
+set(gsl_ccxx_hiredis_files
+        cxhiredis.h
+        cxhiredis.cpp
+        )
+
+mc_merge_file_path(${gs_ccxx_source_path} "${gsl_ccxx_hiredis_files}" gsl_ccxx_hiredis_filepaths)
+
+macro(mc_ccxx_hiredis_include)
+    source_group("ccxx_hiredis" FILES ${gsl_ccxx_hiredis_filepaths})
 endmacro()

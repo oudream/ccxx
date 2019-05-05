@@ -35,8 +35,12 @@
 #ifndef _WIN32
 #include <strings.h>
 #else
+#ifndef strcasecmp
 #define strcasecmp stricmp
+#endif
+#ifndef strncasecmp
 #define strncasecmp  strnicmp
+#endif
 #endif
 #include <assert.h>
 #include <ctype.h>

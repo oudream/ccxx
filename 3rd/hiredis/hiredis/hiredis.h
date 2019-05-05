@@ -38,6 +38,9 @@
 #ifndef _WIN32
 #include <sys/time.h> /* for struct timeval */
 #else
+#if defined(_WIN32_WINNT) && _WIN32_WINNT < 0x0600
+#define _WIN32_WINNT 0x0600
+#endif
 #include <winsock2.h>
 #endif
 #include <stdint.h> /* uintXX_t, etc */

@@ -7,3 +7,4 @@
 #include_directories(${gs_libuv_include_path})
 
 add_subdirectory(redis-simple)
+add_subdirectory(cxhiredis)

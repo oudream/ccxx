@@ -1057,7 +1057,7 @@ public:
     }
 
     CxIpAddress(const std::string & sIp, ushort iPort, bool isBind = false) :
-        _sockAddr(CxSockAddrMaxSize, 0), _ip(sIp), _port(iPort),
+        _sockAddr(CxSockAddrMaxSize, 0), _ip(sIp.c_str(), sIp.size()), _port(iPort),
         _family(0), _isBind(isBind), _isValid(false)
     {
         init(sIp, iPort, isBind);
@@ -1071,7 +1071,7 @@ public:
     }
 
     inline CxIpAddress(const CxIpAddress &o) :
-        _sockAddr(o._sockAddr), _ip(o._ip), _port(o._port),
+        _sockAddr(o._sockAddr), _ip(o._ip.c_str(), o._ip.size()), _port(o._port),
         _family(o._family), _isBind(o._isBind), _isValid(o._isValid)
     {
     }
@@ -1080,7 +1080,7 @@ public:
     {
         if (this != &other)
         {
-            _sockAddr=other._sockAddr; _ip=other._ip; _port=other._port;
+            _sockAddr=other._sockAddr; _ip=std::string(other._ip.c_str(), other._ip.size()); _port=other._port;
             _family=other._family; _isBind=other._isBind; _isValid=other._isValid;
         }
         return *this;

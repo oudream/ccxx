@@ -41,6 +41,8 @@ __inline int c99_snprintf(char* str, size_t size, const char* format, ...)
 
 #ifdef _WIN32
 #define strerror_r(errno,buf,len) strerror_s(buf,len,errno)
+#include <windows.h>
+#include <winsock2.h>
 #endif /* _WIN32 */
 
 #endif /* _WIN32_HELPER_INCLUDE */

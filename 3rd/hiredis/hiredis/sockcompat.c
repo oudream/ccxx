@@ -30,6 +30,7 @@
 
 #define REDIS_SOCKCOMPAT_IMPLEMENTATION
 #include "sockcompat.h"
+#include <errno.h>
 
 #ifdef _WIN32
 static int _wsaErrorToErrno(int err) {
