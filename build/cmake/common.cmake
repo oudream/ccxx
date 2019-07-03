@@ -1,6 +1,7 @@
 
 
 macro(mc_merge_file_path sDir sFileNames sOutFileNames)
+    set(${sOutFileNames} "")
 #    message(${sFileNames})
     foreach (sFileName ${sFileNames})
         list(APPEND ${sOutFileNames} ${sDir}/${sFileName})

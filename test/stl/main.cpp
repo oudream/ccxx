@@ -7,6 +7,8 @@
 
 #include "random1.hpp"
 
+#include "string1.hpp"
+
 void gprint(std::string msg)
 {
     std::cout << msg << std::endl;
@@ -63,9 +65,9 @@ int main(int argc, char *agrv[])
 
 //    testBool1();
 
-    testRandom1(argc, agrv);
-    testRandom2(argc, agrv);
-    testRandom3(argc, agrv);
+//    testRandom1(argc, agrv);
+//    testRandom2(argc, agrv);
+//    testRandom3(argc, agrv);
 
     int ns[4] = {7,8,9,12};
     for (int j = 0; j < 4; ++j)
@@ -78,10 +80,14 @@ int main(int argc, char *agrv[])
             }
         }
     }
-    for (int i = 0; i < 4; ++i)
-    {
+
+    printf("begin test signal-lost1:\n");
+    fflush(stdout);
+
+    while (1) {
 
     }
+    testString11();
 
     gprint("stl end!");
     return 1;

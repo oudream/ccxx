@@ -487,7 +487,7 @@ public:
      * @return
      */
     static std::string parentPath(const std::string& sPath);
-    
+
     /**
      * @brief parentPath
      * @param sPath
@@ -525,7 +525,7 @@ public:
      * @return
      */
     static char getPathStyle(const std::string & sPath);
-    
+
     /**
      * @brief convertPathStyle
      * @param sPath
@@ -559,7 +559,7 @@ public:
      * @sample :/temp/a\b return : 3
      */
     static int calcLevel(const std::string & sPath) { return -1; } //needtodo:
-    
+
     /**
      * @brief cd
      * @param sPathString

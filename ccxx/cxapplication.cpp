@@ -792,8 +792,11 @@ void CxApplication::reset()
 
 void CxApplication::raiseExit()
 {
-    cxPrompt() << "CxApplication::raiseExit.";
-    cout << "CxApplication::raiseExit." << endl;
-    raise(SIGINT);
+    if (f_iApplicationStatus !=0)
+    {
+        cxPrompt() << "CxApplication::raiseExit.";
+        cout << "CxApplication::raiseExit." << endl;
+        raise(SIGINT);
+    }
 }
 

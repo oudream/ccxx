@@ -6,8 +6,8 @@
 
 
 //#include "temp1.cpp"
-#include "testString1.cpp"
-#include "testString2.cpp"
+#include "test_string1.cpp"
+#include "test_string2.cpp"
 
 
 using namespace std;
