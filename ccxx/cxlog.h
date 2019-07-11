@@ -49,6 +49,8 @@ protected:
     CxInterinfo::PlatformEnum platformValue() { return CxInterinfo::Platform_Log; }
 
 private:
+    void outLogImpl( const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int tag = 0 );
+
     //*file path
     std::string _filePathRt;
     FILE * _fileRt;
@@ -77,6 +79,8 @@ protected:
     CxInterinfo::PlatformEnum platformValue() { return CxInterinfo::Platform_Log; }
 
 private:
+    void outLogImpl( const std::string& sInfo, const std::string& sTitle, int type = 0, int reason = 0, int source = 0, int target = 0, int tag = 0 );
+
     void doSaveLog();
 
 private:

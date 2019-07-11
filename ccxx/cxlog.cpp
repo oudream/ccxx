@@ -9,12 +9,6 @@ using namespace std;
 
 const string CS_KEY_DIR_LOG = "LogPath";
 
-CxMutex * fn_oLogOutInfoLock()
-{
-    static CxMutex m;
-    return & m;
-}
-
 CxLogRealtime *fn_oLogRealtimeSingleton()
 {
     static CxLogRealtime m;
@@ -361,17 +355,17 @@ FILE *CxLogManager::fileByFileName(const string &sFileName)
     return NULL;
 }
 
-void
-CxLogManager::outLog(const std::string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
+void CxLogManager::outLog(const std::string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
 {
-    CxMutexScope lock(fn_oLogOutInfoLock());
-//#ifdef GM_LOG_REALTIME
+    CxMutexScope lock(CxInterinfoOut::getLock());
+
+    //#ifdef GM_LOG_REALTIME
     if (f_iLogType == 0)
     {
         CxLogRealtime *oLogRealtime = fn_oLogRealtimeSingleton();
         if (oLogRealtime)
         {
-            oLogRealtime->interinfo_out(sInfo, sTitle, type, reason, source, target, tag);
+            oLogRealtime->outLogImpl(sInfo, sTitle, type, reason, source, target, tag);
         }
     }
     else
@@ -379,7 +373,7 @@ CxLogManager::outLog(const std::string &sInfo, const std::string &sTitle, int ty
         CxLogThread *oLogThread = fn_oLogThreadSingleton();
         if (oLogThread)
         {
-            oLogThread->interinfo_out(sInfo, sTitle, type, reason, source, target, tag);
+            oLogThread->outLogImpl(sInfo, sTitle, type, reason, source, target, tag);
         }
     }
 }
@@ -397,8 +391,12 @@ CxLogRealtime::~CxLogRealtime()
 {
 }
 
-void
-CxLogRealtime::interinfo_out(const string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
+void CxLogRealtime::interinfo_out(const string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
+{
+    outLogImpl(sInfo, sTitle,  type, reason, source, target, tag);
+}
+
+void CxLogRealtime::outLogImpl(const string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
 {
     std::string sFileName = CxLogManager::fileName(type, reason, source, target, tag);
     FILE *oFile = CxLogManager::fileByFileName(sFileName);
@@ -460,8 +458,12 @@ void CxLogThread::run()
     }
 }
 
-void
-CxLogThread::interinfo_out(const string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
+void CxLogThread::interinfo_out(const string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
+{
+    outLogImpl(sInfo, sTitle,  type, reason, source, target, tag);
+}
+
+void CxLogThread::outLogImpl(const string &sInfo, const std::string &sTitle, int type, int reason, int source, int target, int tag)
 {
     std::string sFileName = CxLogManager::fileName(type, reason, source, target, tag);
     FILE *oFile = CxLogManager::fileByFileName(sFileName);
@@ -479,7 +481,7 @@ void CxLogThread::doSaveLog()
     if (_logStringsSize > 0)
     {
         {
-            CxMutexScope lock(fn_oLogOutInfoLock());
+            CxMutexScope lock(CxInterinfoOut::getLock());
             std::vector<std::string> *tmpStrings = _logStringsPush;
             _logStringsPush = _logStringsPop;
             _logStringsPop = tmpStrings;

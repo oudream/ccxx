@@ -429,7 +429,7 @@ protected:
         std::map<socket_t, struct sockaddr> _socketAddres;
         std::vector<socket_t> _socketsAdd;
         std::vector<socket_t> _socketsRemove;
-        char _buffer[1024 * 4];
+        char _buffer[ChannelBuffer_Size];
         sockaddr * _recSockAddr;
         char * _recBuffer;
 

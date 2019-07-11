@@ -816,7 +816,7 @@ CxChannelBase *CxChannelManager::channel(int iChannelId)
 
 int CxChannelBase::SenderThread::push(const char *pData, int iLength, void *oTarget)
 {
-    if (pData && iLength > 0 && iLength < 1024 * 32)
+    if (pData && iLength > 0 && iLength < ChannelBuffer_Size)
     {
         CxMutexScope lock(_lock);
         _pushBuffers->push_back(std::vector<char>(pData, pData + iLength));
@@ -877,7 +877,7 @@ void CxChannelBase::SenderThread::run()
 
 int CxChannelBase::ProcesserThread::push(const char *pData, int iLength, void *oSource, int iTag)
 {
-    if (pData && iLength > 0 && iLength < 1024 * 32)
+    if (pData && iLength > 0 && iLength < ChannelBuffer_Size)
     {
         CxMutexScope lock(_lock);
         _pushBuffers->push_back(std::vector<char>(pData, pData + iLength));

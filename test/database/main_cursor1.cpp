@@ -1,6 +1,8 @@
 
 #include <ccxx/ccxx.h>
 
+#include <ccxx/cxdatabase_odbc.h>
+
 using namespace std;
 
 CxDatabase::CursorBase * f_oCursor1 = NULL;
@@ -105,7 +107,6 @@ void timerCursor2(int iInterval)
     cxPrompt() << " --- --- --- --- ---";
 }
 
-
 void testCursor1()
 {
     cxPrompt() << "TEST Cursor1 start : " << CxTime::currentSystemTimeString();
@@ -113,7 +114,6 @@ void testCursor1()
 
     CxTimerManager::startTimer(timerCursor2, 1000);
 }
-
 
 void timerCursor3(int iInterval)
 {
@@ -164,4 +164,126 @@ void testCursor2()
     CxTimerManager::startTimer(timerCursor3, 1000);
 }
 
+void testCursor4()
+{
+    static int iIndex = 0;
+    ++ iIndex;
+    msepoch_t dtNow = CxTime::currentSystemTime();
+    CxDatabase * oDb = CxDatabaseManager::getDefaultDb();
+    if (oDb == NULL)
+    {
+        cxPrompt() << "can not open database!";
+        return;
+    }
 
+    cxPrompt() << "DB has cursor count : " << oDb->cursorGetOnlineAll().size();
+
+    string sSql = "Select AlarmNo, NeID, AlarmType, ModuleNo, CardNo, AlarmValue, AlarmTime, Confirm, ConfirmTime, ConfirmUser from omc_alarmrec where Status=0 order by AlarmNo desc limit 0, 1000";
+    CxDatabase::CursorBase * oCursor = oDb->cursorLoad(sSql, 100);
+
+    cxPrompt() << "oDb->cursorLoad(sSql, 100); " << CxTime::milliSecondDifferToNow(dtNow);
+
+    int iCount = 0;
+    while (! oDb->cursorIsEnd(oCursor))
+    {
+        vector<string> row = oDb->cursorNext(oCursor);
+        ++iCount;
+    }
+    oDb->cursorClose(oCursor);
+
+    cxPrompt() << "oDb->cursorNext(sSql).count :  " << iCount;
+    cxPrompt() << "oDb->cursorNext(sSql).all : " << CxTime::milliSecondDifferToNow(dtNow);
+
+    cxPrompt() << " --- --- --- --- ---";
+}
+
+int fn_interinfo_in_cmd( const std::string & sCommand, const std::map<std::string, std::string> & sParams, const msepoch_t & dtIn, int iSource, int eInType, int iTag)
+{
+    if (sCommand == "exit")
+    {
+        CxApplication::exit();
+        return TRUE;
+    }
+    else if (sCommand == "open")
+    {
+        string sDsn = CxContainer::value(sParams, string("dsn"), string());
+        CxDatabase * pDb = CxDatabaseManager::getDefaultDb();
+        pDb->openDatabase();
+    }
+    else if (sCommand == "select")
+    {
+        string sSql = CxContainer::value(sParams, string("sql"), string());
+        CxDatabase * pDb = CxDatabaseManager::getDefaultDb();
+        if (pDb == NULL)
+        {
+            return TRUE;
+        }
+        int nRst = 0;
+        vector<std::vector<std::string> > tRows;
+        vector<std::string> tFields;
+        nRst += pDb->loadSql(sSql, tRows, &tFields);
+        cxPrompt() << "tRows.size() : " << tRows.size();
+        for (int i = 0; i < tRows.size() && i < 10; ++i)
+        {
+            cxPrompt() << tRows[i];
+        }
+        return TRUE;
+    }
+    else
+    {
+        cxPrompt() << "in : " << sCommand;
+    }
+    return FALSE;
+}
+
+void fn_timer1(int)
+{
+//	cxPrompt() << "begin time1:";
+    msepoch_t dtNow = CxTime::currentSystemTime();
+    testCursor4();
+}
+
+void fn_test(int, int, const void *, int, void *, void *)
+{
+}
+
+int main(int argc,const char * argv[])
+{
+    cout << "begin test CxDatabase-ODBC : ";
+
+    CxApplication::init(argc, argv);
+
+//	string g_sDBSource = "UID=FMIS9999;PWD=FMIS9999;DSN=cics_oracle_dsn";
+//	string g_sDBType = "Oracle";
+
+    string g_sDBSource = "UID=root;PWD=123456;DSN=mysql_cursor_dsn";
+    string g_sDBType = "MySQL";
+
+//	string g_sDBSource = "UID=root;PWD=123456;DSN=ics_mysql_dsn";
+//	string g_sDBType = "MySQL";
+//
+//	string g_sDBSource = "DSN=ics_access_dsn";
+//	string g_sDBType = "access";
+
+    CxDatabase * pDb = CxDatabaseManager::createDatabase(g_sDBSource, g_sDBType);
+    if (pDb == NULL)
+    {
+        cout << "error : createDatabase fail! end test !!!";
+        return 0;
+    }
+    if (!pDb->openDatabase())
+    {
+        cout << "error : openDatabase fail! end test !!!";
+        return 0;
+    }
+
+//    cout << "end test CxDatabase !!!";
+
+    CxInterinfoIn::addObserver(fn_interinfo_in_cmd);
+
+    CxApplication::pushProcessCallBack(fn_test);
+
+    CxTimerManager::startTimer(fn_timer1, 300);
+
+    return CxApplication::exec();
+}

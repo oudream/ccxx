@@ -27,6 +27,7 @@
 #define ChannelEvent_Send_Fail          (ChannelEvent_Send    + 0x00060000)
 #define ChannelEvent_Send_Error         (ChannelEvent_Send    + 0x00070000)
 
+#define ChannelBuffer_Size              (1024 * 32)
 
 
 class CxChannelBase;

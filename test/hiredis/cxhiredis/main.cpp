@@ -18,7 +18,8 @@ void fn_addList(const string & sKeyName, int iCount)
     //    sValue.push_back(char(i + iRand));
     //    listValues.push_back(sValue);
     //}
-    vector<string> list2; list2.push_back("i2a 1"); list2.push_back("i2a 2"); list2.push_back("i2a 3"); list2.push_back("i2a 4"); list2.push_back("i2a 5");
+    msepoch_t dtNow = CxTime::currentSystemTime();
+    vector<string> list2; list2.push_back(CxTime::toString(dtNow)); list2.push_back(CxTime::toString(dtNow + 1)); list2.push_back(CxTime::toString(dtNow+2)); 
     cxPrompt() << CxString::format(" --- --- --- LIST %s operation but del --- --- --- ", sKeyName.c_str());
     cxPrompt() << CxString::format("listPush(\"%s\", vector<string>([count=%d]): ", sKeyName.c_str(), iCount) << CxHiredis::listPushMultiple(sKeyName, list2);
 }
@@ -100,7 +101,7 @@ int main(int argc, const char * argv[])
     cxPrompt() << "listGet(\"list0424v6\", 0, -1): " << CxHiredis::listGet("list0424v6", 0, -1);
 
 
-    CxTimerManager::startTimer(fn_timer_timeout1, 200);
+    CxTimerManager::startTimer(fn_timer_timeout1, 100);
 
     CxApplication::exec();
 

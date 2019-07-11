@@ -95,7 +95,7 @@ protected:
         CxChannelTcpclient * _channel;
         socket_t _so;
         int * volatile _status;
-        char _buffer[1024 * 4];
+        char _buffer[ChannelBuffer_Size];
 
     };
 
