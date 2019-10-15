@@ -121,7 +121,8 @@ protected:
                 return false;
             }
 
-            string sql_user = "SELECT user() LIMIT 1;";
+//            string sql_user = "SELECT user() LIMIT 1;";
+            string sql_user = "SELECT COUNT(*) FROM information_schema.`TABLES`";
             string sql_select = "SELECT COUNT(*) FROM information_schema.`TABLES`";
             if (CxString::equalIgnoreAll(sDatabaseType, "Oracle"))
             {
@@ -144,7 +145,7 @@ protected:
             {
                 if (sHeartJumpSql.empty())
                     sHeartJumpSql = sql_user;
-                bool bOk = execSqlImpl(sql_user);
+                bool bOk = execSqlImpl(sql_user) >= 0;
                 _sqlTableInfo = bOk ? sql_select : "SELECT TOP 1 * FROM %s;";
                 if (bOk)
                 {

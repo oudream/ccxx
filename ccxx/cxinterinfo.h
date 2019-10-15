@@ -1,8 +1,8 @@
 #ifndef CXINTERINFO_H
 #define CXINTERINFO_H
 
-
 #include "cxglobal.h"
+#include "cxthread.h"
 
 #if HAVE_CXX11_ATOMIC
 #include <atomic>
@@ -166,6 +166,8 @@ protected:
 class GM_CCXX_CORE_API CxInterinfoOut
 {
 public:
+    static CxMutex * getLock();
+
     static void addObserver(CxInterinfoOut_I* oSubject);
 
     static void removeObserver(CxInterinfoOut_I* oSubject);

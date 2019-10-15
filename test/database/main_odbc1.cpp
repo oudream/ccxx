@@ -2,9 +2,9 @@
 
 #include <ccxx/cxdatabase_odbc.h>
 
-#include "test_cursor1.hpp"
 #include "test_dql1.hpp"
 #include "test_odbc_oracle1.hpp"
+#include "test_insert1.hpp"
 
 using namespace std;
 
@@ -47,13 +47,21 @@ int fn_interinfo_in_cmd( const std::string & sCommand, const std::map<std::strin
 	return FALSE;
 }
 
+int f_iMaxId = 0;
+
 void fn_timer1(int)
 {
 //	cxPrompt() << "begin time1:";
 
-	testDql7();
+//	testDql7();
 
-//	testOdbcOracle1();
+	f_iMaxId++;
+	msepoch_t dtNow = CxTime::currentSystemTime();
+	testInsert2(f_iMaxId);
+	testInsert3(f_iMaxId);
+	testInsert4(f_iMaxId);
+    cxPrompt() << "testInsert2 testInsert3 testInsert4 by f_iMaxId: " << f_iMaxId;
+    //	testOdbcOracle1();
 }
 
 void fn_test(int, int, const void *, int, void *, void *)
@@ -69,23 +77,28 @@ int main(int argc,const char * argv[])
 //	string g_sDBSource = "UID=FMIS9999;PWD=FMIS9999;DSN=cics_oracle_dsn";
 //	string g_sDBType = "Oracle";
 
-	string g_sDBSource = "UID=root;PWD=123456;DSN=ics_mysql_dsn";
+	string g_sDBSource = "UID=root;PWD=123456;DSN=mysql_db2_dsn";
 	string g_sDBType = "MySQL";
 
+//	string g_sDBSource = "UID=root;PWD=123456;DSN=ics_mysql_dsn";
+//	string g_sDBType = "MySQL";
+//
 //	string g_sDBSource = "DSN=ics_access_dsn";
 //	string g_sDBType = "access";
-
 
 	CxDatabase * pDb = CxDatabaseManager::createDatabase(g_sDBSource, g_sDBType);
 	if (pDb == NULL)
 	{
-		cout << "end test !!!";
+		cout << "error : createDatabase fail! end test !!!";
 		return 0;
 	}
-	cout << " pDb->openDatabase() : " << pDb->openDatabase();
+    if (!pDb->openDatabase())
+    {
+        cout << "error : openDatabase fail! end test !!!";
+        return 0;
+    }
 
-//	testCursor1();
-//	testCursor2();
+	f_iMaxId = CxString::toInt32(pDb->queryValue("select MAX(omc_alarmrec.AlarmNo) from omc_alarmrec"));
 
 //    cout << "end test CxDatabase !!!";
 
@@ -93,7 +106,7 @@ int main(int argc,const char * argv[])
 
 	CxApplication::pushProcessCallBack(fn_test);
 
-	CxTimerManager::startTimer(fn_timer1, 1000);
+	CxTimerManager::startTimer(fn_timer1, 300);
 
 	return CxApplication::exec();
 }

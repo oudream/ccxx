@@ -283,6 +283,15 @@ void CxChannelUdp::openChannelImpl()
         }
 #endif
 
+//        invalid - this:
+//        int nSendBuf = 64 * 1024;
+//        int iSetsockopt;
+//        iSetsockopt = setsockopt(_socketBind, SOL_SOCKET, SO_SNDBUF, (const char*) &nSendBuf, sizeof(int));
+//        outChannelDebug() << "setsockopt " << iSetsockopt;
+//        int nRecvBuf = 64 * 1024;
+//        iSetsockopt = setsockopt(_socketBind, SOL_SOCKET, SO_RCVBUF, (const char*) &nRecvBuf, sizeof(int));
+//        outChannelDebug() << "setsockopt " << iSetsockopt;
+
         _socketSend = _socketBind;
 
         outChannelDebug() << "openChannelImpl -> createAndStartThread - bind success !!!";
@@ -314,7 +323,7 @@ void CxChannelUdp::ReceiverThread::run()
     CxIpAddress remoteIpAddress = _channel->_remoteIpAddress;
     cxPromptCheck(iRecvSocket != INVALID_SOCKET, return);
 
-    char mBuffer[4096];
+    char mBuffer[ChannelBuffer_Size+CxSockAddrMaxSize];
     sockaddr * pSenderAddr = (sockaddr *)mBuffer;
     char * pRecvBuf = mBuffer + CxSockAddrMaxSize;
     size_t iBufLen = sizeof(mBuffer) - CxSockAddrMaxSize;

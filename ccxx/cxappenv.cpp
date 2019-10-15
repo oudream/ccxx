@@ -340,6 +340,8 @@ map<string, string> CxAppEnv::argumentsFromArgcv(int argc, const char *argv[])
 {
     map<string, string> r;
     int i = 1;
+    f_argumentList.clear();
+    f_argument.clear();
     while (i < argc && i < 1000)
     {
         f_argumentList.push_back(string(argv[i]));

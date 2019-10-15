@@ -2,7 +2,6 @@
 
 #include "cxcontainer.h"
 #include "cxtime.h"
-#include "cxthread.h"
 
 #ifdef WIN32
 #  include <io.h>
@@ -43,7 +42,7 @@ CxConsoleInterinfo * fn_oConsoleInterinfoSingleton()
 
 
 ///*InterinfoOutSubject*/
-CxMutex * fn_getInterinfoOutSubjectsLock()
+CxMutex * fn_getInterinfoOutLock()
 {
     static CxMutex interInfoLock;
     return & interInfoLock;
@@ -383,10 +382,14 @@ string CxInterinfo::levelUnmberToString(int eNum)
 
 
 
+CxMutex* CxInterinfoOut::getLock()
+{
+    return fn_getInterinfoOutLock();
+}
 
 void CxInterinfoOut::addObserver(CxInterinfoOut_I *oSubject)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*> * oSubjects = fn_getInterinfoOutSubjects();
     if ( find(oSubjects->begin(), oSubjects->end(), oSubject) ==  oSubjects->end() )
     {
@@ -396,14 +399,14 @@ void CxInterinfoOut::addObserver(CxInterinfoOut_I *oSubject)
 
 void CxInterinfoOut::removeObserver(CxInterinfoOut_I *oSubject)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*> * oSubjects = fn_getInterinfoOutSubjects();
     CxContainer::remove(*oSubjects, oSubject);
 }
 
 void CxInterinfoOut::outInfo(const string &sInfo, const std::string& sTitle, int type, int reason, int source, int target, int iTag)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     for (vector<CxInterinfoOut_I*>::iterator it = itBegin; it != itEnd; ++it)
@@ -441,7 +444,7 @@ void CxInterinfoOut::outInfo(const string &sInfo, const std::string& sTitle, int
 
 void CxInterinfoOut::outLog(const string &sInfo, const string &sTitle, int type, int reason, int source, int target, int iTag)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     for (vector<CxInterinfoOut_I*>::iterator it = itBegin; it != itEnd; ++it)
@@ -462,7 +465,7 @@ void CxInterinfoOut::outLog(const string &sInfo, const string &sTitle, int type,
 
 int CxInterinfoOut::isEnable(CxInterinfo::PlatformEnum ePlatform, int type, int source, int reason)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     for (vector<CxInterinfoOut_I*>::iterator it = itBegin; it != itEnd; ++it)
@@ -478,7 +481,7 @@ int CxInterinfoOut::isEnable(CxInterinfo::PlatformEnum ePlatform, int type, int 
 
 void CxInterinfoOut::enableAll(CxInterinfo::PlatformEnum ePlatform)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -504,7 +507,7 @@ void CxInterinfoOut::enableAll(CxInterinfo::PlatformEnum ePlatform)
 
 void CxInterinfoOut::diableAll(CxInterinfo::PlatformEnum ePlatform)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -530,7 +533,7 @@ void CxInterinfoOut::diableAll(CxInterinfo::PlatformEnum ePlatform)
 
 void CxInterinfoOut::enableType(int type, CxInterinfo::PlatformEnum ePlatform, bool bOnly)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -574,7 +577,7 @@ void CxInterinfoOut::enableType(int type, CxInterinfo::PlatformEnum ePlatform, b
 
 void CxInterinfoOut::disableType(int type, CxInterinfo::PlatformEnum ePlatform)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -600,7 +603,7 @@ void CxInterinfoOut::disableType(int type, CxInterinfo::PlatformEnum ePlatform)
 
 void CxInterinfoOut::enableType(int type, int source, CxInterinfo::PlatformEnum ePlatform, bool bOnly)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -644,7 +647,7 @@ void CxInterinfoOut::enableType(int type, int source, CxInterinfo::PlatformEnum 
 
 void CxInterinfoOut::disableType(int type, int source, CxInterinfo::PlatformEnum ePlatform)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -670,7 +673,7 @@ void CxInterinfoOut::disableType(int type, int source, CxInterinfo::PlatformEnum
 
 void CxInterinfoOut::enableType(int type, int source, int reason, CxInterinfo::PlatformEnum ePlatform, bool bOnly)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -714,7 +717,7 @@ void CxInterinfoOut::enableType(int type, int source, int reason, CxInterinfo::P
 
 void CxInterinfoOut::disableType(int type, int source, int reason, CxInterinfo::PlatformEnum ePlatform)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     if (ePlatform != CxInterinfo::Platform_None)
@@ -813,7 +816,7 @@ void CxInterinfoOut::update( bool bEnable, const string &sPlatform, const string
 
 CxInterinfoOut_I *CxInterinfoOut::findInterinfoOut(CxInterinfo::PlatformEnum ePlatform)
 {
-    CxMutexScope lock(fn_getInterinfoOutSubjectsLock());
+    CxMutexScope lock(fn_getInterinfoOutLock());
     vector<CxInterinfoOut_I*>::iterator itBegin = fn_getInterinfoOutSubjects()->begin();
     vector<CxInterinfoOut_I*>::iterator itEnd = fn_getInterinfoOutSubjects()->end();
     for (vector<CxInterinfoOut_I*>::iterator it = itBegin; it != itEnd; ++it)
