@@ -57,6 +57,22 @@ void TestVector21()
     } while (str != "CC");
 }
 
+int testBufDouble1(int argc, char *agrv[])
+{
+    unsigned char buf1[8];
+    double d1 = -1;
+    unsigned char * pBuf1 = (unsigned char *)& d1;
+    for (int i = 0; i < sizeof(d1); ++i)
+    {
+        buf1[i] = * pBuf1; pBuf1++;
+    }
+
+    for (int i = 0; i < sizeof(d1); ++i)
+    {
+        cout << buf1[i] << endl;
+    }
+}
+
 int main(int argc, char *agrv[])
 {
     gprint("stl begin:");
@@ -69,25 +85,25 @@ int main(int argc, char *agrv[])
 //    testRandom2(argc, agrv);
 //    testRandom3(argc, agrv);
 
-    int ns[4] = {7,8,9,12};
-    for (int j = 0; j < 4; ++j)
-    {
-        for (int i = 0; i < 4; ++i)
-        {
-            for (int k = 0; k < 4; ++k)
-            {
 
-            }
-        }
-    }
+//    int ns[4] = {7,8,9,12};
+//    for (int j = 0; j < 4; ++j)
+//    {
+//        for (int i = 0; i < 4; ++i)
+//        {
+//            for (int k = 0; k < 4; ++k)
+//            {
+//
+//            }
+//        }
+//    }
 
     printf("begin test signal-lost1:\n");
     fflush(stdout);
 
-    while (1) {
+    testBufDouble1(argc, agrv);
 
-    }
-    testString11();
+//    testString11();
 
     gprint("stl end!");
     return 1;

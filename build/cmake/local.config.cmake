@@ -19,7 +19,7 @@ if(APPLE)
     list(APPEND CMAKE_PREFIX_PATH /Users/oudream/Qt5.5.1/5.5/clang_64)
     set(gs_prefix_path_python /Library/Frameworks/Python.framework/Versions/3.6)
 elseif(UNIX)
-    list(APPEND CMAKE_PREFIX_PATH /fff/qt5.6.3/5.6.3/gcc_64)
+    list(APPEND CMAKE_PREFIX_PATH /opt/fff/qt5.6.3/5.6.3/gcc_64)
 elseif(WIN32)
     message("CMAKE_SIZEOF_VOID_P:" ${CMAKE_SIZEOF_VOID_P})
     if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
@@ -62,7 +62,7 @@ endif()
 ### qt
 ### if enable qt, then config "build/ccpro/local.config.cmake" 's CMAKE_PREFIX_PATH to your dir of qt
 set(gs_project_enable_qt 1)
-# set(gs_project_enable_qt 0)
+set(gs_project_enable_qt 0)
 # set(gs_project_qt_version 4)
 
 ### cpython
@@ -84,7 +84,7 @@ set(gs_project_enable_openssl 1)
 
 ### opencv
 set(gs_project_enable_opencv 1)
-#set(gs_project_enable_opencv 0)
+set(gs_project_enable_opencv 0)
 if (WIN32)
     set(gs_project_enable_opencv 0)
 endif ()

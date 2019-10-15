@@ -9,7 +9,8 @@ set(gsl_cxpy_files
         cxpython/cxpy_noddy2.h
         cxpython/cxpy_noddy2.cpp
         )
-mc_merge_file_path(${gs_ccxx_path} "${gsl_cxpy_files}" gsl_cxpy_files_filepaths)
+
+mc_merge_file_path(${gs_ccxx_source_path} "${gsl_cxpy_files}" gsl_cxpy_files_filepaths)
 source_group("cxpy" FILES ${gsl_cxpy_files_filepaths})
 
 add_library(cxpython SHARED

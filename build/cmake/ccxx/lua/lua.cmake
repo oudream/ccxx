@@ -82,19 +82,21 @@ endmacro()
 
 #2, lua_base
 set(gsl_lua_base_heads
-        cxlua/lua_common.h
-        cxlua/lua_base.h
-        cxlua/lua_run.h
+        lua_common.h
+        lua_base.h
+        lua_run.h
         )
 
 set(gsl_lua_base_sources
-        cxlua/lua_common.cpp
-        cxlua/lua_base.cpp
-        cxlua/lua_run.cpp
+        lua_common.cpp
+        lua_base.cpp
+        lua_run.cpp
         )
 
-mc_merge_file_path(${gs_ccxx_path} "${gsl_lua_base_heads}" gsl_cxlua_base_head_filepaths)
-mc_merge_file_path(${gs_ccxx_path} "${gsl_lua_base_sources}" gsl_cxlua_base_source_filepaths)
+set(gs_ccxx_cxlua_path ${gs_ccxx_source_path}/cxlua)
+
+mc_merge_file_path(${gs_ccxx_cxlua_path} "${gsl_lua_base_heads}" gsl_cxlua_base_head_filepaths)
+mc_merge_file_path(${gs_ccxx_cxlua_path} "${gsl_lua_base_sources}" gsl_cxlua_base_source_filepaths)
 
 macro(mc_cxlua_base_include)
     source_group("lua_base" FILES ${gsl_cxlua_base_head_filepaths} ${gsl_cxlua_base_source_filepaths})
@@ -103,29 +105,29 @@ endmacro()
 
 #3, lua_ccxx
 set(gsl_lua_ccxx_heads
-        cxlua/lua_cxtime.h
-        cxlua/lua_cxstring.h
-        cxlua/lua_cxfilesystem.h
-        cxlua/lua_cxappenv.h
-        cxlua/lua_cxinterinfo.h
-        cxlua/lua_cxlog.h
-        cxlua/lua_cxencoding.h
-        cxlua/lua_cxapplication.h
+        lua_cxtime.h
+        lua_cxstring.h
+        lua_cxfilesystem.h
+        lua_cxappenv.h
+        lua_cxinterinfo.h
+        lua_cxlog.h
+        lua_cxencoding.h
+        lua_cxapplication.h
         )
 
 set(gsl_lua_ccxx_sources
-        cxlua/lua_cxtime.cpp
-        cxlua/lua_cxstring.cpp
-        cxlua/lua_cxfilesystem.cpp
-        cxlua/lua_cxappenv.cpp
-        cxlua/lua_cxinterinfo.cpp
-        cxlua/lua_cxlog.cpp
-        cxlua/lua_cxencoding.cpp
-        cxlua/lua_cxapplication.cpp
+        lua_cxtime.cpp
+        lua_cxstring.cpp
+        lua_cxfilesystem.cpp
+        lua_cxappenv.cpp
+        lua_cxinterinfo.cpp
+        lua_cxlog.cpp
+        lua_cxencoding.cpp
+        lua_cxapplication.cpp
         )
 
-mc_merge_file_path(${gs_ccxx_path} "${gsl_lua_ccxx_heads}" gsl_cxlua_all_head_filepaths)
-mc_merge_file_path(${gs_ccxx_path} "${gsl_lua_ccxx_sources}" gsl_cxlua_all_source_filepaths)
+mc_merge_file_path(${gs_ccxx_cxlua_path} "${gsl_lua_ccxx_heads}" gsl_cxlua_all_head_filepaths)
+mc_merge_file_path(${gs_ccxx_cxlua_path} "${gsl_lua_ccxx_sources}" gsl_cxlua_all_source_filepaths)
 
 macro(mc_cxlua_all_include)
     source_group("lua_ccxx" FILES ${gsl_cxlua_all_head_filepaths} ${gsl_cxlua_all_source_filepaths})

@@ -8,6 +8,7 @@
 #cmake . -G "Visual Studio 12 2013" --build "C:\ddd\ccpp\ccxx\build\cmake" -B"C:\ddd\ccpp\ccxx\build\cmake-vs2013-win32"
 
 #cmake . --build "C:\ddd\ccpp\ccxx\build\cmake" -B"C:\ddd\ccpp\ccxx\build\cmake-vs-local"
+#cmake . --build "/opt/ddd/ccpp/ccxx/build/cmake" -B"/opt/ddd/ccpp/ccxx/build/cmake-gcc"
 #cd /d "C:\ddd\ccpp\ccxx\build\cmake-vs-local"
 
 ### xcode
@@ -89,6 +90,8 @@ include(common.cmake)
 include(local.config.cmake)
 
 if (${gs_project_enable_qt})
+    message("----qt----")
+    message(${gs_project_enable_qt})
     include(qt.cmake)
 endif ()
 
