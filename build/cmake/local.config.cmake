@@ -19,7 +19,7 @@ if(APPLE)
     list(APPEND CMAKE_PREFIX_PATH /Users/oudream/Qt5.5.1/5.5/clang_64)
     set(gs_prefix_path_python /Library/Frameworks/Python.framework/Versions/3.6)
 elseif(UNIX)
-    list(APPEND CMAKE_PREFIX_PATH /opt/fff/qt5.6.3/5.6.3/gcc_64)
+    list(APPEND CMAKE_PREFIX_PATH /fff/qt5.6.3/5.6.3/gcc_64)
 elseif(WIN32)
     message("CMAKE_SIZEOF_VOID_P:" ${CMAKE_SIZEOF_VOID_P})
     if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
@@ -67,7 +67,7 @@ set(gs_project_enable_qt 0)
 
 ### cpython
 set(gs_project_enable_cpython 1)
-#set(gs_project_enable_cpython 0)
+set(gs_project_enable_cpython 0)
 # set(gs_project_cpython_version 2)
 
 ### libuv

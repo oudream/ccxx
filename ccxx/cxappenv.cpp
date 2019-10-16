@@ -83,7 +83,11 @@ void CxAppEnv::init(int argc, const char *argv[])
 #endif
             if (CxFileSystem::isExist(sDefaultDeployPath))
             {
-                CxFileSystem::scanDir(CxFileSystem::mergeFilePath(sDefaultDeployPath, "config"), fn_scan_result_CxAppEnv);
+                string sPath = CxFileSystem::mergeFilePath(sDefaultDeployPath, "config");
+                if (CxFileSystem::isExist(sPath))
+                {
+                    CxFileSystem::scanDir(sPath, fn_scan_result_CxAppEnv);
+                }
             }
 			if (f_sApplicationConfigFilePath.empty() && f_sApplicationDefaultDeployPath.size() > 0)
 			{
