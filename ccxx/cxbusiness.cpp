@@ -342,7 +342,7 @@ const CxMsObjectData *CxMsObjectDataManager::find(const string &sTypeName, const
 {
     for (size_t i = 0; i < f_msObjects.size(); ++i)
     {
-        CxMsObjectData & msObject = f_msObjects.at(i);
+        const CxMsObjectData & msObject = f_msObjects.at(i);
         if (msObject._typeName == sTypeName)
         {
             const std::map<std::string, std::string> & major = msObject.major();
