@@ -75,9 +75,9 @@ int CxMsObjectData::fromString(const string &sText)
     return FALSE;
 }
 
-int CxMsObjectData::updateMajor(const std::map<string, string> &major)
+int CxMsObjectData::updateMajor(const std::map<string, string> &aMajor)
 {
-    for (map<string, string>::const_iterator it = major.begin(); it != major.end(); ++it)
+    for (map<string, string>::const_iterator it = aMajor.begin(); it != aMajor.end(); ++it)
     {
         map<string, string>::iterator itOld = _major.find(it->first);
         if (itOld != _major.end())
@@ -151,7 +151,7 @@ void CxMsObjectDataManager::beginReceived(const std::string & sTypeName, int iSo
     f_msObjectChangedNames.clear();
 }
 
-int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string &sName, const std::map<string, string> &major)
+int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string &sName, const std::map<string, string> &aMajor)
 {
     if (sTypeName.empty())
         return FALSE;
@@ -161,7 +161,7 @@ int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string 
     {
         // update
         iChangeType = 3;
-        oMsObjectOld->updateMajor(major);
+        oMsObjectOld->updateMajor(aMajor);
         oMsObjectOld->_source = f_receivedSource;
         for (size_t i = 0; i < f_msObjectSubjects.size(); ++i)
         {
@@ -172,7 +172,7 @@ int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string 
     else
     {
         iChangeType = 1;
-        CxMsObjectData msObjectNew(sTypeName, sName, major);
+        CxMsObjectData msObjectNew(sTypeName, sName, aMajor);
         msObjectNew._source = f_receivedSource;
         f_msObjects.push_back(msObjectNew);
         for (size_t i = 0; i < f_msObjectSubjects.size(); ++i)
@@ -188,7 +188,7 @@ int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string 
     return TRUE;
 }
 
-int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string &sName, const std::map<string, string> &major, const std::map<string, std::map<string, string> > &details)
+int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string &sName, const std::map<string, string> &aMajor, const std::map<string, std::map<string, string> > &details)
 {
     if (sTypeName.empty())
         return FALSE;
@@ -198,7 +198,7 @@ int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string 
     {
         // update
         iChangeType = 3;
-        oMsObjectOld->updateMajor(major);
+        oMsObjectOld->updateMajor(aMajor);
         oMsObjectOld->updateDetails(details);
         oMsObjectOld->_source = f_receivedSource;
         for (size_t i = 0; i < f_msObjectSubjects.size(); ++i)
@@ -210,7 +210,7 @@ int CxMsObjectDataManager::receivedObject(const string &sTypeName, const string 
     else
     {
         iChangeType = 1;
-        CxMsObjectData msObjectNew(sTypeName, sName, major, details);
+        CxMsObjectData msObjectNew(sTypeName, sName, aMajor, details);
         msObjectNew._source = f_receivedSource;
         f_msObjects.push_back(msObjectNew);
         for (size_t i = 0; i < f_msObjectSubjects.size(); ++i)
@@ -345,9 +345,9 @@ const CxMsObjectData *CxMsObjectDataManager::find(const string &sTypeName, const
         const CxMsObjectData & msObject = f_msObjects.at(i);
         if (msObject._typeName == sTypeName)
         {
-            const std::map<std::string, std::string> & major = msObject.major();
-            std::map<std::string, std::string>::const_iterator it = major.find(majorKey);
-            if (it != major.end() && it->second == majorValue)
+            const std::map<std::string, std::string> & aMajor = msObject.major();
+            std::map<std::string, std::string>::const_iterator it = aMajor.find(majorKey);
+            if (it != aMajor.end() && it->second == majorValue)
             {
                 return & msObject;
             }
@@ -431,7 +431,7 @@ const CxMsObjectType * CxMsObjectTypeManager::find(const string & sTypeName)
     return NULL;
 }
 
-string CxMsObjectTypeManager::name(const string & stypeName, const std::map<string, string> &major)
+string CxMsObjectTypeManager::name(const string & stypeName, const std::map<string, string> &aMajor)
 {
     const CxMsObjectType * oObjectType = find(stypeName);
     if (oObjectType)
@@ -439,7 +439,7 @@ string CxMsObjectTypeManager::name(const string & stypeName, const std::map<stri
         string r;
         for (size_t i = 0; i < oObjectType->_majorKeies.size(); ++i)
         {
-            r += CxContainer::value(major, oObjectType->_majorKeies[i]);
+            r += CxContainer::value(aMajor, oObjectType->_majorKeies[i]);
         }
         return r;
     }

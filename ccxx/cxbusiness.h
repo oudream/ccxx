@@ -70,7 +70,7 @@ public:
 
     static const CxMsObjectType * find(const std::string & sTypeName);
 
-    static std::string name(const std::string & sTypeName, const std::map<std::string, std::string> & major);
+    static std::string name(const std::string & sTypeName, const std::map<std::string, std::string> & aMajor);
 
     static bool isTempObject(const std::string & sTypeName);
 
@@ -81,15 +81,15 @@ class GM_CCXX_CORE_API CxMsObjectData
 {
 public:
     inline CxMsObjectData() : _majorModify(false), _objectType(NULL) {}
-    inline CxMsObjectData(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & major) : _majorModify(false), _objectType(NULL) {
+    inline CxMsObjectData(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & aMajor) : _majorModify(false), _objectType(NULL) {
         _typeName = sTypeName;
         _name = sName;
-        _major = major;
+        _major = aMajor;
     }
-    inline CxMsObjectData(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & major, const std::map<std::string, std::map<std::string, std::string> > & details) : _majorModify(false), _objectType(NULL) {
+    inline CxMsObjectData(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & aMajor, const std::map<std::string, std::map<std::string, std::string> > & details) : _majorModify(false), _objectType(NULL) {
         _typeName = sTypeName;
         _name = sName;
-        _major = major;
+        _major = aMajor;
         _details = details;
     }
     inline CxMsObjectData(const std::string & sText) : _majorModify(false), _objectType(NULL) {
@@ -131,7 +131,7 @@ public:
 
     int fromString(const std::string & sText);
 
-    int updateMajor(const std::map<std::string, std::string> & major);
+    int updateMajor(const std::map<std::string, std::string> & aMajor);
 
     int updateDetails(const std::map<std::string, std::map<std::string, std::string> > & details);
 
@@ -174,9 +174,9 @@ public:
 
     static void beginReceived(const std::string & sTypeName, int iSource = 0);
 
-    static int receivedObject(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & major);
+    static int receivedObject(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & aMajor);
 
-    static int receivedObject(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & major, const std::map<std::string, std::map<std::string, std::string> > & details);
+    static int receivedObject(const std::string & sTypeName, const std::string & sName, const std::map<std::string, std::string> & aMajor, const std::map<std::string, std::map<std::string, std::string> > & details);
 
     static int receivedObject(const CxMsObjectData * oMsObject, bool bReplace = false);
 
