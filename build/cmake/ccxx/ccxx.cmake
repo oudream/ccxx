@@ -54,9 +54,6 @@ set(gsl_ccxx_heads
         cxchannel_tcpserver.h
         cxchannel_udp.h
         cxchannel_serial.h
-        cxsafequeue.h
-        cxsafethread.h
-        cxsafebuffer.h
         cxdatabase.h
         cxbusiness.h
         cxencoding.h
@@ -104,9 +101,6 @@ set(gsl_ccxx_sources
         cxchannel_tcpserver.cpp
         cxchannel_udp.cpp
         cxchannel_serial.cpp
-        cxsafequeue.cpp
-        cxsafethread.cpp
-        cxsafebuffer.cpp
         cxdatabase.cpp
         cxbusiness.cpp
         cxencoding.cpp
