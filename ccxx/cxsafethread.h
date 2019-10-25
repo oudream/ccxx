@@ -1,7 +1,8 @@
 #ifndef CXSAFETHREAD_H
 #define CXSAFETHREAD_H
 
-#include "ccxx.h"
+#include "cxglobal.h"
+#include "cxthread.h"
 
 template <class T>
 class  CxSafeThread: public CxJoinableThread

@@ -2,7 +2,8 @@
 #ifndef CXSAFEBUFFER_H
 #define CXSAFEBUFFER_H
 
-#include "ccxx.h"
+#include "cxglobal.h"
+#include "cxthread.h"
 
 #define CX_LEN_DATA_EM     1024
 #define CX_LEN_DGM         4096

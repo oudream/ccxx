@@ -1,7 +1,7 @@
 #ifndef CXSAFEQUEUE_H
 #define CXSAFEQUEUE_H
 
-#include "ccxx.h"
+#include "cxglobal.h"
 
 template <class T>
 class CxSafeQueue
