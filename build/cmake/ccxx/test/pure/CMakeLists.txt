@@ -37,7 +37,11 @@ set(gsl_ccxx_pure_heads
 #        cxchannel_tcpserver.h
 #        cxchannel_udp.h
 #        cxchannel_serial.h
+#        cxsafequeue.h
+#        cxsafethread.h
+#        cxsafebuffer.h
 #        cxdatabase.h
+#        cxbusiness.h
 #        cxencoding.h
 #        cxresource.h
 #        cxrapidjson.h
@@ -81,7 +85,11 @@ set(gsl_ccxx_pure_sources
 #        cxchannel_tcpserver.cpp
 #        cxchannel_udp.cpp
 #        cxchannel_serial.cpp
+#        cxsafequeue.cpp
+#        cxsafethread.cpp
+#        cxsafebuffer.cpp
 #        cxdatabase.cpp
+#        cxbusiness.cpp
 #        cxencoding.cpp
 #        cxchannel_factorymanager.cpp
         cxprofile_factorymanager.cpp
