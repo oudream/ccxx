@@ -108,9 +108,9 @@ private:
 class GM_CCXX_CORE_API CxSafeBuffer
 {
 public:
-    CxSafeBuffer(void);
+    CxSafeBuffer();
     
-	virtual ~CxSafeBuffer(void);
+	virtual ~CxSafeBuffer();
 	
 	CxSafeBuffer& operator =(CxSafeBuffer&  pI);
 
@@ -123,7 +123,7 @@ public:
     
     void setMaxLen(ushort wLen);
     
-	void clear(void);
+	void clear();
 
 public:
     ushort getMaxLen(){return m_MaxLen;}

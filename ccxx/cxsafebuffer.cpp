@@ -1,6 +1,6 @@
 #include "cxsafebuffer.h"
 
-CxSafeBuffer::CxSafeBuffer(void)
+CxSafeBuffer::CxSafeBuffer()
 {
     m_MaxLen  = CX_LEN_DGM;
     m_wWpoint = 0;
@@ -8,7 +8,7 @@ CxSafeBuffer::CxSafeBuffer(void)
     memset(m_buf,0,CX_LEN_DGM);
 }
 
-CxSafeBuffer::~CxSafeBuffer(void)
+CxSafeBuffer::~CxSafeBuffer()
 {
     if(m_pLoopBuf)
     {
@@ -75,7 +75,7 @@ void CxSafeBuffer::setMaxLen(ushort wLen)
     }
 }
 
-void CxSafeBuffer::clear(void)
+void CxSafeBuffer::clear()
 {
      m_wWpoint =0;
      memset(m_buf,0,CX_LEN_DGM);
