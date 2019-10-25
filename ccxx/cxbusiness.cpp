@@ -345,7 +345,7 @@ const CxMsObjectData *CxMsObjectDataManager::find(const string &sTypeName, const
         const CxMsObjectData & msObject = f_msObjects.at(i);
         if (msObject._typeName == sTypeName)
         {
-            const std::map<std::string, std::string> & aMajor = msObject.major();
+            const std::map<std::string, std::string> & aMajor = msObject._major;
             std::map<std::string, std::string>::const_iterator it = aMajor.find(majorKey);
             if (it != aMajor.end() && it->second == majorValue)
             {

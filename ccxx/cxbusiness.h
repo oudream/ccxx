@@ -119,8 +119,6 @@ public:
 
     inline const std::string & name() const { return _name; }
 
-    inline const std::map<std::string, std::string> & major() const { return _major; }
-
     inline const std::map<std::string, std::map<std::string, std::string> > & details() const { return _details; }
 
     inline bool majorModify() const { return _majorModify; }
