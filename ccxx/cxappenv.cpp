@@ -181,6 +181,20 @@ void CxAppEnv::init(int argc, const char *argv[])
         if (!CxFileSystem::isExist(f_sApplicationConfigPath)) CxFileSystem::createDirMultiLevel(f_sApplicationConfigPath);
     }
     argumentSaveToConfig();
+
+    cout << "f_sApplicationFilePath: "            << f_sApplicationFilePath << endl;
+    cout << "f_sApplicationFileName: "            << f_sApplicationFileName << endl;
+    cout << "f_sApplicationTargetName: "          << f_sApplicationTargetName << endl;
+    cout << "f_sApplicationPath: "                << f_sApplicationPath << endl;
+    cout << "f_sApplicationDefaultDeployPath: "   << f_sApplicationDefaultDeployPath << endl;
+    cout << "f_sApplicationDeployPath: "          << f_sApplicationDeployPath << endl;
+    cout << "f_sApplicationConfigPath: "          << f_sApplicationConfigPath << endl;
+    cout << "f_sDefaultConfigFilePath: "          << f_sDefaultConfigFilePath << endl;
+    cout << "f_sApplicationConfigFilePath: "      << f_sApplicationConfigFilePath << endl;
+    cout << "f_sApplicationConfigExtendFilePath: "<< f_sApplicationConfigExtendFilePath << endl;
+    cout << "f_sApplicationLogPath: "             << f_sApplicationLogPath << endl;
+    cout << "f_sApplicationTempPath: "            << f_sApplicationTempPath << endl;
+    cout << "f_sApplicationDataPath: "            << f_sApplicationDataPath << endl;
 }
 
 const string &CxAppEnv::applicationFilePath()
