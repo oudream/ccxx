@@ -108,8 +108,6 @@ SOURCES += \
     $$PWD/cxchannel_tcpserver.cpp \
     $$PWD/cxchannel_udp.cpp \
     $$PWD/cxchannel_serial.cpp \
-    $$PWD/cxsafequeue.cpp \
-    $$PWD/cxsafethread.cpp \
     $$PWD/cxsafebuffer.cpp \
     $$PWD/cxdatabase.cpp \
     $$PWD/cxbusiness.cpp \

@@ -104,8 +104,6 @@ set(gsl_ccxx_sources
         cxchannel_tcpserver.cpp
         cxchannel_udp.cpp
         cxchannel_serial.cpp
-        cxsafequeue.cpp
-        cxsafethread.cpp
         cxsafebuffer.cpp
         cxdatabase.cpp
         cxbusiness.cpp
