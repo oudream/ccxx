@@ -4,7 +4,7 @@
 
 using namespace std;
 
-
+#ifdef GM_OS_WIN
 long   __stdcall   callback(_EXCEPTION_POINTERS*   excp)
   {
   MessageBox(0,"Error","error",MB_OK);
@@ -15,10 +15,13 @@ long   __stdcall   callback(_EXCEPTION_POINTERS*   excp)
   excp->ContextRecord->Edx);
   return   EXCEPTION_EXECUTE_HANDLER;
   }
+#endif
 
 int main(int argc,const char * argv[])
 {
+#ifdef GM_OS_WIN
     ::SetUnhandledExceptionFilter(callback);
+#endif
 
     std::cout << "begin\n";
 
@@ -39,7 +42,7 @@ int main(int argc,const char * argv[])
     std::cout << CxTime::toString(dt1 + 1000) << endl;
 
     TimerPrintFunction::start();
-    TimerPrintObject to1;
+//    TimerPrintObject to1;
 //    TimerPrintObject to2;
 //    TimerPrintObject to3;
 

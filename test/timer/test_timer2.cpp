@@ -35,5 +35,5 @@ private:
 
 };
 
-int TimerPrintFunction::s_interval_1 = 1000;
+int TimerPrintFunction::s_interval_1 = 3000;
 int TimerPrintFunction::s_interval_3 = 3000;
