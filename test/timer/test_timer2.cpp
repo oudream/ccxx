@@ -7,11 +7,11 @@ class TimerPrintFunction
 public:
     static void timer_timeOut(int iInterval)
     {
-        if (iInterval == 1000)
+        if (iInterval == 100)
         {
             cout << "TimerPrintFunction" << iInterval << endl;
         }
-        else if (iInterval == 3000)
+        else if (iInterval == 300)
         {
             cout << "TimerPrintFunction" << iInterval << endl;
         }
@@ -35,5 +35,5 @@ private:
 
 };
 
-int TimerPrintFunction::s_interval_1 = 3000;
-int TimerPrintFunction::s_interval_3 = 3000;
+int TimerPrintFunction::s_interval_1 = 300;
+int TimerPrintFunction::s_interval_3 = 100;

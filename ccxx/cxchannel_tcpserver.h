@@ -265,8 +265,6 @@ protected:
             int rSelect;
             struct timeval tv;
             struct timeval *tvp = &tv;
-            tv.tv_usec = 100;
-            tv.tv_sec = 0;
 
             fd_set outRecvs = inRecvs;
 //                    fd_set outSends = inSends;
@@ -323,6 +321,9 @@ protected:
                     outRecvs = inRecvs;
 //                    outSends = inSends;
                     outErrors = inErrors;
+
+                    tv.tv_usec = 0;
+                    tv.tv_sec = 1;
 
                     rSelect = ::select((int)(soMax + 1), &outRecvs, NULL, &outErrors, tvp);
                     if (rSelect == 0)
