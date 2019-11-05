@@ -324,10 +324,17 @@ bool CxShareMemory::create(const char *fn, size_t len)
         prot |= PROT_WRITE;
         fd = shm_open(fn, O_RDWR | O_CREAT, 0664);
         if(fd > -1) {
-            if(ftruncate(fd, len)) {
-                ::close(fd);
-                fd = -1;
-            }
+            #ifdef __APPLE__
+                if(ftruncate(fd, len)==-1) {
+                    ::close(fd);
+                    fd = -1;
+                }
+            #else
+                if(ftruncate(fd, len)) {
+                    ::close(fd);
+                    fd = -1;
+                }
+            #endif
         }
     }
     else {
