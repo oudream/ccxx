@@ -7,4 +7,4 @@ if (MSVC)
     add_definitions( "/wd4819" )
 endif ()
 
-add_subdirectory(./module_mock)
+#add_subdirectory(./module_mock)
