@@ -76,11 +76,11 @@ set(gs_project_enable_uv 1)
 
 ### curl
 set(gs_project_enable_curl 1)
-#set(gs_project_enable_curl 0)
+set(gs_project_enable_curl 0)
 
 ### openssl
 set(gs_project_enable_openssl 1)
-#set(gs_project_enable_openssl 0)
+set(gs_project_enable_openssl 0)
 
 ### opencv
 set(gs_project_enable_opencv 1)

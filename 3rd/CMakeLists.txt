@@ -1,9 +1,9 @@
 
 add_subdirectory(./libuv)
 add_subdirectory(./re2)
-if (NOT WIN32)
-    add_subdirectory(./htop)
-endif ()
+#if (NOT WIN32)
+#    add_subdirectory(./htop)
+#endif ()
 add_subdirectory(./googletest)
 add_subdirectory(./benchmark)
 add_subdirectory(./yaml-cpp/yaml-cpp)
