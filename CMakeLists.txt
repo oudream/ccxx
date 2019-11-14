@@ -42,10 +42,11 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
 # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
-
 include(./build/cmake/local.config.cmake)
 include(./build/cmake/common.cmake)
 include(./3rd/3rd.cmake)
+
+enable_testing()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
