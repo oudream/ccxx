@@ -111,7 +111,7 @@ set(gmock_build_tests 1)
 
 ### benchmark
 set(BENCHMARK_ENABLE_TESTING ON)
-#set(BENCHMARK_ENABLE_TESTING OFF)
+set(BENCHMARK_ENABLE_TESTING OFF)
 
 
 if (gs_project_enable_cpython AND gs_prefix_path_python)
