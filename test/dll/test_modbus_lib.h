@@ -12,7 +12,11 @@
 #endif
 
 //#define VXD_API_CALL __stdcall
-#define VXD_API_CALL __cdecl
+#ifdef GM_OS_WIN
+    #define VXD_API_CALL __cdecl
+#else
+    #define VXD_API_CALL
+#endif
 
 #ifdef __cplusplus
 extern "C" {
