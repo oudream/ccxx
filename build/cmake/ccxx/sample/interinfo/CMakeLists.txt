@@ -13,6 +13,8 @@ add_executable(cxsample_interinfo
         ${gsl_ccxx_interinfo_head_filepaths} ${gsl_ccxx_interinfo_source_filepaths}
         )
 
+mc_target_link_libraries(cxsample_interinfo)
+
 set_target_properties(cxsample_interinfo PROPERTIES FOLDER ccxx/sample)
 
 #compile static
