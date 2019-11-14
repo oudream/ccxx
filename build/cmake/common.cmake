@@ -77,7 +77,7 @@ macro(mc_target_link_libraries sTargetName)
         #    add_definitions(-DGUID_LIBUUID)
         #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
         #    target_link_libraries(${sTargetName}  dl rt)
-        target_link_libraries(${sTargetName}  dl rt uuid)
+        target_link_libraries(${sTargetName} pthread dl rt uuid)
     endif ()
 endmacro()
 
