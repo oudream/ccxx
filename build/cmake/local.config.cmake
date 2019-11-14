@@ -105,9 +105,9 @@ set(gs_project_enable_hiredis 1)
 set(gtest_build_tests 1)
 set(gtest_build_samples 1)
 set(gmock_build_tests 1)
-#set(gtest_build_tests 0)
-#set(gtest_build_samples 0)
-#set(gmock_build_tests 0)
+set(gtest_build_tests 0)
+set(gtest_build_samples 0)
+set(gmock_build_tests 0)
 
 ### benchmark
 set(BENCHMARK_ENABLE_TESTING ON)
