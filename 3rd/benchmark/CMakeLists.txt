@@ -266,12 +266,12 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # Build the targets
 add_subdirectory(src)
 
-if (BENCHMARK_ENABLE_TESTING)
-  enable_testing()
-  if (BENCHMARK_ENABLE_GTEST_TESTS AND
-      NOT (TARGET gtest AND TARGET gtest_main AND
-           TARGET gmock AND TARGET gmock_main))
-    include(GoogleTest)
-  endif()
-  add_subdirectory(test)
-endif()
+#if (BENCHMARK_ENABLE_TESTING)
+#  enable_testing()
+#  if (BENCHMARK_ENABLE_GTEST_TESTS AND
+#      NOT (TARGET gtest AND TARGET gtest_main AND
+#           TARGET gmock AND TARGET gmock_main))
+#    include(GoogleTest)
+#  endif()
+#  add_subdirectory(test)
+#endif()
