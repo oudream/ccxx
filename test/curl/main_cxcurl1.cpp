@@ -10,11 +10,11 @@ void fn_test_create(const string& sScanPath)
     for (int j = 0; j < 20; ++j)
     {
         string sNow = CxTime::currentSystemTimeString('-', 'd', '-');
-        string sFilePath = CxFileSystem::mergeFilePath(sScanPath, CxString::format("����-֮-%s-%d.log", sNow.c_str(), j));
+        string sFilePath = CxFileSystem::mergeFilePath(sScanPath, CxString::format("curl-test-%s-%d.log", sNow.c_str(), j));
         string sText;
         for (int i = 0; i < j; ++i)
         {
-            sText += "���Ե�����abc123-";
+            sText += "QWERTYUIOPASDFGHJKL:ZXCVBNM<>!@#$%^&*()abc123-";
         }
         CxFile::save(sFilePath, sText);
         cxPrompt() << "Create File: " << sFilePath;
@@ -33,11 +33,11 @@ void fn_timer_timeout_create_delete(int iInterval)
     msepoch_t dtNow = CxTime::currentSystemTime();
     if (iIndex++ % 2)
     {
-        fn_test_create("/fff/tmp/����dir1");
+        fn_test_create("/fff/tmp/curl-test-dir1");
     }
     else
     {
-        fn_test_delete("/fff/tmp/����dir1/log");
+        fn_test_delete("/fff/tmp/curl-test-dir1/log");
     }
     cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
     cxPrompt() << "";
@@ -67,7 +67,7 @@ static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
     return fwrite(buffer, size, nmemb, out->stream);
 }
 
-int main(int argc,const char *argv[])
+int main1(int argc,const char *argv[])
 {
     CxApplication::init(argc, argv);
 
@@ -85,12 +85,17 @@ int main(int argc,const char *argv[])
 
 
 
-int main1(void)
+int main(void)
 {
+#ifdef GM_OS_WIN
+    char sFp[] = "c:/test-curl-002.md";
+#else
+    char sFp[] = "/tmp/test-curl-002.md";
+#endif
     CURL *curl;
     CURLcode res;
     struct FtpFile ftpfile = {
-        "d:/002.md", /* name to store the file as if successful */
+        sFp, /* name to store the file as if successful */
 //    "curl.tar.gz", /* name to store the file as if successful */
         NULL
     };
@@ -103,7 +108,7 @@ int main1(void)
          * You better replace the URL with one that works!
          */
         curl_easy_setopt(curl, CURLOPT_URL,
-                         "ftp://ftp.gnu.org/gnu/button.14.0.shar");
+                         "http://ftp.gnu.org/gnu/button.14.0.shar");
 //                     "ftp://ftp.example.com/curl/curl-7.9.2.tar.gz");
         /* Define our callback to get called when there's data to be written */
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);

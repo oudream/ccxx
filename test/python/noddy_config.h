@@ -1,5 +1,5 @@
 
-#include <python.h>
+#include <Python.h>
 
 struct InitTypeTable
 {

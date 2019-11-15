@@ -62,13 +62,13 @@ endif()
 ### qt
 ### if enable qt, then config "build/ccpro/local.config.cmake" 's CMAKE_PREFIX_PATH to your dir of qt
 set(gs_project_enable_qt 1)
-set(gs_project_enable_qt 0)
+#set(gs_project_enable_qt 0)
 # set(gs_project_qt_version 4)
 
 
 ### cpython
 set(gs_project_enable_cpython 1)
-set(gs_project_enable_cpython 0)
+#set(gs_project_enable_cpython 0)
 # set(gs_project_cpython_version 2)
 
 
@@ -79,12 +79,12 @@ set(gs_project_enable_uv 1)
 
 ### curl
 set(gs_project_enable_curl 1)
-set(gs_project_enable_curl 0)
+#set(gs_project_enable_curl 0)
 
 
 ### openssl
 set(gs_project_enable_openssl 1)
-set(gs_project_enable_openssl 0)
+#set(gs_project_enable_openssl 0)
 
 
 ### opencv
@@ -126,7 +126,7 @@ set(BENCHMARK_ENABLE_TESTING OFF)
 set(gs_project_enable_htop 1)
 ### cd /opt/ddd/ccpp/ccxx/3rd/htop/readme.sh
 ### ./autogen.sh && ./configure --disable-unicode
-set(gs_project_enable_htop 0)
+#set(gs_project_enable_htop 0)
 
 
 if (gs_project_enable_cpython AND gs_prefix_path_python)

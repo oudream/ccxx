@@ -7,6 +7,8 @@
 
 #############################################
 
+mc_target_define_curl()
+
 macro(mc_create_test1 sCppName)
     set(gsl_test_${sCppName}_sources
             curl/${sCppName}.c
@@ -41,6 +43,7 @@ endmacro()
 #############################################
 
 #############################################
+
 
 macro(mc_create_test2 sCppName)
     set(gsl_test_${sCppName}_sources
