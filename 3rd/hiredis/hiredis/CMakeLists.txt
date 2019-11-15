@@ -63,15 +63,15 @@ IF(HIREDIS_SSL)
     TARGET_LINK_LIBRARIES(hiredis PRIVATE ${OPENSSL_LIBRARIES})
 ENDIF()
 
-IF(NOT (WIN32 OR MINGW))
-    ENABLE_TESTING()
-    ADD_EXECUTABLE(hiredis-test test.c)
-    TARGET_LINK_LIBRARIES(hiredis-test hiredis)
-    ADD_TEST(NAME hiredis-test
-        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test.sh)
-ENDIF()
-
 # Add examples
 IF(ENABLE_EXAMPLES)
-  ADD_SUBDIRECTORY(examples)
+    IF(NOT (WIN32 OR MINGW))
+        ENABLE_TESTING()
+        ADD_EXECUTABLE(hiredis-test test.c)
+        TARGET_LINK_LIBRARIES(hiredis-test hiredis)
+        ADD_TEST(NAME hiredis-test
+                COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test.sh)
+    ENDIF()
+
+    ADD_SUBDIRECTORY(examples)
 ENDIF(ENABLE_EXAMPLES)
