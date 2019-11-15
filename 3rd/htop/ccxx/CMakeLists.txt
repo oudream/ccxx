@@ -89,5 +89,5 @@ macro(mc_create_test1 sCppName)
     set_target_properties(cxtest_htop_${sCppName} PROPERTIES FOLDER 3rd/htop)
 endmacro()
 
-mc_create_test1(htop)
-mc_create_test1(process_list1)
+#mc_create_test1(htop)
+#mc_create_test1(process_list1)
