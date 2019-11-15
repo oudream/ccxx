@@ -9,7 +9,7 @@ set(gs_htop_include_path ${gs_htop_path})
 macro(mc_htop_generate_config)
     file(GLOB htop_config_h "${gs_htop_path}/htop/config.h")
 
-    message('htop config.h--: ' "${gs_htop_path}/htop/config.h")
+    message('htop config.h--: ' "${gs_htop_path}/htop/config.h" ${htop_config_h})
     if (NOT htop_config_h)
         execute_process(
                 COMMAND ./autogen.sh
