@@ -3,4 +3,13 @@ https://github.com/hishamhm/htop/releases/tag/3.0.0beta5
 
 For compiling sources downloaded from the Git repository, run:
 
+
+libncurses
+
+apt install ncurses-dev ncursesw-dev
+
     ./autogen.sh && ./configure && make
+
+libncurses5-dev
+
+    ./autogen.sh && ./configure --disable-unicode && make

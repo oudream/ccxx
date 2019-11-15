@@ -81,7 +81,6 @@ macro(mc_create_test1 sCppName)
 
         target_link_libraries(cxtest_htop_${sCppName}
                 ncurses
-                ncursesw
                 tinfo
                 m
                 )

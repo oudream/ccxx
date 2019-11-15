@@ -64,7 +64,6 @@ else()
 
     target_link_libraries(htop_main
             ncurses
-            ncursesw
             tinfo
             m
             )

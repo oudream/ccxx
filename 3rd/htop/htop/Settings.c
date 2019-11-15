@@ -408,9 +408,9 @@ Settings* Settings_new(int cpuCount) {
    if (!ok) {
       this->changed = true;
       // TODO: how to get SYSCONFDIR correctly through Autoconf?
-      char* systemSettings = String_cat(SYSCONFDIR, "/htoprc");
-      ok = Settings_read(this, systemSettings);
-      free(systemSettings);
+//      char* systemSettings = String_cat(SYSCONFDIR, "/htoprc");
+//      ok = Settings_read(this, systemSettings);
+//      free(systemSettings);
    }
    if (!ok) {
       Settings_defaultMeters(this);

@@ -65,22 +65,27 @@ set(gs_project_enable_qt 1)
 set(gs_project_enable_qt 0)
 # set(gs_project_qt_version 4)
 
+
 ### cpython
 set(gs_project_enable_cpython 1)
 set(gs_project_enable_cpython 0)
 # set(gs_project_cpython_version 2)
 
+
 ### libuv
 set(gs_project_enable_uv 1)
 #set(gs_project_enable_uv 0)
+
 
 ### curl
 set(gs_project_enable_curl 1)
 set(gs_project_enable_curl 0)
 
+
 ### openssl
 set(gs_project_enable_openssl 1)
 set(gs_project_enable_openssl 0)
+
 
 ### opencv
 set(gs_project_enable_opencv 1)
@@ -93,6 +98,7 @@ if (gs_project_enable_opencv)
     #set(gs_project_enable_opencv_sample 0)
 endif ()
 
+
 ### yamlcpp yaml-cpp
 set(gs_project_enable_yamlcpp 1)
 #set(gs_project_enable_yamlcpp 0)
@@ -100,6 +106,7 @@ set(gs_project_enable_yamlcpp 1)
 ### yamlcpp yaml-cpp
 set(gs_project_enable_hiredis 1)
 #set(gs_project_enable_hiredis 0)
+
 
 ### gtest googletest
 set(gtest_build_tests 1)
@@ -109,9 +116,17 @@ set(gtest_build_tests 0)
 set(gtest_build_samples 0)
 set(gmock_build_tests 0)
 
+
 ### benchmark
 set(BENCHMARK_ENABLE_TESTING ON)
 set(BENCHMARK_ENABLE_TESTING OFF)
+
+
+### htop
+set(gs_project_enable_htop 1)
+### cd /opt/ddd/ccpp/ccxx/3rd/htop/readme.sh
+### ./autogen.sh && ./configure --disable-unicode
+set(gs_project_enable_htop 0)
 
 
 if (gs_project_enable_cpython AND gs_prefix_path_python)

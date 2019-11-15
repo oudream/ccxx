@@ -117,7 +117,6 @@ set(gsl_htop_linux_heads
         htop/linux/LinuxCRT.h
         htop/linux/LinuxProcess.h
         htop/linux/LinuxProcessList.h
-        htop/linux/PerfCounter.h
         htop/linux/Platform.h
         )
 
@@ -128,7 +127,6 @@ set(gsl_htop_linux_sources
         htop/linux/LinuxCRT.c
         htop/linux/LinuxProcess.c
         htop/linux/LinuxProcessList.c
-        htop/linux/PerfCounter.c
         htop/linux/Platform.c
         )
 
@@ -149,11 +147,12 @@ set(gsl_htop_gui_heads
         htop/ColumnsPanel.h
         htop/MainPanel.h
         htop/Action.h
+        htop/Affinity.h
+        htop/AffinityPanel.h
         htop/IncSet.h
         htop/CategoriesPanel.h
         htop/AvailableMetersPanel.h
         htop/DisplayOptionsPanel.h
-        htop/ScreensPanel.h
         htop/ColorsPanel.h
         htop/AvailableColumnsPanel.h
         htop/CheckItem.h
@@ -168,11 +167,12 @@ set(gsl_htop_gui_sources
         htop/ColumnsPanel.c
         htop/MainPanel.c
         htop/Action.c
+        htop/Affinity.c
+        htop/AffinityPanel.c
         htop/IncSet.c
         htop/CategoriesPanel.c
         htop/AvailableMetersPanel.c
         htop/DisplayOptionsPanel.c
-        htop/ScreensPanel.c
         htop/ColorsPanel.c
         htop/AvailableColumnsPanel.c
         htop/CheckItem.c
@@ -194,7 +194,7 @@ endmacro()
 
 #4, htop_main
 set(gsl_htop_main_heads
-        htop/main_htop.h
+        htop/htop.h
         )
 
 set(gsl_htop_main_sources
