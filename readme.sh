@@ -43,18 +43,18 @@ git clone https://github.com/oudream/ccxx.git
 H/2 * * * *
 
 cd /opt/ddd/ccpp/ccxx
-cmake . -DCMAKE_BUILD_TYPE=Debug --build "/opt/ddd/ccpp/ccxx" -B"/opt/ddd/ccpp/ccxx/cmake-gcc"
-cd cmake-gcc && make
-export GTEST_OUTPUT="xml:/opt/ddd/ccpp/ccxx/cmake-gcc/unittest-report"
+cmake . -DCMAKE_BUILD_TYPE=Debug --build "/opt/ddd/ccpp/ccxx" -B"/opt/ddd/ccpp/ccxx/build/cmake-gcc"
+cd build/cmake-gcc && make
+export GTEST_OUTPUT="xml:/opt/ddd/ccpp/ccxx/build/cmake-gcc/unittest-report"
 make test
 
 
 cd $WORKSPACE
-export GTEST_OUTPUT="xml:${WORKSPACE}/cmake-gcc/unittest-report"
-cmake . -DCMAKE_BUILD_TYPE=Debug --build "${WORKSPACE}" -B"${WORKSPACE}/cmake-gcc"
+export GTEST_OUTPUT="xml:${WORKSPACE}/build/cmake-gcc/unittest-report"
+cmake . -DCMAKE_BUILD_TYPE=Debug --build "${WORKSPACE}" -B"${WORKSPACE}/build/cmake-gcc"
 
 
-export GTEST_OUTPUT="xml:${WORKSPACE}/cmake-gcc/unittest-report"
+export GTEST_OUTPUT="xml:${WORKSPACE}/build/cmake-gcc/unittest-report"
 cd ${WORKSPACE}/cmake-gcc
 make
 make test
