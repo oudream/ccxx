@@ -34,6 +34,11 @@
 #include <sstream>
 #include <thread>
 
+#ifndef __STDC_FORMAT_MACROS
+#define __STDC_FORMAT_MACROS
+#endif
+#include <inttypes.h>
+
 #include "benchmark/benchmark.h"
 #include "benchmark_api_internal.h"
 #include "check.h"
@@ -153,7 +158,7 @@ bool BenchmarkFamilies::FindBenchmarks(
     for (auto const& args : family->args_) {
       for (int num_threads : *thread_counts) {
         BenchmarkInstance instance;
-        instance.name = family->name_;
+        instance.name.function_name = family->name_;
         instance.benchmark = family.get();
         instance.aggregation_report_mode = family->aggregation_report_mode_;
         instance.arg = args;
@@ -162,6 +167,7 @@ bool BenchmarkFamilies::FindBenchmarks(
         instance.min_time = family->min_time_;
         instance.iterations = family->iterations_;
         instance.repetitions = family->repetitions_;
+        instance.measure_process_cpu_time = family->measure_process_cpu_time_;
         instance.use_real_time = family->use_real_time_;
         instance.use_manual_time = family->use_manual_time_;
         instance.complexity = family->complexity_;
@@ -172,45 +178,57 @@ bool BenchmarkFamilies::FindBenchmarks(
         // Add arguments to instance name
         size_t arg_i = 0;
         for (auto const& arg : args) {
-          instance.name += "/";
+          if (!instance.name.args.empty()) {
+            instance.name.args += '/';
+          }
 
           if (arg_i < family->arg_names_.size()) {
             const auto& arg_name = family->arg_names_[arg_i];
             if (!arg_name.empty()) {
-              instance.name +=
-                  StrFormat("%s:", family->arg_names_[arg_i].c_str());
+              instance.name.args += StrFormat("%s:", arg_name.c_str());
             }
           }
 
-          // we know that the args are always non-negative (see 'AddRange()'),
-          // thus print as 'unsigned'. BUT, do a cast due to the 32-bit builds.
-          instance.name += StrFormat("%lu", static_cast<unsigned long>(arg));
+          instance.name.args += StrFormat("%" PRId64, arg);
           ++arg_i;
         }
 
         if (!IsZero(family->min_time_))
-          instance.name += StrFormat("/min_time:%0.3f", family->min_time_);
+          instance.name.min_time =
+              StrFormat("min_time:%0.3f", family->min_time_);
         if (family->iterations_ != 0) {
-          instance.name +=
-              StrFormat("/iterations:%lu",
+          instance.name.iterations =
+              StrFormat("iterations:%lu",
                         static_cast<unsigned long>(family->iterations_));
         }
         if (family->repetitions_ != 0)
-          instance.name += StrFormat("/repeats:%d", family->repetitions_);
+          instance.name.repetitions =
+              StrFormat("repeats:%d", family->repetitions_);
+
+        if (family->measure_process_cpu_time_) {
+          instance.name.time_type = "process_time";
+        }
 
         if (family->use_manual_time_) {
-          instance.name += "/manual_time";
+          if (!instance.name.time_type.empty()) {
+            instance.name.time_type += '/';
+          }
+          instance.name.time_type += "manual_time";
         } else if (family->use_real_time_) {
-          instance.name += "/real_time";
+          if (!instance.name.time_type.empty()) {
+            instance.name.time_type += '/';
+          }
+          instance.name.time_type += "real_time";
         }
 
         // Add the number of threads used to the name
         if (!family->thread_counts_.empty()) {
-          instance.name += StrFormat("/threads:%d", instance.threads);
+          instance.name.threads = StrFormat("threads:%d", instance.threads);
         }
 
-        if ((re.Match(instance.name) && !isNegativeFilter) ||
-            (!re.Match(instance.name) && isNegativeFilter)) {
+        const auto full_name = instance.name.str();
+        if ((re.Match(full_name) && !isNegativeFilter) ||
+            (!re.Match(full_name) && isNegativeFilter)) {
           instance.last_benchmark_instance = (&args == &family->args_.back());
           benchmarks->push_back(std::move(instance));
         }
@@ -247,6 +265,7 @@ Benchmark::Benchmark(const char* name)
       min_time_(0),
       iterations_(0),
       repetitions_(0),
+      measure_process_cpu_time_(false),
       use_real_time_(false),
       use_manual_time_(false),
       complexity_(oNone),
@@ -328,7 +347,6 @@ Benchmark* Benchmark::ArgNames(const std::vector<std::string>& names) {
 
 Benchmark* Benchmark::DenseRange(int64_t start, int64_t limit, int step) {
   CHECK(ArgsCnt() == -1 || ArgsCnt() == 1);
-  CHECK_GE(start, 0);
   CHECK_LE(start, limit);
   for (int64_t arg = start; arg <= limit; arg += step) {
     args_.push_back({arg});
@@ -360,7 +378,7 @@ Benchmark* Benchmark::MinTime(double t) {
   return this;
 }
 
-Benchmark* Benchmark::Iterations(size_t n) {
+Benchmark* Benchmark::Iterations(IterationCount n) {
   CHECK(n > 0);
   CHECK(IsZero(min_time_));
   iterations_ = n;
@@ -391,6 +409,12 @@ Benchmark* Benchmark::DisplayAggregatesOnly(bool value) {
         aggregation_report_mode_ & ~ARM_DisplayReportAggregatesOnly);
   }
 
+  return this;
+}
+
+Benchmark* Benchmark::MeasureProcessCPUTime() {
+  // Can be used together with UseRealTime() / UseManualTime().
+  measure_process_cpu_time_ = true;
   return this;
 }
 

@@ -56,8 +56,7 @@ static void BM_memcpy(benchmark::State& state) {
   memset(src, 'x', state.range(0));
   for (auto _ : state)
     memcpy(dst, src, state.range(0));
-  state.SetBytesProcessed(int64_t(state.iterations()) *
-                          int64_t(state.range(0)));
+  state.SetBytesProcessed(state.iterations() * state.range(0));
   delete[] src; delete[] dst;
 }
 BENCHMARK(BM_memcpy)->Arg(8)->Arg(64)->Arg(512)->Arg(1<<10)->Arg(8<<10);
@@ -122,8 +121,7 @@ template <class Q> int BM_Sequential(benchmark::State& state) {
       q.Wait(&v);
   }
   // actually messages, not bytes:
-  state.SetBytesProcessed(
-      static_cast<int64_t>(state.iterations())*state.range(0));
+  state.SetBytesProcessed(state.iterations() * state.range(0));
 }
 BENCHMARK_TEMPLATE(BM_Sequential, WaitQueue<int>)->Range(1<<0, 1<<10);
 
@@ -246,11 +244,11 @@ BENCHMARK(BM_test)->Unit(benchmark::kMillisecond);
 #endif
 
 #if defined(__GNUC__) || __has_builtin(__builtin_unreachable)
-  #define BENCHMARK_UNREACHABLE() __builtin_unreachable()
+#define BENCHMARK_UNREACHABLE() __builtin_unreachable()
 #elif defined(_MSC_VER)
-  #define BENCHMARK_UNREACHABLE() __assume(false)
+#define BENCHMARK_UNREACHABLE() __assume(false)
 #else
-  #define BENCHMARK_UNREACHABLE() ((void)0)
+#define BENCHMARK_UNREACHABLE() ((void)0)
 #endif
 
 namespace benchmark {
@@ -370,7 +368,10 @@ class Counter {
     // It will be presented divided by the number of iterations.
     kAvgIterations = 1U << 3U,
     // Mark the counter as a iteration-average rate. See above.
-    kAvgIterationsRate = kIsRate | kAvgIterations
+    kAvgIterationsRate = kIsRate | kAvgIterations,
+
+    // In the end, invert the result. This is always done last!
+    kInvert = 1U << 31U
   };
 
   enum OneK {
@@ -413,14 +414,17 @@ enum TimeUnit { kNanosecond, kMicrosecond, kMillisecond };
 // calculated automatically to the best fit.
 enum BigO { oNone, o1, oN, oNSquared, oNCubed, oLogN, oNLogN, oAuto, oLambda };
 
+typedef uint64_t IterationCount;
+
 // BigOFunc is passed to a benchmark in order to specify the asymptotic
 // computational complexity for the benchmark.
-typedef double(BigOFunc)(int64_t);
+typedef double(BigOFunc)(IterationCount);
 
 // StatisticsFunc is passed to a benchmark in order to compute some descriptive
 // statistics over all the measurements of some type
 typedef double(StatisticsFunc)(const std::vector<double>&);
 
+namespace internal {
 struct Statistics {
   std::string name_;
   StatisticsFunc* compute_;
@@ -429,7 +433,6 @@ struct Statistics {
       : name_(name), compute_(compute) {}
 };
 
-namespace internal {
 struct BenchmarkInstance;
 class ThreadTimer;
 class ThreadManager;
@@ -488,7 +491,7 @@ class State {
   //   while (state.KeepRunningBatch(1000)) {
   //     // process 1000 elements
   //   }
-  bool KeepRunningBatch(size_t n);
+  bool KeepRunningBatch(IterationCount n);
 
   // REQUIRES: timer is running and 'SkipWithError(...)' has not been called
   //           by the current thread.
@@ -574,7 +577,7 @@ class State {
   void SetComplexityN(int64_t complexity_n) { complexity_n_ = complexity_n; }
 
   BENCHMARK_ALWAYS_INLINE
-  int64_t complexity_length_n() { return complexity_n_; }
+  int64_t complexity_length_n() const { return complexity_n_; }
 
   // If this routine is called with items > 0, then an items/s
   // label is printed on the benchmark report line for the currently
@@ -627,7 +630,7 @@ class State {
   int64_t range_y() const { return range(1); }
 
   BENCHMARK_ALWAYS_INLINE
-  size_t iterations() const {
+  IterationCount iterations() const {
     if (BENCHMARK_BUILTIN_EXPECT(!started_, false)) {
       return 0;
     }
@@ -638,15 +641,15 @@ class State {
      :  // items we expect on the first cache line (ie 64 bytes of the struct)
   // When total_iterations_ is 0, KeepRunning() and friends will return false.
   // May be larger than max_iterations.
-  size_t total_iterations_;
+  IterationCount total_iterations_;
 
   // When using KeepRunningBatch(), batch_leftover_ holds the number of
   // iterations beyond max_iters that were run. Used to track
   // completed_iterations_ accurately.
-  size_t batch_leftover_;
+  IterationCount batch_leftover_;
 
  public:
-  const size_t max_iterations;
+  const IterationCount max_iterations;
 
  private:
   bool started_;
@@ -667,14 +670,14 @@ class State {
   const int threads;
 
  private:
-  State(size_t max_iters, const std::vector<int64_t>& ranges, int thread_i,
-        int n_threads, internal::ThreadTimer* timer,
+  State(IterationCount max_iters, const std::vector<int64_t>& ranges,
+        int thread_i, int n_threads, internal::ThreadTimer* timer,
         internal::ThreadManager* manager);
 
   void StartKeepRunning();
   // Implementation of KeepRunning() and KeepRunningBatch().
   // is_batch must be true unless n is 1.
-  bool KeepRunningInternal(size_t n, bool is_batch);
+  bool KeepRunningInternal(IterationCount n, bool is_batch);
   void FinishKeepRunning();
   internal::ThreadTimer* timer_;
   internal::ThreadManager* manager_;
@@ -686,11 +689,11 @@ inline BENCHMARK_ALWAYS_INLINE bool State::KeepRunning() {
   return KeepRunningInternal(1, /*is_batch=*/false);
 }
 
-inline BENCHMARK_ALWAYS_INLINE bool State::KeepRunningBatch(size_t n) {
+inline BENCHMARK_ALWAYS_INLINE bool State::KeepRunningBatch(IterationCount n) {
   return KeepRunningInternal(n, /*is_batch=*/true);
 }
 
-inline BENCHMARK_ALWAYS_INLINE bool State::KeepRunningInternal(size_t n,
+inline BENCHMARK_ALWAYS_INLINE bool State::KeepRunningInternal(IterationCount n,
                                                                bool is_batch) {
   // total_iterations_ is set to 0 by the constructor, and always set to a
   // nonzero value by StartKepRunning().
@@ -754,7 +757,7 @@ struct State::StateIterator {
   }
 
  private:
-  size_t cached_;
+  IterationCount cached_;
   State* const parent_;
 };
 
@@ -858,7 +861,7 @@ class Benchmark {
   // NOTE: This function should only be used when *exact* iteration control is
   //   needed and never to control or limit how long a benchmark runs, where
   // `--benchmark_min_time=N` or `MinTime(...)` should be used instead.
-  Benchmark* Iterations(size_t n);
+  Benchmark* Iterations(IterationCount n);
 
   // Specify the amount of times to repeat this benchmark. This option overrides
   // the `benchmark_repetitions` flag.
@@ -874,11 +877,18 @@ class Benchmark {
   // Same as ReportAggregatesOnly(), but applies to display reporter only.
   Benchmark* DisplayAggregatesOnly(bool value = true);
 
-  // If a particular benchmark is I/O bound, runs multiple threads internally or
-  // if for some reason CPU timings are not representative, call this method. If
-  // called, the elapsed time will be used to control how many iterations are
-  // run, and in the printing of items/second or MB/seconds values.  If not
-  // called, the cpu time used by the benchmark will be used.
+  // By default, the CPU time is measured only for the main thread, which may
+  // be unrepresentative if the benchmark uses threads internally. If called,
+  // the total CPU time spent by all the threads will be measured instead.
+  // By default, the only the main thread CPU time will be measured.
+  Benchmark* MeasureProcessCPUTime();
+
+  // If a particular benchmark should use the Wall clock instead of the CPU time
+  // (be it either the CPU time of the main thread only (default), or the
+  // total CPU usage of the benchmark), call this method. If called, the elapsed
+  // (wall) time will be used to control how many iterations are run, and in the
+  // printing of items/second or MB/seconds values.
+  // If not called, the CPU time used by the benchmark will be used.
   Benchmark* UseRealTime();
 
   // If a benchmark must measure time manually (e.g. if GPU execution time is
@@ -950,8 +960,9 @@ class Benchmark {
   TimeUnit time_unit_;
   int range_multiplier_;
   double min_time_;
-  size_t iterations_;
+  IterationCount iterations_;
   int repetitions_;
+  bool measure_process_cpu_time_;
   bool use_real_time_;
   bool use_manual_time_;
   BigO complexity_;
@@ -1293,13 +1304,31 @@ struct CPUInfo {
   BENCHMARK_DISALLOW_COPY_AND_ASSIGN(CPUInfo);
 };
 
-//Adding Struct for System Information
+// Adding Struct for System Information
 struct SystemInfo {
   std::string name;
   static const SystemInfo& Get();
+
  private:
   SystemInfo();
   BENCHMARK_DISALLOW_COPY_AND_ASSIGN(SystemInfo);
+};
+
+// BenchmarkName contains the components of the Benchmark's name
+// which allows individual fields to be modified or cleared before
+// building the final name using 'str()'.
+struct BenchmarkName {
+  std::string function_name;
+  std::string args;
+  std::string min_time;
+  std::string iterations;
+  std::string repetitions;
+  std::string time_type;
+  std::string threads;
+
+  // Return the full name of the benchmark with each non-empty
+  // field separated by a '/'
+  std::string str() const;
 };
 
 // Interface for custom benchmark result printers.
@@ -1319,12 +1348,14 @@ class BenchmarkReporter {
   };
 
   struct Run {
+    static const int64_t no_repetition_index = -1;
     enum RunType { RT_Iteration, RT_Aggregate };
 
     Run()
         : run_type(RT_Iteration),
           error_occurred(false),
           iterations(1),
+          threads(1),
           time_unit(kNanosecond),
           real_accumulated_time(0),
           cpu_accumulated_time(0),
@@ -1340,14 +1371,17 @@ class BenchmarkReporter {
           max_bytes_used(0) {}
 
     std::string benchmark_name() const;
-    std::string run_name;
-    RunType run_type;          // is this a measurement, or an aggregate?
+    BenchmarkName run_name;
+    RunType run_type;
     std::string aggregate_name;
     std::string report_label;  // Empty if not set by benchmark.
     bool error_occurred;
     std::string error_message;
 
-    int64_t iterations;
+    IterationCount iterations;
+    int64_t threads;
+    int64_t repetition_index;
+    int64_t repetitions;
     TimeUnit time_unit;
     double real_accumulated_time;
     double cpu_accumulated_time;
@@ -1373,7 +1407,7 @@ class BenchmarkReporter {
     int64_t complexity_n;
 
     // what statistics to compute from the measurements
-    const std::vector<Statistics>* statistics;
+    const std::vector<internal::Statistics>* statistics;
 
     // Inform print function whether the current run is a complexity report
     bool report_big_o;
@@ -1485,8 +1519,9 @@ class JSONReporter : public BenchmarkReporter {
   bool first_report_;
 };
 
-class BENCHMARK_DEPRECATED_MSG("The CSV Reporter will be removed in a future release")
-      CSVReporter : public BenchmarkReporter {
+class BENCHMARK_DEPRECATED_MSG(
+    "The CSV Reporter will be removed in a future release") CSVReporter
+    : public BenchmarkReporter {
  public:
   CSVReporter() : printed_header_(false) {}
   virtual bool ReportContext(const Context& context);

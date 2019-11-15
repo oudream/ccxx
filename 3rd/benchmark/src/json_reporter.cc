@@ -16,6 +16,7 @@
 #include "complexity.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <iomanip>  // for setprecision
 #include <iostream>
@@ -31,32 +32,63 @@ namespace benchmark {
 
 namespace {
 
+std::string StrEscape(const std::string & s) {
+  std::string tmp;
+  tmp.reserve(s.size());
+  for (char c : s) {
+    switch (c) {
+    case '\b': tmp += "\\b"; break;
+    case '\f': tmp += "\\f"; break;
+    case '\n': tmp += "\\n"; break;
+    case '\r': tmp += "\\r"; break;
+    case '\t': tmp += "\\t"; break;
+    case '\\': tmp += "\\\\"; break;
+    case '"' : tmp += "\\\""; break;
+    default  : tmp += c; break;
+    }
+  }
+  return tmp;
+}
+
 std::string FormatKV(std::string const& key, std::string const& value) {
-  return StrFormat("\"%s\": \"%s\"", key.c_str(), value.c_str());
+  return StrFormat("\"%s\": \"%s\"", StrEscape(key).c_str(), StrEscape(value).c_str());
 }
 
 std::string FormatKV(std::string const& key, const char* value) {
-  return StrFormat("\"%s\": \"%s\"", key.c_str(), value);
+  return StrFormat("\"%s\": \"%s\"", StrEscape(key).c_str(), StrEscape(value).c_str());
 }
 
 std::string FormatKV(std::string const& key, bool value) {
-  return StrFormat("\"%s\": %s", key.c_str(), value ? "true" : "false");
+  return StrFormat("\"%s\": %s", StrEscape(key).c_str(), value ? "true" : "false");
 }
 
 std::string FormatKV(std::string const& key, int64_t value) {
   std::stringstream ss;
-  ss << '"' << key << "\": " << value;
+  ss << '"' << StrEscape(key) << "\": " << value;
+  return ss.str();
+}
+
+std::string FormatKV(std::string const& key, IterationCount value) {
+  std::stringstream ss;
+  ss << '"' << StrEscape(key) << "\": " << value;
   return ss.str();
 }
 
 std::string FormatKV(std::string const& key, double value) {
   std::stringstream ss;
-  ss << '"' << key << "\": ";
+  ss << '"' << StrEscape(key) << "\": ";
 
-  const auto max_digits10 = std::numeric_limits<decltype(value)>::max_digits10;
-  const auto max_fractional_digits10 = max_digits10 - 1;
-
-  ss << std::scientific << std::setprecision(max_fractional_digits10) << value;
+  if (std::isnan(value))
+    ss << (value < 0 ? "-" : "") << "NaN";
+  else if (std::isinf(value))
+    ss << (value < 0 ? "-" : "") << "Infinity";
+  else {
+    const auto max_digits10 =
+        std::numeric_limits<decltype(value)>::max_digits10;
+    const auto max_fractional_digits10 = max_digits10 - 1;
+    ss << std::scientific << std::setprecision(max_fractional_digits10)
+       << value;
+  }
   return ss.str();
 }
 
@@ -80,12 +112,7 @@ bool JSONReporter::ReportContext(const Context& context) {
   out << indent << FormatKV("host_name", context.sys_info.name) << ",\n";
 
   if (Context::executable_name) {
-    // windows uses backslash for its path separator,
-    // which must be escaped in JSON otherwise it blows up conforming JSON
-    // decoders
-    std::string executable_name = Context::executable_name;
-    ReplaceAll(&executable_name, "\\", "\\\\");
-    out << indent << FormatKV("executable", executable_name) << ",\n";
+    out << indent << FormatKV("executable", Context::executable_name) << ",\n";
   }
 
   CPUInfo const& info = context.cpu_info;
@@ -108,7 +135,7 @@ bool JSONReporter::ReportContext(const Context& context) {
     out << cache_indent << FormatKV("level", static_cast<int64_t>(CI.level))
         << ",\n";
     out << cache_indent
-        << FormatKV("size", static_cast<int64_t>(CI.size) * 1000u) << ",\n";
+        << FormatKV("size", static_cast<int64_t>(CI.size)) << ",\n";
     out << cache_indent
         << FormatKV("num_sharing", static_cast<int64_t>(CI.num_sharing))
         << "\n";
@@ -168,7 +195,7 @@ void JSONReporter::PrintRunData(Run const& run) {
   std::string indent(6, ' ');
   std::ostream& out = GetOutputStream();
   out << indent << FormatKV("name", run.benchmark_name()) << ",\n";
-  out << indent << FormatKV("run_name", run.run_name) << ",\n";
+  out << indent << FormatKV("run_name", run.run_name.str()) << ",\n";
   out << indent << FormatKV("run_type", [&run]() -> const char* {
     switch (run.run_type) {
       case BenchmarkReporter::Run::RT_Iteration:
@@ -178,6 +205,12 @@ void JSONReporter::PrintRunData(Run const& run) {
     }
     BENCHMARK_UNREACHABLE();
   }()) << ",\n";
+  out << indent << FormatKV("repetitions", run.repetitions) << ",\n";
+  if (run.run_type != BenchmarkReporter::Run::RT_Aggregate) {
+    out << indent << FormatKV("repetition_index", run.repetition_index)
+        << ",\n";
+  }
+  out << indent << FormatKV("threads", run.threads) << ",\n";
   if (run.run_type == BenchmarkReporter::Run::RT_Aggregate) {
     out << indent << FormatKV("aggregate_name", run.aggregate_name) << ",\n";
   }

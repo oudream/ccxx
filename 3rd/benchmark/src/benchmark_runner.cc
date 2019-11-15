@@ -59,12 +59,14 @@ MemoryManager* memory_manager = nullptr;
 
 namespace {
 
-static const size_t kMaxIterations = 1000000000;
+static constexpr IterationCount kMaxIterations = 1000000000;
 
 BenchmarkReporter::Run CreateRunReport(
     const benchmark::internal::BenchmarkInstance& b,
-    const internal::ThreadManager::Result& results, size_t memory_iterations,
-    const MemoryManager::Result& memory_result, double seconds) {
+    const internal::ThreadManager::Result& results,
+    IterationCount memory_iterations,
+    const MemoryManager::Result& memory_result, double seconds,
+    int64_t repetition_index) {
   // Create report about this benchmark run.
   BenchmarkReporter::Run report;
 
@@ -75,6 +77,9 @@ BenchmarkReporter::Run CreateRunReport(
   // This is the total iterations across all threads.
   report.iterations = results.iterations;
   report.time_unit = b.time_unit;
+  report.threads = b.threads;
+  report.repetition_index = repetition_index;
+  report.repetitions = b.repetitions;
 
   if (!report.error_occurred) {
     if (b.use_manual_time) {
@@ -105,9 +110,12 @@ BenchmarkReporter::Run CreateRunReport(
 
 // Execute one thread of benchmark b for the specified number of iterations.
 // Adds the stats collected for the thread into *total.
-void RunInThread(const BenchmarkInstance* b, size_t iters, int thread_id,
-                 ThreadManager* manager) {
-  internal::ThreadTimer timer;
+void RunInThread(const BenchmarkInstance* b, IterationCount iters,
+                 int thread_id, ThreadManager* manager) {
+  internal::ThreadTimer timer(
+      b->measure_process_cpu_time
+          ? internal::ThreadTimer::CreateProcessCpuTime()
+          : internal::ThreadTimer::Create());
   State st = b->Run(iters, thread_id, &timer, manager);
   CHECK(st.iterations() >= st.max_iterations)
       << "Benchmark returned before State::KeepRunning() returned false!";
@@ -150,8 +158,7 @@ class BenchmarkRunner {
     }
 
     for (int repetition_num = 0; repetition_num < repeats; repetition_num++) {
-      const bool is_the_first_repetition = repetition_num == 0;
-      DoOneRepetition(is_the_first_repetition);
+      DoOneRepetition(repetition_num);
     }
 
     // Calculate additional statistics
@@ -181,17 +188,17 @@ class BenchmarkRunner {
 
   std::vector<std::thread> pool;
 
-  size_t iters;  // preserved between repetitions!
+  IterationCount iters;  // preserved between repetitions!
   // So only the first repetition has to find/calculate it,
   // the other repetitions will just use that precomputed iteration count.
 
   struct IterationResults {
     internal::ThreadManager::Result results;
-    size_t iters;
+    IterationCount iters;
     double seconds;
   };
   IterationResults DoNIterations() {
-    VLOG(2) << "Running " << b.name << " for " << iters << "\n";
+    VLOG(2) << "Running " << b.name.str() << " for " << iters << "\n";
 
     std::unique_ptr<internal::ThreadManager> manager;
     manager.reset(new internal::ThreadManager(b.threads));
@@ -223,6 +230,8 @@ class BenchmarkRunner {
     // Adjust real/manual time stats since they were reported per thread.
     i.results.real_time_used /= b.threads;
     i.results.manual_time_used /= b.threads;
+    // If we were measuring whole-process CPU usage, adjust the CPU time too.
+    if (b.measure_process_cpu_time) i.results.cpu_time_used /= b.threads;
 
     VLOG(2) << "Ran in " << i.results.cpu_time_used << "/"
             << i.results.real_time_used << "\n";
@@ -240,7 +249,7 @@ class BenchmarkRunner {
     return i;
   }
 
-  size_t PredictNumItersNeeded(const IterationResults& i) const {
+  IterationCount PredictNumItersNeeded(const IterationResults& i) const {
     // See how much iterations should be increased by.
     // Note: Avoid division by zero with max(seconds, 1ns).
     double multiplier = min_time * 1.4 / std::max(i.seconds, 1e-9);
@@ -254,10 +263,10 @@ class BenchmarkRunner {
     if (multiplier <= 1.0) multiplier = 2.0;
 
     // So what seems to be the sufficiently-large iteration count? Round up.
-    const size_t max_next_iters =
+    const IterationCount max_next_iters =
         0.5 + std::max(multiplier * i.iters, i.iters + 1.0);
     // But we do have *some* sanity limits though..
-    const size_t next_iters = std::min(max_next_iters, kMaxIterations);
+    const IterationCount next_iters = std::min(max_next_iters, kMaxIterations);
 
     VLOG(3) << "Next iters: " << next_iters << ", " << multiplier << "\n";
     return next_iters;  // round up before conversion to integer.
@@ -276,7 +285,8 @@ class BenchmarkRunner {
            ((i.results.real_time_used >= 5 * min_time) && !b.use_manual_time);
   }
 
-  void DoOneRepetition(bool is_the_first_repetition) {
+  void DoOneRepetition(int64_t repetition_index) {
+    const bool is_the_first_repetition = repetition_index == 0;
     IterationResults i;
 
     // We *may* be gradually increasing the length (iteration count)
@@ -310,11 +320,11 @@ class BenchmarkRunner {
 
     // Oh, one last thing, we need to also produce the 'memory measurements'..
     MemoryManager::Result memory_result;
-    size_t memory_iterations = 0;
+    IterationCount memory_iterations = 0;
     if (memory_manager != nullptr) {
       // Only run a few iterations to reduce the impact of one-time
       // allocations in benchmarks that are not properly managed.
-      memory_iterations = std::min<size_t>(16, iters);
+      memory_iterations = std::min<IterationCount>(16, iters);
       memory_manager->Start();
       std::unique_ptr<internal::ThreadManager> manager;
       manager.reset(new internal::ThreadManager(1));
@@ -326,8 +336,9 @@ class BenchmarkRunner {
     }
 
     // Ok, now actualy report.
-    BenchmarkReporter::Run report = CreateRunReport(
-        b, i.results, memory_iterations, memory_result, i.seconds);
+    BenchmarkReporter::Run report =
+        CreateRunReport(b, i.results, memory_iterations, memory_result,
+                        i.seconds, repetition_index);
 
     if (!report.error_occurred && b.complexity != oNone)
       complexity_reports.push_back(report);
