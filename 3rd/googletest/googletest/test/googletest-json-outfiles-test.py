@@ -40,24 +40,41 @@ GTEST_OUTPUT_1_TEST = 'gtest_xml_outfile1_test_'
 GTEST_OUTPUT_2_TEST = 'gtest_xml_outfile2_test_'
 
 EXPECTED_1 = {
-    u'tests': 1,
-    u'failures': 0,
-    u'disabled': 0,
-    u'errors': 0,
-    u'time': u'*',
-    u'timestamp': u'*',
-    u'name': u'AllTests',
+    u'tests':
+        1,
+    u'failures':
+        0,
+    u'disabled':
+        0,
+    u'errors':
+        0,
+    u'time':
+        u'*',
+    u'timestamp':
+        u'*',
+    u'name':
+        u'AllTests',
     u'testsuites': [{
-        u'name': u'PropertyOne',
-        u'tests': 1,
-        u'failures': 0,
-        u'disabled': 0,
-        u'errors': 0,
-        u'time': u'*',
+        u'name':
+            u'PropertyOne',
+        u'tests':
+            1,
+        u'failures':
+            0,
+        u'disabled':
+            0,
+        u'errors':
+            0,
+        u'time':
+            u'*',
+        u'timestamp':
+            u'*',
         u'testsuite': [{
             u'name': u'TestSomeProperties',
             u'status': u'RUN',
+            u'result': u'COMPLETED',
             u'time': u'*',
+            u'timestamp': u'*',
             u'classname': u'PropertyOne',
             u'SetUpProp': u'1',
             u'TestSomeProperty': u'1',
@@ -67,23 +84,40 @@ EXPECTED_1 = {
 }
 
 EXPECTED_2 = {
-    u'tests': 1,
-    u'failures': 0,
-    u'disabled': 0,
-    u'errors': 0,
-    u'time': u'*',
-    u'timestamp': u'*',
-    u'name': u'AllTests',
+    u'tests':
+        1,
+    u'failures':
+        0,
+    u'disabled':
+        0,
+    u'errors':
+        0,
+    u'time':
+        u'*',
+    u'timestamp':
+        u'*',
+    u'name':
+        u'AllTests',
     u'testsuites': [{
-        u'name': u'PropertyTwo',
-        u'tests': 1,
-        u'failures': 0,
-        u'disabled': 0,
-        u'errors': 0,
-        u'time': u'*',
+        u'name':
+            u'PropertyTwo',
+        u'tests':
+            1,
+        u'failures':
+            0,
+        u'disabled':
+            0,
+        u'errors':
+            0,
+        u'time':
+            u'*',
+        u'timestamp':
+            u'*',
         u'testsuite': [{
             u'name': u'TestSomeProperties',
             u'status': u'RUN',
+            u'result': u'COMPLETED',
+            u'timestamp': u'*',
             u'time': u'*',
             u'classname': u'PropertyTwo',
             u'SetUpProp': u'2',

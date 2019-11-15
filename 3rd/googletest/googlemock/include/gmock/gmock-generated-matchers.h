@@ -250,18 +250,15 @@
 // overloading matchers based on parameter types (as opposed to just
 // based on the number of parameters).
 //
-// MATCHER*() can only be used in a namespace scope.  The reason is
-// that C++ doesn't yet allow function-local types to be used to
-// instantiate templates.  The up-coming C++0x standard will fix this.
-// Once that's done, we'll consider supporting using MATCHER*() inside
-// a function.
+// MATCHER*() can only be used in a namespace scope as templates cannot be
+// declared inside of a local class.
 //
 // More Information
 // ================
 //
 // To learn more about using these macros, please search for 'MATCHER'
 // on
-// https://github.com/google/googletest/blob/master/googlemock/docs/CookBook.md
+// https://github.com/google/googletest/blob/master/googlemock/docs/cook_book.md
 
 #define MATCHER(name, description)\
   class name##Matcher {\
@@ -272,13 +269,13 @@
      public:\
       gmock_Impl()\
            {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
      private:\
@@ -321,13 +318,13 @@
      public:\
       explicit gmock_Impl(p0##_type gmock_p0)\
            : p0(::std::move(gmock_p0)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -374,13 +371,13 @@
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1)\
            : p0(::std::move(gmock_p0)), p1(::std::move(gmock_p1)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -434,13 +431,13 @@
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2)\
            : p0(::std::move(gmock_p0)), p1(::std::move(gmock_p1)), \
                p2(::std::move(gmock_p2)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -498,13 +495,13 @@
           p3##_type gmock_p3)\
            : p0(::std::move(gmock_p0)), p1(::std::move(gmock_p1)), \
                p2(::std::move(gmock_p2)), p3(::std::move(gmock_p3)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -571,13 +568,13 @@
            : p0(::std::move(gmock_p0)), p1(::std::move(gmock_p1)), \
                p2(::std::move(gmock_p2)), p3(::std::move(gmock_p3)), \
                p4(::std::move(gmock_p4)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -647,13 +644,13 @@
            : p0(::std::move(gmock_p0)), p1(::std::move(gmock_p1)), \
                p2(::std::move(gmock_p2)), p3(::std::move(gmock_p3)), \
                p4(::std::move(gmock_p4)), p5(::std::move(gmock_p5)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -729,13 +726,13 @@
                p2(::std::move(gmock_p2)), p3(::std::move(gmock_p3)), \
                p4(::std::move(gmock_p4)), p5(::std::move(gmock_p5)), \
                p6(::std::move(gmock_p6)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -817,13 +814,13 @@
                p2(::std::move(gmock_p2)), p3(::std::move(gmock_p3)), \
                p4(::std::move(gmock_p4)), p5(::std::move(gmock_p5)), \
                p6(::std::move(gmock_p6)), p7(::std::move(gmock_p7)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -912,13 +909,13 @@
                p4(::std::move(gmock_p4)), p5(::std::move(gmock_p5)), \
                p6(::std::move(gmock_p6)), p7(::std::move(gmock_p7)), \
                p8(::std::move(gmock_p8)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\
@@ -1012,13 +1009,13 @@
                p4(::std::move(gmock_p4)), p5(::std::move(gmock_p5)), \
                p6(::std::move(gmock_p6)), p7(::std::move(gmock_p7)), \
                p8(::std::move(gmock_p8)), p9(::std::move(gmock_p9)) {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\
       p0##_type const p0;\

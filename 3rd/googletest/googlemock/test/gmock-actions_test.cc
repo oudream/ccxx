@@ -46,6 +46,7 @@
 #include <iterator>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include "gmock/gmock.h"
 #include "gmock/internal/gmock-port.h"
 #include "gtest/gtest.h"
@@ -54,12 +55,14 @@
 namespace {
 
 // This list should be kept sorted.
+using testing::_;
 using testing::Action;
 using testing::ActionInterface;
 using testing::Assign;
 using testing::ByMove;
 using testing::ByRef;
 using testing::DefaultValue;
+using testing::DoAll;
 using testing::DoDefault;
 using testing::IgnoreResult;
 using testing::Invoke;
@@ -71,11 +74,11 @@ using testing::Return;
 using testing::ReturnNull;
 using testing::ReturnRef;
 using testing::ReturnRefOfCopy;
+using testing::ReturnRoundRobin;
 using testing::SetArgPointee;
 using testing::SetArgumentPointee;
 using testing::Unused;
 using testing::WithArgs;
-using testing::_;
 using testing::internal::BuiltInDefaultValue;
 using testing::internal::Int64;
 using testing::internal::UInt64;
@@ -104,10 +107,6 @@ TEST(BuiltInDefaultValueTest, IsZeroForNumericTypes) {
   EXPECT_EQ(0U, BuiltInDefaultValue<unsigned char>::Get());
   EXPECT_EQ(0, BuiltInDefaultValue<signed char>::Get());
   EXPECT_EQ(0, BuiltInDefaultValue<char>::Get());
-#if GMOCK_HAS_SIGNED_WCHAR_T_
-  EXPECT_EQ(0U, BuiltInDefaultValue<unsigned wchar_t>::Get());
-  EXPECT_EQ(0, BuiltInDefaultValue<signed wchar_t>::Get());
-#endif
 #if GMOCK_WCHAR_T_IS_NATIVE_
 #if !defined(__WCHAR_UNSIGNED__)
   EXPECT_EQ(0, BuiltInDefaultValue<wchar_t>::Get());
@@ -136,10 +135,6 @@ TEST(BuiltInDefaultValueTest, ExistsForNumericTypes) {
   EXPECT_TRUE(BuiltInDefaultValue<unsigned char>::Exists());
   EXPECT_TRUE(BuiltInDefaultValue<signed char>::Exists());
   EXPECT_TRUE(BuiltInDefaultValue<char>::Exists());
-#if GMOCK_HAS_SIGNED_WCHAR_T_
-  EXPECT_TRUE(BuiltInDefaultValue<unsigned wchar_t>::Exists());
-  EXPECT_TRUE(BuiltInDefaultValue<signed wchar_t>::Exists());
-#endif
 #if GMOCK_WCHAR_T_IS_NATIVE_
   EXPECT_TRUE(BuiltInDefaultValue<wchar_t>::Exists());
 #endif
@@ -171,20 +166,12 @@ TEST(BuiltInDefaultValueTest, BoolExists) {
 // Tests that BuiltInDefaultValue<T>::Get() returns "" when T is a
 // string type.
 TEST(BuiltInDefaultValueTest, IsEmptyStringForString) {
-#if GTEST_HAS_GLOBAL_STRING
-  EXPECT_EQ("", BuiltInDefaultValue< ::string>::Get());
-#endif  // GTEST_HAS_GLOBAL_STRING
-
   EXPECT_EQ("", BuiltInDefaultValue< ::std::string>::Get());
 }
 
 // Tests that BuiltInDefaultValue<T>::Exists() returns true when T is a
 // string type.
 TEST(BuiltInDefaultValueTest, ExistsForString) {
-#if GTEST_HAS_GLOBAL_STRING
-  EXPECT_TRUE(BuiltInDefaultValue< ::string>::Exists());
-#endif  // GTEST_HAS_GLOBAL_STRING
-
   EXPECT_TRUE(BuiltInDefaultValue< ::std::string>::Exists());
 }
 
@@ -661,6 +648,41 @@ TEST(ReturnRefTest, IsCovariant) {
   EXPECT_EQ(&derived, &a.Perform(std::make_tuple()));
 }
 
+template <typename T, typename = decltype(ReturnRef(std::declval<T&&>()))>
+bool CanCallReturnRef(T&&) { return true; }
+bool CanCallReturnRef(Unused) { return false; }
+
+// Tests that ReturnRef(v) is working with non-temporaries (T&)
+TEST(ReturnRefTest, WorksForNonTemporary) {
+  int scalar_value = 123;
+  EXPECT_TRUE(CanCallReturnRef(scalar_value));
+
+  std::string non_scalar_value("ABC");
+  EXPECT_TRUE(CanCallReturnRef(non_scalar_value));
+
+  const int const_scalar_value{321};
+  EXPECT_TRUE(CanCallReturnRef(const_scalar_value));
+
+  const std::string const_non_scalar_value("CBA");
+  EXPECT_TRUE(CanCallReturnRef(const_non_scalar_value));
+}
+
+// Tests that ReturnRef(v) is not working with temporaries (T&&)
+TEST(ReturnRefTest, DoesNotWorkForTemporary) {
+  auto scalar_value = []()  -> int { return 123; };
+  EXPECT_FALSE(CanCallReturnRef(scalar_value()));
+
+  auto non_scalar_value = []() -> std::string { return "ABC"; };
+  EXPECT_FALSE(CanCallReturnRef(non_scalar_value()));
+
+  // cannot use here callable returning "const scalar type",
+  // because such const for scalar return type is ignored
+  EXPECT_FALSE(CanCallReturnRef(static_cast<const int>(321)));
+
+  auto const_non_scalar_value = []() -> const std::string { return "CBA"; };
+  EXPECT_FALSE(CanCallReturnRef(const_non_scalar_value()));
+}
+
 // Tests that ReturnRefOfCopy(v) works for reference types.
 TEST(ReturnRefOfCopyTest, WorksForReference) {
   int n = 42;
@@ -683,6 +705,31 @@ TEST(ReturnRefOfCopyTest, IsCovariant) {
 
   a = ReturnRefOfCopy(derived);
   EXPECT_NE(&derived, &a.Perform(std::make_tuple()));
+}
+
+// Tests that ReturnRoundRobin(v) works with initializer lists
+TEST(ReturnRoundRobinTest, WorksForInitList) {
+  Action<int()> ret = ReturnRoundRobin({1, 2, 3});
+
+  EXPECT_EQ(1, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(2, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(3, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(1, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(2, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(3, ret.Perform(std::make_tuple()));
+}
+
+// Tests that ReturnRoundRobin(v) works with vectors
+TEST(ReturnRoundRobinTest, WorksForVector) {
+  std::vector<double> v = {4.4, 5.5, 6.6};
+  Action<double()> ret = ReturnRoundRobin(v);
+
+  EXPECT_EQ(4.4, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(5.5, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(6.6, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(4.4, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(5.5, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(6.6, ret.Perform(std::make_tuple()));
 }
 
 // Tests that DoDefault() does the default action for the mock method.
@@ -1164,13 +1211,12 @@ TEST_F(SetErrnoAndReturnTest, CompatibleTypes) {
 
 // Tests ByRef().
 
-// Tests that ReferenceWrapper<T> is copyable.
+// Tests that the result of ByRef() is copyable.
 TEST(ByRefTest, IsCopyable) {
   const std::string s1 = "Hi";
   const std::string s2 = "Hello";
 
-  ::testing::internal::ReferenceWrapper<const std::string> ref_wrapper =
-      ByRef(s1);
+  auto ref_wrapper = ByRef(s1);
   const std::string& r1 = ref_wrapper;
   EXPECT_EQ(&s1, &r1);
 
@@ -1179,8 +1225,7 @@ TEST(ByRefTest, IsCopyable) {
   const std::string& r2 = ref_wrapper;
   EXPECT_EQ(&s2, &r2);
 
-  ::testing::internal::ReferenceWrapper<const std::string> ref_wrapper1 =
-      ByRef(s1);
+  auto ref_wrapper1 = ByRef(s1);
   // Copies ref_wrapper1 to ref_wrapper.
   ref_wrapper = ref_wrapper1;
   const std::string& r3 = ref_wrapper;

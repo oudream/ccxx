@@ -252,18 +252,15 @@ $$ }} This line fixes auto-indentation of the following code in Emacs.
 // overloading matchers based on parameter types (as opposed to just
 // based on the number of parameters).
 //
-// MATCHER*() can only be used in a namespace scope.  The reason is
-// that C++ doesn't yet allow function-local types to be used to
-// instantiate templates.  The up-coming C++0x standard will fix this.
-// Once that's done, we'll consider supporting using MATCHER*() inside
-// a function.
+// MATCHER*() can only be used in a namespace scope as templates cannot be
+// declared inside of a local class.
 //
 // More Information
 // ================
 //
 // To learn more about using these macros, please search for 'MATCHER'
 // on
-// https://github.com/google/googletest/blob/master/googlemock/docs/CookBook.md
+// https://github.com/google/googletest/blob/master/googlemock/docs/cook_book.md
 
 $range i 0..n
 $for i
@@ -305,13 +302,13 @@ $var param_field_decls2 = [[$for j
      public:\
       [[$if i==1 [[explicit ]]]]gmock_Impl($impl_ctor_param_list)\
           $impl_inits {}\
-      virtual bool MatchAndExplain(\
+      bool MatchAndExplain(\
           GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
-          ::testing::MatchResultListener* result_listener) const;\
-      virtual void DescribeTo(::std::ostream* gmock_os) const {\
+          ::testing::MatchResultListener* result_listener) const override;\
+      void DescribeTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(false);\
       }\
-      virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
+      void DescribeNegationTo(::std::ostream* gmock_os) const override {\
         *gmock_os << FormatDescription(true);\
       }\$param_field_decls
      private:\

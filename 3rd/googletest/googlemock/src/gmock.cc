@@ -34,8 +34,8 @@
 namespace testing {
 
 GMOCK_DEFINE_bool_(catch_leaked_mocks, true,
-                   "true iff Google Mock should report leaked mock objects "
-                   "as failures.");
+                   "true if and only if Google Mock should report leaked "
+                   "mock objects as failures.");
 
 GMOCK_DEFINE_string_(verbose, internal::kWarningVerbosity,
                      "Controls how verbose Google Mock's output is."
@@ -196,6 +196,18 @@ GTEST_API_ void InitGoogleMock(int* argc, char** argv) {
 // UNICODE mode.
 GTEST_API_ void InitGoogleMock(int* argc, wchar_t** argv) {
   internal::InitGoogleMockImpl(argc, argv);
+}
+
+// This overloaded version can be used on Arduino/embedded platforms where
+// there is no argc/argv.
+GTEST_API_ void InitGoogleMock() {
+  // Since Arduino doesn't have a command line, fake out the argc/argv arguments
+  int argc = 1;
+  const auto arg0 = "dummy";
+  char* argv0 = const_cast<char*>(arg0);
+  char** argv = &argv0;
+
+  internal::InitGoogleMockImpl(&argc, argv);
 }
 
 }  // namespace testing

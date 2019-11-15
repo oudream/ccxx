@@ -30,18 +30,19 @@
 #include <cstdio>
 #include "gtest/gtest.h"
 
-#ifdef ARDUINO
+#if GTEST_OS_ESP8266 || GTEST_OS_ESP32
+#if GTEST_OS_ESP8266
+extern "C" {
+#endif
 void setup() {
-  // Since Arduino doesn't have a command line, fake out the argc/argv arguments
-  int argc = 1;
-  const auto arg0 = "PlatformIO";
-  char* argv0 = const_cast<char*>(arg0);
-  char** argv = &argv0;
-
-  testing::InitGoogleTest(&argc, argv);
+  testing::InitGoogleTest();
 }
 
 void loop() { RUN_ALL_TESTS(); }
+
+#if GTEST_OS_ESP8266
+}
+#endif
 
 #else
 

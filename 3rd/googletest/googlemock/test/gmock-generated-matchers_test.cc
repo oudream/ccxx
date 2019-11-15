@@ -41,6 +41,8 @@
 
 #include "gmock/gmock-generated-matchers.h"
 
+#include <array>
+#include <iterator>
 #include <list>
 #include <map>
 #include <memory>
@@ -51,8 +53,8 @@
 #include <vector>
 
 #include "gmock/gmock.h"
-#include "gtest/gtest.h"
 #include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
 
 namespace {
 
@@ -64,7 +66,9 @@ using std::stringstream;
 using std::vector;
 using testing::_;
 using testing::AllOf;
+using testing::AllOfArray;
 using testing::AnyOf;
+using testing::AnyOfArray;
 using testing::Args;
 using testing::Contains;
 using testing::ElementsAre;
@@ -193,7 +197,7 @@ TEST(ElementsAreTest, ExplainsNonTrivialMatch) {
       ElementsAre(GreaterThan(1), 0, GreaterThan(2));
 
   const int a[] = { 10, 0, 100 };
-  vector<int> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<int> test_vector(std::begin(a), std::end(a));
   EXPECT_EQ("whose element #0 matches, which is 9 more than 1,\n"
             "and whose element #2 matches, which is 98 more than 2",
             Explain(m, test_vector));
@@ -278,7 +282,7 @@ TEST(ElementsAreTest, MatchesThreeElementsMixedMatchers) {
 
 TEST(ElementsAreTest, MatchesTenElementVector) {
   const int a[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-  vector<int> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<int> test_vector(std::begin(a), std::end(a));
 
   EXPECT_THAT(test_vector,
               // The element list can contain values and/or matchers
@@ -315,13 +319,10 @@ TEST(ElementsAreTest, DoesNotMatchWrongOrder) {
 }
 
 TEST(ElementsAreTest, WorksForNestedContainer) {
-  const char* strings[] = {
-    "Hi",
-    "world"
-  };
+  constexpr std::array<const char*, 2> strings = {{"Hi", "world"}};
 
   vector<list<char> > nested;
-  for (size_t i = 0; i < GTEST_ARRAY_SIZE_(strings); i++) {
+  for (size_t i = 0; i < strings.size(); i++) {
     nested.push_back(list<char>(strings[i], strings[i] + strlen(strings[i])));
   }
 
@@ -333,7 +334,7 @@ TEST(ElementsAreTest, WorksForNestedContainer) {
 
 TEST(ElementsAreTest, WorksWithByRefElementMatchers) {
   int a[] = { 0, 1, 2 };
-  vector<int> v(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<int> v(std::begin(a), std::end(a));
 
   EXPECT_THAT(v, ElementsAre(Ref(v[0]), Ref(v[1]), Ref(v[2])));
   EXPECT_THAT(v, Not(ElementsAre(Ref(v[0]), Ref(v[1]), Ref(a[2]))));
@@ -341,7 +342,7 @@ TEST(ElementsAreTest, WorksWithByRefElementMatchers) {
 
 TEST(ElementsAreTest, WorksWithContainerPointerUsingPointee) {
   int a[] = { 0, 1, 2 };
-  vector<int> v(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<int> v(std::begin(a), std::end(a));
 
   EXPECT_THAT(&v, Pointee(ElementsAre(0, 1, _)));
   EXPECT_THAT(&v, Not(Pointee(ElementsAre(0, _, 3))));
@@ -438,7 +439,7 @@ TEST(ElementsAreTest, MakesCopyOfArguments) {
 TEST(ElementsAreArrayTest, CanBeCreatedWithValueArray) {
   const int a[] = { 1, 2, 3 };
 
-  vector<int> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<int> test_vector(std::begin(a), std::end(a));
   EXPECT_THAT(test_vector, ElementsAreArray(a));
 
   test_vector[2] = 0;
@@ -446,20 +447,20 @@ TEST(ElementsAreArrayTest, CanBeCreatedWithValueArray) {
 }
 
 TEST(ElementsAreArrayTest, CanBeCreatedWithArraySize) {
-  const char* a[] = { "one", "two", "three" };
+  std::array<const char*, 3> a = {{"one", "two", "three"}};
 
-  vector<std::string> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
-  EXPECT_THAT(test_vector, ElementsAreArray(a, GTEST_ARRAY_SIZE_(a)));
+  vector<std::string> test_vector(std::begin(a), std::end(a));
+  EXPECT_THAT(test_vector, ElementsAreArray(a.data(), a.size()));
 
-  const char** p = a;
+  const char** p = a.data();
   test_vector[0] = "1";
-  EXPECT_THAT(test_vector, Not(ElementsAreArray(p, GTEST_ARRAY_SIZE_(a))));
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(p, a.size())));
 }
 
 TEST(ElementsAreArrayTest, CanBeCreatedWithoutArraySize) {
   const char* a[] = { "one", "two", "three" };
 
-  vector<std::string> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<std::string> test_vector(std::begin(a), std::end(a));
   EXPECT_THAT(test_vector, ElementsAreArray(a));
 
   test_vector[0] = "1";
@@ -482,8 +483,8 @@ TEST(ElementsAreArrayTest, CanBeCreatedWithMatcherArray) {
 
 TEST(ElementsAreArrayTest, CanBeCreatedWithVector) {
   const int a[] = { 1, 2, 3 };
-  vector<int> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
-  const vector<int> expected(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<int> test_vector(std::begin(a), std::end(a));
+  const vector<int> expected(std::begin(a), std::end(a));
   EXPECT_THAT(test_vector, ElementsAreArray(expected));
   test_vector.push_back(4);
   EXPECT_THAT(test_vector, Not(ElementsAreArray(expected)));
@@ -528,9 +529,9 @@ TEST(ElementsAreArrayTest,
 TEST(ElementsAreArrayTest, CanBeCreatedWithMatcherVector) {
   const int a[] = { 1, 2, 3 };
   const Matcher<int> kMatchers[] = { Eq(1), Eq(2), Eq(3) };
-  vector<int> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
-  const vector<Matcher<int> > expected(
-      kMatchers, kMatchers + GTEST_ARRAY_SIZE_(kMatchers));
+  vector<int> test_vector(std::begin(a), std::end(a));
+  const vector<Matcher<int>> expected(std::begin(kMatchers),
+                                      std::end(kMatchers));
   EXPECT_THAT(test_vector, ElementsAreArray(expected));
   test_vector.push_back(4);
   EXPECT_THAT(test_vector, Not(ElementsAreArray(expected)));
@@ -538,11 +539,11 @@ TEST(ElementsAreArrayTest, CanBeCreatedWithMatcherVector) {
 
 TEST(ElementsAreArrayTest, CanBeCreatedWithIteratorRange) {
   const int a[] = { 1, 2, 3 };
-  const vector<int> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
-  const vector<int> expected(a, a + GTEST_ARRAY_SIZE_(a));
+  const vector<int> test_vector(std::begin(a), std::end(a));
+  const vector<int> expected(std::begin(a), std::end(a));
   EXPECT_THAT(test_vector, ElementsAreArray(expected.begin(), expected.end()));
   // Pointers are iterators, too.
-  EXPECT_THAT(test_vector, ElementsAreArray(a, a + GTEST_ARRAY_SIZE_(a)));
+  EXPECT_THAT(test_vector, ElementsAreArray(std::begin(a), std::end(a)));
   // The empty range of NULL pointers should also be okay.
   int* const null_int = nullptr;
   EXPECT_THAT(test_vector, Not(ElementsAreArray(null_int, null_int)));
@@ -562,8 +563,8 @@ TEST(ElementsAreArrayTest, WorksWithNativeArray) {
 
 TEST(ElementsAreArrayTest, SourceLifeSpan) {
   const int a[] = { 1, 2, 3 };
-  vector<int> test_vector(a, a + GTEST_ARRAY_SIZE_(a));
-  vector<int> expect(a, a + GTEST_ARRAY_SIZE_(a));
+  vector<int> test_vector(std::begin(a), std::end(a));
+  vector<int> expect(std::begin(a), std::end(a));
   ElementsAreArrayMatcher<int> matcher_maker =
       ElementsAreArray(expect.begin(), expect.end());
   EXPECT_THAT(test_vector, matcher_maker);
@@ -1094,6 +1095,146 @@ TEST(ContainsTest, WorksForTwoDimensionalNativeArray) {
   EXPECT_THAT(a, Contains(Not(Contains(5))));
 }
 
+TEST(AllOfArrayTest, BasicForms) {
+  // Iterator
+  std::vector<int> v0{};
+  std::vector<int> v1{1};
+  std::vector<int> v2{2, 3};
+  std::vector<int> v3{4, 4, 4};
+  EXPECT_THAT(0, AllOfArray(v0.begin(), v0.end()));
+  EXPECT_THAT(1, AllOfArray(v1.begin(), v1.end()));
+  EXPECT_THAT(2, Not(AllOfArray(v1.begin(), v1.end())));
+  EXPECT_THAT(3, Not(AllOfArray(v2.begin(), v2.end())));
+  EXPECT_THAT(4, AllOfArray(v3.begin(), v3.end()));
+  // Pointer +  size
+  int ar[6] = {1, 2, 3, 4, 4, 4};
+  EXPECT_THAT(0, AllOfArray(ar, 0));
+  EXPECT_THAT(1, AllOfArray(ar, 1));
+  EXPECT_THAT(2, Not(AllOfArray(ar, 1)));
+  EXPECT_THAT(3, Not(AllOfArray(ar + 1, 3)));
+  EXPECT_THAT(4, AllOfArray(ar + 3, 3));
+  // Array
+  // int ar0[0];  Not usable
+  int ar1[1] = {1};
+  int ar2[2] = {2, 3};
+  int ar3[3] = {4, 4, 4};
+  // EXPECT_THAT(0, Not(AllOfArray(ar0)));  // Cannot work
+  EXPECT_THAT(1, AllOfArray(ar1));
+  EXPECT_THAT(2, Not(AllOfArray(ar1)));
+  EXPECT_THAT(3, Not(AllOfArray(ar2)));
+  EXPECT_THAT(4, AllOfArray(ar3));
+  // Container
+  EXPECT_THAT(0, AllOfArray(v0));
+  EXPECT_THAT(1, AllOfArray(v1));
+  EXPECT_THAT(2, Not(AllOfArray(v1)));
+  EXPECT_THAT(3, Not(AllOfArray(v2)));
+  EXPECT_THAT(4, AllOfArray(v3));
+  // Initializer
+  EXPECT_THAT(0, AllOfArray<int>({}));  // Requires template arg.
+  EXPECT_THAT(1, AllOfArray({1}));
+  EXPECT_THAT(2, Not(AllOfArray({1})));
+  EXPECT_THAT(3, Not(AllOfArray({2, 3})));
+  EXPECT_THAT(4, AllOfArray({4, 4, 4}));
+}
+
+TEST(AllOfArrayTest, Matchers) {
+  // vector
+  std::vector<Matcher<int>> matchers{Ge(1), Lt(2)};
+  EXPECT_THAT(0, Not(AllOfArray(matchers)));
+  EXPECT_THAT(1, AllOfArray(matchers));
+  EXPECT_THAT(2, Not(AllOfArray(matchers)));
+  // initializer_list
+  EXPECT_THAT(0, Not(AllOfArray({Ge(0), Ge(1)})));
+  EXPECT_THAT(1, AllOfArray({Ge(0), Ge(1)}));
+}
+
+TEST(AnyOfArrayTest, BasicForms) {
+  // Iterator
+  std::vector<int> v0{};
+  std::vector<int> v1{1};
+  std::vector<int> v2{2, 3};
+  EXPECT_THAT(0, Not(AnyOfArray(v0.begin(), v0.end())));
+  EXPECT_THAT(1, AnyOfArray(v1.begin(), v1.end()));
+  EXPECT_THAT(2, Not(AnyOfArray(v1.begin(), v1.end())));
+  EXPECT_THAT(3, AnyOfArray(v2.begin(), v2.end()));
+  EXPECT_THAT(4, Not(AnyOfArray(v2.begin(), v2.end())));
+  // Pointer +  size
+  int ar[3] = {1, 2, 3};
+  EXPECT_THAT(0, Not(AnyOfArray(ar, 0)));
+  EXPECT_THAT(1, AnyOfArray(ar, 1));
+  EXPECT_THAT(2, Not(AnyOfArray(ar, 1)));
+  EXPECT_THAT(3, AnyOfArray(ar + 1, 2));
+  EXPECT_THAT(4, Not(AnyOfArray(ar + 1, 2)));
+  // Array
+  // int ar0[0];  Not usable
+  int ar1[1] = {1};
+  int ar2[2] = {2, 3};
+  // EXPECT_THAT(0, Not(AnyOfArray(ar0)));  // Cannot work
+  EXPECT_THAT(1, AnyOfArray(ar1));
+  EXPECT_THAT(2, Not(AnyOfArray(ar1)));
+  EXPECT_THAT(3, AnyOfArray(ar2));
+  EXPECT_THAT(4, Not(AnyOfArray(ar2)));
+  // Container
+  EXPECT_THAT(0, Not(AnyOfArray(v0)));
+  EXPECT_THAT(1, AnyOfArray(v1));
+  EXPECT_THAT(2, Not(AnyOfArray(v1)));
+  EXPECT_THAT(3, AnyOfArray(v2));
+  EXPECT_THAT(4, Not(AnyOfArray(v2)));
+  // Initializer
+  EXPECT_THAT(0, Not(AnyOfArray<int>({})));  // Requires template arg.
+  EXPECT_THAT(1, AnyOfArray({1}));
+  EXPECT_THAT(2, Not(AnyOfArray({1})));
+  EXPECT_THAT(3, AnyOfArray({2, 3}));
+  EXPECT_THAT(4, Not(AnyOfArray({2, 3})));
+}
+
+TEST(AnyOfArrayTest, Matchers) {
+  // We negate test AllOfArrayTest.Matchers.
+  // vector
+  std::vector<Matcher<int>> matchers{Lt(1), Ge(2)};
+  EXPECT_THAT(0, AnyOfArray(matchers));
+  EXPECT_THAT(1, Not(AnyOfArray(matchers)));
+  EXPECT_THAT(2, AnyOfArray(matchers));
+  // initializer_list
+  EXPECT_THAT(0, AnyOfArray({Lt(0), Lt(1)}));
+  EXPECT_THAT(1, Not(AllOfArray({Lt(0), Lt(1)})));
+}
+
+TEST(AnyOfArrayTest, ExplainsMatchResultCorrectly) {
+  // AnyOfArray and AllOfArry use the same underlying template-template,
+  // thus it is sufficient to test one here.
+  const std::vector<int> v0{};
+  const std::vector<int> v1{1};
+  const std::vector<int> v2{2, 3};
+  const Matcher<int> m0 = AnyOfArray(v0);
+  const Matcher<int> m1 = AnyOfArray(v1);
+  const Matcher<int> m2 = AnyOfArray(v2);
+  EXPECT_EQ("", Explain(m0, 0));
+  EXPECT_EQ("", Explain(m1, 1));
+  EXPECT_EQ("", Explain(m1, 2));
+  EXPECT_EQ("", Explain(m2, 3));
+  EXPECT_EQ("", Explain(m2, 4));
+  EXPECT_EQ("()", Describe(m0));
+  EXPECT_EQ("(is equal to 1)", Describe(m1));
+  EXPECT_EQ("(is equal to 2) or (is equal to 3)", Describe(m2));
+  EXPECT_EQ("()", DescribeNegation(m0));
+  EXPECT_EQ("(isn't equal to 1)", DescribeNegation(m1));
+  EXPECT_EQ("(isn't equal to 2) and (isn't equal to 3)", DescribeNegation(m2));
+  // Explain with matchers
+  const Matcher<int> g1 = AnyOfArray({GreaterThan(1)});
+  const Matcher<int> g2 = AnyOfArray({GreaterThan(1), GreaterThan(2)});
+  // Explains the first positiv match and all prior negative matches...
+  EXPECT_EQ("which is 1 less than 1", Explain(g1, 0));
+  EXPECT_EQ("which is the same as 1", Explain(g1, 1));
+  EXPECT_EQ("which is 1 more than 1", Explain(g1, 2));
+  EXPECT_EQ("which is 1 less than 1, and which is 2 less than 2",
+            Explain(g2, 0));
+  EXPECT_EQ("which is the same as 1, and which is 1 less than 2",
+            Explain(g2, 1));
+  EXPECT_EQ("which is 1 more than 1",  // Only the first
+            Explain(g2, 2));
+}
+
 TEST(AllOfTest, HugeMatcher) {
   // Verify that using AllOf with many arguments doesn't cause
   // the compiler to exceed template instantiation depth limit.
@@ -1120,7 +1261,7 @@ namespace adl_test {
 MATCHER(M, "") { return true; }
 
 template <typename T1, typename T2>
-bool AllOf(const T1& t1, const T2& t2) { return true; }
+bool AllOf(const T1& /*t1*/, const T2& /*t2*/) { return true; }
 
 TEST(AllOfTest, DoesNotCallAllOfUnqualified) {
   EXPECT_THAT(42, testing::AllOf(
