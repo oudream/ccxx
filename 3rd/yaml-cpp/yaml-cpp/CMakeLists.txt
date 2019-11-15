@@ -85,4 +85,4 @@ target_link_libraries(yaml-cpp-gtest
         ${CMAKE_THREAD_LIBS_INIT}
         )
 
-add_test(yaml-test ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/yaml-cpp-gtest)
+add_test(yaml-cpp-gtest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/yaml-cpp-gtest)

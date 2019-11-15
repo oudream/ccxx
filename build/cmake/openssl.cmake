@@ -8,10 +8,6 @@ if (WIN32)
         set(OPENSSL_SSL_LIBRARY "${gs_project_cross_compile_path}/lib/win32/vc/libssl.a")
         set(OPENSSL_CRYPTO_LIBRARY "${gs_project_cross_compile_path}/lib/win32/vc/libcrypto.a")
     endif ()
-elseif(APPLE)
-    set(OPENSSL_INCLUDE_DIR "${gs_project_cross_compile_path}/include/openssl")
-    set(OPENSSL_SSL_LIBRARY "/usr/local/Cellar/openssl@1.1/1.1.0f/lib/libssl.dylib")
-    set(OPENSSL_CRYPTO_LIBRARY "/usr/local/Cellar/openssl@1.1/1.1.0f/lib/libcrypto.dylib")
 else()
     find_package (OpenSSL REQUIRED)
     # OPENSSL_INCLUDE_DIR
@@ -20,6 +16,11 @@ else()
     # OPENSSL_LIBRARIES
     # apt | apk | yam libssl-dev openssl-dev
 endif ()
+#elseif(APPLE)
+#set(OPENSSL_INCLUDE_DIR "${gs_project_cross_compile_path}/include/openssl")
+#set(OPENSSL_SSL_LIBRARY "/usr/local/Cellar/openssl@1.1/1.1d/lib/libssl.dylib")
+#set(OPENSSL_CRYPTO_LIBRARY "/usr/local/Cellar/openssl@1.1/1.1d/lib/libcrypto.dylib")
+
 
 
 macro(mc_target_define_openssl)

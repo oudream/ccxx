@@ -22,7 +22,9 @@ macro(mc_create_test1 sCxxName)
 
     set_target_properties(gtest_${sCxxName} PROPERTIES FOLDER ccxx/gtest)
 
-    add_test(gtest_${sCxxName} gtest_${sCxxName})
+    add_test(NAME gtest_${sCxxName}
+            COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/gtest_${sCxxName}
+            )
 endmacro()
 
 
