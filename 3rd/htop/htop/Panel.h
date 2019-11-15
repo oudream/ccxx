@@ -29,12 +29,8 @@ typedef enum HandlerResult_ {
 #define EVENT_SET_SELECTED -1
 
 #define EVENT_HEADER_CLICK(x_) (-10000 + x_)
+#define EVENT_IS_HEADER_CLICK(ev_) (ev_ >= -10000 && ev_ <= -9000)
 #define EVENT_HEADER_CLICK_GET_X(ev_) (ev_ + 10000)
-#define EVENT_IS_HEADER_CLICK(ev_) (ev_ >= -10000 && ev_ < -9000)
-
-#define EVENT_SCREEN_TAB_CLICK(x_) (-20000 + x_)
-#define EVENT_SCREEN_TAB_GET_X(ev_) (ev_ + 20000)
-#define EVENT_IS_SCREEN_TAB_CLICK(ev_) (ev_ >= -20000 && ev_ < -10000)
 
 typedef HandlerResult(*Panel_EventHandler)(Panel*, int);
 
@@ -50,7 +46,6 @@ typedef struct PanelClass_ {
 struct Panel_ {
    Object super;
    int x, y, w, h;
-   int cursorX, cursorY;
    WINDOW* window;
    Vector* items;
    int selected;
@@ -60,7 +55,6 @@ struct Panel_ {
    int scrollV;
    short scrollH;
    bool needsRedraw;
-   bool cursorOn;
    FunctionBar* currentBar;
    FunctionBar* defaultBar;
    RichString header;
@@ -78,8 +72,6 @@ struct Panel_ {
 #endif
 
 #define KEY_CTRL(l) ((l)-'A'+1)
-
-void Panel_setCursorToSelection(Panel* this);
 
 extern PanelClass Panel_class;
 
@@ -130,8 +122,5 @@ void Panel_draw(Panel* this, bool focus);
 bool Panel_onKey(Panel* this, int key);
 
 HandlerResult Panel_selectByTyping(Panel* this, int ch);
-
-int Panel_getCh(Panel* this);
-
 
 #endif

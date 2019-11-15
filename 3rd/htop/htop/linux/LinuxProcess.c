@@ -19,24 +19,11 @@ in the source distribution for its full text.
 
 /*{
 
-#include "PerfCounter.h"
-
-#define PROCESS_FLAG_LINUX_IOPRIO   0x0100L
-#define PROCESS_FLAG_LINUX_OPENVZ   0x0200L
-#define PROCESS_FLAG_LINUX_VSERVER  0x0400L
-#define PROCESS_FLAG_LINUX_CGROUP   0x0800L
-#define PROCESS_FLAG_LINUX_OOM      0x1000L
-
-#define PROCESS_FLAG_LINUX_HPC       0xff0000L
-#define PROCESS_FLAG_LINUX_HPC_CYCLE 0x10000L
-#define PROCESS_FLAG_LINUX_HPC_INSN  0x20000L
-#define PROCESS_FLAG_LINUX_HPC_MISS  0x40000L
-#define PROCESS_FLAG_LINUX_HPC_BMISS 0x80000L
-
-#define PROCESS_FLAG_LINUX_HPC_L1DR   0x100000L
-#define PROCESS_FLAG_LINUX_HPC_L1DW   0x200000L
-#define PROCESS_FLAG_LINUX_HPC_L1DRM  0x400000L
-#define PROCESS_FLAG_LINUX_HPC_L1DWM  0x800000L
+#define PROCESS_FLAG_LINUX_IOPRIO   0x0100
+#define PROCESS_FLAG_LINUX_OPENVZ   0x0200
+#define PROCESS_FLAG_LINUX_VSERVER  0x0400
+#define PROCESS_FLAG_LINUX_CGROUP   0x0800
+#define PROCESS_FLAG_LINUX_OOM      0x1000
 
 typedef enum UnsupportedProcessFields {
    FLAGS = 9,
@@ -100,18 +87,7 @@ typedef enum LinuxProcessFields {
    PERCENT_IO_DELAY = 117,
    PERCENT_SWAP_DELAY = 118,
    #endif
-   #ifdef HAVE_PERFCOUNTERS
-   IPC = 119,
-   MCYCLE = 120,
-   MINSTR = 121,
-   PERCENT_MISS = 122,
-   PERCENT_BMISS = 123,
-   L1DREADS = 124,
-   L1DRMISSES = 125,
-   L1DWRITES = 126,
-   L1DWMISSES = 127,
-   #endif
-   LAST_PROCESSFIELD = 128,
+   LAST_PROCESSFIELD = 119,
 } LinuxProcessField;
 
 #include "IOPriority.h"
@@ -165,25 +141,6 @@ typedef struct LinuxProcess_ {
    float cpu_delay_percent;
    float blkio_delay_percent;
    float swapin_delay_percent;
-   #endif
-   #ifdef HAVE_PERFCOUNTERS
-   PerfCounter* cycleCounter;
-   PerfCounter* insnCounter;
-   PerfCounter* missCounter;
-   PerfCounter* brCounter;
-   PerfCounter* l1drCounter;
-   PerfCounter* l1drmCounter;
-   PerfCounter* l1dwCounter;
-   PerfCounter* l1dwmCounter;
-   float ipc;
-   float mcycle;
-   float minstr;
-   float pMiss;
-   float pBMiss;
-   float l1dr;
-   float l1drm;
-   float l1dw;
-   float l1dwm;
    #endif
 } LinuxProcess;
 
@@ -278,20 +235,9 @@ ProcessFieldData Process_fields[] = {
    [OOM] = { .name = "OOM", .title = "    OOM ", .description = "OOM (Out-of-Memory) killer score", .flags = PROCESS_FLAG_LINUX_OOM, },
    [IO_PRIORITY] = { .name = "IO_PRIORITY", .title = "IO ", .description = "I/O priority", .flags = PROCESS_FLAG_LINUX_IOPRIO, },
 #ifdef HAVE_DELAYACCT
-   [PERCENT_CPU_DELAY] = { .name = "PERCENT_CPU_DELAY", .title = "CPD% ", .description = "CPU delay %", .flags = 0, },
+   [PERCENT_CPU_DELAY] = { .name = "PERCENT_CPU_DELAY", .title = "CPUD% ", .description = "CPU delay %", .flags = 0, },
    [PERCENT_IO_DELAY] = { .name = "PERCENT_IO_DELAY", .title = "IOD% ", .description = "Block I/O delay %", .flags = 0, },
-   [PERCENT_SWAP_DELAY] = { .name = "PERCENT_SWAP_DELAY", .title = "SWD% ", .description = "Swapin delay %", .flags = 0, },
-#endif
-#ifdef HAVE_PERFCOUNTERS
-   [IPC] = { .name = "IPC", .title = "   IPC ", .description = "Executed instructions per cycle", .flags = PROCESS_FLAG_LINUX_HPC_CYCLE | PROCESS_FLAG_LINUX_HPC_INSN, },
-   [MCYCLE] = { .name = "MCYCLE", .title = "  Mcycle ", .description = "Cycles (millions)", .flags = PROCESS_FLAG_LINUX_HPC_CYCLE, },
-   [MINSTR] = { .name = "MINSTR", .title = "  Minstr ", .description = "Instructions (millions)", .flags = PROCESS_FLAG_LINUX_HPC_INSN, },
-   [PERCENT_MISS] = { .name = "PERCENT_MISS", .title = "MIS% ", .description = "Cache misses per 100 instructions", .flags = PROCESS_FLAG_LINUX_HPC_MISS | PROCESS_FLAG_LINUX_HPC_INSN, },
-   [PERCENT_BMISS] = { .name = "PERCENT_BMISS", .title = "BrM% ", .description = "Branch misprediction per 100 instructions", .flags = PROCESS_FLAG_LINUX_HPC_BMISS | PROCESS_FLAG_LINUX_HPC_INSN, },
-   [L1DREADS] = { .name = "L1DREADS", .title =     "  L1Dread ", .description = "L1 data cache: reads (thousands)", .flags = PROCESS_FLAG_LINUX_HPC_L1DR, },
-   [L1DRMISSES] = { .name = "L1DRMISSES", .title = "   R miss ", .description = "L1 data cache: reads misses (thousands)", .flags = PROCESS_FLAG_LINUX_HPC_L1DRM, },
-   [L1DWRITES] = { .name = "L1DWRITES", .title =   " L1Dwrite ", .description = "L1D data cache: writes (thousands)", .flags = PROCESS_FLAG_LINUX_HPC_L1DW, },
-   [L1DWMISSES] = { .name = "L1DWMISSES", .title = "   W miss ", .description = "L1D data cache: write misses (thousands)", .flags = PROCESS_FLAG_LINUX_HPC_L1DWM, },
+   [PERCENT_SWAP_DELAY] = { .name = "PERCENT_SWAP_DELAY", .title = "SWAPD% ", .description = "Swapin delay %", .flags = 0, },
 #endif
    [LAST_PROCESSFIELD] = { .name = "*** report bug! ***", .title = NULL, .description = NULL, .flags = 0, },
 };
@@ -333,10 +279,6 @@ void Process_delete(Object* cast) {
 #ifdef HAVE_CGROUP
    free(this->cgroup);
 #endif
-#ifdef HAVE_PERFCOUNTERS
-   PerfCounter_delete(this->cycleCounter);
-   PerfCounter_delete(this->insnCounter);
-#endif
    free(this->ttyDevice);
    free(this);
 }
@@ -369,43 +311,14 @@ bool LinuxProcess_setIOPriority(LinuxProcess* this, IOPriority ioprio) {
    return (LinuxProcess_updateIOPriority(this) == ioprio);
 }
 
-#if HAVE_DELAYACCT || HAVE_PERFCOUNTERS
-
-static char* perfFmt[] = {
-   "%6.2f ",
-   NULL,
-   NULL,
-   NULL,
-   NULL,
-   NULL,
-   "%6.1f ",
-   "%7.1f ",
-   "%8.2f ",
-   "%9.1f ",
-};
-
-static char* perfNA[] = {
-   "   N/A ",
-   NULL,
-   NULL,
-   NULL,
-   NULL,
-   NULL,
-   "   N/A ",
-   "    N/A ",
-   "     N/A ",
-   "      N/A ",
-};
-
-static inline void LinuxProcess_printPerfCounter(float val, int len, char* buffer, int n, int* attr) {
-   if (val != -1) {
-      xSnprintf(buffer, n, perfFmt[len], val);
-   } else {
-      xSnprintf(buffer, n, perfNA[len]);
-      *attr = CRT_colors[PROCESS_SHADOW];
-   }
+#ifdef HAVE_DELAYACCT
+void LinuxProcess_printDelay(float delay_percent, char* buffer, int n) {
+  if (delay_percent == -1LL) {
+    xSnprintf(buffer, n, " N/A  ");
+  } else {
+    xSnprintf(buffer, n, "%4.1f  ", delay_percent);
+  }
 }
-
 #endif
 
 void LinuxProcess_writeField(Process* this, RichString* str, ProcessField field) {
@@ -489,20 +402,9 @@ void LinuxProcess_writeField(Process* this, RichString* str, ProcessField field)
       break;
    }
    #ifdef HAVE_DELAYACCT
-   case PERCENT_CPU_DELAY:  Process_printPercentage(lp->cpu_delay_percent,    buffer, n, &attr); break;
-   case PERCENT_IO_DELAY:   Process_printPercentage(lp->blkio_delay_percent,  buffer, n, &attr); break;
-   case PERCENT_SWAP_DELAY: Process_printPercentage(lp->swapin_delay_percent, buffer, n, &attr); break;
-   #endif
-   #ifdef HAVE_PERFCOUNTERS
-   case PERCENT_MISS:  Process_printPercentage(lp->pMiss,  buffer, n, &attr); break;
-   case PERCENT_BMISS: Process_printPercentage(lp->pBMiss, buffer, n, &attr); break;
-   case IPC:            LinuxProcess_printPerfCounter(lp->ipc,    0, buffer, n, &attr); break;
-   case MCYCLE:         LinuxProcess_printPerfCounter(lp->mcycle, 8, buffer, n, &attr); break;
-   case MINSTR:         LinuxProcess_printPerfCounter(lp->minstr, 8, buffer, n, &attr); break;
-   case L1DREADS:       LinuxProcess_printPerfCounter(lp->l1dr,   9, buffer, n, &attr); break;
-   case L1DRMISSES:     LinuxProcess_printPerfCounter(lp->l1drm,  9, buffer, n, &attr); break;
-   case L1DWRITES:      LinuxProcess_printPerfCounter(lp->l1dw,   9, buffer, n, &attr); break;
-   case L1DWMISSES:     LinuxProcess_printPerfCounter(lp->l1dwm,  9, buffer, n, &attr); break;
+   case PERCENT_CPU_DELAY: LinuxProcess_printDelay(lp->cpu_delay_percent, buffer, n); break;
+   case PERCENT_IO_DELAY: LinuxProcess_printDelay(lp->blkio_delay_percent, buffer, n); break;
+   case PERCENT_SWAP_DELAY: LinuxProcess_printDelay(lp->swapin_delay_percent, buffer, n); break;
    #endif
    default:
       Process_writeField((Process*)this, str, field);
@@ -511,12 +413,10 @@ void LinuxProcess_writeField(Process* this, RichString* str, ProcessField field)
    RichString_append(str, attr, buffer);
 }
 
-#define COMPARE_FIELD(_f) return (p2->_f > p1->_f ? 1 : -1)
-
 long LinuxProcess_compare(const void* v1, const void* v2) {
    LinuxProcess *p1, *p2;
    Settings *settings = ((Process*)v1)->settings;
-   if (settings->ss->direction == 1) {
+   if (settings->direction == 1) {
       p1 = (LinuxProcess*)v1;
       p2 = (LinuxProcess*)v2;
    } else {
@@ -524,11 +424,7 @@ long LinuxProcess_compare(const void* v1, const void* v2) {
       p1 = (LinuxProcess*)v2;
    }
    long long diff;
-   switch ((int)settings->ss->sortKey) {
-   case CMAJFLT:
-      return (p2->cmajflt - p1->cmajflt);
-   case CMINFLT:
-      return (p2->cminflt - p1->cminflt);
+   switch ((int)settings->sortKey) {
    case M_DRS:
       return (p2->m_drs - p1->m_drs);
    case M_DT:
@@ -578,20 +474,12 @@ long LinuxProcess_compare(const void* v1, const void* v2) {
    case OOM:
       return (p2->oom - p1->oom);
    #ifdef HAVE_DELAYACCT
-   case PERCENT_CPU_DELAY:  COMPARE_FIELD(cpu_delay_percent);
-   case PERCENT_IO_DELAY:   COMPARE_FIELD(blkio_delay_percent);
-   case PERCENT_SWAP_DELAY: COMPARE_FIELD(swapin_delay_percent);
-   #endif
-   #ifdef HAVE_PERFCOUNTERS
-   case PERCENT_MISS:   COMPARE_FIELD(pMiss);
-   case PERCENT_BMISS:  COMPARE_FIELD(pBMiss);
-   case IPC:            COMPARE_FIELD(ipc);
-   case MCYCLE:         COMPARE_FIELD(mcycle);
-   case MINSTR:         COMPARE_FIELD(minstr);
-   case L1DREADS:       COMPARE_FIELD(l1dr);
-   case L1DRMISSES:     COMPARE_FIELD(l1drm);
-   case L1DWRITES:      COMPARE_FIELD(l1dw);
-   case L1DWMISSES:     COMPARE_FIELD(l1dwm);
+   case PERCENT_CPU_DELAY:
+      return (p2->cpu_delay_percent > p1->cpu_delay_percent ? 1 : -1);
+   case PERCENT_IO_DELAY:
+      return (p2->blkio_delay_percent > p1->blkio_delay_percent ? 1 : -1);
+   case PERCENT_SWAP_DELAY:
+      return (p2->swapin_delay_percent > p1->swapin_delay_percent ? 1 : -1);
    #endif
    case IO_PRIORITY:
       return LinuxProcess_effectiveIOPriority(p1) - LinuxProcess_effectiveIOPriority(p2);
@@ -605,3 +493,4 @@ long LinuxProcess_compare(const void* v1, const void* v2) {
 bool Process_isThread(Process* this) {
    return (Process_isUserlandThread(this) || Process_isKernelThread(this));
 }
+

@@ -87,13 +87,12 @@ static CommandLineSettings parseArguments(int argc, char** argv) {
       {"no-colour",no_argument,         0, 'C'},
       {"tree",     no_argument,         0, 't'},
       {"pid",      required_argument,   0, 'p'},
-      {"io",       no_argument,         0, 'i'},
       {0,0,0,0}
    };
 
    int opt, opti=0;
    /* Parse arguments */
-   while ((opt = getopt_long(argc, argv, "hvCs:td:u:p:i", long_opts, &opti))) {
+   while ((opt = getopt_long(argc, argv, "hvCs:td:u:p:", long_opts, &opti))) {
       if (opt == EOF) break;
       switch (opt) {
          case 'h':
@@ -205,21 +204,19 @@ int main(int argc, char** argv) {
    if (!flags.useColors) 
       settings->colorScheme = COLORSCHEME_MONOCHROME;
    if (flags.treeView)
-      settings->screens[0]->treeView = true;
+      settings->treeView = true;
 
-//    ProcessList_scan(pl);
-
-    CRT_init(settings->delay, settings->colorScheme);
+   CRT_init(settings->delay, settings->colorScheme);
    
    MainPanel* panel = MainPanel_new();
    ProcessList_setPanel(pl, (Panel*) panel);
 
-   MainPanel_updateTreeFunctions(panel, settings->screens[0]->treeView);
+   MainPanel_updateTreeFunctions(panel, settings->treeView);
       
    if (flags.sortKey > 0) {
-      settings->screens[0]->sortKey = flags.sortKey;
-      settings->screens[0]->treeView = false;
-      settings->screens[0]->direction = 1;
+      settings->sortKey = flags.sortKey;
+      settings->treeView = false;
+      settings->direction = 1;
    }
    ProcessList_printHeader(pl, Panel_getHeader((Panel*)panel));
 
@@ -239,7 +236,7 @@ int main(int argc, char** argv) {
    millisleep(75);
    ProcessList_scan(pl);
 
-   ScreenManager_run(scr, NULL, NULL, NULL);
+   ScreenManager_run(scr, NULL, NULL);   
    
    attron(CRT_colors[RESET_COLOR]);
    mvhline(LINES-1, 0, ' ', COLS);

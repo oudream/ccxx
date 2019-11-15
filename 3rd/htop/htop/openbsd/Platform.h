@@ -32,9 +32,7 @@ extern ProcessFieldData Process_fields[];
  * The routine assumes modulo arithmetic.  This function is especially
  * useful on BSD machines for calculating cpu state percentages.
  */
-extern ScreenDefaults Platform_defaultScreens[];
-
-extern const unsigned int Platform_numberOfDefaultScreens;
+extern ProcessField Platform_defaultFields[];
 
 extern int Platform_numberOfFields;
 

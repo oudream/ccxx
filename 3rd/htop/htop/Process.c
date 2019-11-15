@@ -51,7 +51,6 @@ in the source distribution for its full text.
 #include "Object.h"
 
 #include <sys/types.h>
-#include <inttypes.h>
 
 #define PROCESS_FLAG_IO 0x0001
 
@@ -157,7 +156,7 @@ typedef struct ProcessFieldData_ {
    const char* name;
    const char* title;
    const char* description;
-   uint64_t flags;
+   int flags;
 } ProcessFieldData;
 
 // Implemented in platform-specific code:
@@ -229,7 +228,7 @@ void Process_humanNumber(RichString* str, unsigned long number, bool coloring) {
    if(number >= (10 * ONE_DECIMAL_M)) {
       #ifdef __LP64__
       if(number >= (100 * ONE_DECIMAL_G)) {
-         len = snprintf(buffer, 10, "%4ldT ", number / ONE_G);
+         len = snprintf(buffer, 10, "%4luT ", number / ONE_G);
          RichString_appendn(str, largeNumberColor, buffer, len);
          return;
       } else if (number >= (1000 * ONE_DECIMAL_M)) {
@@ -239,7 +238,7 @@ void Process_humanNumber(RichString* str, unsigned long number, bool coloring) {
       }
       #endif
       if(number >= (100 * ONE_DECIMAL_M)) {
-         len = snprintf(buffer, 10, "%4ldG ", number / ONE_M);
+         len = snprintf(buffer, 10, "%4luG ", number / ONE_M);
          RichString_appendn(str, largeNumberColor, buffer, len);
          return;
       }
@@ -247,11 +246,11 @@ void Process_humanNumber(RichString* str, unsigned long number, bool coloring) {
       RichString_appendn(str, largeNumberColor, buffer, len);
       return;
    } else if (number >= 100000) {
-      len = snprintf(buffer, 10, "%4ldM ", number / ONE_K);
+      len = snprintf(buffer, 10, "%4luM ", number / ONE_K);
       RichString_appendn(str, processMegabytesColor, buffer, len);
       return;
    } else if (number >= 1000) {
-      len = snprintf(buffer, 10, "%2ld", number/1000);
+      len = snprintf(buffer, 10, "%2lu", number/1000);
       RichString_appendn(str, processMegabytesColor, buffer, len);
       number %= 1000;
       len = snprintf(buffer, 10, "%03lu ", number);
@@ -279,7 +278,7 @@ void Process_colorNumber(RichString* str, unsigned long long number, bool colori
       int len = snprintf(buffer, 13, "    no perm ");
       RichString_appendn(str, CRT_colors[PROCESS_SHADOW], buffer, len);
    } else if (number > 10000000000) {
-      xSnprintf(buffer, 13, "%11lld ", number / 1000);
+      xSnprintf(buffer, 13, "%11llu ", number / 1000);
       RichString_appendn(str, largeNumberColor, buffer, 5);
       RichString_appendn(str, processMegabytesColor, buffer+5, 3);
       RichString_appendn(str, processColor, buffer+8, 4);
@@ -371,21 +370,6 @@ void Process_outputRate(RichString* str, char* buffer, int n, double rate, int c
    }
 }
 
-void Process_printPercentage(float val, char* buffer, int n, int* attr) {
-   if (val >= 0) {
-      if (val < 100) {
-         xSnprintf(buffer, n, "%4.1f ", val);
-      } else if (val < 1000) {
-         xSnprintf(buffer, n, "%3d. ", (unsigned int)val); 
-      } else {
-         xSnprintf(buffer, n, "%4d ", (unsigned int)val); 
-      }
-   } else {
-      *attr = CRT_colors[PROCESS_SHADOW];
-      xSnprintf(buffer, n, " N/A ");
-   }
-}
-
 void Process_writeField(Process* this, RichString* str, ProcessField field) {
    char buffer[256]; buffer[255] = '\0';
    int attr = CRT_colors[DEFAULT_COLOR];
@@ -394,15 +378,30 @@ void Process_writeField(Process* this, RichString* str, ProcessField field) {
    bool coloring = this->settings->highlightMegabytes;
 
    switch (field) {
-   case PERCENT_CPU: Process_printPercentage(this->percent_cpu, buffer, n, &attr); break;
-   case PERCENT_MEM: Process_printPercentage(this->percent_mem, buffer, n, &attr); break;
+   case PERCENT_CPU: {
+      if (this->percent_cpu > 999.9) {
+         xSnprintf(buffer, n, "%4u ", (unsigned int)this->percent_cpu); 
+      } else if (this->percent_cpu > 99.9) {
+         xSnprintf(buffer, n, "%3u. ", (unsigned int)this->percent_cpu); 
+      } else {
+         xSnprintf(buffer, n, "%4.1f ", this->percent_cpu);
+      }
+      break;
+   }
+   case PERCENT_MEM: {
+      if (this->percent_mem > 99.9) {
+         xSnprintf(buffer, n, "100. "); 
+      } else {
+         xSnprintf(buffer, n, "%4.1f ", this->percent_mem);
+      }
+      break;
+   }
    case COMM: {
       if (this->settings->highlightThreads && Process_isThread(this)) {
          attr = CRT_colors[PROCESS_THREAD];
          baseattr = CRT_colors[PROCESS_THREAD_BASENAME];
       }
-      ScreenSettings* ss = this->settings->ss;
-      if (!ss->treeView || this->indent == 0) {
+      if (!this->settings->treeView || this->indent == 0) {
          Process_writeCommand(this, attr, baseattr, str);
          return;
       } else {
@@ -415,15 +414,20 @@ void Process_writeField(Process* this, RichString* str, ProcessField field) {
             if (indent & (1U << i))
                maxIndent = i+1;
           for (int i = 0; i < maxIndent - 1; i++) {
-            int written;
+            int written, ret;
             if (indent & (1 << i))
-               written = snprintf(buf, n, "%s  ", CRT_treeStr[TREE_STR_VERT]);
+               ret = snprintf(buf, n, "%s  ", CRT_treeStr[TREE_STR_VERT]);
             else
-               written = snprintf(buf, n, "   ");
+               ret = snprintf(buf, n, "   ");
+            if (ret < 0 || ret >= n) {
+               written = n;
+            } else {
+               written = ret;
+            }
             buf += written;
             n -= written;
          }
-         const char* draw = CRT_treeStr[lastItem ? (ss->direction == 1 ? TREE_STR_BEND : TREE_STR_TEND) : TREE_STR_RTEE];
+         const char* draw = CRT_treeStr[lastItem ? (this->settings->direction == 1 ? TREE_STR_BEND : TREE_STR_TEND) : TREE_STR_RTEE];
          xSnprintf(buf, n, "%s%s ", draw, this->showChildren ? CRT_treeStr[TREE_STR_SHUT] : CRT_treeStr[TREE_STR_OPEN] );
          RichString_append(str, CRT_colors[PROCESS_TREE], buffer);
          Process_writeCommand(this, attr, baseattr, str);
@@ -494,7 +498,7 @@ void Process_writeField(Process* this, RichString* str, ProcessField field) {
 
 void Process_display(Object* cast, RichString* out) {
    Process* this = (Process*) cast;
-   ProcessField* fields = this->settings->ss->fields;
+   ProcessField* fields = this->settings->fields;
    RichString_prune(out);
    for (int i = 0; fields[i]; i++)
       As_Process(this)->writeField(this, out, fields[i]);
@@ -564,15 +568,14 @@ long Process_pidCompare(const void* v1, const void* v2) {
 long Process_compare(const void* v1, const void* v2) {
    Process *p1, *p2;
    Settings *settings = ((Process*)v1)->settings;
-   ScreenSettings* ss = settings->ss;
-   if (ss->direction == 1) {
+   if (settings->direction == 1) {
       p1 = (Process*)v1;
       p2 = (Process*)v2;
    } else {
       p2 = (Process*)v1;
       p1 = (Process*)v2;
    }
-   switch (ss->sortKey) {
+   switch (settings->sortKey) {
    case PERCENT_CPU:
       return (p2->percent_cpu > p1->percent_cpu ? 1 : -1);
    case PERCENT_MEM:

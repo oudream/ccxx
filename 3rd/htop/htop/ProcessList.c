@@ -124,15 +124,14 @@ void ProcessList_setPanel(ProcessList* this, Panel* panel) {
 
 void ProcessList_printHeader(ProcessList* this, RichString* header) {
    RichString_prune(header);
-   ProcessField* fields = this->settings->ss->fields;
+   ProcessField* fields = this->settings->fields;
    for (int i = 0; fields[i]; i++) {
-      unsigned int key = fields[i];
-      const char* field = Process_fields[key].title;
+      const char* field = Process_fields[fields[i]].title;
       if (!field) field = "- ";
-      int color = (!this->settings->ss->treeView && this->settings->ss->sortKey == key)
-                ? CRT_colors[PANEL_SELECTION_FOCUS]
-                : CRT_colors[PANEL_HEADER_FOCUS];
-      RichString_append(header, color, field);
+      if (!this->settings->treeView && this->settings->sortKey == fields[i])
+         RichString_append(header, CRT_colors[PANEL_SELECTION_FOCUS], field);
+      else
+         RichString_append(header, CRT_colors[PANEL_HEADER_FOCUS], field);
    }
 }
 
@@ -201,19 +200,19 @@ static void ProcessList_buildTree(ProcessList* this, pid_t pid, int level, int i
 }
 
 void ProcessList_sort(ProcessList* this) {
-   if (!this->settings->ss->treeView) {
+   if (!this->settings->treeView) {
       Vector_insertionSort(this->processes);
    } else {
       // Save settings
-      int direction = this->settings->ss->direction;
-      int sortKey = this->settings->ss->sortKey;
+      int direction = this->settings->direction;
+      int sortKey = this->settings->sortKey;
       // Sort by PID
-      this->settings->ss->sortKey = PID;
-      this->settings->ss->direction = 1;
+      this->settings->sortKey = PID;
+      this->settings->direction = 1;
       Vector_quickSort(this->processes);
       // Restore settings
-      this->settings->ss->sortKey = sortKey;
-      this->settings->ss->direction = direction;
+      this->settings->sortKey = sortKey;
+      this->settings->direction = direction;
       int vsize = Vector_size(this->processes);
       // Find all processes whose parent is not visible
       int size;
@@ -272,7 +271,7 @@ void ProcessList_sort(ProcessList* this) {
 
 ProcessField ProcessList_keyAt(ProcessList* this, int at) {
    int x = 0;
-   ProcessField* fields = this->settings->ss->fields;
+   ProcessField* fields = this->settings->fields;
    ProcessField field;
    for (int i = 0; (field = fields[i]); i++) {
       const char* title = Process_fields[field].title;

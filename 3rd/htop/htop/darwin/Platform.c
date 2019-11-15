@@ -25,26 +25,13 @@ in the source distribution for its full text.
 #include "CPUMeter.h"
 #include "BatteryMeter.h"
 #include "DarwinProcess.h"
-
-typedef enum DarwinProcessFields {
-   LAST_PROCESSFIELD = 100,
-} DarwinProcessField;
-
 }*/
 
 #ifndef CLAMP
 #define CLAMP(x,low,high) (((x)>(high))?(high):(((x)<(low))?(low):(x)))
 #endif
 
-ScreenDefaults Platform_defaultScreens[] = {
-   {
-      .name = "Main",
-      .columns = "PID USER PRIORITY NICE M_SIZE M_RESIDENT STATE PERCENT_CPU PERCENT_MEM TIME Command",
-      .sortKey = "PERCENT_CPU",
-   },
-};
-
-const unsigned int Platform_numberOfDefaultScreens = sizeof(Platform_defaultScreens)/sizeof(ScreenDefaults);
+ProcessField Platform_defaultFields[] = { PID, USER, PRIORITY, NICE, M_SIZE, M_RESIDENT, STATE, PERCENT_CPU, PERCENT_MEM, TIME, COMM, 0 };
 
 const SignalItem Platform_signals[] = {
    { .name = " 0 Cancel",    .number =  0 },
@@ -110,7 +97,7 @@ ProcessFieldData Process_fields[] = {
    [TIME] = { .name = "TIME", .title = "  TIME+  ", .description = "Total time the process has spent in user and system time", .flags = 0, },
    [NLWP] = { .name = "NLWP", .title = "NLWP ", .description = "Number of threads in the process", .flags = 0, },
    [TGID] = { .name = "TGID", .title = "   TGID ", .description = "Thread group ID (i.e. process ID)", .flags = 0, },
-   [LAST_PROCESSFIELD] = { .name = "*** report bug! ***", .title = NULL, .description = NULL, .flags = 0, },
+   [100] = { .name = "*** report bug! ***", .title = NULL, .description = NULL, .flags = 0, },
 };
 
 MeterClass* Platform_meterTypes[] = {

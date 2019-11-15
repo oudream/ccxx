@@ -14,18 +14,15 @@ in the source distribution for its full text.
 
 typedef struct ColumnsPanel_ {
    Panel super;
-   ScreenSettings* ss;
-   bool* changed;
 
+   Settings* settings;
    bool moving;
 } ColumnsPanel;
 
 
 extern PanelClass ColumnsPanel_class;
 
-void ColumnsPanel_fill(ColumnsPanel* this, ScreenSettings* ss);
-
-ColumnsPanel* ColumnsPanel_new(ScreenSettings* ss, bool* changed);
+ColumnsPanel* ColumnsPanel_new(Settings* settings);
 
 int ColumnsPanel_fieldNameToIndex(const char* name);
 

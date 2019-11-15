@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.65)
-AC_INIT([htop],[3.0.0beta5],[hisham@gobolinux.org])
+AC_INIT([htop],[2.2.0],[hisham@gobolinux.org])
 
 SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-$(date +%s)}"
 year=$(date -u -d "@$SOURCE_DATE_EPOCH" "+%Y" 2>/dev/null || date -u -r "$SOURCE_DATE_EPOCH" "+%Y" 2>/dev/null || date -u "+%Y")
@@ -245,10 +245,6 @@ if test "$my_htop_platform" = "solaris"; then
    AC_CHECK_LIB([kstat], [kstat_open], [], [missing_libraries="$missing_libraries libkstat"])
    AC_CHECK_LIB([proc], [Pgrab_error], [], [missing_libraries="$missing_libraries libproc"])
    AC_CHECK_LIB([malloc], [free], [], [missing_libraries="$missing_libraries libmalloc"])
-   AC_CHECK_HEADERS([err.h],[:],[
-      missing_headers="$missing_headers err.h"
-      AC_MSG_ERROR([You appear to be on Solaris 10, or very early Solaris Express, which are currently unsupported.])
-   ])
 fi
 
 AC_ARG_ENABLE(linux_affinity, [AS_HELP_STRING([--enable-linux-affinity], [enable Linux sched_setaffinity and sched_getaffinity for affinity support, disables hwloc])], ,enable_linux_affinity="yes")
@@ -285,53 +281,7 @@ then
    AC_DEFINE(HAVE_SETUID_ENABLED, 1, [Define if setuid support should be enabled.])
 fi
 
-AC_ARG_ENABLE(perfcounters, [AS_HELP_STRING([--enable-perfcounters], [enable hardware performance counters])],, enable_perfcounters="yes")
-if test "x$enable_perfcounters" = "xyes" -a "$my_htop_platform" = "linux"
-then
-   AC_DEFINE(HAVE_PERFCOUNTERS, 1, [Define if hardware performance counter support should be enabled.])
-
-   AC_CHECK_HEADERS([linux/perf_counter.h], [have_perf_counter=yes],
-                                            [have_perf_counter=no])
-   
-   AC_CHECK_HEADERS([linux/perf_event.h], [have_perf_event=yes],
-                                          [have_perf_event=no])
-   
-   if test "x${have_perf_counter}" = xno -a "x${have_perf_event}" = xno; then
-      os=`uname -s -r`
-      AC_MSG_FAILURE([
-     ------------------------------------------------------------
-      Could not locate linux/perf_count.h or linux/perf_event.h.
-      Are performance counters supported on this machine?
-      Linux 2.6.31+ is required.
-      uname reports: ${os}
-     ------------------------------------------------------------])
-   fi
-   
-   # Check for hardware architecture
-   no_target=yes
-   AC_MSG_CHECKING([hardware])
-   hw=`uname -m`
-   case $hw in
-      x86_64 | i386 | i686 ) :
-         AC_MSG_RESULT([x86])
-         AC_DEFINE([TARGET_X86], [1], [Define to 1 if the target is x86.])
-         no_target=no
-         ;;
-      unknown ) :
-         AC_MSG_RESULT([unknown])
-         AC_MSG_WARN([Could not detect architecture])
-         ;;
-      * ) :
-         AC_MSG_RESULT([$hw])
-         ;;
-   esac
-   
-   if test x$no_target = xyes; then
-      AC_DEFINE([NOTARGET], [1], [Define to 1 when no specific target is supported.])
-   fi
-fi
-
-AC_ARG_ENABLE(delayacct, [AS_HELP_STRING([--enable-delayacct], [enable linux delay accounting])],, enable_delayacct="no")
+AC_ARG_ENABLE(delayacct, [AS_HELP_STRING([--enable-delayacct], [enable Linux delay accounting])],, enable_delayacct="no")
 if test "x$enable_delayacct" = xyes
 then
    m4_ifdef([PKG_PROG_PKG_CONFIG], [

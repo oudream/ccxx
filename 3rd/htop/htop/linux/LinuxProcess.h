@@ -10,24 +10,11 @@ in the source distribution for its full text.
 */
 
 
-#include "PerfCounter.h"
-
-#define PROCESS_FLAG_LINUX_IOPRIO   0x0100L
-#define PROCESS_FLAG_LINUX_OPENVZ   0x0200L
-#define PROCESS_FLAG_LINUX_VSERVER  0x0400L
-#define PROCESS_FLAG_LINUX_CGROUP   0x0800L
-#define PROCESS_FLAG_LINUX_OOM      0x1000L
-
-#define PROCESS_FLAG_LINUX_HPC       0xff0000L
-#define PROCESS_FLAG_LINUX_HPC_CYCLE 0x10000L
-#define PROCESS_FLAG_LINUX_HPC_INSN  0x20000L
-#define PROCESS_FLAG_LINUX_HPC_MISS  0x40000L
-#define PROCESS_FLAG_LINUX_HPC_BMISS 0x80000L
-
-#define PROCESS_FLAG_LINUX_HPC_L1DR   0x100000L
-#define PROCESS_FLAG_LINUX_HPC_L1DW   0x200000L
-#define PROCESS_FLAG_LINUX_HPC_L1DRM  0x400000L
-#define PROCESS_FLAG_LINUX_HPC_L1DWM  0x800000L
+#define PROCESS_FLAG_LINUX_IOPRIO   0x0100
+#define PROCESS_FLAG_LINUX_OPENVZ   0x0200
+#define PROCESS_FLAG_LINUX_VSERVER  0x0400
+#define PROCESS_FLAG_LINUX_CGROUP   0x0800
+#define PROCESS_FLAG_LINUX_OOM      0x1000
 
 typedef enum UnsupportedProcessFields {
    FLAGS = 9,
@@ -91,18 +78,7 @@ typedef enum LinuxProcessFields {
    PERCENT_IO_DELAY = 117,
    PERCENT_SWAP_DELAY = 118,
    #endif
-   #ifdef HAVE_PERFCOUNTERS
-   IPC = 119,
-   MCYCLE = 120,
-   MINSTR = 121,
-   PERCENT_MISS = 122,
-   PERCENT_BMISS = 123,
-   L1DREADS = 124,
-   L1DRMISSES = 125,
-   L1DWRITES = 126,
-   L1DWMISSES = 127,
-   #endif
-   LAST_PROCESSFIELD = 128,
+   LAST_PROCESSFIELD = 119,
 } LinuxProcessField;
 
 #include "IOPriority.h"
@@ -157,25 +133,6 @@ typedef struct LinuxProcess_ {
    float blkio_delay_percent;
    float swapin_delay_percent;
    #endif
-   #ifdef HAVE_PERFCOUNTERS
-   PerfCounter* cycleCounter;
-   PerfCounter* insnCounter;
-   PerfCounter* missCounter;
-   PerfCounter* brCounter;
-   PerfCounter* l1drCounter;
-   PerfCounter* l1drmCounter;
-   PerfCounter* l1dwCounter;
-   PerfCounter* l1dwmCounter;
-   float ipc;
-   float mcycle;
-   float minstr;
-   float pMiss;
-   float pBMiss;
-   float l1dr;
-   float l1drm;
-   float l1dw;
-   float l1dwm;
-   #endif
 } LinuxProcess;
 
 #ifndef Process_isKernelThread
@@ -213,16 +170,15 @@ IOPriority LinuxProcess_updateIOPriority(LinuxProcess* this);
 
 bool LinuxProcess_setIOPriority(LinuxProcess* this, IOPriority ioprio);
 
-#if HAVE_DELAYACCT || HAVE_PERFCOUNTERS
-
+#ifdef HAVE_DELAYACCT
+void LinuxProcess_printDelay(float delay_percent, char* buffer, int n);
 #endif
 
 void LinuxProcess_writeField(Process* this, RichString* str, ProcessField field);
 
-#define COMPARE_FIELD(_f) return (p2->_f > p1->_f ? 1 : -1)
-
 long LinuxProcess_compare(const void* v1, const void* v2);
 
 bool Process_isThread(Process* this);
+
 
 #endif

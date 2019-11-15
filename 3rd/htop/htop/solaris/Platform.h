@@ -14,7 +14,6 @@ in the source distribution for its full text.
 #include "Action.h"
 #include "BatteryMeter.h"
 #include "SignalsPanel.h"
-#include "SolarisProcess.h"
 #include <signal.h>
 #include <sys/mkdev.h>
 #include <sys/proc.h>
@@ -39,9 +38,7 @@ extern const SignalItem Platform_signals[];
 
 extern const unsigned int Platform_numberOfSignals;
 
-extern ScreenDefaults Platform_defaultScreens[];
-
-extern const unsigned int Platform_numberOfDefaultScreens;
+extern ProcessField Platform_defaultFields[];
 
 extern MeterClass* Platform_meterTypes[];
 

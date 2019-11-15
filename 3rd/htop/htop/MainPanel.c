@@ -72,25 +72,19 @@ static HandlerResult MainPanel_eventHandler(Panel* super, int ch) {
    
    Htop_Reaction reaction = HTOP_OK;
 
-   Settings* settings = this->state->settings;
-   ScreenSettings* ss = settings->ss;
-
    if (EVENT_IS_HEADER_CLICK(ch)) {
       int x = EVENT_HEADER_CLICK_GET_X(ch);
       ProcessList* pl = this->state->pl;
+      Settings* settings = this->state->settings;
       int hx = super->scrollH + x + 1;
       ProcessField field = ProcessList_keyAt(pl, hx);
-      if (field == ss->sortKey) {
-         ScreenSettings_invertSortOrder(ss);
-         ss->treeView = false;
+      if (field == settings->sortKey) {
+         Settings_invertSortOrder(settings);
+         settings->treeView = false;
       } else {
          reaction |= Action_setSortKey(settings, field);
       }
       reaction |= HTOP_RECALCULATE | HTOP_REDRAW_BAR | HTOP_SAVE_SETTINGS; 
-      result = HANDLED;
-   } else if (EVENT_IS_SCREEN_TAB_CLICK(ch)) {
-      int x = EVENT_SCREEN_TAB_GET_X(ch);
-      reaction |= Action_setScreenTab(settings, x);
       result = HANDLED;
    } else if (ch != ERR && this->inc->active) {
       bool filterChanged = IncSet_handleKey(this->inc, ch, super, (IncMode_GetPanelValue) MainPanel_getValue, NULL);
@@ -119,8 +113,8 @@ static HandlerResult MainPanel_eventHandler(Panel* super, int ch) {
    }
 
    if (reaction & HTOP_REDRAW_BAR) {
-      MainPanel_updateTreeFunctions(this, settings->ss->treeView);
-      IncSet_drawBar(this->inc, CRT_colors[FUNCTION_BAR]);
+      MainPanel_updateTreeFunctions(this, this->state->settings->treeView);
+      IncSet_drawBar(this->inc);
    }
    if (reaction & HTOP_UPDATE_PANELHDR) {
       ProcessList_printHeader(this->state->pl, Panel_getHeader(super));

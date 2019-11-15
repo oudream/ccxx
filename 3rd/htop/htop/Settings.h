@@ -15,43 +15,28 @@ in the source distribution for its full text.
 #include <stdbool.h>
 
 typedef struct {
-   const char* name;
-   const char* columns;
-   const char* sortKey;
-} ScreenDefaults;
-
-typedef struct {
    int len;
    char** names;
    int* modes;
 } MeterColumnSettings;
 
-typedef struct {
-   char* name;
-   ProcessField* fields;
-   int flags;
-   int direction;
-   ProcessField sortKey;
-   bool treeView;
-} ScreenSettings;
-
 typedef struct Settings_ {
    char* filename;
    
-   MeterColumnSettings meterColumns[2];
+   MeterColumnSettings columns[2];
 
-   ScreenSettings** screens;
-   unsigned int nScreens;
-   unsigned int ssIndex;
-   ScreenSettings* ss;
-
+   ProcessField* fields;
+   int flags;
    int colorScheme;
    int delay;
 
    int cpuCount;
+   int direction;
+   ProcessField sortKey;
 
    bool countCPUsFromZero;
    bool detailedCPUTime;
+   bool treeView;
    bool showProgramPath;
    bool hideThreads;
    bool shadowOtherUsers;
@@ -64,7 +49,6 @@ typedef struct Settings_ {
    bool updateProcessNames;
    bool accountGuestInCPUMeter;
    bool headerMargin;
-   bool screenTabs;
 
    bool changed;
 } Settings;
@@ -74,18 +58,12 @@ typedef struct Settings_ {
 #endif
 
 
-/*
-
-*/
-
 void Settings_delete(Settings* this);
-
-ScreenSettings* Settings_newScreen(Settings* this, const char* name, const char* line);
 
 bool Settings_write(Settings* this);
 
 Settings* Settings_new(int cpuCount);
 
-void ScreenSettings_invertSortOrder(ScreenSettings* this);
+void Settings_invertSortOrder(Settings* this);
 
 #endif

@@ -96,15 +96,7 @@ static int percentages(int cnt, int64_t *out, int64_t *new, int64_t *old, int64_
    return (total_change);
 }
 
-ScreenDefaults Platform_defaultScreens[] = {
-   {
-      .name = "Main",
-      .columns = "PID USER PRIORITY NICE M_SIZE M_RESIDENT STATE PERCENT_CPU PERCENT_MEM TIME Command",
-      .sortKey = "PERCENT_CPU",
-   },
-};
-
-const unsigned int Platform_numberOfDefaultScreens = sizeof(Platform_defaultScreens)/sizeof(ScreenDefaults);
+ProcessField Platform_defaultFields[] = { PID, USER, PRIORITY, NICE, M_SIZE, M_RESIDENT, STATE, PERCENT_CPU, PERCENT_MEM, TIME, COMM, 0 };
 
 int Platform_numberOfFields = LAST_PROCESSFIELD;
 

@@ -19,9 +19,7 @@ extern const SignalItem Platform_signals[];
 
 extern const unsigned int Platform_numberOfSignals;
 
-extern ScreenDefaults Platform_defaultScreens[];
-
-extern const unsigned int Platform_numberOfDefaultScreens;
+extern ProcessField Platform_defaultFields[];
 
 extern ProcessFieldData Process_fields[];
 

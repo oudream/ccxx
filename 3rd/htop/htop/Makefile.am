@@ -21,7 +21,7 @@ ClockMeter.c ColorsPanel.c ColumnsPanel.c CPUMeter.c CRT.c MainPanel.c \
 DisplayOptionsPanel.c FunctionBar.c Hashtable.c Header.c htop.c ListItem.c \
 LoadAverageMeter.c MemoryMeter.c Meter.c MetersPanel.c Object.c Panel.c \
 BatteryMeter.c Process.c ProcessList.c RichString.c ScreenManager.c Settings.c \
-SignalsPanel.c StringUtils.c SwapMeter.c TasksMeter.c UptimeMeter.c ScreensPanel.c \
+SignalsPanel.c StringUtils.c SwapMeter.c TasksMeter.c UptimeMeter.c \
 TraceScreen.c UsersTable.c Vector.c AvailableColumnsPanel.c AffinityPanel.c \
 HostnameMeter.c OpenFilesScreen.c Affinity.c IncSet.c Action.c EnvScreen.c \
 InfoScreen.c XAlloc.c
@@ -31,7 +31,7 @@ CategoriesPanel.h CheckItem.h ClockMeter.h ColorsPanel.h ColumnsPanel.h \
 CPUMeter.h CRT.h MainPanel.h DisplayOptionsPanel.h FunctionBar.h \
 Hashtable.h Header.h htop.h ListItem.h LoadAverageMeter.h MemoryMeter.h \
 BatteryMeter.h Meter.h MetersPanel.h Object.h Panel.h ProcessList.h RichString.h \
-ScreenManager.h Settings.h SignalsPanel.h StringUtils.h SwapMeter.h ScreensPanel.h \
+ScreenManager.h Settings.h SignalsPanel.h StringUtils.h SwapMeter.h \
 TasksMeter.h UptimeMeter.h TraceScreen.h UsersTable.h Vector.h Process.h \
 AffinityPanel.h HostnameMeter.h OpenFilesScreen.h Affinity.h IncSet.h Action.h \
 EnvScreen.h InfoScreen.h XAlloc.h
@@ -48,16 +48,14 @@ linux_platform_headers = \
 	linux/LinuxProcess.h \
 	linux/LinuxProcessList.h \
 	linux/LinuxCRT.h \
-	linux/Battery.h \
-	linux/PerfCounter.h
+	linux/Battery.h
 
 all_platform_headers += $(linux_platform_headers)
 
 if HTOP_LINUX
 AM_CFLAGS += -rdynamic
 myhtopplatsources = linux/Platform.c linux/IOPriorityPanel.c linux/IOPriority.c \
-linux/LinuxProcess.c linux/LinuxProcessList.c linux/LinuxCRT.c linux/Battery.c \
-linux/PerfCounter.c
+linux/LinuxProcess.c linux/LinuxProcessList.c linux/LinuxCRT.c linux/Battery.c
 
 myhtopplatheaders = $(linux_platform_headers)
 endif
@@ -202,9 +200,6 @@ profile:
 
 debug:
 	$(MAKE) all CFLAGS="" AM_CPPFLAGS="-ggdb -DDEBUG"
-
-symbols:
-	$(MAKE) all CFLAGS="" AM_CPPFLAGS="-ggdb -DNDEBUG"
 
 coverage:
 	$(MAKE) all CFLAGS="" AM_CPPFLAGS="-fprofile-arcs -ftest-coverage -DDEBUG" LDFLAGS="-lgcov"

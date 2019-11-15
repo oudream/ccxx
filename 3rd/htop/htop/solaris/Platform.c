@@ -35,7 +35,6 @@ in the source distribution for its full text.
 #include "Action.h"
 #include "BatteryMeter.h"
 #include "SignalsPanel.h"
-#include "SolarisProcess.h"
 #include <signal.h>
 #include <sys/mkdev.h>
 #include <sys/proc.h>
@@ -104,15 +103,7 @@ const SignalItem Platform_signals[] = {
 
 const unsigned int Platform_numberOfSignals = sizeof(Platform_signals)/sizeof(SignalItem);
 
-ScreenDefaults Platform_defaultScreens[] = {
-   {
-      .name = "Default",
-      .columns = "PID LWPID USER PRIORITY NICE M_SIZE M_RESIDENT STATE PERCENT_CPU PERCENT_MEM TIME Command",
-      .sortKey = "PERCENT_CPU",
-   },
-};
-
-const unsigned int Platform_numberOfDefaultScreens = sizeof(Platform_defaultScreens)/sizeof(ScreenDefaults);
+ProcessField Platform_defaultFields[] = { PID, LWPID, USER, PRIORITY, NICE, M_SIZE, M_RESIDENT, STATE, PERCENT_CPU, PERCENT_MEM, TIME, COMM, 0 };
 
 MeterClass* Platform_meterTypes[] = {
    &CPUMeter_class,

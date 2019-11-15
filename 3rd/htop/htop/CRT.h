@@ -31,7 +31,6 @@ in the source distribution for its full text.
 #define KEY_WHEELUP KEY_F(20)
 #define KEY_WHEELDOWN KEY_F(21)
 #define KEY_RECLICK KEY_F(22)
-#define KEY_SHIFT_TAB KEY_F(23)
 
 //#link curses
 
@@ -117,11 +116,6 @@ typedef enum ColorElements_ {
    CPU_SOFTIRQ,
    CPU_STEAL,
    CPU_GUEST,
-   PANEL_EDIT,
-   SCREENS_OTH_BORDER,
-   SCREENS_OTH_TEXT,
-   SCREENS_CUR_BORDER,
-   SCREENS_CUR_TEXT,
    LAST_COLORELEMENT
 } ColorElements;
 
@@ -149,6 +143,8 @@ extern int CRT_delay;
 int* CRT_colors;
 
 extern int CRT_colorSchemes[LAST_COLORSCHEME][LAST_COLORELEMENT];
+
+extern int CRT_cursorX;
 
 extern int CRT_scrollHAmount;
 

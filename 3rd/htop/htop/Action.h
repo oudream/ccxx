@@ -49,8 +49,6 @@ Htop_Reaction Action_setSortKey(Settings* settings, ProcessField sortKey);
 
 // ----------------------------------------
 
-Htop_Reaction Action_setScreenTab(Settings* settings, int x);
-
 Htop_Reaction Action_follow(State* st);
 
 

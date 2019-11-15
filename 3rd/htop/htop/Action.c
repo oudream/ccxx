@@ -26,7 +26,6 @@ in the source distribution for its full text.
 #include <math.h>
 #include <pwd.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
 #include <sys/param.h>
 #include <sys/time.h>
@@ -81,7 +80,7 @@ Object* Action_pickFromVector(State* st, Panel* list, int x) {
       header->pl->following = pid;
       unfollow = true;
    }
-   ScreenManager_run(scr, &panelFocus, &ch, NULL);
+   ScreenManager_run(scr, &panelFocus, &ch);
    if (unfollow) {
       header->pl->following = -1;
    }
@@ -107,7 +106,7 @@ static void Action_runSetup(Settings* settings, const Header* header, ProcessLis
    CategoriesPanel_makeMetersPage(panelCategories);
    Panel* panelFocus;
    int ch;
-   ScreenManager_run(scr, &panelFocus, &ch, "Setup");
+   ScreenManager_run(scr, &panelFocus, &ch);
    ScreenManager_delete(scr);
    if (settings->changed) {
       Header_writeBackToSettings(header);
@@ -172,10 +171,9 @@ static bool collapseIntoParent(Panel* panel) {
 }
 
 Htop_Reaction Action_setSortKey(Settings* settings, ProcessField sortKey) {
-   ScreenSettings* ss = settings->ss;
-   ss->sortKey = sortKey;
-   ss->direction = 1;
-   ss->treeView = false;
+   settings->sortKey = sortKey;
+   settings->direction = 1;
+   settings->treeView = false;
    return HTOP_REFRESH | HTOP_SAVE_SETTINGS | HTOP_UPDATE_PANELHDR | HTOP_KEEP_FOLLOWING;
 }
 
@@ -183,12 +181,11 @@ static Htop_Reaction sortBy(State* st) {
    Htop_Reaction reaction = HTOP_OK;
    Panel* sortPanel = Panel_new(0, 0, 0, 0, true, Class(ListItem), FunctionBar_newEnterEsc("Sort   ", "Cancel "));
    Panel_setHeader(sortPanel, "Sort by");
-   ScreenSettings* ss = st->settings->ss;
-   ProcessField* fields = ss->fields;
+   ProcessField* fields = st->settings->fields;
    for (int i = 0; fields[i]; i++) {
       char* name = String_trim(Process_fields[fields[i]].name);
       Panel_add(sortPanel, (Object*) ListItem_new(name, fields[i]));
-      if (fields[i] == ss->sortKey)
+      if (fields[i] == st->settings->sortKey)
          Panel_setSelected(sortPanel, i);
       free(name);
    }
@@ -237,9 +234,8 @@ static Htop_Reaction actionToggleProgramPath(State* st) {
 }
 
 static Htop_Reaction actionToggleTreeView(State* st) {
-   ScreenSettings* ss = st->settings->ss;
-   ss->treeView = !ss->treeView;
-   if (ss->treeView) ss->direction = 1;
+   st->settings->treeView = !st->settings->treeView;
+   if (st->settings->treeView) st->settings->direction = 1;
    ProcessList_expandTree(st->pl);
    return HTOP_REFRESH | HTOP_SAVE_SETTINGS | HTOP_KEEP_FOLLOWING | HTOP_REDRAW_BAR | HTOP_UPDATE_PANELHDR;
 }
@@ -267,7 +263,7 @@ static Htop_Reaction actionLowerPriority(State* st) {
 }
 
 static Htop_Reaction actionInvertSortOrder(State* st) {
-   ScreenSettings_invertSortOrder(st->settings->ss);
+   Settings_invertSortOrder(st->settings);
    return HTOP_REFRESH | HTOP_SAVE_SETTINGS;
 }
 
@@ -281,7 +277,7 @@ static Htop_Reaction actionExpandOrCollapse(State* st) {
 }
 
 static Htop_Reaction actionCollapseIntoParent(State* st) {
-   if (!st->settings->ss->treeView) {
+   if (!st->settings->treeView) {
       return HTOP_OK;
    }
    bool changed = collapseIntoParent(st->panel);
@@ -289,50 +285,11 @@ static Htop_Reaction actionCollapseIntoParent(State* st) {
 }
 
 static Htop_Reaction actionExpandCollapseOrSortColumn(State* st) {
-   return st->settings->ss->treeView ? actionExpandOrCollapse(st) : actionSetSortColumn(st);
+   return st->settings->treeView ? actionExpandOrCollapse(st) : actionSetSortColumn(st);
 }
 
 static Htop_Reaction actionQuit() {
    return HTOP_QUIT;
-}
-
-static Htop_Reaction actionNextScreen(State* st) {
-   Settings* settings = st->settings;
-   settings->ssIndex++;
-   if (settings->ssIndex == settings->nScreens) {
-      settings->ssIndex = 0;
-   }
-   settings->ss = settings->screens[settings->ssIndex];
-   return HTOP_REFRESH;
-}
-
-static Htop_Reaction actionPrevScreen(State* st) {
-   Settings* settings = st->settings;
-   if (settings->ssIndex == 0) {
-      settings->ssIndex = settings->nScreens - 1;
-   } else {
-      settings->ssIndex--;
-   }
-   settings->ss = settings->screens[settings->ssIndex];
-   return HTOP_REFRESH;
-}
-
-Htop_Reaction Action_setScreenTab(Settings* settings, int x) {
-   int s = 2;
-   for (unsigned int i = 0; i < settings->nScreens; i++) {
-      if (x < s) {
-         return 0;
-      }
-      const char* name = settings->screens[i]->name;
-      int len = strlen(name);
-      if (x <= s + len + 1) {
-         settings->ssIndex = i;
-         settings->ss = settings->screens[i];
-         return HTOP_REFRESH;
-      }
-      s += len + 3;
-   }
-   return 0;
 }
 
 static Htop_Reaction actionSetAffinity(State* st) {
@@ -639,7 +596,5 @@ void Action_setBindings(Htop_Action* keys) {
    keys['U'] = actionUntagAll;
    keys['c'] = actionTagAllChildren;
    keys['e'] = actionShowEnvScreen;
-   keys['\t'] = actionNextScreen;
-   keys[KEY_SHIFT_TAB] = actionPrevScreen;
 }
 

@@ -10,7 +10,7 @@ in the source distribution for its full text.
 #include "AvailableMetersPanel.h"
 #include "MetersPanel.h"
 #include "DisplayOptionsPanel.h"
-#include "ScreensPanel.h"
+#include "ColumnsPanel.h"
 #include "ColorsPanel.h"
 #include "AvailableColumnsPanel.h"
 
@@ -64,11 +64,9 @@ static void CategoriesPanel_makeColorsPage(CategoriesPanel* this) {
    ScreenManager_add(this->scr, colors, -1);
 }
 
-static void CategoriesPanel_makeScreensPage(CategoriesPanel* this) {
-   Panel* screens = (Panel*) ScreensPanel_new(this->settings);
-   Panel* columns = (Panel*) ((ScreensPanel*)screens)->columns;
+static void CategoriesPanel_makeColumnsPage(CategoriesPanel* this) {
+   Panel* columns = (Panel*) ColumnsPanel_new(this->settings);
    Panel* availableColumns = (Panel*) AvailableColumnsPanel_new(columns);
-   ScreenManager_add(this->scr, screens, 20);
    ScreenManager_add(this->scr, columns, 20);
    ScreenManager_add(this->scr, availableColumns, -1);
 }
@@ -120,7 +118,7 @@ static HandlerResult CategoriesPanel_eventHandler(Panel* super, int ch) {
             CategoriesPanel_makeColorsPage(this);
             break;
          case 3:
-            CategoriesPanel_makeScreensPage(this);
+            CategoriesPanel_makeColumnsPage(this);
             break;
       }
    }
@@ -145,10 +143,10 @@ CategoriesPanel* CategoriesPanel_new(ScreenManager* scr, Settings* settings, Hea
    this->settings = settings;
    this->header = header;
    this->pl = pl;
-   Panel_setHeader(super, "Categories");
+   Panel_setHeader(super, "Setup");
    Panel_add(super, (Object*) ListItem_new("Meters", 0));
    Panel_add(super, (Object*) ListItem_new("Display options", 0));
    Panel_add(super, (Object*) ListItem_new("Colors", 0));
-   Panel_add(super, (Object*) ListItem_new("Screens", 0));
+   Panel_add(super, (Object*) ListItem_new("Columns", 0));
    return this;
 }

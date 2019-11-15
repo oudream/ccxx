@@ -656,86 +656,15 @@ static void LinuxProcessList_readDelayAcctData(LinuxProcessList* this, LinuxProc
    }
 
    if (nl_send_sync(this->netlink_socket, msg) < 0) {
-      process->swapin_delay_percent = -1;
-      process->blkio_delay_percent = -1;
-      process->cpu_delay_percent = -1;
+      process->swapin_delay_percent = -1LL;
+      process->blkio_delay_percent = -1LL;
+      process->cpu_delay_percent = -1LL;
       return;
    }
    
    if (nl_recvmsgs_default(this->netlink_socket) < 0) {
       return;
    }
-}
-
-#endif
-
-#ifdef HAVE_PERFCOUNTERS
-
-#define READ_COUNTER(_b, _var, _flag, _type, _config)           \
-   bool _b ## Ok = false;                                       \
-   uint64_t _b ## Delta = 0;                                    \
-   if (flags & _flag && lp->super.show) {                       \
-      if (!_var) {                                              \
-         _var = PerfCounter_new(lp->super.pid, _type, _config); \
-         _b ## Ok = PerfCounter_read(_var);                     \
-         _b ## Delta = 0;                                       \
-      } else {                                                  \
-         _b ## Ok = PerfCounter_read(_var);                     \
-         _b ## Delta = PerfCounter_delta(_var);                 \
-      }                                                         \
-      if (_b ## Ok) {                                           \
-      }                                                         \
-   } else {                                                     \
-      if (_var) {                                               \
-         PerfCounter_delete(_var);                              \
-         _var = NULL;                                           \
-      }                                                         \
-   }
-
-#define SET_IF(_ok, _var, _exp) \
-   if (_ok) {                   \
-      _var = _exp;              \
-   } else {                     \
-      _var = -1;                \
-   }
-
-#define SET_IFNZ(_ok, _z, _var, _exp) \
-   if (_ok) {                         \
-      if (_z > 0) {                   \
-         _var = _exp;                 \
-      } else {                        \
-         _var = 0;                    \
-      }                               \
-   } else {                           \
-      _var = -1;                      \
-   }
-
-#define L1DR  (PERF_COUNT_HW_CACHE_L1D | (PERF_COUNT_HW_CACHE_OP_READ  << 8) | (PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16))
-#define L1DRM (PERF_COUNT_HW_CACHE_L1D | (PERF_COUNT_HW_CACHE_OP_READ  << 8) | (PERF_COUNT_HW_CACHE_RESULT_MISS   << 16))
-#define L1DW  (PERF_COUNT_HW_CACHE_L1D | (PERF_COUNT_HW_CACHE_OP_WRITE << 8) | (PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16))
-#define L1DWM (PERF_COUNT_HW_CACHE_L1D | (PERF_COUNT_HW_CACHE_OP_WRITE << 8) | (PERF_COUNT_HW_CACHE_RESULT_MISS   << 16))
-
-static void LinuxProcessList_readPerfCounters(LinuxProcess* lp, uint64_t flags) {
-
-   READ_COUNTER(c, lp->cycleCounter, PROCESS_FLAG_LINUX_HPC_CYCLE, PERF_TYPE_HARDWARE, PERF_COUNT_HW_CPU_CYCLES);
-   READ_COUNTER(i, lp->insnCounter,  PROCESS_FLAG_LINUX_HPC_INSN,  PERF_TYPE_HARDWARE, PERF_COUNT_HW_INSTRUCTIONS);
-   READ_COUNTER(m, lp->missCounter,  PROCESS_FLAG_LINUX_HPC_MISS,  PERF_TYPE_HARDWARE, PERF_COUNT_HW_CACHE_MISSES);
-   READ_COUNTER(b, lp->brCounter,    PROCESS_FLAG_LINUX_HPC_BMISS, PERF_TYPE_HARDWARE, PERF_COUNT_HW_BRANCH_MISSES);
-
-   READ_COUNTER(r, lp->l1drCounter,  PROCESS_FLAG_LINUX_HPC_L1DR,  PERF_TYPE_HW_CACHE, L1DR);
-   READ_COUNTER(R, lp->l1drmCounter, PROCESS_FLAG_LINUX_HPC_L1DRM, PERF_TYPE_HW_CACHE, L1DRM);
-   READ_COUNTER(w, lp->l1dwCounter,  PROCESS_FLAG_LINUX_HPC_L1DW,  PERF_TYPE_HW_CACHE, L1DW);
-   READ_COUNTER(W, lp->l1dwmCounter, PROCESS_FLAG_LINUX_HPC_L1DWM, PERF_TYPE_HW_CACHE, L1DWM);
-
-   SET_IF(cOk, lp->mcycle, (double)cDelta / 1000000);
-   SET_IF(iOk, lp->minstr, (double)iDelta / 1000000);
-   SET_IFNZ(cOk && iOk, cDelta, lp->ipc,    (double)iDelta / cDelta);
-   SET_IFNZ(mOk && iOk, iDelta, lp->pMiss,  100 * ((double)mDelta / iDelta));
-   SET_IFNZ(bOk && iOk, iDelta, lp->pBMiss, 100 * ((double)bDelta / iDelta));
-   SET_IF(rOk, lp->l1dr,  (double)rDelta / 1000);
-   SET_IF(ROk, lp->l1drm, (double)RDelta / 1000);
-   SET_IF(wOk, lp->l1dw,  (double)wDelta / 1000);
-   SET_IF(WOk, lp->l1dwm, (double)WDelta / 1000);
 }
 
 #endif
@@ -835,7 +764,6 @@ static bool LinuxProcessList_recurseProcTree(LinuxProcessList* this, const char*
    DIR* dir;
    struct dirent* entry;
    Settings* settings = pl->settings;
-   ScreenSettings* ss = settings->ss;
 
    #ifdef HAVE_TASKSTATS
    unsigned long long now = tv.tv_sec*1000LL+tv.tv_usec/1000LL;
@@ -880,7 +808,7 @@ static bool LinuxProcessList_recurseProcTree(LinuxProcessList* this, const char*
       LinuxProcessList_recurseProcTree(this, subdirname, proc, period, tv);
 
       #ifdef HAVE_TASKSTATS
-      if (ss->flags & PROCESS_FLAG_IO)
+      if (settings->flags & PROCESS_FLAG_IO)
          LinuxProcessList_readIoFile(lp, dirname, name, now);
       #endif
 
@@ -899,7 +827,7 @@ static bool LinuxProcessList_recurseProcTree(LinuxProcessList* this, const char*
          free(lp->ttyDevice);
          lp->ttyDevice = LinuxProcessList_updateTtyDevice(this->ttyDrivers, proc->tty_nr);
       }
-      if (ss->flags & PROCESS_FLAG_LINUX_IOPRIO)
+      if (settings->flags & PROCESS_FLAG_LINUX_IOPRIO)
          LinuxProcess_updateIOPriority(lp);
       float percent_cpu = (lp->utime + lp->stime - lasttimes) / period * 100.0;
       proc->percent_cpu = CLAMP(percent_cpu, 0.0, cpus * 100.0);
@@ -914,13 +842,13 @@ static bool LinuxProcessList_recurseProcTree(LinuxProcessList* this, const char*
          proc->user = UsersTable_getRef(pl->usersTable, proc->st_uid);
 
          #ifdef HAVE_OPENVZ
-         if (ss->flags & PROCESS_FLAG_LINUX_OPENVZ) {
+         if (settings->flags & PROCESS_FLAG_LINUX_OPENVZ) {
             LinuxProcessList_readOpenVZData(lp, dirname, name);
          }
          #endif
          
          #ifdef HAVE_VSERVER
-         if (ss->flags & PROCESS_FLAG_LINUX_VSERVER) {
+         if (settings->flags & PROCESS_FLAG_LINUX_VSERVER) {
             LinuxProcessList_readVServerData(lp, dirname, name);
          }
          #endif
@@ -943,17 +871,12 @@ static bool LinuxProcessList_recurseProcTree(LinuxProcessList* this, const char*
       #endif
 
       #ifdef HAVE_CGROUP
-      if (ss->flags & PROCESS_FLAG_LINUX_CGROUP)
+      if (settings->flags & PROCESS_FLAG_LINUX_CGROUP)
          LinuxProcessList_readCGroupFile(lp, dirname, name);
       #endif
       
-      if (ss->flags & PROCESS_FLAG_LINUX_OOM)
+      if (settings->flags & PROCESS_FLAG_LINUX_OOM)
          LinuxProcessList_readOomData(lp, dirname, name);
-
-      #ifdef HAVE_PERFCOUNTERS
-      if (ss->flags & PROCESS_FLAG_LINUX_HPC)
-         LinuxProcessList_readPerfCounters(lp, ss->flags);
-      #endif
 
       if (proc->state == 'Z' && (proc->basenameOffset == 0)) {
          proc->basenameOffset = -1;
@@ -1004,30 +927,30 @@ static inline void LinuxProcessList_scanMemoryInfo(ProcessList* this) {
    char buffer[128];
    while (fgets(buffer, 128, file)) {
 
-      #define tryRead(label, variable) (String_startsWith(buffer, label) && sscanf(buffer + strlen(label), " %32llu kB", variable))
+      #define tryRead(label, variable) do { if (String_startsWith(buffer, label) && sscanf(buffer + strlen(label), " %32llu kB", variable)) { break; } } while(0)
       switch (buffer[0]) {
       case 'M':
-         if (tryRead("MemTotal:", &this->totalMem)) {}
-         else if (tryRead("MemFree:", &this->freeMem)) {}
-         else if (tryRead("MemShared:", &this->sharedMem)) {}
+         tryRead("MemTotal:", &this->totalMem);
+         tryRead("MemFree:", &this->freeMem);
+         tryRead("MemShared:", &this->sharedMem);
          break;
       case 'B':
-         if (tryRead("Buffers:", &this->buffersMem)) {}
+         tryRead("Buffers:", &this->buffersMem);
          break;
       case 'C':
-         if (tryRead("Cached:", &this->cachedMem)) {}
+         tryRead("Cached:", &this->cachedMem);
          break;
       case 'S':
          switch (buffer[1]) {
          case 'w':
-            if (tryRead("SwapTotal:", &this->totalSwap)) {}
-            else if (tryRead("SwapFree:", &swapFree)) {}
+            tryRead("SwapTotal:", &this->totalSwap);
+            tryRead("SwapFree:", &swapFree);
             break;
          case 'h':
-            if (tryRead("Shmem:", &shmem)) {}
+            tryRead("Shmem:", &shmem);
             break;
          case 'R':
-            if (tryRead("SReclaimable:", &sreclaimable)) {}
+            tryRead("SReclaimable:", &sreclaimable);
             break;
          }
          break;
