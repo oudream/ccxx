@@ -13,6 +13,11 @@ macro(mc_htop_generate_config)
     if (NOT htop_config_h)
         execute_process(
                 COMMAND ./autogen.sh
+                RESULT_VARIABLE result
+                WORKING_DIRECTORY "${gs_htop_path}/htop"
+        )
+        message('htop config.h result--: ' ${result})
+        execute_process(
                 COMMAND ./configure --disable-unicode
                 RESULT_VARIABLE result
                 WORKING_DIRECTORY "${gs_htop_path}/htop"
