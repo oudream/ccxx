@@ -50,10 +50,7 @@ make test
 
 
 cd $WORKSPACE
-export GTEST_OUTPUT="xml:${WORKSPACE}/build/cmake-gcc/unittest-report"
 cmake . -DCMAKE_BUILD_TYPE=Debug --build "${WORKSPACE}" -B"${WORKSPACE}/build/cmake-gcc"
-
-
 export GTEST_OUTPUT="xml:${WORKSPACE}/build/cmake-gcc/unittest-report"
 cd ${WORKSPACE}/cmake-gcc
 make

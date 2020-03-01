@@ -326,37 +326,6 @@ ICS 目录
         |--- res        resource、图片、UI、样式
 
 
-|--- cc4000
-    |--- build    makefile、project等文件（如果单个程序的构建文件在三个以上，要以文件夹方式出现）windows 上 vs 编译器对应的 sln ncb 等文件
-        |--- vcpro  windows 上 vs 编译器对应的 sln ncb 等文件
-        |--- linux  linux 上 makefile 文件
-    |--- src       源代码，是否按照细节再分子目录依据担当，但是最多按照子模块加以区分
-        //以下为模块实现代码
-        |--- db      数据库一致访问接口
-        |--- softbus 软总线实现
-        |--- rtdb    实时库
-        |--- 图形
-        |--- ......
-    |--- test      代码测试
-        |--- db      数据库一致访问接口的测试
-        |--- SoftBus 软总线实现
-        |--- RTDB    实时库
-        |--- 图形
-        |--- ......
-    |--- temp       此目录下文件不上传
-    |--- res        resource
-    |--- example    对于所有的基础模块库，提供使用例子，强制使用
-    |--- out        编译中的临时文件，修改 vs 中的设置，可以将输出的 exe / dll / lib / 中间文件导向到不同的文件夹
-    |--- doc        分子目录，存放总体和子模块的需求、设计、测试用例、测试方案文档
-    |--- lib        lib
-    |--- basic      基础的源码库，例如字符串处理、文件处理、时间处理、协议封包/解包、log库 这些都不会封装成单独的 dll 或者 so 了，
-    |--- include    所有外部引用库的头文件，第三方库一旦引用，和自己编写的库同等对待
-       |--- db        数据库一致访问接口头文件
-       |--- softbus   软总线头文件
-
-
-
-
 
 select ID,Name,1 as Level from tblCity where ParentID=0
 union all

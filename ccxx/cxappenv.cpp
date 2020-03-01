@@ -4,15 +4,12 @@
 
 using namespace std;
 
-#ifdef PROJECT_PLATFORM_CC4000
-#define app_config_filename "app.config.json"
-#define apps_config_filename "apps.config.json"
-#define config_suffixname ".config.json"
-#else
+//#define app_config_filename "app.config.json"
+//#define apps_config_filename "apps.config.json"
+//#define config_suffixname ".config.json"
 #define app_config_filename "app.config.ini"
 #define apps_config_filename "apps.config.ini"
 #define config_suffixname ".config.ini"
-#endif
 
 static string f_sApplicationFilePath = "";
 static string f_sApplicationFileName = "";
@@ -76,11 +73,7 @@ void CxAppEnv::init(int argc, const char *argv[])
         }
         else
         {
-#ifdef PROJECT_PLATFORM_CC4000
-            string sDefaultDeployPath = CxFileSystem::parentPath( CxFileSystem::parentPath( f_sApplicationPath ) );
-#else
             string sDefaultDeployPath = CxFileSystem::parentPath(f_sApplicationPath);
-#endif
             if (CxFileSystem::isExist(sDefaultDeployPath))
             {
                 string sPath = CxFileSystem::mergeFilePath(sDefaultDeployPath, "config");

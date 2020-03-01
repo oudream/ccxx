@@ -1,14 +1,13 @@
 #
-CC4000_PATH = $$PWD/../..
-CC4000_SRC_PATH = $$PWD/../../src
-CC4000_DEPLOY_PATH = $$PWD/../../../deploy
-CC4000_INCLUDE_PATH = $$CC4000_PATH/include
+EXPRO_PATH = $$PWD/../..
+EXPRO_SRC_PATH = $$PWD/../../src
+EXPRO_DEPLOY_PATH = $$PWD/../../../deploy
+EXPRO_INCLUDE_PATH = $$EXPRO_PATH/include
 CCXX_PATH = $$PWD/../../src/CCXX
 
-#DEFINES += PROJECT_PLATFORM_CC4000
 
 INCLUDEPATH += $$CCXX_PATH
-INCLUDEPATH += $$CC4000_INCLUDE_PATH
+INCLUDEPATH += $$EXPRO_INCLUDE_PATH
 
 
 PRECOMPILED_HEADER += $$PWD/svn_version.h
@@ -100,8 +99,8 @@ CONFIG(debug, debug|release):DEFINES += GM_DEBUG
 #define project_bin_path : PROJECT_TARGET_DEPLOY = 1 or PROJECT_BIN_PATH = "$$PWD/../../bin
 
 #isEmpty( PROJECT_DEPLOY_NAME ) {
-#    CONFIG(debug, debug|release) : PROJECT_DEPLOY_NAME = CC4000_debug/bin
-#    CONFIG(release, debug|release) : PROJECT_DEPLOY_NAME = CC4000_release/bin
+#    CONFIG(debug, debug|release) : PROJECT_DEPLOY_NAME = EXPRO_debug/bin
+#    CONFIG(release, debug|release) : PROJECT_DEPLOY_NAME = EXPRO_release/bin
 
     ! contains(DEFINES, CCXX_QT) : ! contains(DEFINES, PROJECT_3RDPARTY_QT) {
         CONFIG(debug, debug|release) : PROJECT_DEPLOY_NAME = bin_d
@@ -117,19 +116,19 @@ CONFIG(debug, debug|release):DEFINES += GM_DEBUG
 #}
 
 win32 {
-    CC4000_BIN_PATH = $$CC4000_DEPLOY_PATH/win32/$$PROJECT_DEPLOY_NAME
+    EXPRO_BIN_PATH = $$EXPRO_DEPLOY_PATH/win32/$$PROJECT_DEPLOY_NAME
 }
 unix {
-    CC4000_BIN_PATH = $$CC4000_DEPLOY_PATH/unix/$$PROJECT_DEPLOY_NAME
+    EXPRO_BIN_PATH = $$EXPRO_DEPLOY_PATH/unix/$$PROJECT_DEPLOY_NAME
 }
 x11 {
-    CC4000_BIN_PATH = $$CC4000_DEPLOY_PATH/x11/$$PROJECT_DEPLOY_NAME
+    EXPRO_BIN_PATH = $$EXPRO_DEPLOY_PATH/x11/$$PROJECT_DEPLOY_NAME
 }
 
 
 #### project destdir ###
 isEmpty( PROJECT_BIN_PATH ) {
-    PROJECT_BIN_PATH = $$CC4000_BIN_PATH
+    PROJECT_BIN_PATH = $$EXPRO_BIN_PATH
 }
 DESTDIR = $$PROJECT_BIN_PATH
 LIBS += -L$$PROJECT_BIN_PATH

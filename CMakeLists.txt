@@ -29,7 +29,7 @@ if (NOT gs_project_deploy_path)
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${gs_project_output_path_debug}")
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${gs_project_output_path_release}")
 
-    if (${CMAKE_BUILD_TYPE} STREQUAL Release)
+    if (CMAKE_BUILD_TYPE STREQUAL Release)
         SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_release})
     else()
         SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_debug})

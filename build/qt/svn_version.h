@@ -15,7 +15,7 @@
 //本地源码是否存在修改（1：存在修改；0：不存在修改），若存在表示本地与SVN服务器源码不一致，此时应禁止发布
 #define IS_MODS 0
 //源码在服务器上的存放目录
-#define SVN_URL "https://10.31.16.253/svn/ygct_ics_cc4000/trunk/cc4000/build/qtpro"
+#define SVN_URL "https://github.com/oudream/ccxx"
 
 
 #endif	/* GCL_VERSION_H */

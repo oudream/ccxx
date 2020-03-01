@@ -61,14 +61,22 @@ endif()
 
 ### qt
 ### if enable qt, then config "build/ccpro/local.config.cmake" 's CMAKE_PREFIX_PATH to your dir of qt
-set(gs_project_enable_qt 1)
-#set(gs_project_enable_qt 0)
+set(gs_project_enable_qt 0)
+find_package(Qt5Core)
+if (Qt5Core_LIBRARIES)
+    set(gs_project_enable_qt 1)
+endif ()
+#set(gs_project_enable_qt 1)
 # set(gs_project_qt_version 4)
 
 
 ### cpython
-set(gs_project_enable_cpython 1)
-#set(gs_project_enable_cpython 0)
+set(gs_project_enable_cpython 0)
+find_package(PythonLibs)
+if (PYTHON_LIBRARIES)
+    set(gs_project_enable_cpython 1)
+endif ()
+#set(gs_project_enable_cpython 1)
 # set(gs_project_cpython_version 2)
 
 
@@ -78,18 +86,26 @@ set(gs_project_enable_uv 1)
 
 
 ### curl
-set(gs_project_enable_curl 1)
-#set(gs_project_enable_curl 0)
+set(gs_project_enable_curl 0)
+if (NOT WIN32)
+    find_package(CURL)
+    if (CURL_LIBRARIES)
+        set(gs_project_enable_qt 1)
+    endif ()
+else()
+    set(gs_project_enable_qt 1)
+endif ()
+#set(gs_project_enable_curl 1)
 
 
 ### openssl
 set(gs_project_enable_openssl 1)
-#set(gs_project_enable_openssl 0)
+set(gs_project_enable_openssl 0)
 
 
 ### opencv
 set(gs_project_enable_opencv 1)
-set(gs_project_enable_opencv 0)
+#set(gs_project_enable_opencv 0)
 if (WIN32)
     set(gs_project_enable_opencv 0)
 endif ()

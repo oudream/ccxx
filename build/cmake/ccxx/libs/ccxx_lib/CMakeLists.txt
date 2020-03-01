@@ -1,8 +1,6 @@
 
 mc_ccxx_include()
 
-#use cc4000 's path construction
-add_definitions(-D"PROJECT_PLATFORM_CC4000")
 add_definitions(-D"GM_BUILD_CCXX_CORE_LIB")
 
 add_library(ccxx SHARED ${gsl_ccxx_head_filepaths} ${gsl_ccxx_source_filepaths})

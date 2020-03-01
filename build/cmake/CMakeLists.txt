@@ -59,8 +59,15 @@ if (NOT gs_project_deploy_path)
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${gs_project_output_path_debug}")
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${gs_project_output_path_release}")
 
-    message(${gs_project_output_path_debug})
-    message(${gs_project_output_path_release})
+    if (CMAKE_BUILD_TYPE STREQUAL Release)
+        SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_release})
+    else()
+        SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_debug})
+    endif()
+
+    message("CMAKE_RUNTIME_OUTPUT_DIRECTORY--: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    message("gs_project_output_path_debug--: " ${gs_project_output_path_debug})
+    message("gs_project_output_path_release--: " ${gs_project_output_path_release})
 endif()
 
 if (APPLE)
