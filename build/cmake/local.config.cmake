@@ -100,7 +100,15 @@ endif ()
 
 ### openssl
 set(gs_project_enable_openssl 1)
-set(gs_project_enable_openssl 0)
+if (NOT WIN32)
+    find_package (OpenSSL)
+    if (OPENSSL_SSL_LIBRARY)
+        set(gs_project_enable_openssl 1)
+    endif ()
+else()
+    set(gs_project_enable_openssl 1)
+endif ()
+#set(gs_project_enable_openssl 0)
 
 
 ### opencv
