@@ -9,6 +9,12 @@
 > 2. 这个库已经连续开发了三年多，它为许多大型项目提供了基础支持。 
 > 3. 合并了单元测试，基准测试，cmake，进程监视，守护程序，异步库libuv，lua，cpython，re2，json，yaml，mysql，redis，opencv，qt，lz4，oci ...
 
+## 宣言
+> 库要轻量，精简，尽量一个模块用一个文件完成，模块之间尽量不产生依赖，尽量单独拷贝几个文件就能完成目标功能。在达到效率基础上库的使用次序 -> clib ->stl -> unix api -> posix -> os api。要多写 unit test , benchmark , docker in k8s 并行分布式测试。
+
+## Manifesto
+> The library should be lightweight and streamlined, and one module should be completed with one file as much as possible. There should be no dependencies between the modules. Try to copy several files separately to complete the target function. On the basis of efficiency, the order of use of the library-> clib-> stl-> unix api-> posix-> os api. To write more unit test, benchmark, docker in k8s parallel distributed testing.
+
 ### Git Clone Project 
 git clone https://github.com/oudream/ccxx.git
 
@@ -154,8 +160,17 @@ cd ~/ccxx/build/deploy/unix/bin_d
 - [https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
 - [refer to -> https://github.com/oudream/hello-docker](https://github.com/oudream/hello-docker)
 
-This is a cross-platform library software library about c, c ++, unix4, posix. 
-Incorporate unit test, benchmark test, cmake, process monitoring, daemon, asynchronous libraries libuv, lua, cpython, re2, json, yaml, mysql, redis, opencv, qt, lz4, oci ...
+### reference
+- The ccxx base layer calls these libraries such as clib, stl, unix4 interface, OS Api and so on. And referenced stl, boost, qt, ucommon (en)
+- ccxx底基层调用了clib, stl, unix4接口, OS Api等这些库。并参照了 stl,boost, qt, ucommon (cn)
+- [stl -> http://www.cplusplus.com/](http://www.cplusplus.com/)
+- [qt -> https://github.com/oudream/qt-4.8.7](https://github.com/oudream/qt-4.8.7)
+- [boost -> https://github.com/oudream/boost_1_42_0](https://github.com/oudream/boost_1_42_0)
+- [ucommon -> https://github.com/oudream/ucommon](https://github.com/oudream/ucommon)
+
+### ccxx的交叉编译目录
+- [ccxx的交叉编译目录](./build/cross-compile)
+
 ### todo
 todo:
 CxDatabase::loadSql : if loaded count > max return
