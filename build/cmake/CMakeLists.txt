@@ -88,10 +88,10 @@ message("----------------------------------------------------------------------"
 include(common.cmake)
 
 ### cmake config
-if (CCXX_BUILD_TYPE STREQUAL simple)
-    include(local.simple.config.cmake)
-else()
+if (CCXX_BUILD_TYPE STREQUAL all)
     include(local.all.config.cmake)
+else()
+    include(local.simple.config.cmake)
 endif()
 
 if (gs_project_enable_qt)
