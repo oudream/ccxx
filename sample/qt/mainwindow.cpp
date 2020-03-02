@@ -18,11 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
-//    QIcon icon(":/images/logo_ics.ico");
-    string sIconFilePath = "D:\\ICS4000\\deploy\\win32\\bin_gnu\\images\\logo_ics.ico";
-    //CxFileSystem::normalize(CxFileSystem::mergeFilePath(CxAppEnv::applicationPath(), "images/logo_ics.ico"));
+    // QIcon icon(":/images/logo_ics.ico");
+    string sIconFilePath = "./images/logo.ico";
     QIcon icon(QString::fromStdString(sIconFilePath));
-    //cxLog() << "sIconFilePath: " << sIconFilePath;
 
     trayIcon->setIcon(icon);
     qApp->setWindowIcon(icon);
