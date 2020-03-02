@@ -59,16 +59,10 @@ if (NOT gs_project_deploy_path)
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${gs_project_output_path_debug}")
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${gs_project_output_path_release}")
 
-    if (CMAKE_BUILD_TYPE STREQUAL Release)
-        SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_release})
-    else()
-        SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_debug})
-    endif()
-
-    message("CMAKE_RUNTIME_OUTPUT_DIRECTORY--: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     message("gs_project_output_path_debug--: " ${gs_project_output_path_debug})
     message("gs_project_output_path_release--: " ${gs_project_output_path_release})
 endif()
+
 
 if (APPLE)
     set(gs_project_lib_path ${gs_project_cross_compile_path}/lib/macos)
@@ -94,7 +88,11 @@ message("----------------------------------------------------------------------"
 include(common.cmake)
 
 ### cmake config
-include(local.config.cmake)
+if (CCXX_BUILD_TYPE STREQUAL simple)
+    include(local.simple.config.cmake)
+else()
+    include(local.all.config.cmake)
+endif()
 
 if (${gs_project_enable_qt})
     message("----qt----")
