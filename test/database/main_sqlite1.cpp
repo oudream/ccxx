@@ -72,7 +72,13 @@ int main(int argc,const char * argv[])
 
 	CxApplication::init(argc, argv);
 
-	string g_sDBSource = "D:\\ics4000.sqlite3.db";
+#ifdef GM_OS_WIN
+    string sHome = CxAppEnv::findEnv("HOMEPATH")
+#else
+    string sHome = CxAppEnv::findEnv("HOME")
+#endif
+
+    string g_sDBSource = CxFileSystem::mergeFilePath(sHome, "hello1.sqlite3.db";
 	string g_sDBType = "Sqlite";
 
 	CxDatabase * pDb = CxDatabaseManager::createDatabase(g_sDBSource, g_sDBType);
