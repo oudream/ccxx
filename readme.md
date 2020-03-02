@@ -78,36 +78,33 @@ vim ~/ccxx/build/cmake/local.all.config.cmake
 ## https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html
 ## https://opencv.org/releases/
 # cd ~/<my_working_directory>
-### 1 step
-sudo apt-get update -y && \
-sudo apt-get install build-essential && \
-sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev && \
-sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev 
+### 1 step: apt insall depend libs
+# libopencv-dev
+sudo echo "deb http://security.ubuntu.com/ubuntu xenial-security main" | tee /etc/apt/sources.list.d/libjasper.list && \
+sudo apt update -y ; apt upgrade -y && \
+sudo apt install -y gcc g++ cmake build-essential gdb gdbserver git \
+        unixodbc unixodbc-dev libcurl4-openssl-dev uuid uuid-dev \
+        qt5-default libqt5svg5 libqt5svg5-dev qtcreator \
+        software-properties-common \
+        libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
+        python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
 
 ### 2 step: git code and make it
 cd ~ && \
 git clone https://github.com/opencv/opencv.git && \
-git reset --hard 4c71dbf && \
-cd ~/opencv && mkdir build && cd build && \
+cd ~/opencv && git reset --hard 4c71dbf && \
+mkdir build && cd build && \
 cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local .. && \
 make -j7 && sudo make install
 
-### 3 step: apt insall depend libs
-# libopencv-dev
-sudo apt-get update -y ; sudo apt-get upgrade -y && \
-sudo apt-get install gcc g++ cmake build-essential gdb gdbserver \
-    unixodbc unixodbc-dev libcurl4-openssl-dev uuid uuid-dev \
-    qt5-default libqt5svg5 libqt5svg5-dev qtcreator -y && \
-sudo rm -rf /var/lib/apt/lists/*
-
-### 4 step: down source and compile
+### 3 step: down source and compile
 cd ~ && \
 git clone https://github.com/oudream/ccxx.git && \
 cd ccxx && \
 cmake . -DCMAKE_BUILD_TYPE=Debug --build . -B"./build/cmake-gcc" && \
 cd build/cmake-gcc && make
 
-### 5 step: run apps
+### 4 step: run apps
 cd ~/ccxx/build/deploy/unix/bin_d
 ./cxtest_timer
 ./cxtest_channel_udp_client1
@@ -156,7 +153,8 @@ cd ~/ccxx/build/deploy/unix/bin_d
 - [https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
 - [refer to -> https://github.com/oudream/hello-docker](https://github.com/oudream/hello-docker)
 
-
+This is a cross-platform library software library about c, c ++, unix4, posix. 
+Incorporate unit test, benchmark test, cmake, process monitoring, daemon, asynchronous libraries libuv, lua, cpython, re2, json, yaml, mysql, redis, opencv, qt, lz4, oci ...
 ### todo
 todo:
 CxDatabase::loadSql : if loaded count > max return
