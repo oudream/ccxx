@@ -50,7 +50,11 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
 # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
-include(./build/cmake/local.config.cmake)
+if (CCXX_BUILD_TYPE STREQUAL simple)
+    include(./build/cmake/local.simple.config.cmake)
+else()
+    include(./build/cmake/local.all.config.cmake)
+endif()
 include(./build/cmake/common.cmake)
 include(./3rd/3rd.cmake)
 
