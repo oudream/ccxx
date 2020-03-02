@@ -85,9 +85,10 @@ sudo apt update -y ; apt upgrade -y && \
 sudo apt install -y gcc g++ cmake build-essential gdb gdbserver git \
         unixodbc unixodbc-dev libcurl4-openssl-dev uuid uuid-dev \
         qt5-default libqt5svg5 libqt5svg5-dev qtcreator \
-        software-properties-common \
+        libssl-dev libncurses5-dev \
         libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
-        python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+        python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev \
+        software-properties-common 
 
 ### 2 step: git code and make it
 cd ~ && \
