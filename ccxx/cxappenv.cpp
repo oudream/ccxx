@@ -443,6 +443,21 @@ const map<string, string> &CxAppEnv::findConfigs(const string &sSection)
     return CxGlobal::emptyMapString;
 }
 
+std::string CxAppEnv::findEnv(const std::string &sName)
+{
+    char * p= getenv (sName.c_str());
+    if (p != NULL)
+    {
+        return string(p);
+    }
+    return string();
+}
+
+bool CxAppEnv::existEnv(const std::string &sName)
+{
+    return getenv (sName.c_str()) != NULL;
+}
+
 int CxAppEnv::saveConfig(const string &sFilePath)
 {
     string sSaveFilePath = sFilePath;

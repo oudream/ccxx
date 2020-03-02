@@ -114,6 +114,10 @@ public:
 
     static void saveConfig(const std::string &sSection, const std::string &sKey, const std::string &sValue);
 
+    static std::string findEnv(const std::string & sName);
+
+    static bool existEnv(const std::string & sName);
+
     /**
      * check app single instance
      * @param argc

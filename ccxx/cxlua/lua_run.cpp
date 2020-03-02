@@ -87,8 +87,6 @@ void CxLuaRun::init()
     }
     /**/
     
-//	string sScriptPath = "D:/ics4000/deploy/models";
-
     cxPrompt() << "ScriptPath : " << sScriptPath;
 
     f_deal_filePath = sScriptPath;
