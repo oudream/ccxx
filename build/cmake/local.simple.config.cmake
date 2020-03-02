@@ -1,15 +1,4 @@
 
-### mac
-### brew install unixodbc
-
-### Ubuntu: -D"OTL_ODBC_UNIX" -lodbc
-### sudo apt-get install unixodbc unixodbc-dev
-### sudo apt-get install uuid-dev
-
-### CentOS: -D"OTL_ODBC_UNIX" -lodbc
-### sudo yum install unixODBC-devel
-
-
 ### * setting cmake option:
 set(CMAKE_CXX_STANDARD 11)
 set(BUILD_SHARED_LIBS ON)
@@ -31,3 +20,6 @@ else()
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
 endif()
 message("CMAKE_RUNTIME_OUTPUT_DIRECTORY--: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+message("local.config.cmake type--: " local.simple.config.cmake)
+
+message("CCXX_BUILD_TYPE type--: " ${CCXX_BUILD_TYPE})

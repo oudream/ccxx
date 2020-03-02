@@ -1,15 +1,4 @@
 
-### mac
-### brew install unixodbc
-
-### Ubuntu: -D"OTL_ODBC_UNIX" -lodbc
-### sudo apt-get install unixodbc unixodbc-dev
-### sudo apt-get install uuid-dev
-
-### CentOS: -D"OTL_ODBC_UNIX" -lodbc
-### sudo yum install unixODBC-devel
-
-
 ### * setting cmake option:
 set(CMAKE_CXX_STANDARD 11)
 set(BUILD_SHARED_LIBS ON)
@@ -95,10 +84,10 @@ set(gs_project_enable_curl 0)
 if (NOT WIN32)
     find_package(CURL)
     if (CURL_LIBRARIES)
-        set(gs_project_enable_qt 1)
+        set(gs_project_enable_curl 1)
     endif ()
 else()
-    set(gs_project_enable_qt 1)
+    set(gs_project_enable_curl 1)
 endif ()
 #set(gs_project_enable_curl 1)
 
@@ -189,3 +178,5 @@ endif()
 
 
 message("CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
+message("local.config.cmake type--: " local.all.config.cmake)
+message("CCXX_BUILD_TYPE type--: " ${CCXX_BUILD_TYPE})
