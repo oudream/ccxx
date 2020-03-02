@@ -5,6 +5,7 @@ if (gs_project_enable_uv)
 endif ()
 
 add_subdirectory(./re2)
+
 if (gs_project_enable_htop)
     if (NOT WIN32)
         add_subdirectory(./htop)
