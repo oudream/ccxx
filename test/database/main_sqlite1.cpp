@@ -73,9 +73,9 @@ int main(int argc,const char * argv[])
 	CxApplication::init(argc, argv);
 
 #ifdef GM_OS_WIN
-    string sHome = CxAppEnv::findEnv("HOMEPATH")
+    string sHome = CxAppEnv::findEnv("HOMEPATH");
 #else
-    string sHome = CxAppEnv::findEnv("HOME")
+    string sHome = CxAppEnv::findEnv("HOME");
 #endif
 
     string g_sDBSource = CxFileSystem::mergeFilePath(sHome, "hello1.sqlite3.db");

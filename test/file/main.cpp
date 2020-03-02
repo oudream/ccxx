@@ -105,9 +105,9 @@ void fn_test_delete(const string& sScanPath)
 void fn_timer_timeout_create_delete(int iInterval)
 {
 #ifdef GM_OS_WIN
-    string sHome = CxAppEnv::findEnv("HOMEPATH")
+    string sHome = CxAppEnv::findEnv("HOMEPATH");
 #else
-    string sHome = CxAppEnv::findEnv("HOME")
+    string sHome = CxAppEnv::findEnv("HOME");
 #endif
     static int iIndex = 0;
     msepoch_t dtNow = CxTime::currentSystemTime();
