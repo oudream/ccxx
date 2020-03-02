@@ -17,9 +17,11 @@
 #ifdef BENCHMARK_OS_WINDOWS
 #include <shlwapi.h>
 #undef StrCat  // Don't let StrCat in string_util.h be renamed to lstrcatA
+#ifndef BENCHMARK_OS_MINGW
 #include <versionhelpers.h>
 #include <windows.h>
 #include <codecvt>
+#endif
 #else
 #include <fcntl.h>
 #ifndef BENCHMARK_OS_FUCHSIA
