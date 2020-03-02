@@ -104,15 +104,20 @@ void fn_test_delete(const string& sScanPath)
 
 void fn_timer_timeout_create_delete(int iInterval)
 {
+#ifdef GM_OS_WIN
+    string sHome = CxAppEnv::findEnv("HOMEPATH")
+#else
+    string sHome = CxAppEnv::findEnv("HOME")
+#endif
     static int iIndex = 0;
     msepoch_t dtNow = CxTime::currentSystemTime();
     if (iIndex++ % 2)
     {
-        fn_test_create("D:\\ics4000-¬¿≈‡¡˙\\deploy\\log\\tmp01");
+        fn_test_create(CxFileSystem::mergeFilePath(sHome,"deploy/log/tmp01"));
     }
     else
     {
-        fn_test_delete("D:\\ics4000-¬¿≈‡¡˙\\deploy\\log\\tmp01");
+        fn_test_delete(CxFileSystem::mergeFilePath(sHome,"deploy/log/tmp01"));
     }
     cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
     cxPrompt() << "";
@@ -121,12 +126,6 @@ void fn_timer_timeout_create_delete(int iInterval)
 void fn_timer_timeout_scan(int iInterval)
 {
     msepoch_t dtNow = CxTime::currentSystemTime();
-//    fn_test_scandir("D:\\ics4000-¬¿≈‡¡˙\\deploy\\history");
-//    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
-//    cxPrompt() << "";
-//    fn_test_scandir("D:\\ics4000-¬¿≈‡¡˙\\deploy\\log");
-//    cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
-//    cxPrompt() << "";
     fn_test_scandir("C:\\ddd\\ygct\\nodejs3\\node_modules\\oracledb");
     cxPrompt() << "COST TIME(MS): " << CxTime::milliSecondDifferToNow(dtNow);
     cxPrompt() << "";
