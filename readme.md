@@ -1,48 +1,75 @@
 
-### 
-- This is a cross-platform library software library about c, c ++, unix4, posix. 
-- This library has been continuously developed for more than three years, and it serves as the underlying support for many large projects. 
-- Incorporate unit test, benchmark test, cmake, process monitoring, daemon, asynchronous libraries libuv, lua, cpython, re2, json, yaml, mysql, redis, opencv, qt, lz4, oci ...
+## **CCXX** (en)
+> 1. This is a cross-platform library software library about c, c ++, unix4, posix. 
+> 2. This library has been continuously developed for more than three years, and it serves as the underlying support for many large projects. 
+> 3. Incorporate unit test, benchmark test, cmake, process monitoring, daemon, asynchronous libraries libuv, lua, cpython, re2, json, yaml, mysql, redis, opencv, qt, lz4, oci ...
 
-### 
-- 这是关于c，c ++，unix4，posix的跨平台库软件库。 
-- 这个库已经连续开发了三年多，它为许多大型项目提供了基础支持。 
-- 合并了单元测试，基准测试，cmake，进程监视，守护程序，异步库libuv，lua，cpython，re2，json，yaml，mysql，redis，opencv，qt，lz4，oci ...
+## **CCXX** (cn)
+> 1. 这是关于c，c ++，unix4，posix的跨平台库软件库。 
+> 2. 这个库已经连续开发了三年多，它为许多大型项目提供了基础支持。 
+> 3. 合并了单元测试，基准测试，cmake，进程监视，守护程序，异步库libuv，lua，cpython，re2，json，yaml，mysql，redis，opencv，qt，lz4，oci ...
 
 ### Git Clone Project 
 git clone https://github.com/oudream/ccxx.git
 
-### Tools Download
-- [clion - https://www.jetbrains.com/clion/download/other.html](https://www.jetbrains.com/clion/download/other.html)
-- [vscode - https://code.visualstudio.com/download](https://code.visualstudio.com/download)
-- [qt - http://download.qt.io/archive/qt/](http://download.qt.io/archive/qt/)
+### Two libraries are required ( 有两个库是必须的 )
+> 1. ODBC : ccxx_database_odbc is a library for connecting databases with odbc
+> 1. ODBC : ccxx_database_odbc 是一个用 odbc 连接数据库的库
+> 2. UUID : Except for windows, CxUuid (uuid) is implemented using the libuuid library
+> 2. UUID : 除了 windows 以外， CxUuid (uuid) 是用 libuuid库实现的
+```bash
 
-### May be install related dependent libraries according to your needs
-- [windows sdk - https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/](https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/)
-- [windows sdk - https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/)
+### mac
+brew install unixodbc
 
-### Compile
-cd ccxx
-cmake . -DCMAKE_BUILD_TYPE=Debug --build . -B"./build/cmake-gcc"
+### Ubuntu: -D"OTL_ODBC_UNIX" -lodbc
+sudo apt-get install unixodbc unixodbc-dev
+sudo apt-get install uuid-dev
 
-### OpenCv On Windows
-- Download and install Microsoft Visual C++ Build Tools 2015[http://go.microsoft.com/fwlink/?LinkId=691126](http://go.microsoft.com/fwlink/?LinkId=691126)
-- Download and install cmake-> [https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-win64-x64.msi](https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-win64-x64.msi)
-- or [https://cmake.org/download/](https://cmake.org/download/)
-- Download and install qt [http://download.qt.io/archive/qt/5.6/5.6.3/qt-opensource-windows-x86-mingw492-5.6.3.exe](http://download.qt.io/archive/qt/5.6/5.6.3/qt-opensource-windows-x86-mingw492-5.6.3.exe)
-- or [http://download.qt.io/archive/qt/](http://download.qt.io/archive/qt/)
-- Add ( your qt5.6.3mingw\Tools\mingw492_32\bin) To PATH
-- Download and install git [https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/Git-2.25.1-64-bit.exe](https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/Git-2.25.1-64-bit.exe)
-- or [https://git-scm.com/download/win](https://git-scm.com/download/win) 
-- Download and install github desktop [https://desktop.githubusercontent.com/releases/2.3.1-8a055015/GitHubDesktopSetup.exe](https://desktop.githubusercontent.com/releases/2.3.1-8a055015/GitHubDesktopSetup.exe)
-- or [https://desktop.github.com/](https://desktop.github.com/)
-```cmd
-
-git clone https://github.com/oudream/ccxx.git
-
+### CentOS: -D"OTL_ODBC_UNIX" -lodbc
+sudo yum install unixODBC-devel
+sudo yum install libuuid-devel
 
 ```
-ssh root@122.51.12.151 -AXY
+
+### Simple Compile
+```cmd
+
+# git and compile
+git clone https://github.com/oudream/ccxx.git
+cd ccxx
+cmake . -DCMAKE_BUILD_TYPE=Debug -DCCXX_BUILD_TYPE=simple --build . -B"./build/cmake-gcc"
+cd ./build/cmake-gcc && make
+
+# try run gtest (google test)
+make test
+
+# try run app
+cd ~/ccxx/build/deploy/unix/bin_d
+./cxtest_timer
+./cxtest_channel_udp_client1
+./cxtest_channel_udp_server1
+./cxsample_lua
+./benchmark_cxstring
+# ...
+
+```
+
+### Customize Compile
+```bash
+
+vim ~/ccxx/build/cmake/local.all.config.cmake
+# e.g. modify -> set(gs_project_enable_uv 1) to set(gs_project_enable_uv 0)
+# e.g. modify -> set(gs_project_enable_openssl 1) to set(gs_project_enable_openssl 0)
+
+```
+
+### Compiled pictures for each operating system (en)
+> 各个操作系统编译后的图片 (cn)
+- [man](./man)
+- [Ubuntu](./ubuntu-run-snips.md)
+- [Windows](./windows-run-snips.md)
+- [MacOs](./macos-run-snips.md)
 
 ### Full Compile On Ubuntu
 ```bash
@@ -81,13 +108,56 @@ cmake . -DCMAKE_BUILD_TYPE=Debug --build . -B"./build/cmake-gcc" && \
 cd build/cmake-gcc && make
 
 ### 5 step: run apps
-~/ccxx/build/deploy/unix/bin_d/benchmark_cxstring
+cd ~/ccxx/build/deploy/unix/bin_d
+./cxtest_timer
+./cxtest_channel_udp_client1
+./cxtest_channel_udp_server1
+./cxsample_lua
+./benchmark_cxstring
+# ...
 
 ```
 
-# ccxx
-clib, std, stl, Cross-platform, tcp, udp, serail, xml, regular expression, gtest, lua, json
+### ccxx source code
+- [ccxx source ->](./ccxx)
+- [third-party source ->](./3rd)
 
+### examples 
+- [sample code ->](./sample)
+
+### test, but not googletest
+- [test code ->](./test)
+
+### Tools
+- [clion - https://www.jetbrains.com/clion/download/other.html](https://www.jetbrains.com/clion/download/other.html)
+- [vscode - https://code.visualstudio.com/download](https://code.visualstudio.com/download)
+- [qt - http://download.qt.io/archive/qt/](http://download.qt.io/archive/qt/)
+
+### Tools On Windows
+- Download and install Microsoft Visual C++ Build Tools 2015[http://go.microsoft.com/fwlink/?LinkId=691126](http://go.microsoft.com/fwlink/?LinkId=691126)
+- Download and install cmake-> [https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-win64-x64.msi](https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-win64-x64.msi)
+- or [https://cmake.org/download/](https://cmake.org/download/)
+- Download and install qt [http://download.qt.io/archive/qt/5.6/5.6.3/qt-opensource-windows-x86-mingw492-5.6.3.exe](http://download.qt.io/archive/qt/5.6/5.6.3/qt-opensource-windows-x86-mingw492-5.6.3.exe)
+- or [http://download.qt.io/archive/qt/](http://download.qt.io/archive/qt/)
+- Add ( your qt5.6.3mingw\Tools\mingw492_32\bin) To PATH
+- Download and install git [https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/Git-2.25.1-64-bit.exe](https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/Git-2.25.1-64-bit.exe)
+- or [https://git-scm.com/download/win](https://git-scm.com/download/win) 
+- Download and install github desktop [https://desktop.githubusercontent.com/releases/2.3.1-8a055015/GitHubDesktopSetup.exe](https://desktop.githubusercontent.com/releases/2.3.1-8a055015/GitHubDesktopSetup.exe)
+- or [https://desktop.github.com/](https://desktop.github.com/)
+
+### May be install related dependent libraries according to your needs
+- [windows sdk - https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/](https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/)
+- [windows sdk - https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/](https://developer.microsoft.com/zh-cn/windows/downloads/sdk-archive/)
+
+### Jenkins
+- [refer to -> https://github.com/oudream/hello-jenkins](https://github.com/oudream/hello-jenkins)
+
+### Docker
+- [https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
+- [refer to -> https://github.com/oudream/hello-docker](https://github.com/oudream/hello-docker)
+
+
+### todo
 todo:
 CxDatabase::loadSql : if loaded count > max return
 
@@ -97,4 +167,3 @@ add libuv channel
 todo:
 exit or signal : reentrant function
 e.g. : CxLog() <<
-
