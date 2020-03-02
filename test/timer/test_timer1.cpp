@@ -18,13 +18,13 @@ protected:
     {
         if (oTimer == &timer1)
         {
-            cout << "TimerPrintObject" << timer1.interval() << endl;
+            cout << "timer1.interval = " << timer1.interval() << ", now = " << CxTime::currentSystemTimeString() << endl;
             timer5.start();
             timer1.stop();
         }
         else if (oTimer == &timer5)
         {
-            cout << "TimerPrintObject" << timer5.interval() << endl;
+            cout << "timer5.interval = " << timer5.interval() << ", now = " << CxTime::currentSystemTimeString() << endl;
             timer5.stop();
             timer1.start();
         }

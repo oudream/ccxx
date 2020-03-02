@@ -9,12 +9,11 @@ public:
     {
         if (iInterval == 100)
         {
-            cout << "TimerPrintFunction" << iInterval << endl;
         }
         else if (iInterval == 300)
         {
-            cout << "TimerPrintFunction" << iInterval << endl;
         }
+        cout << "interval = " << iInterval << ", now = " << CxTime::currentSystemTimeString() << endl;
     }
 
     static void start()
