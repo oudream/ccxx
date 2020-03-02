@@ -21,5 +21,3 @@ else()
 endif()
 message("CMAKE_RUNTIME_OUTPUT_DIRECTORY--: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 message("local.config.cmake type--: " local.simple.config.cmake)
-
-message("CCXX_BUILD_TYPE type--: " ${CCXX_BUILD_TYPE})

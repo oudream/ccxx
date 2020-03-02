@@ -44,7 +44,7 @@ sudo yum install libuuid-devel
 # git and compile
 git clone https://github.com/oudream/ccxx.git
 cd ccxx
-cmake . -DCMAKE_BUILD_TYPE=Debug -DCCXX_BUILD_TYPE=simple --build . -B"./build/cmake-gcc"
+cmake . -DCMAKE_BUILD_TYPE=Debug --build . -B"./build/cmake-gcc"
 cd ./build/cmake-gcc && make
 
 # try run gtest (google test)
@@ -108,7 +108,7 @@ make -j7 && sudo make install
 cd ~ && \
 git clone https://github.com/oudream/ccxx.git && \
 cd ccxx && \
-cmake . -DCMAKE_BUILD_TYPE=Debug --build . -B"./build/cmake-gcc" && \
+cmake . -DCMAKE_BUILD_TYPE=Debug -DCCXX_BUILD_TYPE=all --build . -B"./build/cmake-gcc" && \
 cd build/cmake-gcc && make
 
 ### 4 step: run apps

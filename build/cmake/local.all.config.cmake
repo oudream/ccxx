@@ -179,4 +179,3 @@ endif()
 
 message("CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
 message("local.config.cmake type--: " local.all.config.cmake)
-message("CCXX_BUILD_TYPE type--: " ${CCXX_BUILD_TYPE})

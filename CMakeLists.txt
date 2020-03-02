@@ -55,6 +55,8 @@ if (CCXX_BUILD_TYPE STREQUAL all)
 else()
     include(./build/cmake/local.simple.config.cmake)
 endif()
+message("---CCXX_BUILD_TYPE type---: " ${CCXX_BUILD_TYPE})
+
 include(./build/cmake/common.cmake)
 
 enable_testing()

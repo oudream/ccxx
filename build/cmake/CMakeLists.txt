@@ -93,6 +93,7 @@ if (CCXX_BUILD_TYPE STREQUAL all)
 else()
     include(local.simple.config.cmake)
 endif()
+message("---CCXX_BUILD_TYPE type---: " ${CCXX_BUILD_TYPE})
 
 if (gs_project_enable_qt)
     include(qt.cmake)
