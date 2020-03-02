@@ -56,7 +56,6 @@ else()
     include(./build/cmake/local.all.config.cmake)
 endif()
 include(./build/cmake/common.cmake)
-include(./3rd/3rd.cmake)
 
 enable_testing()
 
