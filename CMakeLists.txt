@@ -29,19 +29,9 @@ if (NOT gs_project_deploy_path)
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${gs_project_output_path_debug}")
     SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${gs_project_output_path_release}")
 
-    if (CMAKE_BUILD_TYPE STREQUAL Release)
-        SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_release})
-    else()
-        SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${gs_project_output_path_debug})
-    endif()
-
-    message("CMAKE_RUNTIME_OUTPUT_DIRECTORY--: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-    message("gs_project_output_path_debug--: " ${gs_project_output_path_debug})
-    message("gs_project_output_path_release--: " ${gs_project_output_path_release})
+    message(------gs_project_output_path_debug: ${gs_project_output_path_debug})
+    message(------gs_project_output_path_release: ${gs_project_output_path_release})
 endif()
-
-message("CMAKE_BUILD_TYPE--: " ${CMAKE_BUILD_TYPE})
-message("----------------------------------------------------------------------")
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -50,14 +40,15 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
 # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
-if (CCXX_BUILD_TYPE STREQUAL all)
-    include(./build/cmake/local.all.config.cmake)
-else()
-    include(./build/cmake/local.simple.config.cmake)
-endif()
-message("---CCXX_BUILD_TYPE type---: " ${CCXX_BUILD_TYPE})
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/build/cmake/modules")
 
-include(./build/cmake/common.cmake)
+if (CCXX_BUILD_TYPE STREQUAL all)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/build/cmake/local.all.config.cmake)
+else()
+    include(${CMAKE_CURRENT_SOURCE_DIR}/build/cmake/local.simple.config.cmake)
+endif()
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/build/cmake/common.cmake)
 
 enable_testing()
 

@@ -3,26 +3,26 @@
 # path
 set(gs_htop_path ${CMAKE_CURRENT_SOURCE_DIR})
 set(gs_htop_include_path ${gs_htop_path})
-message("gs_htop_path = " ${gs_htop_path})
+message(------gs_htop_path: ${gs_htop_path})
 
 # config
 macro(mc_htop_generate_config)
     file(GLOB htop_config_h "${gs_htop_path}/htop/config.h")
 
-    message('htop config.h--: ' "${gs_htop_path}/htop/config.h" ${htop_config_h})
+    message(------htop config.h: "${gs_htop_path}/htop/config.h" ${htop_config_h})
     if (NOT htop_config_h)
         execute_process(
                 COMMAND ./autogen.sh
                 RESULT_VARIABLE result
                 WORKING_DIRECTORY "${gs_htop_path}/htop"
         )
-        message('htop config.h result--: ' ${result})
+        message(------htop config.h result: ${result})
         execute_process(
                 COMMAND ./configure --disable-unicode
                 RESULT_VARIABLE result
                 WORKING_DIRECTORY "${gs_htop_path}/htop"
         )
-        message('htop config.h result--: ' ${result})
+        message(------htop config.h result: ${result})
     endif ()
 endmacro()
 

@@ -1,21 +1,21 @@
 
-mc_target_define_cpython()
+include_directories(${PYTHON_INCLUDE_DIRS})
 
 ### noddy
 set(gsl_noddy_files
-        python/noddy1.h
-        python/noddy1.cpp
-        python/noddy2.h
-        python/noddy2.cpp
-        python/noddy3.h
-        python/noddy3.cpp
-        python/noddy4.h
-        python/noddy4.cpp
-        python/noddy_config.h
-        python/noddy_config.cpp
-        python/noddy_module.cpp
+        noddy1.h
+        noddy1.cpp
+        noddy2.h
+        noddy2.cpp
+        noddy3.h
+        noddy3.cpp
+        noddy4.h
+        noddy4.cpp
+        noddy_config.h
+        noddy_config.cpp
+        noddy_module.cpp
         )
-mc_merge_file_path(${gs_ccxx_test_path} "${gsl_noddy_files}" gsl_noddy_files_filepaths)
+mc_merge_file_path(${gs_ccxx_test_path}/python/noddy "${gsl_noddy_files}" gsl_noddy_files_filepaths)
 source_group("noddy" FILES ${gsl_noddy_files_filepaths})
 
 add_library(noddy SHARED
@@ -34,12 +34,12 @@ set_target_properties(noddy PROPERTIES FOLDER ccxx/test)
 
 ### shoddy
 set(gsl_shoddy_files
-        python/shoddy1.h
-        python/shoddy1.cpp
-        python/shoddy_config.hpp
-        python/shoddy_module.cpp
+        shoddy1.h
+        shoddy1.cpp
+        shoddy_config.hpp
+        shoddy_module.cpp
         )
-mc_merge_file_path(${gs_ccxx_test_path} "${gsl_shoddy_files}" gsl_shoddy_files_filepaths)
+mc_merge_file_path(${gs_ccxx_test_path}/python/shoddy "${gsl_shoddy_files}" gsl_shoddy_files_filepaths)
 source_group("shoddy" FILES ${gsl_shoddy_files_filepaths})
 
 add_library(shoddy SHARED

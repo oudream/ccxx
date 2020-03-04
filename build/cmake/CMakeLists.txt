@@ -16,10 +16,11 @@
 
 #cmake --build .
 
-
 cmake_minimum_required(VERSION 3.0)
 
 project(CCXX VERSION 1.0.1 LANGUAGES CXX C)
+
+message("----------------------------------------------------------------------")
 
 ### depend path
 #CMAKE_CURRENT_SOURCE_DIR (current file path)
@@ -27,10 +28,10 @@ if (NOT gs_project_path)
     set(gs_project_path ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 endif()
 
-message('PROJECT-PATH: ' ${gs_project_path})
-message(${CMAKE_C_COMPILER_ID})
-message(${CMAKE_CXX_COMPILER_ID})
-#message(${CMAKE_PREFIX_PATH})
+message(------gs_project_path= ${gs_project_path})
+message(------CMAKE_C_COMPILER_ID= ${CMAKE_C_COMPILER_ID})
+message(------CMAKE_CXX_COMPILER_ID= ${CMAKE_CXX_COMPILER_ID})
+message(------CMAKE_PREFIX_PATH= ${CMAKE_PREFIX_PATH})
 
 set(gs_project_include_path ${gs_project_path}/include)
 set(gs_project_3rd_path ${gs_project_path}/3rd)
@@ -61,6 +62,14 @@ if (NOT gs_project_deploy_path)
 
     message("gs_project_output_path_debug--: " ${gs_project_output_path_debug})
     message("gs_project_output_path_release--: " ${gs_project_output_path_release})
+
+    ### cmake config
+    if (CCXX_BUILD_TYPE STREQUAL all)
+        include(local.all.config.cmake)
+    else()
+        include(local.simple.config.cmake)
+    endif()
+    message("---CCXX_BUILD_TYPE type---: " ${CCXX_BUILD_TYPE})
 endif()
 
 
@@ -82,18 +91,9 @@ else()
 endif()
 link_directories(${gs_project_lib_path})
 
-message("----------------------------------------------------------------------")
 
 ### common cmake
 include(common.cmake)
-
-### cmake config
-if (CCXX_BUILD_TYPE STREQUAL all)
-    include(local.all.config.cmake)
-else()
-    include(local.simple.config.cmake)
-endif()
-message("---CCXX_BUILD_TYPE type---: " ${CCXX_BUILD_TYPE})
 
 if (gs_project_enable_qt)
     include(qt.cmake)
@@ -101,7 +101,6 @@ if (gs_project_enable_qt)
 endif ()
 
 if (gs_project_enable_cpython)
-    include(cpython.cmake)
     message("--------------gs_project_enable_cpython---------------")
 endif ()
 
