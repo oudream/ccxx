@@ -15,6 +15,25 @@
 ## Manifesto
 > The library should be lightweight and streamlined, and one module should be completed with one file as much as possible. There should be no dependencies between the modules. Try to copy several files separately to complete the target function. On the basis of efficiency, the order of use of the library-> clib-> stl-> unix api-> posix-> os api. To write more unit test, benchmark, docker in k8s parallel distributed testing.
 
+## 简介 (brief introduction)
+> ccxx的核心库（默认静态类方式直接调用）
+> 1.  cxappenv.h: 运行环境（运行程序名, 工作目录, 环境变量）
+> 2.  cxinterinfo.h: 程序的信息输入输出接口。实现有: cxlog.h（日志）, CxConsoleInterinfo（终端）
+> 2.  cxfile.h: 文件系统
+> 3.  cxsocket.h: 网络通信
+> 4.  cxthread.h: 线程信号,IPC
+> 5.  cxapplication.h 类似（Node.js）中的Event Loop。采用 wait 信号机制对事件队列进行轮询并执行。
+> 6.  cxchannel.h: （要实例化来使用）开独立线程进行收发和监听，收到数据及事件 push 到主线程的 Event Loop 中，因此数据不需要跨线加锁。实现有: cxchannel_udp.h, cxchannel_tcpserver.h, cxchannel_tcpclient.h, cxchannel_serial.h
+> 7.  cxcrc.h: 数据检验
+> 8.  cxdatabase.h: （要实例化来使用）以表的方式统一数据操作的接口类。实现有：cxdatabase_odbc.h, cxdatabase_sqlite.h（直接调用官方 sqlite3.c来实现相关功能）
+> 9.  cxprocess.h: 系统进程
+> 10. cxprocmutex.h: 进程锁
+> 11. cxtimer.h: 定时器
+> 12. cxtime.h: 时间与日期
+> 13. cxuuid.h: GUID, UUID
+> 14. cxsharememory.h: 共享内存,进程间通信IPC (InterProcess Communication) 
+> 15. 其它的(cxhiredis.h(Redis), )
+
 ### Git Clone Project 
 git clone https://github.com/oudream/ccxx.git
 

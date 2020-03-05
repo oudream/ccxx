@@ -9,7 +9,7 @@ set(gsl_cxpython_files
 
 mc_merge_file_path(${gs_ccxx_source_path}/cxpython "${gsl_cxpython_files}" gsl_cxpython_files_filepaths)
 
-add_executable(cxpython
+add_library(cxpython
         ${gsl_cxpython_files_filepaths}
         )
 
