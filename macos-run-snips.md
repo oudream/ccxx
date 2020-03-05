@@ -6,3 +6,6 @@
 
 ### app cxsample_lua is running
 ![cxsample_lua_run](./man/img/cxsample_lua_run.jpg)
+
+### app cxsample_callpython is running
+![cxsample_lua_run](./man/img/cxsample_callpython.jpg)
