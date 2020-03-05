@@ -256,6 +256,10 @@ void CxLuaRun::loadLuaFiles(bool bLocalCommon, bool bLocadTask)
                     if (bOk && iTimeOut>0)
                     {
                         f_task_filePathTimeouts[pathInfo.fileName] = iTimeOut;
+                        // cxDebug() << "load 1 Lua File Success =" <<  pathInfo.fileName << " , iTimeOut =" << iTimeOut ;
+                    } else
+                    {
+                        // cxDebug() << "load 1 Lua File False =" <<  pathInfo.fileName << " , iTimeOut =" << iTimeOut ;
                     }
                     continue;
                 }

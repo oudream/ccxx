@@ -67,12 +67,32 @@
 > 22. c ++ call python (callpython) (./ ccxx / sample / callpython), python call c ++ (cxpython) (./ ccxx / ccxx / cxpython). Referto [https://github.com/oudream/hello-cmake ] (https://github.com/oudream/hello-cmake)
 > 23. The official sample code for opencv has been included with cmake and can be compiled for easy testing.
 
-### Source Code
+### Source Code (Try: docker run -d -p 2235:22 oudream/ubuntu-ccxx-env:18.04.12)
 ```bash
 git clone https://github.com/oudream/ccxx.git
 ```
 - [Docker of ccxx as -> https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
 - [Dockerfile of ccxx as -> https://github.com/oudream/hello-docker/tree/master/projects/ccxx](https://github.com/oudream/hello-docker/tree/master/projects/ccxx)
+- **Try It** 
+```bash
+docker run -d -p 2235:22 oudream/ubuntu-ccxx-env:18.04.12
+ssh root@localhost -p 2235 -AXY -v
+# password is: 123456
+# You can run the following examples to experiment (可以运行以下样例来试验)
+/opt/ccxx/build/deploy/unix/bin_d/cxtest_timer
+# or
+/opt/ccxx/build/deploy/unix/bin_d/cxtest_channel_udp_client1
+# or
+/opt/ccxx/build/deploy/unix/bin_d/cxtest_channel_udp_server1
+# or
+/opt/ccxx/build/deploy/unix/bin_d/cxsample_lua
+# or
+/opt/ccxx/build/deploy/unix/bin_d/benchmark_cxstring
+# ctrl + c to exit
+^c
+
+```
+
 
 ### Before compiling: Two libraries are required ( 有两个库是必须的 )
 > 1. ODBC : ccxx_database_odbc is a library for connecting databases with odbc
@@ -145,11 +165,11 @@ vim /opt/ccxx/build/cmake/local.all.config.cmake
 sudo echo "deb http://security.ubuntu.com/ubuntu xenial-security main" | tee /etc/apt/sources.list.d/libjasper.list && \
 sudo apt update -y ; apt upgrade -y && \
 sudo apt install -y gcc g++ cmake build-essential gdb gdbserver git \
-        unixodbc unixodbc-dev libcurl4-openssl-dev uuid uuid-dev \
+        unixodbc unixodbc-dev libcurl4-openssl-dev uuid uuid-dev libssl-dev libncurses5-dev \
         qt5-default libqt5svg5 libqt5svg5-dev qtcreator \
         libssl-dev libncurses5-dev \
         libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
-        python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev \
+        python3-dev python3-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev \
         software-properties-common 
 
 ### 2 step: git code and make it
@@ -168,12 +188,17 @@ cmake . -DCMAKE_BUILD_TYPE=Debug -DCCXX_BUILD_TYPE=all --build . -B"./build/cmak
 cd build/cmake-gcc && make
 
 ### 4 step: run apps
-cd /opt/ccxx/build/deploy/unix/bin_d
-./cxtest_timer
-./cxtest_channel_udp_client1
-./cxtest_channel_udp_server1
-./cxsample_lua
-./benchmark_cxstring
+/opt/ccxx/build/deploy/unix/bin_d/cxtest_timer
+# or
+/opt/ccxx/build/deploy/unix/bin_d/cxtest_channel_udp_client1
+# or
+/opt/ccxx/build/deploy/unix/bin_d/cxtest_channel_udp_server1
+# or
+/opt/ccxx/build/deploy/unix/bin_d/cxsample_lua
+# or
+/opt/ccxx/build/deploy/unix/bin_d/benchmark_cxstring
+# ctrl + c to exit
+^c
 # ...
 
 ```
