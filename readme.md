@@ -67,7 +67,7 @@
 > 22. c ++ call python (callpython) (./ ccxx / sample / callpython), python call c ++ (cxpython) (./ ccxx / ccxx / cxpython). Referto [https://github.com/oudream/hello-cmake ] (https://github.com/oudream/hello-cmake)
 > 23. The official sample code for opencv has been included with cmake and can be compiled for easy testing.
 
-### Source Code (Try: docker run -d -p 2235:22 oudream/ubuntu-ccxx-env:18.04.12)
+### Source Code
 ```bash
 git clone https://github.com/oudream/ccxx.git
 # You can extract several related files for use as needed
@@ -75,7 +75,7 @@ git clone https://github.com/oudream/ccxx.git
 ```
 - [Docker of ccxx as -> https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
 - [Dockerfile of ccxx as -> https://github.com/oudream/hello-docker/tree/master/projects/ccxx](https://github.com/oudream/hello-docker/tree/master/projects/ccxx)
-- **Try It** 
+- **Try It In Docker** 
 ```bash
 docker run -d -p 2235:22 oudream/ubuntu-ccxx-env:18.04.12
 ssh root@localhost -p 2235 -AXY -v
