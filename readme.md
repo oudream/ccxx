@@ -70,6 +70,8 @@
 ### Source Code (Try: docker run -d -p 2235:22 oudream/ubuntu-ccxx-env:18.04.12)
 ```bash
 git clone https://github.com/oudream/ccxx.git
+# You can extract several related files for use as needed
+# 可以根据需要提取其中几个相关文件来用的
 ```
 - [Docker of ccxx as -> https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
 - [Dockerfile of ccxx as -> https://github.com/oudream/hello-docker/tree/master/projects/ccxx](https://github.com/oudream/hello-docker/tree/master/projects/ccxx)
