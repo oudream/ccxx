@@ -60,7 +60,7 @@ if (Qt5Core_LIBRARIES)
         endif ()
     endif ()
 endif ()
-#set(gs_project_enable_qt 1)
+#set(gs_project_enable_qt 0)
 # set(gs_project_qt_version 4)
 
 
@@ -89,8 +89,7 @@ if (PYTHONLIBS_FOUND)
     message(------PYTHON_LIBRARIES: ${PYTHON_LIBRARIES})
     message(------PYTHON_DEBUG_LIBRARIES: ${PYTHON_DEBUG_LIBRARIES})
 endif ()
-#set(gs_project_enable_cpython 1)
-# set(gs_project_cpython_version 2)
+#set(gs_project_enable_cpython 0)
 
 
 ### * libuv
@@ -108,7 +107,7 @@ if (NOT WIN32)
 else ()
     set(gs_project_enable_curl 1)
 endif ()
-#set(gs_project_enable_curl 1)
+#set(gs_project_enable_curl 0)
 
 
 ### * openssl

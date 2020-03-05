@@ -19,8 +19,6 @@ add_custom_command(
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/multiply.py
         )
 
-include_directories(${PYTHON_INCLUDE_DIRS})
-
 target_link_libraries(cxsample_callpython
         ${PYTHON_LIBRARIES}
         )

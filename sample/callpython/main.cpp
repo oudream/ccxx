@@ -6,35 +6,34 @@
 int
 main(int argc, char *argv[])
 {
+    fprintf(stdout,"Usage: call pythonfile funcname [args]\n");
+
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
     int i;
 
-    if (argc < 3) {
-        fprintf(stderr,"Usage: call pythonfile funcname [args]\n");
-        return 1;
-    }
+    //run as: ./callpython multiply multiply 3 2
+    char * sArgvsDefault[] = {"callpython", "multiply", "multiply", "3", "2"};
+    char ** sArgvs = argc<3 ? sArgvsDefault :argv;
 
     PyImport_AppendInittab("Module1",Module1::createModule);
 
     Py_Initialize();
 
-//    PyObject* oModule = Module1::createModule();
-
-    pName = PyUnicode_DecodeFSDefault(argv[1]);
+    pName = PyUnicode_DecodeFSDefault(sArgvs[1]);
     /* Error checking of pName left out */
 
     pModule = PyImport_Import(pName);
     Py_DECREF(pName);
 
     if (pModule != NULL) {
-        pFunc = PyObject_GetAttrString(pModule, argv[2]);
+        pFunc = PyObject_GetAttrString(pModule, sArgvs[2]);
         /* pFunc is a new reference */
 
         if (pFunc && PyCallable_Check(pFunc)) {
             pArgs = PyTuple_New(argc - 3);
             for (i = 0; i < argc - 3; ++i) {
-                pValue = PyLong_FromLong(atoi(argv[i + 3]));
+                pValue = PyLong_FromLong(atoi(sArgvs[i + 3]));
                 if (!pValue) {
                     Py_DECREF(pArgs);
                     Py_DECREF(pModule);
@@ -61,14 +60,14 @@ main(int argc, char *argv[])
         else {
             if (PyErr_Occurred())
                 PyErr_Print();
-            fprintf(stderr, "Cannot find function \"%s\"\n", argv[2]);
+            fprintf(stderr, "Cannot find function \"%s\"\n", sArgvs[2]);
         }
         Py_XDECREF(pFunc);
         Py_DECREF(pModule);
     }
     else {
         PyErr_Print();
-        fprintf(stderr, "Failed to load \"%s\"\n", argv[1]);
+        fprintf(stderr, "Failed to load \"%s\"\n", sArgvs[1]);
         return 1;
     }
 

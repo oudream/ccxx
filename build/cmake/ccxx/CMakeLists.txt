@@ -13,3 +13,7 @@ add_subdirectory(tools)
 add_subdirectory(lua)
 add_subdirectory(gtest)
 add_subdirectory(benchmark)
+
+if (gs_project_enable_cpython)
+    add_subdirectory(python)
+endif()
