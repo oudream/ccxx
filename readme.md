@@ -1,4 +1,3 @@
----
 
 ## **CCXX** (en)
 > 1. This is a cross-platform library software library about c, c ++, unix4, posix. 
@@ -63,8 +62,6 @@
 > 19. Other third-party packages include (cxhiredis.h (closed by Redis), cxtinyxml.h (Xml file read and write), cxrapidjson.h (regular expression), lz4.h (compression and decompression))
 > 20. gtest, luv, benchmark, yaml's own source code has been placed in 3rd.
 > 21. openssl, curl is a header file plus library
-
----
 
 ### Source Code
 ```bash
