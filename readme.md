@@ -38,6 +38,8 @@
 > 19. 其它第三方封装有(cxhiredis.h(Redis的封闭), cxtinyxml.h(Xml文件读写), cxrapidjson.h(正则表达式)，lz4.h（压缩解压）)
 > 20. gtest, luv, benchmark, yaml 的自身源码已经放到 3rd 中。
 > 21. openssl, curl 是以头文件加库的方式 
+> 22. c++ call python(callpython)(./ccxx/sample/callpython), python call c++(cxpython)(./ccxx/ccxx/cxpython). referto [https://github.com/oudream/hello-cmake](https://github.com/oudream/hello-cmake)
+> 23. opencv 的官方样例代码用cmake已经包含进来，并能编译以方便试验。
 
 ## brief introduction
 > The core library code of ccxx is located in the ccxx folder in the root directory (about 14MB). Modules mostly use a file .cpp to complete the function, and the default static class method is called directly). For examples, please refer to the directory of sample and test.
@@ -62,6 +64,8 @@
 > 19. Other third-party packages include (cxhiredis.h (closed by Redis), cxtinyxml.h (Xml file read and write), cxrapidjson.h (regular expression), lz4.h (compression and decompression))
 > 20. gtest, luv, benchmark, yaml's own source code has been placed in 3rd.
 > 21. openssl, curl is a header file plus library
+> 22. c ++ call python (callpython) (./ ccxx / sample / callpython), python call c ++ (cxpython) (./ ccxx / ccxx / cxpython). Referto [https://github.com/oudream/hello-cmake ] (https://github.com/oudream/hello-cmake)
+> 23. The official sample code for opencv has been included with cmake and can be compiled for easy testing.
 
 ### Source Code
 ```bash
