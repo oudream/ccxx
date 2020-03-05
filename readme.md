@@ -16,26 +16,57 @@
 > The library should be lightweight and streamlined, and one module should be completed with one file as much as possible. There should be no dependencies between the modules. Try to copy several files separately to complete the target function. On the basis of efficiency, the order of use of the library-> clib-> stl-> unix api-> posix-> os api. To write more unit test, benchmark, docker in k8s parallel distributed testing.
 
 ## 简介 (brief introduction)
-> ccxx的核心库（默认静态类方式直接调用）
+> ccxx的核心库代码在根目录下ccxx文件夹中中，大概有（14MB 左右）。模块大多以一个文件.cpp来完成功能，默认静态类方式直接调用）。例子可参考 sample 及 test 的目录。
 > 1.  cxappenv.h: 运行环境（运行程序名, 工作目录, 环境变量）
 > 2.  cxinterinfo.h: 程序的信息输入输出接口。实现有: cxlog.h（日志）, CxConsoleInterinfo（终端）
-> 2.  cxfile.h: 文件系统
-> 3.  cxsocket.h: 网络通信
-> 4.  cxthread.h: 线程信号,IPC
-> 5.  cxapplication.h 类似（Node.js）中的Event Loop。采用 wait 信号机制对事件队列进行轮询并执行。
-> 6.  cxchannel.h: （要实例化来使用）开独立线程进行收发和监听，收到数据及事件 push 到主线程的 Event Loop 中，因此数据不需要跨线加锁。实现有: cxchannel_udp.h, cxchannel_tcpserver.h, cxchannel_tcpclient.h, cxchannel_serial.h
-> 7.  cxcrc.h: 数据检验
-> 8.  cxdatabase.h: （要实例化来使用）以表的方式统一数据操作的接口类。实现有：cxdatabase_odbc.h, cxdatabase_sqlite.h（直接调用官方 sqlite3.c来实现相关功能）
-> 9.  cxprocess.h: 系统进程
-> 10. cxprocmutex.h: 进程锁
-> 11. cxtimer.h: 定时器
-> 12. cxtime.h: 时间与日期
-> 13. cxuuid.h: GUID, UUID
-> 14. cxsharememory.h: 共享内存,进程间通信IPC (InterProcess Communication) 
-> 15. 其它的(cxhiredis.h(Redis), )
+> 3.  cxfile.h: 文件系统
+> 4.  cxsocket.h: 网络通信
+> 5.  cxthread.h: 线程信号,IPC
+> 6.  cxapplication.h 类似（Node.js）中的Event Loop。采用 wait 信号机制对事件队列进行轮询并执行。目前参与到 Event Loop 中的有（cxchannel.h, cxtimer.h）。cxapplication_qt.h 是 Qt 参与到 Qt 的 Event Loop。
+> 7.  cxchannel.h: （要实例化来使用）开独立线程进行收发和监听，收到数据及事件 push 到主线程的 Event Loop 中，因此数据不需要跨线加锁。实现有: cxchannel_udp.h, cxchannel_tcpserver.h, cxchannel_tcpclient.h, cxchannel_serial.h
+> 8.  cxcrc.h: 数据检验
+> 9.  cxdatabase.h: （要实例化来使用）以表的方式统一数据操作的接口类。实现有：cxdatabase_odbc.h, cxdatabase_sqlite.h（直接调用官方 sqlite3.c来实现相关功能）
+> 10. cxprocess.h: 系统进程
+> 11. cxprocmutex.h: 进程锁
+> 12. cxtimer.h: （要实例化来使用）定时器
+> 13. cxtime.h: 时间与日期
+> 14. cxuuid.h: GUID, UUID
+> 15. cxsharememory.h: 共享内存,进程间通信IPC (InterProcess Communication) 
+> 16. cxprofile.h: （要实例化来使用）配置文件以表的方式来封闭使用。实现有: cxprofile_skv_json.h, cxprofile_skv_xml.h。(skv: section key value)
+> 17. cxencoding.h: 实现 GBK 与 UTF-8 之间的转换
+> 18. cxlua文件夹: 以 lua 的方式公开 ccxx 功能块，lua_run.h 是 main的入口。
+> 19. 其它第三方封装有(cxhiredis.h(Redis的封闭), cxtinyxml.h(Xml文件读写), cxrapidjson.h(正则表达式)，lz4.h（压缩解压）)
+> 20. gtest, luv, benchmark, yaml 的自身源码已经放到 3rd 中。
+> 21. openssl, curl 是以头文件加库的方式 
 
-### Git Clone Project 
+
+> The core library code of ccxx is located in the ccxx folder in the root directory (about 14MB). Modules mostly use a file .cpp to complete the function, and the default static class method is called directly). For examples, please refer to the directory of sample and test.
+> 1.  cxappenv.h: running environment (run program name, working directory, environment variables)
+> 2.  cxinterinfo.h: program information input and output interface. Implementations are: cxlog.h (log), CxConsoleInterinfo (terminal)
+> 3.  cxfile.h: file system
+> 4.  cxsocket.h: network communication
+> 5.  cxthread.h: thread signal, IPC
+> 6.  cxapplication.h is similar to the Event Loop in (Node.js). The wait signal mechanism is used to poll and execute the event queue. Currently participating in the Event Loop (cxchannel.h, cxtimer.h). cxapplication_qt.h is the event loop where Qt participates in Qt.
+> 7.  cxchannel.h: (to be instantiated to use) open a separate thread to send and receive and monitor, receive data and events push to the Event Loop of the main thread, so the data does not need to be locked across lines. Implementations are: cxchannel_udp.h, cxchannel_tcpserver.h, cxchannel_tcpclient.h, cxchannel_serial.h
+> 8.  cxcrc.h: data check
+> 9.  cxdatabase.h: (to be instantiated for use) interface class that unifies data operations in a table. The implementations are: cxdatabase_odbc.h, cxdatabase_sqlite.h (directly call the official sqlite3.c to achieve related functions)
+> 10. cxprocess.h: system process
+> 11. cxprocmutex.h: process lock
+> 12. cxtimer.h: (to be instantiated to use) timer
+> 13. cxtime.h: time and date
+> 14. cxuuid.h: GUID, UUID
+> 15. cxsharememory.h: shared memory, IPC (InterProcess Communication)
+> 16. cxprofile.h: (to be instantiated for use) The profile is closed for use as a table. The implementations are: cxprofile_skv_json.h, cxprofile_skv_xml.h. (skv: section key value)
+> 17. cxencoding.h: convert between GBK and UTF-8
+> 18. cxlua folder: exposes ccxx function blocks in lua, lua_run.h is the main entry.
+> 19. Other third-party packages include (cxhiredis.h (closed by Redis), cxtinyxml.h (Xml file read and write), cxrapidjson.h (regular expression), lz4.h (compression and decompression))
+> 20. gtest, luv, benchmark, yaml's own source code has been placed in 3rd.
+> 21. openssl, curl is a header file plus library
+
+### Source Code
+```bash
 git clone https://github.com/oudream/ccxx.git
+```
 
 ### Two libraries are required ( 有两个库是必须的 )
 > 1. ODBC : ccxx_database_odbc is a library for connecting databases with odbc
@@ -70,7 +101,7 @@ cd ./build/cmake-gcc && make
 make test
 
 # try run app
-cd ~/ccxx/build/deploy/unix/bin_d
+cd /opt/ccxx/build/deploy/unix/bin_d
 ./cxtest_timer
 ./cxtest_channel_udp_client1
 ./cxtest_channel_udp_server1
@@ -83,7 +114,7 @@ cd ~/ccxx/build/deploy/unix/bin_d
 ### Customize Compile
 ```bash
 
-vim ~/ccxx/build/cmake/local.all.config.cmake
+vim /opt/ccxx/build/cmake/local.all.config.cmake
 # e.g. modify -> set(gs_project_enable_uv 1) to set(gs_project_enable_uv 0)
 # e.g. modify -> set(gs_project_enable_openssl 1) to set(gs_project_enable_openssl 0)
 
@@ -102,7 +133,7 @@ vim ~/ccxx/build/cmake/local.all.config.cmake
 ### 1 step: build and install OpenCV 4.1.2 (4c71dbf)
 ## https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html
 ## https://opencv.org/releases/
-# cd ~/<my_working_directory>
+# cd /opt/<my_working_directory>
 ### 1 step: apt insall depend libs
 # libopencv-dev
 sudo echo "deb http://security.ubuntu.com/ubuntu xenial-security main" | tee /etc/apt/sources.list.d/libjasper.list && \
@@ -116,22 +147,22 @@ sudo apt install -y gcc g++ cmake build-essential gdb gdbserver git \
         software-properties-common 
 
 ### 2 step: git code and make it
-cd ~ && \
+cd /opt && \
 git clone https://github.com/opencv/opencv.git && \
-cd ~/opencv && git reset --hard 4c71dbf && \
+cd /opt/opencv && git reset --hard 4c71dbf && \
 mkdir build && cd build && \
 cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local .. && \
 make -j7 && sudo make install
 
 ### 3 step: down source and compile
-cd ~ && \
+cd /opt && \
 git clone https://github.com/oudream/ccxx.git && \
 cd ccxx && \
 cmake . -DCMAKE_BUILD_TYPE=Debug -DCCXX_BUILD_TYPE=all --build . -B"./build/cmake-gcc" && \
 cd build/cmake-gcc && make
 
 ### 4 step: run apps
-cd ~/ccxx/build/deploy/unix/bin_d
+cd /opt/ccxx/build/deploy/unix/bin_d
 ./cxtest_timer
 ./cxtest_channel_udp_client1
 ./cxtest_channel_udp_server1
