@@ -71,9 +71,10 @@
 ```bash
 git clone https://github.com/oudream/ccxx.git
 ```
-[Docker of ccxx as -> https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
+- [Docker of ccxx as -> https://hub.docker.com/u/oudream](https://hub.docker.com/u/oudream)
+- [Dockerfile of ccxx as -> https://github.com/oudream/hello-docker/tree/master/projects/ccxx](https://github.com/oudream/hello-docker/tree/master/projects/ccxx)
 
-### Two libraries are required ( 有两个库是必须的 )
+### Before compiling: Two libraries are required ( 有两个库是必须的 )
 > 1. ODBC : ccxx_database_odbc is a library for connecting databases with odbc
 > 1. ODBC : ccxx_database_odbc 是一个用 odbc 连接数据库的库
 > 2. UUID : Except for windows, CxUuid (uuid) is implemented using the libuuid library
