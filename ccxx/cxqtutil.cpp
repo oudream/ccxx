@@ -969,7 +969,7 @@ int CxQWidget::setItemValue(QTableWidgetItem* oItem, const double & value)
     if (data.type() == QVariant::Invalid || data.toDouble() != value)
     {
         oItem->setData(Qt::UserRole, value);
-        oItem->setText(QString::number(value));
+        oItem->setText(QString::number(value, 'g', 3));
         return TRUE;
     }
     return FALSE;
@@ -1166,7 +1166,7 @@ int CxQWidget::setItemValue(QListWidgetItem* oItem, const double & value)
     if (data.type() == QVariant::Invalid || data.toDouble() != value)
     {
         oItem->setData(Qt::UserRole, value);
-        oItem->setText(QString::number(value));
+        oItem->setText(QString::number(value, 'g', 3));
         return TRUE;
     }
     return FALSE;
@@ -1272,7 +1272,7 @@ int CxQWidget::setItemValue(QStandardItem* oItem, const double & value)
     if (data.type() == QVariant::Invalid || data.toDouble() != value)
     {
         oItem->setData(value, Qt::UserRole);
-        oItem->setText(QString::number(value));
+        oItem->setText(QString::number(value, 'g', 3));
         return TRUE;
     }
     return FALSE;

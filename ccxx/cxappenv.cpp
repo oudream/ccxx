@@ -58,7 +58,11 @@ void CxAppEnv::init(int argc, const char *argv[])
         //*1 begin auto deployPath and configPath
         f_sApplicationFilePath = argv[0];
         //may be current dir
-        if (!CxFileSystem::hasRootPath(f_sApplicationFilePath)) f_sApplicationFilePath = CxFileSystem::mergeFilePath(CxFileSystem::getCurrentDir(), f_sApplicationFilePath);
+        if (!CxFileSystem::hasRootPath(f_sApplicationFilePath))
+        {
+            string fp = CxFileSystem::mergeFilePath(CxFileSystem::getCurrentDir(), f_sApplicationFilePath);
+            f_sApplicationFilePath = CxFileSystem::normalize(fp);
+        }
         f_sApplicationPath = CxFileSystem::extractPath(f_sApplicationFilePath);
         f_sApplicationFileName = CxFileSystem::extractFileName(f_sApplicationFilePath);
         f_sApplicationTargetName = CxFileSystem::extractFilePrefixName(f_sApplicationFilePath);
@@ -73,7 +77,7 @@ void CxAppEnv::init(int argc, const char *argv[])
         }
         else
         {
-            string sDefaultDeployPath = CxFileSystem::parentPath(f_sApplicationPath);
+            string sDefaultDeployPath = CxFileSystem::parentPath(CxFileSystem::parentPath(f_sApplicationPath));
             if (CxFileSystem::isExist(sDefaultDeployPath))
             {
                 string sPath = CxFileSystem::mergeFilePath(sDefaultDeployPath, "config");

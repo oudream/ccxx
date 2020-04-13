@@ -5,6 +5,7 @@
 
 #include "cxstring.h"
 #include "cxtime.h"
+#include "cxcontainer.h"
 
 
 #ifdef GM_OS_WIN
@@ -543,13 +544,25 @@ public:
     static std::string normalizePathStyle(const std::string & sPath);
 
     /**
-     * @brief normalize
+     * @brief normalize path to full path, remove '.' '..'
      * @param sPath
      * @return
      * @sample :D:\\deploy/win32/b\\win32/bin_qt/./../bi\\bin_d/a.exe return : D:\deploy\win32\b\win32\bi\bin_d\a.exe
      */
     static std::string normalize(const std::string & sPath);
 
+    /**
+     * @brief normalize path to full path, remove '.' '..'
+     * @param sPath
+     * @return
+     */
+    static std::string normalizeFullPath(const std::string & sPath);
+
+    /**
+     * @brief trim .. .
+     * @param sPath
+     * @return
+     */
     static std::string trimeDots(const std::string & sPath);
 
     /**
@@ -576,9 +589,6 @@ public:
      * @case1 : 1024MB , 1024kb, 1024gb, 1024b, 1024
      */
     static int64 toSize(const std::string & sSize);
-
-private:
-    static std::string normalizeStringWin32(const std::string &sPath, bool bAllowAboveRoot);
 
 };
 

@@ -1954,197 +1954,58 @@ string CxFileSystem::normalizePathStyle(const string &sPath)
         return CxString::replace(sPath, '\\', '/');
 }
 
-string CxFileSystem::normalizeStringWin32(const string & sPath, bool bAllowAboveRoot)
-{
-    string res = string();
-    int lastSlash = -1;
-    int dots = 0;
-    char code;
-    for (int i = 0; i <= sPath.size(); ++i) {
-        if (i < sPath.size())
-            code = sPath[i];
-        else if (code == 47/*/*/ || code == 92/*\*/)
-            break;
-        else
-            code = 47/*/*/;
-        if (code == 47/*/*/ || code == 92/*\*/) {
-            if (lastSlash == i - 1 || dots == 1) {
-                // NOOP
-            } else if (lastSlash != i - 1 && dots == 2) {
-                if (res.size() < 2 ||
-                    res[res.size() - 1] != 46/*.*/ ||
-                    res[res.size() - 2] != 46/*.*/) {
-                    if (res.size() > 2) {
-                        int start = res.size() - 1;
-                        int j = start;
-                        for (; j >= 0; --j) {
-                            if (res[j] == 92/*\*/)
-                                break;
-                        }
-                        if (j != start) {
-                            if (j == -1)
-                                res = string();
-                            else
-                                res = res.substr(0, j);
-                            lastSlash = i;
-                            dots = 0;
-                            continue;
-                        }
-                    } else if (res.size() == 2 || res.size() == 1) {
-                        res = string();
-                        lastSlash = i;
-                        dots = 0;
-                        continue;
-                    }
-                }
-                if (bAllowAboveRoot) {
-                    if (res.size() > 0)
-                        res += "\\..";
-                    else
-                        res = "..";
-                }
-            } else {
-                if (res.size() > 0)
-                    res += "\\" + sPath.substr(lastSlash + 1, i - lastSlash - 1);
-                else
-                    res = sPath.substr(lastSlash + 1, i - lastSlash - 1);
-            }
-            lastSlash = i;
-            dots = 0;
-        } else if (code == 46/*.*/ && dots != -1) {
-            ++dots;
-        } else {
-            dots = -1;
-        }
-    }
-    return res;
-}
-
 string CxFileSystem::normalize(const string & sPath)
 {
-    int len = sPath.size();
-    if (len == 0)
-        return ".";
-    int rootEnd = 0;
-    char code = sPath[0];
-    string device;
-    bool isAbsolute = false;
-
-    // Try to match a root
-    if (len > 1) {
-        if (code == 47/*/*/ || code == 92/*\*/) {
-            // Possible UNC root
-
-            // If we started with a separator, we know we at least have an absolute
-            // path of some kind (UNC or otherwise)
-            isAbsolute = true;
-
-            code = sPath[1];
-            if (code == 47/*/*/ || code == 92/*\*/) {
-                // Matched double path separator at beginning
-                int j = 2;
-                int last = j;
-                // Match 1 or more non-path separators
-                for (; j < len; ++j) {
-                    code = sPath[j];
-                    if (code == 47/*/*/ || code == 92/*\*/)
-                        break;
-                }
-                if (j < len && j != last) {
-                    string firstPart = sPath.substr(last, j - last);
-                    // Matched!
-                    last = j;
-                    // Match 1 or more path separators
-                    for (; j < len; ++j) {
-                        code = sPath[j];
-                        if (code != 47/*/*/ && code != 92/*\*/)
-                            break;
-                    }
-                    if (j < len && j != last) {
-                        // Matched!
-                        last = j;
-                        // Match 1 or more non-path separators
-                        for (; j < len; ++j) {
-                            code = sPath[j];
-                            if (code == 47/*/*/ || code == 92/*\*/)
-                                break;
-                        }
-                        if (j == len) {
-                            // We matched a UNC root only
-                            // Return the normalized version of the UNC root since there
-                            // is nothing left to process
-
-                            return "\\\\" + firstPart + "\\" + sPath.substr(last) + "\\";
-                        } else if (j != last) {
-                            // We matched a UNC root with leftovers
-
-                            device = "\\\\" + firstPart + "\\" + sPath.substr(last, j - last);
-                            rootEnd = j;
-                        }
-                    }
-                }
-            } else {
-                rootEnd = 1;
-            }
-        } else if ((code >= 65/*A*/ && code <= 90/*Z*/) ||
-                   (code >= 97/*a*/ && code <= 122/*z*/)) {
-            // Possible device root
-
-            code = sPath[1];
-            if (sPath[1] == 58/*:*/) {
-                device = sPath.substr(0, 2);
-                rootEnd = 2;
-                if (len > 2) {
-                    code = sPath[2];
-                    if (code == 47/*/*/ || code == 92/*\*/) {
-                        // Treat separator following drive name as an absolute path
-                        // indicator
-                        isAbsolute = true;
-                        rootEnd = 3;
-                    }
-                }
-            }
-        }
-    } else if (code == 47/*/*/ || code == 92/*\*/) {
-        // `path` contains just a path separator, exit early to avoid unnecessary
-        // work
-        return "\\";
-    }
-
-    code = sPath[len - 1];
-    bool trailingSeparator = (code == 47/*/*/ || code == 92/*\*/);
-    string tail;
-    if (rootEnd < len)
-        tail = CxFileSystem::normalizeStringWin32(sPath.substr(rootEnd), !isAbsolute);
-    else
-        tail = string();
-    if (tail.size() == 0 && !isAbsolute)
-        tail = ".";
-    if (tail.size() > 0 && trailingSeparator)
-        tail += "\\";
-    if (device.empty()) {
-        if (isAbsolute) {
-            if (tail.size() > 0)
-                return "\\" + tail;
-            else
-                return "\\";
-        } else if (tail.size() > 0) {
-            return tail;
-        } else {
-            return string();
-        }
-    } else {
-        if (isAbsolute) {
-            if (tail.size() > 0)
-                return device + "\\" + tail;
-            else
-                return device + "\\";
-        } else if (tail.size() > 0) {
-            return device + tail;
-        } else {
-            return device;
+    string p = CxString::trim(sPath);
+    bool bWin32 = isWin32PathStyle(sPath);
+    p = bWin32 ? CxString::replace(p, '/', '\\') : CxString::replace(p, '\\', '/');
+    char cSec = bWin32 ? '\\' : '/';
+    vector<string> ps = CxString::split(p, cSec);
+    CxContainer::remove(ps, string("."));
+    for (int i = ps.size()-1; i > 0; --i)
+    {
+        if (ps[i] == "..")
+        {
+            ps.erase(ps.begin() + i - 1, ps.begin() + i + 1);
+            --i;
         }
     }
+    string tail = CxString::join(ps, cSec);
+    if (p[0] == '\\' && p[1] == '\\')
+    {
+        return "\\\\" + tail;
+    }
+    string sSec = bWin32 ? "\\" : "/";
+    return sSec + tail;
+}
+
+string CxFileSystem::normalizeFullPath(const std::string &sPath)
+{
+    string p = CxString::trim(sPath);
+    bool bWin32 = isWin32PathStyle(sPath);
+    p = bWin32 ? CxString::replace(p, '/', '\\') : CxString::replace(p, '\\', '/');
+    char cSec = bWin32 ? '\\' : '/';
+    vector<string> ps = CxString::split(p, cSec);
+    CxContainer::remove(ps, string("."));
+    for (int i = ps.size()-1; i > 0; --i)
+    {
+        if (ps[i] == "..")
+        {
+            ps.erase(ps.begin() + i - 1, ps.begin() + i + 1);
+            --i;
+        }
+    }
+    string tail = CxString::join(ps, cSec);
+    if (p[0] == '\\' && p[1] == '\\')
+    {
+        return "\\\\" + tail;
+    }
+    string sSec = bWin32 ? "\\" : "/";
+    if (p[0] == cSec || p.find(':') != string::npos)
+    {
+        return sSec + tail;
+    }
+    return mergeFilePath(getCurrentDir(), sSec + tail) ;
 }
 
 string CxFileSystem::trimeDots(const string &sPath)
