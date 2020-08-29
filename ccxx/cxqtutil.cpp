@@ -1398,6 +1398,22 @@ std::vector<int> CxQWidget::deleteSelectRows(QTableWidget *oGrid)
     return iRows;
 }
 
+void CxQWidget::setQSS(QWidget *widget, const QString &fp)
+{
+    QFile file(fp);
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    widget->setStyleSheet(styleSheet);
+}
+
+void CxQWidget::setQSS(QWidget *widget, const string &fp)
+{
+    QFile file(CxQString::gbkToQString(fp));
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    widget->setStyleSheet(styleSheet);
+}
+
 
 
 

@@ -55,6 +55,10 @@ public:
 
     static void setApplicationDefaultDeployPath(const std::string& value);
 
+    static const std::string& deployPath();
+
+    static const std::string& deployPathMerge(const std::string& sSubDir);
+
     static const std::string& configPath();
 
     static const std::string& configDefaultFilePath();
@@ -68,6 +72,8 @@ public:
     static const std::string& tempPath();
 
     static const std::string& dataPath();
+
+    static const std::string& resPath();
 
     static const std::vector<std::string> & argumentList();
 

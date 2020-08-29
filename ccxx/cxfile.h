@@ -7,22 +7,19 @@
 #include "cxtime.h"
 #include "cxcontainer.h"
 
-
 #ifdef GM_OS_WIN
 #define	GM_FILE_MODE_IEXEC	0x0040
 #define	GM_FILE_MODE_IWRITE	0x0080
 #define	GM_FILE_MODE_IREAD	0x0100
 #define	GM_FILE_MODE_IRWXU	(GM_FILE_MODE_IREAD | GM_FILE_MODE_IWRITE | GM_FILE_MODE_IEXEC)
 #else
-#define	GM_FILE_MODE_IEXEC	S_IEXEC
-#define	GM_FILE_MODE_IWRITE	S_IWRITE
-#define	GM_FILE_MODE_IREAD	S_IREAD
-#define	GM_FILE_MODE_IRWXU	S_IRWXU
+#define    GM_FILE_MODE_IEXEC    S_IEXEC
+#define    GM_FILE_MODE_IWRITE    S_IWRITE
+#define    GM_FILE_MODE_IREAD    S_IREAD
+#define    GM_FILE_MODE_IRWXU    S_IRWXU
 #endif
 
-
-class GM_CCXX_CORE_API CxFile
-{
+class GM_CCXX_CORE_API CxFile {
 public:
     /**
      * @brief load : Read file to byte array (string).
@@ -30,11 +27,17 @@ public:
      * @param sOut
      * @return
      */
-    static inline std::string load(const std::string& sFilePath) { std::string r; load(sFilePath, r, 1024 * 1024 * 30); return r; }
+    static inline std::string load(const std::string &sFilePath)
+    {
+        std::string r;
+        load(sFilePath, r, 1024 * 1024 * 30);
+        return r;
+    }
 
-    static inline bool load(const std::string& sFilePath, std::string& sOut) { return load(sFilePath, sOut, 1024 * 1024 * 30); }
+    static inline bool load(const std::string &sFilePath, std::string &sOut)
+    { return load(sFilePath, sOut, 1024 * 1024 * 30); }
 
-    static bool load(const std::string& sFilePath, std::string& sOut, size_t iMaxSize);
+    static bool load(const std::string &sFilePath, std::string &sOut, size_t iMaxSize);
 
     /**
      * @brief load : Read file to byte array (string) by split character.
@@ -43,7 +46,8 @@ public:
      * @param sSplitString
      * @return
      */
-    static int load(const std::string& sFilePath, std::vector<std::string> & sOut, const std::string& sSplitString = CxGlobal::lineString);
+    static int
+    load(const std::string &sFilePath, std::vector<std::string> &sOut, const std::string &sSplitString = CxGlobal::lineString);
 
     /**
      * @brief load
@@ -52,7 +56,7 @@ public:
      * @param cSplit
      * @return
      */
-    static int load(const std::string& sFilePath, std::vector<std::string> & sOut, char cSplit);
+    static int load(const std::string &sFilePath, std::vector<std::string> &sOut, char cSplit);
 
     /**
      * @brief load
@@ -61,7 +65,7 @@ public:
      * @param iSectionLength
      * @return
      */
-    static int load(const std::string& sFilePath, std::vector<std::string> & sOut, int iSectionLength);
+    static int load(const std::string &sFilePath, std::vector<std::string> &sOut, int iSectionLength);
 
     /**
      * @brief load
@@ -70,7 +74,7 @@ public:
      * @param fn : call back to deal
      * @return 0 on false
      */
-    static int load(const std::string& sFilePath, void * oObject, fn_int_object_tlv_t fn);
+    static int load(const std::string &sFilePath, void *oObject, fn_int_object_tlv_t fn);
 
     /**
      * @brief load first size
@@ -80,7 +84,8 @@ public:
      * @param sSplitString
      * @return
      */
-    static int loadFirst(const std::string& sFilePath, size_t iSize, std::vector<std::string> & sOut, const std::string& sSplitString = CxGlobal::lineString);
+    static int
+    loadFirst(const std::string &sFilePath, size_t iSize, std::vector<std::string> &sOut, const std::string &sSplitString = CxGlobal::lineString);
 
     /**
      * @brief load last size
@@ -90,7 +95,8 @@ public:
      * @param sSplitString
      * @return
      */
-    static int loadLast(const std::string& sFilePath, size_t iSize, std::vector<std::string> & sOut, const std::string& sSplitString = CxGlobal::lineString);
+    static int
+    loadLast(const std::string &sFilePath, size_t iSize, std::vector<std::string> &sOut, const std::string &sSplitString = CxGlobal::lineString);
 
     /**
      * @brief save : Write file from byte array (string).
@@ -98,7 +104,7 @@ public:
      * @param sBuffer
      * @return
      */
-    static bool save(const std::string& sFilePath, const std::string& sBuffer);
+    static bool save(const std::string &sFilePath, const std::string &sBuffer);
 
     /**
      * @brief save : Write file from byte array (string).
@@ -107,12 +113,14 @@ public:
      * @param sSplitString
      * @return
      */
-    static bool save(const std::string &sFilePath, const std::vector<std::string>& sStrings, const std::string& sSplitString = CxGlobal::lineString, bool saveReturn = false);
+    static bool
+    save(const std::string &sFilePath, const std::vector<std::string> &sStrings, const std::string &sSplitString = CxGlobal::lineString, bool saveReturn = false);
+
+    static std::string getLineString(const std::string &sFilePath);
 
 };
 
-class GM_CCXX_CORE_API CxFileSystem
-{
+class GM_CCXX_CORE_API CxFileSystem {
 public:
     typedef enum {
         PathTypeNone,
@@ -124,12 +132,15 @@ public:
         PathTypeSystem      //fifo , socket
     } PathTypeEnum;
 
-    class PathInfo
-    {
+    class PathInfo {
     public:
-        PathInfo() : pathType(PathTypeNone), fileSize(0), creationTime(0), lastWriteTime(0) {}
-        ~PathInfo() {}
-        inline PathInfo(const PathInfo &o) : pathType(o.pathType), path(o.path), fileName(o.fileName), fileSize(o.fileSize), creationTime(o.creationTime), lastWriteTime(o.lastWriteTime) { }
+        PathInfo() : pathType(PathTypeNone), fileSize(0), creationTime(0), lastWriteTime(0)
+        {}
+        ~PathInfo()
+        {}
+        inline PathInfo(const PathInfo &o)
+            : pathType(o.pathType), path(o.path), fileName(o.fileName), fileSize(o.fileSize), creationTime(o.creationTime), lastWriteTime(o.lastWriteTime)
+        {}
         inline PathInfo &operator=(const PathInfo &other)
         {
             if (this != &other)
@@ -168,7 +179,7 @@ public:
      * @param path to change to.
      * @return true on success.
      */
-    static bool setCurrentDir(const std::string& sDir);
+    static bool setCurrentDir(const std::string &sDir);
 
     /**
      * @brief getCurrentDir
@@ -181,7 +192,7 @@ public:
      * @param sFilePath
      * @return
      */
-    static fd_t openFile(const std::string& sFilePath);
+    static fd_t openFile(const std::string &sFilePath);
 
     /**
      * @brief release
@@ -194,14 +205,14 @@ public:
      * @param sFilePath
      * @return
      */
-    static bool createFile(const std::string& sFilePath);
+    static bool createFile(const std::string &sFilePath);
 
     /**
      * Erase (remove) a file only.
      * @param path of file.
      * @return true on success.
      */
-    static bool deleteFile(const std::string& sPath);
+    static bool deleteFile(const std::string &sPath);
 
     /**
      * Copy a file.
@@ -210,7 +221,7 @@ public:
      * @param size of buffer.
      * @return copied size.
      */
-    static int copyFile(const std::string& sSource, std::string& sTarget, bool bOvert = true, int * iSourceSize = NULL);
+    static int copyFile(const std::string &sSource, std::string &sTarget, bool bOvert = true, int *iSourceSize = NULL);
 
     /**
      * Rename a file.
@@ -218,14 +229,14 @@ public:
      * @param newpath to rename to.
      * @return true on success.
      */
-    static bool renameFile(const std::string& sOldPath, const std::string& sNewPath);
+    static bool renameFile(const std::string &sOldPath, const std::string &sNewPath);
 
     /**
      * @brief sizeOfFile
      * @param sFilePath
      * @return
      */
-    static int64 sizeOfFile(const std::string& sFilePath);
+    static int64 sizeOfFile(const std::string &sFilePath);
 
     /**
      * Change file access mode.
@@ -233,14 +244,14 @@ public:
      * @param value of mode to assign. _S_IREAD | _S_IWRITE | _S_IEXEC S_IRWXU
      * @return true on success.
      */
-    static bool changeMode(const std::string& sPath, unsigned value);
+    static bool changeMode(const std::string &sPath, unsigned value);
 
     /**
      * check if path exists.
      * @param path to test.
      * @return if true.
      */
-    static bool isExist(const std::string& sPath);
+    static bool isExist(const std::string &sPath);
 
     /**
      * @brief isExist
@@ -248,7 +259,7 @@ public:
      * @param sDir
      * @return
      */
-    static bool isExist(const std::string& sPath, const std::string & sDir);
+    static bool isExist(const std::string &sPath, const std::string &sDir);
 
     /**
      * @brief isExist
@@ -256,63 +267,63 @@ public:
      * @param sDirs
      * @return
      */
-    static bool isExist(const std::string& sPath, const std::vector<std::string> & sDirs);
+    static bool isExist(const std::string &sPath, const std::vector<std::string> &sDirs);
 
     /**
      * Test if path readable.
      * @param path to test.
      * @return if true.
      */
-    static bool isReadable(const std::string& sPath);
+    static bool isReadable(const std::string &sPath);
 
     /**
      * Test if path writable.
      * @param path to test.
      * @return if true.
      */
-    static bool isWritable(const std::string& sPath);
+    static bool isWritable(const std::string &sPath);
 
     /**
      * Test if path is executable.
      * @param path to test.
      * @return if true.
      */
-    static bool isExecutable(const std::string& sPath);
+    static bool isExecutable(const std::string &sPath);
 
     /**
      * Test if path is a file.
      * @param path to test.
      * @return true if exists and is file.
      */
-    static bool isFile(const std::string& sPath);
+    static bool isFile(const std::string &sPath);
 
     /**
      * Test if path is a directory.
      * @param path to test.
      * @return true if exists and is directory.
      */
-    static bool isDir(const std::string& sPath);
+    static bool isDir(const std::string &sPath);
 
     /**
      * Test if path is a symlink.
      * @param path to test.
      * @return true if exists and is symlink.
      */
-    static bool isLink(const std::string& sPath);
+    static bool isLink(const std::string &sPath);
 
     /**
      * Test if path is a device path.
      * @param path to test.
      * @return true of is a device path.
      */
-    static bool isDevice(const std::string& sPath);
+    static bool isDevice(const std::string &sPath);
 
     /**
      * Test if path is a hidden file.
      * @param path to test.
      * @return true if exists and is hidden.
      */
-    static bool isHidden(const std::string& sPath);
+    static bool isHidden(const std::string &sPath);
 
     /**
      * Stat a file.
@@ -320,7 +331,7 @@ public:
      * @param buffer to save stat info.
      * @return success or fail.
      */
-    static bool getPathInfo(const std::string & sFilePath, PathInfo * pathInfo);
+    static bool getPathInfo(const std::string &sFilePath, PathInfo *pathInfo);
 
     /**
      * Stat a file.
@@ -328,7 +339,7 @@ public:
      * @param buffer to save stat info.
      * @return success or fail.
      */
-    static PathInfo getPathInfo(const std::string & sFilePath);
+    static PathInfo getPathInfo(const std::string &sFilePath);
 
     /**
      *
@@ -343,7 +354,7 @@ public:
      * @param target of link.
      * @return true on success.
      */
-    static bool createLink(const std::string& sPath, const std::string& sTarget);
+    static bool createLink(const std::string &sPath, const std::string &sTarget);
 
     /**
      * Remove a symbolic link explicitly.  Other kinds of files are also
@@ -352,7 +363,7 @@ public:
      * @param path to remove.
      * @return true on success.
      */
-    static bool unlink(const std::string& sPath);
+    static bool unlink(const std::string &sPath);
 
     /**
      * Create a hard link.
@@ -360,7 +371,7 @@ public:
      * @param target of link.
      * @return error number or 0 on success.
      */
-    static bool createHardlink(const std::string& sPath, const std::string& sTarget);
+    static bool createHardlink(const std::string &sPath, const std::string &sTarget);
 
     /**
      * Read a symbolic link to get it's target.
@@ -368,7 +379,7 @@ public:
      * @param buffer to save target into.
      * @param size of buffer.
      */
-    static int getLinkinfo(const std::string& sPath, char * buffer, size_t size);
+    static int getLinkinfo(const std::string &sPath, char *buffer, size_t size);
 
     /**
      * Create pipe.  These are created inheritable by default.
@@ -377,14 +388,14 @@ public:
      * @param size of buffer if supported.
      * @return 0 or error code.
      */
-    static int createPipe(fd_t& input, fd_t& output, size_t size = 0);
+    static int createPipe(fd_t &input, fd_t &output, size_t size = 0);
 
     /**
      * load a library into memory.
      * @param path to plugin.
      * @return 0 on success, else error.
      */
-    static bool dllCanLoad(const std::string& sPath);
+    static bool dllCanLoad(const std::string &sPath);
 
     /**
      * Simple direct method to create a directory.
@@ -392,7 +403,7 @@ public:
      * @param mode of directory.
      * @return error number or 0 on success.
      */
-    static bool createDir(const std::string& sPath, unsigned model = GM_FILE_MODE_IRWXU);
+    static bool createDir(const std::string &sPath, unsigned model = GM_FILE_MODE_IRWXU);
 
     /**
      * Simple direct method to create a directory.
@@ -400,14 +411,14 @@ public:
      * @param mode of directory.
      * @return error number or 0 on success.
      */
-    static int createDirMultiLevel(const std::string& sPath, unsigned model = GM_FILE_MODE_IRWXU);
+    static int createDirMultiLevel(const std::string &sPath, unsigned model = GM_FILE_MODE_IRWXU);
 
     /**
      * Remove an empty directory.
      * @param path of directory.
      * @return error number or 0 on success.
      */
-    static bool removeDir(const std::string& sPath);
+    static bool removeDir(const std::string &sPath);
 
     /**
      * @brief scanDir
@@ -415,17 +426,19 @@ public:
      * @param pathInfos
      * @param includeDir
      */
-    static void scanDir(const std::string& sPath, std::vector<PathInfo>& pathInfos, bool bIncludeSubDir = false, bool bContainDir = false, const std::vector<std::string> & ignoreDirNames = std::vector<std::string>());
+    static void
+    scanDir(const std::string &sPath, std::vector<PathInfo> &pathInfos, bool bIncludeSubDir = false, bool bContainDir = false, const std::vector<std::string> &ignoreDirNames = std::vector<std::string>());
 
-    typedef void (*fn_scan_result_t)(const PathInfo& pathInfo, std::string * sParam, int * iParam);
-    static void scanDir(const std::string& sPath, fn_scan_result_t fn_scan_result, bool includeSubDir = false, std::string * sParam = NULL, int * iParam = NULL);
+    typedef void (*fn_scan_result_t)(const PathInfo &pathInfo, std::string *sParam, int *iParam);
+    static void
+    scanDir(const std::string &sPath, fn_scan_result_t fn_scan_result, bool includeSubDir = false, std::string *sParam = NULL, int *iParam = NULL);
 
     /**
      * @brief sizeOfDir
      * @param sPath
      * @return
      */
-    static int64 sizeOfDir(const std::string& sPath);
+    static int64 sizeOfDir(const std::string &sPath);
 
     /**
      * @brief mergeFilePath
@@ -433,7 +446,7 @@ public:
      * @param sFileName
      * @return
      */
-    static std::string mergeFilePath(const std::string& sPath, const std::string& sFileName);
+    static std::string mergeFilePath(const std::string &sPath, const std::string &sFileName);
 
     /**
      * @brief relativeFilePath
@@ -441,14 +454,14 @@ public:
      * @param sFilePath
      * @return
      */
-    static std::string relativeFilePath(const std::string& sPath, const std::string& sFilePath, bool * bOk = NULL);
+    static std::string relativeFilePath(const std::string &sPath, const std::string &sFilePath, bool *bOk = NULL);
 
     /**
      * @brief hasRootPath
      * @param sFilePath
      * @return
      */
-    static bool hasRootPath(const std::string& sFilePath);
+    static bool hasRootPath(const std::string &sFilePath);
 
     /**
      * @brief fullFilePath
@@ -456,7 +469,7 @@ public:
      * @param sFilePath
      * @return
      */
-    static std::string fullFilePath(const std::string& sPath, const std::string& sFilePath, bool * bOk = NULL);
+    static std::string fullFilePath(const std::string &sPath, const std::string &sFilePath, bool *bOk = NULL);
 
     /**
      * @brief fullFilePath
@@ -466,36 +479,22 @@ public:
      * @param pStrategy
      * @return
      */
-    static std::string fullFilePath(const std::string& sRootPath, const std::string& sRelativePath, const std::string& sFilePath);
+    static std::string
+    fullFilePath(const std::string &sRootPath, const std::string &sRelativePath, const std::string &sFilePath);
 
     /**
      * @brief extractFileName
      * @param sFilePath
      * @return
      */
-    static std::string extractFileName(const std::string& sFilePath);
+    static std::string extractFileName(const std::string &sFilePath);
 
     /**
      * @brief extractPath
      * @param sFilePath
      * @return
      */
-    static std::string extractPath(const std::string& sFilePath);
-
-    /**
-     * @brief parentPath
-     * @param sPath
-     * @return
-     */
-    static std::string parentPath(const std::string& sPath);
-
-    /**
-     * @brief parentPath
-     * @param sPath
-     * @param iLevel back level : ../../../=3
-     * @return 
-     */
-    static std::string parentPath(const std::string& sPath, int iLevel);
+    static std::string extractPath(const std::string &sFilePath);
 
     /**
      * @brief extractFilePrefixName
@@ -503,7 +502,7 @@ public:
      * @return
      * example : sFilePath = \tmp\dir\filename.suffix; return filename
      */
-    static std::string extractFilePrefixName(const std::string& sFilePath);
+    static std::string extractFilePrefixName(const std::string &sFilePath);
 
     /**
      * @brief extractFileSuffixName
@@ -511,21 +510,21 @@ public:
      * @return
      * example : sFilePath = \tmp\dir\filename.suffix; return .suffix
      */
-    static std::string extractFileSuffixName(const std::string& sPath);
+    static std::string extractFileSuffixName(const std::string &sPath);
 
     /**
      * @brief isWin32PathStyle
      * @param sPath
      * @return
      */
-    static bool isWin32PathStyle(const std::string & sPath);
+    static bool isWin32PathStyle(const std::string &sPath);
 
     /**
      * @brief getPathStyle
      * @param sPath
      * @return
      */
-    static char getPathStyle(const std::string & sPath);
+    static char getPathStyle(const std::string &sPath);
 
     /**
      * @brief convertPathStyle
@@ -533,7 +532,7 @@ public:
      * @param iStype 0==unixStyle , 1==win32Style
      * @return
      */
-    static std::string convertPathStyle(const std::string & sPath, int iStype = 0);
+    static std::string convertPathStyle(const std::string &sPath, int iStype = 0);
 
     /**
      * @brief normalizePathStyle
@@ -541,7 +540,7 @@ public:
      * @return 
      * @sample :/temp/a\b return : /temp/a/b
      */
-    static std::string normalizePathStyle(const std::string & sPath);
+    static std::string normalizePathStyle(const std::string &sPath);
 
     /**
      * @brief normalize path to full path, remove '.' '..'
@@ -549,29 +548,21 @@ public:
      * @return
      * @sample :D:\\deploy/win32/b\\win32/bin_qt/./../bi\\bin_d/a.exe return : D:\deploy\win32\b\win32\bi\bin_d\a.exe
      */
-    static std::string normalize(const std::string & sPath);
+    static std::string normalize(const std::string &sPath);
 
     /**
      * @brief normalize path to full path, remove '.' '..'
      * @param sPath
      * @return
      */
-    static std::string normalizeFullPath(const std::string & sPath);
+    static std::string normalizeFullPath(const std::string &sPath);
 
     /**
      * @brief trim .. .
      * @param sPath
      * @return
      */
-    static std::string trimeDots(const std::string & sPath);
-
-    /**
-     * @brief calcLevel
-     * @param sPath
-     * @return 
-     * @sample :/temp/a\b return : 3
-     */
-    static int calcLevel(const std::string & sPath) { return -1; } //needtodo:
+    static std::string trimeDots(const std::string &sPath);
 
     /**
      * @brief cd
@@ -580,7 +571,7 @@ public:
      * @return 
      * @sample : cd("./..", "/temp/a") return "/temp
      */
-    static std::string cd(const std::string& sPathString, const std::string& sCurrentPath=std::string());
+    static std::string cd(const std::string &sPathString, const std::string &sCurrentPath = std::string());
 
     /**
      *
@@ -588,29 +579,60 @@ public:
      * @return
      * @case1 : 1024MB , 1024kb, 1024gb, 1024b, 1024
      */
-    static int64 toSize(const std::string & sSize);
+    static int64 toSize(const std::string &sSize);
+
+    /**
+     *
+     * @param master
+     * @param sub
+     * @return
+     */
+    static bool isSubDirectory(const std::string &master, const std::string &sub);
+
+    /**
+     * @brief parentPath
+     * @param sPath
+     * @return
+     */
+    static std::string parentPath(const std::string &sPath);
+
+    /**
+     * @brief parentPath
+     * @param sPath
+     * @param iLevel back level : ../../../=3
+     * @return
+     */
+    static std::string parentPath(const std::string &sPath, int iLevel);
+
+    /**
+     * @brief calcLevel
+     * @param sPath
+     * @return
+     * @sample :/temp/a\b return : 3
+     */
+    static int calcLevel(const std::string &sPath)
+    { return -1; } //needtodo:
+
 
 };
 
 typedef CxFileSystem::PathInfo CxFilePathInfo;
 typedef CxFileSystem::PathTypeEnum CxFilePathTypeEnum;
 
-
 /**
  * Convenience class for library plugins.
  * @author David Sugar <dyfet@gnutelephony.org>
  */
-class GM_CCXX_CORE_API CxDll
-{
+class GM_CCXX_CORE_API CxDll {
 private:
     friend class CxFileSystem;
 
 #ifdef GM_OS_WIN
     HINSTANCE   ptr;
 #else
-    void    *ptr;
+    void *ptr;
 #endif
-    int     error;
+    int error;
 
 public:
 #ifdef  GM_OS_WIN
@@ -641,7 +663,8 @@ public:
      */
     void map(const char *path);
 
-    inline bool hadLoad() const { return ptr; }
+    inline bool hadLoad() const
+    { return ptr; }
 
     /**
      * Release loaded library.
@@ -657,19 +680,19 @@ public:
     addr_t find(const char *symbol) const;
 
     inline int err(void) const
-        {return error;}
+    { return error; }
 
     inline addr_t operator[](const char *symbol) const
-        {return find(symbol);}
+    { return find(symbol); }
 
     inline addr_t operator()(const char *symbol) const
-        {return find(symbol);}
+    { return find(symbol); }
 
     inline operator bool()
-        {return ptr != NULL;}
+    { return ptr != NULL; }
 
     inline bool operator!()
-        {return ptr == NULL;}
+    { return ptr == NULL; }
 };
 
 #endif // CXFILE_H

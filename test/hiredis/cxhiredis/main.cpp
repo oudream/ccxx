@@ -100,7 +100,6 @@ int main(int argc, const char * argv[])
     cxPrompt() << "listTrim(\"list0424v6\", 2, 3): " << CxHiredis::listTrim("list0424v6", 2, 3);
     cxPrompt() << "listGet(\"list0424v6\", 0, -1): " << CxHiredis::listGet("list0424v6", 0, -1);
 
-
     CxTimerManager::startTimer(fn_timer_timeout1, 100);
 
     CxApplication::exec();

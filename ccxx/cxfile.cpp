@@ -578,6 +578,60 @@ bool CxFile::save(const string &sFilePath, const vector<string> &sStrings, const
     return iWrote == iStringsSize;
 }
 
+std::string CxFile::getLineString(const string &sFilePath)
+{
+    std::string r;
+    FILE * pFile;
+    long lSize;
+    std::vector<char> buffer(512, 0);
+    std::vector<char>::iterator it;
+    int needle[] = {'\n', '\r'};
+    size_t result;
+    size_t index = 0;
+
+    pFile = fopen ( sFilePath.c_str() , "rb" );
+    if (pFile==NULL)
+    {
+        return r;
+    }
+
+    // obtain file size:
+    fseek (pFile , 0 , SEEK_END);
+    lSize = ftell (pFile);
+    rewind (pFile);
+
+    while (index < lSize)
+    {
+        // copy the file into the buffer:
+        size_t count = lSize - index > buffer.size() ? buffer.size() : lSize - index;
+        result = fread (buffer.data(),1,count,pFile);
+        if (result != count)
+        {
+            fclose (pFile);
+            return r;
+        }
+        it = std::find_first_of (buffer.begin(), buffer.begin()+result, needle, needle+2);
+        if (it!=buffer.begin()+result)
+        {
+            index += it - buffer.begin();
+            r.push_back(*it);
+            break;
+        }
+        index += result;
+    }
+    if (r == "\r" && index < lSize-1)
+    {
+        fseek (pFile , index+1 , SEEK_SET);
+        if (fgetc(pFile) == '\n')
+        {
+            r.push_back('\n');
+        }
+    }
+    // terminate
+    fclose (pFile);
+    return r;
+}
+
 int CxFileSystem::getFileLastError()
 {
 #ifdef GM_OS_WIN
@@ -1753,27 +1807,6 @@ string CxFileSystem::mergeFilePath(const string &sPath, const string &sFileName)
     return r;
 }
 
-string CxFileSystem::relativeFilePath(const string &sPath, const string &sFilePath, bool *bOk)
-{
-    string sPath1;
-    string sPath2;
-    int iStype = isWin32PathStyle(sFilePath);
-    sPath1 = CxString::toLower(CxFileSystem::convertPathStyle(sPath, iStype));
-    sPath2 = CxString::toLower(CxFileSystem::convertPathStyle(sFilePath, iStype));
-    size_t iPos = sPath2.find(sPath1);
-    if (iPos == 0)
-    {
-        string r = sFilePath.substr(sPath1.size());
-        if (r.size() > 0 && (r[0] == '\\' || r[0] == '/'))
-        {
-            if (bOk) *bOk = true;
-            return r.substr(1);
-        }
-    }
-    if (bOk) *bOk = false;
-    return string();
-}
-
 bool CxFileSystem::hasRootPath(const string &sFilePath)
 {
 #ifdef GM_OS_WIN
@@ -1837,54 +1870,6 @@ string CxFileSystem::extractPath(const string &sFilePath)
         return sFilePath.substr(0, found);
     }
     return string();
-}
-
-string CxFileSystem::parentPath(const string &sPath)
-{
-    if (sPath.size() > 1)
-    {
-        string rPath;
-        char cLast = sPath[sPath.size() - 1];
-        if (cLast == '\\' || cLast == '/')
-            rPath = sPath.substr(0, sPath.size() - 1);
-        else
-            rPath = sPath;
-
-        size_t found = rPath.find_last_of("/\\");
-        if (found != string::npos)
-        {
-            return rPath.substr(0, found);
-        }
-    }
-    return sPath;
-}
-
-string CxFileSystem::parentPath(const string &sPath, int iLevel)
-{
-    if (sPath.size() > 1)
-    {
-        string rPath;
-        char cLast = sPath[sPath.size() - 1];
-        if (cLast == '\\' || cLast == '/')
-            rPath = sPath.substr(0, sPath.size() - 1);
-        else
-            rPath = sPath;
-
-        for (int i = 0; i < iLevel; ++i)
-        {
-            size_t found = rPath.find_last_of("/\\");
-            if (found != string::npos)
-            {
-                rPath = rPath.substr(0, found);
-            }
-            else
-            {
-                break;
-            }
-        }
-        return rPath;
-    }
-    return sPath;
 }
 
 string CxFileSystem::extractFilePrefixName(const string &sFilePath)
@@ -2034,6 +2019,7 @@ string CxFileSystem::trimeDots(const string &sPath)
     }
     return CxString::join(ary, cPathStyle);
 }
+
 //./a
 //../../aa
 //./../../aa
@@ -2193,6 +2179,89 @@ int64 CxFileSystem::toSize(const std::string &sSize)
         return iSize * 1024 * 1024 * 1024;
     }
     return iSize;
+}
+
+bool CxFileSystem::isSubDirectory(const string &master, const string &sub)
+{
+    if (master.size()>0 && sub.size()>0)
+    {
+        string s1 = normalize(CxString::toLower(master));
+        string s2 = normalize(CxString::toLower(sub));
+        if (s1.size()<s2.size() && CxString::beginWith(s2, s1) && (s2[s1.size()] == '\\' || s2[s1.size()] == '/'))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+string CxFileSystem::relativeFilePath(const string &sPath, const string &sFilePath, bool *bOk)
+{
+    string sPath1;
+    string sPath2;
+    int iStype = isWin32PathStyle(sFilePath);
+    sPath1 = CxString::toLower(CxFileSystem::convertPathStyle(sPath, iStype));
+    sPath2 = CxString::toLower(CxFileSystem::convertPathStyle(sFilePath, iStype));
+    size_t iPos = sPath2.find(sPath1);
+    if (iPos == 0)
+    {
+        string r = sFilePath.substr(sPath1.size());
+        if (r.size() > 0 && (r[0] == '\\' || r[0] == '/'))
+        {
+            if (bOk) *bOk = true;
+            return r.substr(1);
+        }
+    }
+    if (bOk) *bOk = false;
+    return string();
+}
+
+string CxFileSystem::parentPath(const string &sPath)
+{
+    if (sPath.size() > 1)
+    {
+        string rPath;
+        char cLast = sPath[sPath.size() - 1];
+        if (cLast == '\\' || cLast == '/')
+            rPath = sPath.substr(0, sPath.size() - 1);
+        else
+            rPath = sPath;
+
+        size_t found = rPath.find_last_of("/\\");
+        if (found != string::npos)
+        {
+            return rPath.substr(0, found);
+        }
+    }
+    return sPath;
+}
+
+string CxFileSystem::parentPath(const string &sPath, int iLevel)
+{
+    if (sPath.size() > 1)
+    {
+        string rPath;
+        char cLast = sPath[sPath.size() - 1];
+        if (cLast == '\\' || cLast == '/')
+            rPath = sPath.substr(0, sPath.size() - 1);
+        else
+            rPath = sPath;
+
+        for (int i = 0; i < iLevel; ++i)
+        {
+            size_t found = rPath.find_last_of("/\\");
+            if (found != string::npos)
+            {
+                rPath = rPath.substr(0, found);
+            }
+            else
+            {
+                break;
+            }
+        }
+        return rPath;
+    }
+    return sPath;
 }
 
 CxDll::CxDll()

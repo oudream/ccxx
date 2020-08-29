@@ -285,5 +285,4 @@ public:
     static std::string hashSetMultiple(const std::string & sKey, const std::map<std::string, std::string> & sFieldNameValues);
     
 };
-
 #endif //CXHIREDIS_H

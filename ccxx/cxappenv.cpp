@@ -24,6 +24,7 @@ static string f_sApplicationConfigExtendFilePath = "";
 static string f_sApplicationLogPath = "";
 static string f_sApplicationTempPath = "";
 static string f_sApplicationDataPath = "";
+static string f_sApplicationResPath = "";
 
 static string f_argument;
 static vector<string> f_argumentList;
@@ -170,11 +171,22 @@ void CxAppEnv::init(int argc, const char *argv[])
         {
             f_sApplicationDataPath = CxFileSystem::mergeFilePath(CxFileSystem::mergeFilePath(f_sApplicationDeployPath, "data"), f_sApplicationTargetName);
         }
+        //res path
+        f_sApplicationResPath = findConfig(CS_SectionProgramConfig, "ResPath", std::string());
+        if (f_sApplicationResPath.size() > 0)
+        {
+            f_sApplicationResPath = CxFileSystem::fullFilePath(f_sApplicationDeployPath, f_sApplicationResPath);
+        }
+        else
+        {
+            f_sApplicationResPath = CxFileSystem::mergeFilePath(CxFileSystem::mergeFilePath(f_sApplicationDeployPath, "res"), f_sApplicationTargetName);
+        }
 
         //create dirs
         if (!CxFileSystem::isExist(f_sApplicationLogPath)) CxFileSystem::createDirMultiLevel(f_sApplicationLogPath);
         if (!CxFileSystem::isExist(f_sApplicationTempPath)) CxFileSystem::createDirMultiLevel(f_sApplicationTempPath);
         if (!CxFileSystem::isExist(f_sApplicationDataPath)) CxFileSystem::createDirMultiLevel(f_sApplicationDataPath);
+        if (!CxFileSystem::isExist(f_sApplicationResPath)) CxFileSystem::createDirMultiLevel(f_sApplicationResPath);
         if (!CxFileSystem::isExist(f_sApplicationConfigPath)) CxFileSystem::createDirMultiLevel(f_sApplicationConfigPath);
     }
     argumentSaveToConfig();
@@ -192,6 +204,7 @@ void CxAppEnv::init(int argc, const char *argv[])
     cout << "f_sApplicationLogPath: "             << f_sApplicationLogPath << endl;
     cout << "f_sApplicationTempPath: "            << f_sApplicationTempPath << endl;
     cout << "f_sApplicationDataPath: "            << f_sApplicationDataPath << endl;
+    cout << "f_sApplicationResPath: "            << f_sApplicationResPath << endl;
 }
 
 const string &CxAppEnv::applicationFilePath()
@@ -262,6 +275,11 @@ const string &CxAppEnv::tempPath()
 const string &CxAppEnv::dataPath()
 {
     return f_sApplicationDataPath;
+}
+
+const string &CxAppEnv::resPath()
+{
+    return f_sApplicationResPath;
 }
 
 const map<string, string> &CxAppEnv::arguments()
@@ -558,6 +576,16 @@ const std::vector<std::string> &CxAppEnv::argumentList()
 std::string CxAppEnv::argumentsString()
 {
     return f_argument;
+}
+
+const std::string &CxAppEnv::deployPath()
+{
+    return f_sApplicationDeployPath;
+}
+
+const std::string &CxAppEnv::deployPathMerge(const std::string &sSubDir)
+{
+    return CxFileSystem::mergeFilePath(f_sApplicationDeployPath, sSubDir);
 }
 
 CxAppEnv::CommandLineArguments::CommandLineArguments(int argc, const char *argv[])

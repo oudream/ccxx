@@ -26,7 +26,7 @@ struct SqliteColumnDesc
 class CxDatabaseSqlite : public CxDatabase
 {
 private:
-    sqlite3* db;
+    sqlite3* _db;
 
 public:
     class CursorSqlite : public CursorBase
@@ -56,12 +56,12 @@ public:
 public:
     CxDatabaseSqlite()
     {
-        db = NULL;
+        _db = NULL;
     }
 
     ~CxDatabaseSqlite()
     {
-        if (db)
+        if (_db)
         {
             closeDatabaseImpl();
         }
@@ -74,7 +74,7 @@ protected:
                      bool bCreate,
                      const std::map<std::string, std::string>* oParams)
     {
-        if (!db)
+        if (!_db)
         {
             cxDebug() << "OpenDatabase.sqlite: open-begin: " << sDatabase;
             if (sDatabase.empty())
@@ -85,15 +85,15 @@ protected:
                 sDatabase2 = CxFileSystem::mergeFilePath(CxDatabaseManager::getDefaultDatabasePath(), sDatabase);
             }
             int flags = bCreate ? SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE : SQLITE_OPEN_READWRITE;
-            int rc = sqlite3_open_v2(sDatabase2.c_str(), &db, flags, NULL);
+            int rc = sqlite3_open_v2(sDatabase2.c_str(), &_db, flags, NULL);
             if (rc)
             {
-                fprintf(stderr, "can not open database :%s", sqlite3_errmsg(db));
-                sqlite3_close(db);
-                db = NULL;
+                fprintf(stderr, "can not open database :%s", sqlite3_errmsg(_db));
+                sqlite3_close(_db);
+                _db = NULL;
                 return false;
             }
-            cxDebug() << "OpenDatabase.sqlite: open-end: " << (db != NULL);
+            cxDebug() << "OpenDatabase.sqlite: open-end: " << (_db != NULL);
         }
         return true;
     }
@@ -101,17 +101,17 @@ protected:
     void
     closeDatabaseImpl()
     {
-        if (db)
+        if (_db)
         {
-            sqlite3_close(db);
-            db = NULL;
+            sqlite3_close(_db);
+            _db = NULL;
         }
     }
 
     bool
     isOpenImpl() const
     {
-        return db;
+        return _db;
     }
 
     bool
@@ -186,7 +186,7 @@ protected:
                   const std::vector<int>& columnTypes = std::vector<int>(),
                   bool bTransaction = true)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
@@ -217,11 +217,11 @@ protected:
 
         sqlite3_stmt* stmt;
         const char* tail;
-        int rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
+        int rc = sqlite3_prepare(_db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if (rc != SQLITE_OK)
         {
             // set LastError
-            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
             setLastError(rc, sErrorString);
             // rollback
             if (bTransaction)
@@ -246,7 +246,7 @@ protected:
             if (rc != SQLITE_OK && rc != SQLITE_DONE)
             {
                 // set LastError
-                string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+                string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
                 setLastError(rc, sErrorString);
                 // roll back
                 if (bTransaction)
@@ -267,7 +267,7 @@ protected:
                   const std::vector<int>* oColumnTypes,
                   bool bTransaction = false)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
@@ -280,10 +280,10 @@ protected:
 
         sqlite3_stmt* stmt;
         const char* tail;
-        int rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
+        int rc = sqlite3_prepare(_db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if (rc != SQLITE_OK)
         {
-            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
             setLastError(rc, sErrorString);
             // roll back
             if (bTransaction)
@@ -306,7 +306,7 @@ protected:
             rc = sqlite3_step(stmt);
             if (rc != SQLITE_OK && rc != SQLITE_DONE)
             {
-                string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+                string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
                 setLastError(rc, sErrorString);
                 // roll back
                 if (bTransaction)
@@ -328,7 +328,7 @@ protected:
                     const std::vector<int>& columnTypes = std::vector<int>(),
                     bool bTransaction = true)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
@@ -360,11 +360,11 @@ protected:
 
         sqlite3_stmt* stmt;
         const char* tail;
-        int rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
+        int rc = sqlite3_prepare(_db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if (rc != SQLITE_OK)
         {
             // set LastError
-            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
             setLastError(rc, sErrorString);
             // rollback
             if (bTransaction)
@@ -389,7 +389,7 @@ protected:
             if (rc != SQLITE_OK && rc != SQLITE_DONE)
             {
                 // set LastError
-                string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+                string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
                 setLastError(rc, sErrorString);
                 // rollback
                 if (bTransaction)
@@ -407,14 +407,15 @@ protected:
     int
     execSqlImpl(const string& sSql)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
-            return FALSE;
+            return -1;
         }
+        int result = sqlite3_total_changes(_db);
         char* zErr;
-        int rc = sqlite3_exec(db, sSql.c_str(), NULL, NULL, &zErr);
+        int rc = sqlite3_exec(_db, sSql.c_str(), NULL, NULL, &zErr);
         if (rc != SQLITE_OK)
         {
             string sErrorString;
@@ -424,28 +425,28 @@ protected:
                 sqlite3_free(zErr);
             }
             setLastError(rc, sErrorString);
-            return FALSE;
+            return -2;
         }
-        return TRUE;
+        return sqlite3_total_changes(_db) - result;
     }
 
     int
     execSqlListImpl(const std::vector<std::string>& sqlList)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
             return -1;
         }
+        int result = sqlite3_total_changes(_db);
         if (!beginTransaction())
-            return -1;
-
+            return -2;
         for (size_t i = 0; i < sqlList.size(); ++i)
         {
             const string& sSql = sqlList.at(i);
             char* zErr;
-            int rc = sqlite3_exec(db, sSql.c_str(), NULL, NULL, &zErr);
+            int rc = sqlite3_exec(_db, sSql.c_str(), NULL, NULL, &zErr);
             if (rc != SQLITE_OK)
             {
                 rollbackTransaction();
@@ -456,16 +457,16 @@ protected:
                     sqlite3_free(zErr);
                 }
                 setLastError(rc, sErrorString);
-                return -1;
+                return -3;
             }
         }
         if (commitTransaction())
         {
-            return sqlList.size();
+            return sqlite3_total_changes(_db) - result;
         }
         else
         {
-            return -1;
+            return -4;
         }
     }
 
@@ -475,7 +476,7 @@ protected:
                 std::vector<std::string>* oColumnNames = NULL,
                 int iMaxRowCount = -1)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
@@ -484,10 +485,10 @@ protected:
         int rc, ncols;
         sqlite3_stmt* stmt;
         const char* tail;
-        rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
+        rc = sqlite3_prepare(_db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if (rc != SQLITE_OK)
         {
-            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
             setLastError(rc, sErrorString);
             return -1;
         }
@@ -530,7 +531,7 @@ protected:
                  std::vector<int>* oColumnTypes = NULL,
                  int iMaxRowCount = -1)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
@@ -539,10 +540,10 @@ protected:
         int rc, ncols;
         sqlite3_stmt* stmt;
         const char* tail;
-        rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
+        rc = sqlite3_prepare(_db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if (rc != SQLITE_OK)
         {
-            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
             setLastError(rc, sErrorString);
             return -1;
         }
@@ -601,12 +602,12 @@ protected:
     }
 
     void*
-    getDbImpl() { return db; }
+    getDbImpl() { return _db; }
 
     CursorBase*
     cursorLoadImpl(const std::string& sSql, int iPrefetchArraySize)
     {
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);
@@ -615,10 +616,10 @@ protected:
         int rc, ncols;
         sqlite3_stmt* stmt;
         const char* tail;
-        rc = sqlite3_prepare(db, sSql.c_str(), sSql.size(), &stmt, &tail);
+        rc = sqlite3_prepare(_db, sSql.c_str(), sSql.size(), &stmt, &tail);
         if (rc != SQLITE_OK)
         {
-            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(db));
+            string sErrorString = CxString::format("sql exec error: %s", sqlite3_errmsg(_db));
             setLastError(rc, sErrorString);
             return NULL;
         }
@@ -683,7 +684,7 @@ protected:
     cursorPutImpl(CursorBase* oCursor, std::vector<std::vector<std::string> >& rows, int iMaxRowCount)
     {
         int r = 0;
-        if (!db)
+        if (!_db)
         {
             string sErrorString = "error : db is not open sql!";
             setLastError(-1, sErrorString);

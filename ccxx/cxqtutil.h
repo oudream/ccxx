@@ -175,6 +175,9 @@ public:
 class CxQWidget
 {
 public:
+    static void setQSS(QWidget * widget, const QString &fp);
+    static void setQSS(QWidget * widget, const std::string &fp);
+
     //set
     static int setItemValue16(QTableWidgetItem* oItem, const int & value);
 

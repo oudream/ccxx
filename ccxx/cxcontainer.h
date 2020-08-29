@@ -101,9 +101,36 @@ public:
         return std::find(oVector1->begin(), oVector1->end(), value1) != oVector1->end();
     }
 
+    template<typename _Key, typename _Tp>
+    inline static bool contain(const std::vector<std::pair<_Key, _Tp> > & vec, const _Key& key)
+    {
+        for (int i = 0; i < vec.size(); ++i)
+        {
+            if (vec[i]->first == key)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    template<typename _Key, typename _Tp>
+    inline static typename std::vector<std::pair<_Key, _Tp> >::const_iterator contain(const std::vector<std::pair<_Key, _Tp> > & vec, const _Key& key)
+    {
+        for (int i = 0; i < vec.size(); ++i)
+        {
+            if (vec[i]->first == key)
+            {
+                return vec.begin() + i;
+            }
+        }
+        return vec.end();
+    }
+
+
     //vector - remove
     template<typename _Tp>
-    static size_t remove(std::vector<_Tp> & vector1, const std::vector<_Tp> & vector2)
+    inline static size_t remove(std::vector<_Tp> & vector1, const std::vector<_Tp> & vector2)
     {
         size_t r = vector1.size();
         for(typename std::vector<_Tp>::iterator it = vector1.begin(); it != vector1.end();)
@@ -121,7 +148,7 @@ public:
     }
 
     template<typename _Tp>
-    static size_t remove2(std::vector<_Tp> & vector1, const std::vector<_Tp> & vector2)
+    inline static size_t remove2(std::vector<_Tp> & vector1, const std::vector<_Tp> & vector2)
     {
         size_t r = vector1.size();
         std::vector<_Tp> rv(r);
@@ -140,14 +167,43 @@ public:
     }
 
     template<typename _Tp>
-    static void remove(std::vector<_Tp> & vector1, const _Tp & value)
+    inline static void remove(std::vector<_Tp> & vector1, const _Tp & value)
     {
         vector1.erase(std::remove(vector1.begin(), vector1.end(), value), vector1.end());
     }
 
+    //vector - remove
+    template<typename _Key, typename _Tp>
+    inline static size_t remove(const std::vector<std::pair<_Key, _Tp> > & vec, const _Key& key)
+    {
+        size_t r = vec.size();
+        for (int i = vec.size()-1; i >= 0; --i)
+        {
+            if (vec[i]->first == key)
+            {
+                vec.erase(vec.begin()+i);
+            }
+        }
+        return r - vec.size();
+    }
+
+    template<typename _Key, typename _Tp>
+    inline static size_t removeByValue(const std::vector<std::pair<_Key, _Tp> > & vec, const _Tp& value)
+    {
+        size_t r = vec.size();
+        for (int i = vec.size()-1; i >= 0; --i)
+        {
+            if (vec[i]->second == value)
+            {
+                vec.erase(vec.begin()+i);
+            }
+        }
+        return r - vec.size();
+    }
+
     //vector - delete clear
     template<typename _Tp>
-    static void deleteAndclear(std::vector<_Tp> & vector1)
+    inline static void deleteAndclear(std::vector<_Tp> & vector1)
     {
         for(typename std::vector<_Tp>::iterator it = vector1.begin(); it != vector1.end(); ++it)
         {
@@ -159,32 +215,32 @@ public:
 
     //vector - pointer begin end
     template<typename _Tp>
-    static const _Tp * begin_pointer( const std::vector<_Tp> & vector1 )
+    inline static const _Tp * begin_pointer( const std::vector<_Tp> & vector1 )
     {
         return (vector1.size() > 0) ? ( & vector1.front() ) : (NULL);
     }
 
     template<typename _Tp>
-    static _Tp * begin_pointer( std::vector<_Tp> & vector1 )
+    inline static _Tp * begin_pointer( std::vector<_Tp> & vector1 )
     {
         return (vector1.size() > 0) ? ( & vector1.front() ) : (NULL);
     }
 
     template<typename _Tp>
-    static const _Tp * end_pointer( const std::vector<_Tp> & vector1 )
+    inline static const _Tp * end_pointer( const std::vector<_Tp> & vector1 )
     {
         return (vector1.size() > 0) ? ( & vector1.back() ) : (NULL);
     }
 
     template<typename _Tp>
-    static _Tp * end_pointer( std::vector<_Tp> & vector1 )
+    inline static _Tp * end_pointer( std::vector<_Tp> & vector1 )
     {
         return (vector1.size() > 0) ? ( & vector1.back() ) : (NULL);
     }
 
     //vector - index
     template<typename _Tp>
-    static size_t index( const std::vector<_Tp> & vector1 , const _Tp & value1 )
+    inline static size_t index( const std::vector<_Tp> & vector1 , const _Tp & value1 )
     {
         typename std::vector<_Tp>::const_iterator it = std::find(vector1.begin(), vector1.end(), value1);
         if (it != vector1.end())
@@ -196,7 +252,7 @@ public:
 
     //vector - merge
     template<typename _Tp>
-    static std::vector<_Tp> merge( const std::vector<_Tp> & vector1 ,  const std::vector<_Tp> & vector2 )
+    inline static std::vector<_Tp> merge( const std::vector<_Tp> & vector1 ,  const std::vector<_Tp> & vector2 )
     {
         std::vector<_Tp> r = vector1;
         vector1.insert(r.end(), vector2.begin(), vector2.end());
@@ -205,7 +261,7 @@ public:
 
     //vector - next
     template<typename _Tp>
-    static _Tp next( const std::vector<_Tp> & vector1 ,  const _Tp & value )
+    inline static _Tp next( const std::vector<_Tp> & vector1 ,  const _Tp & value )
     {
         typename std::vector<_Tp>::const_iterator it = std::find(vector1.begin(), vector1.end(), value);
         if (it != vector1.end())
@@ -220,7 +276,7 @@ public:
     }
 
     template<typename _Tp>
-    static std::string joinToString(const std::vector<_Tp>& ss, char cJoin = CxGlobal::lineCharacter)
+    inline static std::string joinToString(const std::vector<_Tp>& ss, char cJoin = CxGlobal::lineCharacter)
     {
         std::string r;
         if (ss.empty())
@@ -239,7 +295,7 @@ public:
     }
 
     template<typename _Tp>
-    static std::string joinToString(const std::vector<_Tp>& ss, const std::string & sJoin)
+    inline static std::string joinToString(const std::vector<_Tp>& ss, const std::string & sJoin)
     {
         std::string r;
         if (ss.empty())
@@ -258,7 +314,7 @@ public:
     }
 
     template<typename _Tp>
-    static std::string joinToHexstring(const std::vector<_Tp>& ss, char cJoin = CxGlobal::lineCharacter)
+    inline static std::string joinToHexstring(const std::vector<_Tp>& ss, char cJoin = CxGlobal::lineCharacter)
     {
         std::string r;
         if (ss.empty())
@@ -277,7 +333,7 @@ public:
     }
 
     template<typename _Tp>
-    static std::string joinToHexstring(const std::vector<_Tp>& ss, const std::string & sJoin)
+    inline static std::string joinToHexstring(const std::vector<_Tp>& ss, const std::string & sJoin)
     {
         std::string r;
         if (ss.empty())
@@ -297,7 +353,7 @@ public:
 
     //vector - value
     template<typename _Tp, typename _NewTp>
-    static std::vector<_NewTp> valuesTo(const std::vector<_Tp> & vec1, const _NewTp & defaultValue)
+    inline static std::vector<_NewTp> valuesTo(const std::vector<_Tp> & vec1, const _NewTp & defaultValue)
     {
         std::vector<_NewTp> r;
         for (size_t i = 0; i < vec1.size(); ++i)
@@ -308,7 +364,7 @@ public:
     }
 
     template<typename _Tp>
-    static void sort(std::vector<_Tp> & vec1, bool bOrder = true)
+    inline static void sort(std::vector<_Tp> & vec1, bool bOrder = true)
     {
         if (bOrder)
             std::sort(vec1.begin(), vec1.end(), CxContainer::compare_order<_Tp>);
@@ -317,17 +373,29 @@ public:
     }
 
     template<typename _Tp>
-    static int compare_order(const _Tp& v1, const _Tp& v2)
+    inline static int compare_order(const _Tp& v1, const _Tp& v2)
     {
         return v2 > v1;
     }
 
     template<typename _Tp>
-    static int compare_reverse(const _Tp& v1, const _Tp& v2)
+    inline static int compare_reverse(const _Tp& v1, const _Tp& v2)
     {
         return v2 < v1;
     }
 
+    template<typename _Key, typename _Tp>
+    inline static typename std::vector<std::pair<_Key, _Tp> >::const_iterator find(const std::vector<std::pair<_Key, _Tp> > & vec, const _Key& key)
+    {
+        for (int i = 0; i < vec.size(); ++i)
+        {
+            if (vec[i]->first == key)
+            {
+                return vec.begin() + i;
+            }
+        }
+        return vec.end();
+    }
 
 
 
@@ -363,7 +431,7 @@ public:
 
     //map - keys
     template<typename _Key, typename _Tp>
-    static std::vector<_Key> keys(const std::map<_Key, _Tp> & map1)
+    inline static std::vector<_Key> keys(const std::map<_Key, _Tp> & map1)
     {
         std::vector<_Key> r;
         for(typename std::map<_Key,_Tp>::const_iterator it = map1.begin(); it != map1.end(); ++it)
@@ -374,7 +442,7 @@ public:
     }
 
     template<typename _Key, typename _Tp>
-    static std::vector<_Key> keys(const std::map<_Key, _Tp> & map1, const _Tp & value1)
+    inline static std::vector<_Key> keys(const std::map<_Key, _Tp> & map1, const _Tp & value1)
     {
         std::vector<_Key> r;
         for(typename std::map<_Key,_Tp>::const_iterator it = map1.begin(); it != map1.end(); ++it)
@@ -440,7 +508,7 @@ public:
 
     //map - key
     template<typename _Key, typename _Tp>
-    static const _Key& key(const std::map<_Key, _Tp> & map1, const _Tp& value1, const _Tp& defaultKey)
+    inline static const _Key& key(const std::map<_Key, _Tp> & map1, const _Tp& value1, const _Tp& defaultKey)
     {
         for(typename std::map<_Key,_Tp>::const_iterator it = map1.begin(); it != map1.end(); ++it)
         {
@@ -451,7 +519,7 @@ public:
     }
 
     template<typename _Key, typename _Tp>
-    static _Key key(const std::map<_Key, _Tp> & map1, const _Tp& value1)
+    inline static _Key key(const std::map<_Key, _Tp> & map1, const _Tp& value1)
     {
         for(typename std::map<_Key,_Tp>::const_iterator it = map1.begin(); it != map1.end(); ++it)
         {
@@ -463,7 +531,7 @@ public:
 
     //map - value
     template<typename _Key, typename _Tp>
-    static const _Tp& value(const std::map<_Key, _Tp> & map1, const _Key& key1, const _Tp& defaultValue)
+    inline static const _Tp& value(const std::map<_Key, _Tp> & map1, const _Key& key1, const _Tp& defaultValue)
     {
         typename std::map<_Key,_Tp>::const_iterator it = map1.find(key1);
         if (it != map1.end())
@@ -473,7 +541,7 @@ public:
     }  
 
     template<typename _Key, typename _Tp>
-    static const _Tp& value(const std::map<_Key, _Tp> * map1, const _Key& key1, const _Tp& defaultValue)
+    inline static const _Tp& value(const std::map<_Key, _Tp> * map1, const _Key& key1, const _Tp& defaultValue)
     {
         if (map1)
         {
@@ -490,7 +558,7 @@ public:
     }
 
     template<typename _Key, typename _Tp>
-    static _Tp value(const std::map<_Key, _Tp> & map1, const _Key& key1)
+    inline static _Tp value(const std::map<_Key, _Tp> & map1, const _Key& key1)
     {
         typename std::map<_Key,_Tp>::const_iterator it = map1.find(key1);
         if (it != map1.end())
@@ -500,7 +568,7 @@ public:
     }
 
     template<typename _Key, typename _Tp>
-    static _Tp value(const std::map<_Key, _Tp> * map1, const _Key& key1)
+    inline static _Tp value(const std::map<_Key, _Tp> * map1, const _Key& key1)
     {
         if (map1)
         {
@@ -518,7 +586,7 @@ public:
 
     //map - value
     template<typename _Key, typename _Tp, typename _NewTp>
-    static std::map<_Key, _NewTp> valuesTo(const std::map<_Key, _Tp> & map1, const _NewTp & defaultValue)
+    inline static std::map<_Key, _NewTp> valuesTo(const std::map<_Key, _Tp> & map1, const _NewTp & defaultValue)
     {
         std::map<_Key, _NewTp> r;
         for(typename std::map<_Key,_Tp>::const_iterator it = map1.begin(); it != map1.end(); ++it)
@@ -531,7 +599,7 @@ public:
 
     //map - value
     template<typename _Key, typename _Tp, typename _NewTp>
-    static _NewTp valueTo(const std::map<_Key, _Tp> & map1, const _Key& key1, const _NewTp & defaultValue)
+    inline static _NewTp valueTo(const std::map<_Key, _Tp> & map1, const _Key& key1, const _NewTp & defaultValue)
     {
         typename std::map<_Key,_Tp>::const_iterator it = map1.find(key1);
         if (it != map1.end())
@@ -568,7 +636,7 @@ public:
 
     //map - merge
     template<typename _Key, typename _Tp>
-    static std::map<_Key, _Tp> merge(const std::map<_Key, _Tp> & map1, const std::map<_Key, _Tp> & map2)
+    inline static std::map<_Key, _Tp> merge(const std::map<_Key, _Tp> & map1, const std::map<_Key, _Tp> & map2)
     {
         std::map<_Key, _Tp> r = map1;
         r.insert(map2.begin(), map2.end());
@@ -577,7 +645,7 @@ public:
 
     //map - update
     template<typename _Key, typename _Tp>
-    static void update(std::map<_Key, _Tp> & map1, const std::map<_Key, _Tp> & map2)
+    inline static void update(std::map<_Key, _Tp> & map1, const std::map<_Key, _Tp> & map2)
     {
         for(typename std::map<_Key,_Tp>::const_iterator it = map2.begin(); it != map2.end(); ++it)
         {
@@ -586,14 +654,14 @@ public:
     }
 
     template<typename _Key, typename _Tp>
-    static void remove(std::map<_Key, _Tp> & map1, const _Key& key1)
+    inline static void remove(std::map<_Key, _Tp> & map1, const _Key& key1)
     {
         typename std::map<_Key,_Tp>::iterator it = map1.find(key1);
         if (it != map1.end()) map1.erase(it);
     }
 
     template<typename _Key, typename _Tp>
-    static void remove(std::map<_Key, _Tp> & map1, const std::vector<_Key>& keys)
+    inline static void remove(std::map<_Key, _Tp> & map1, const std::vector<_Key>& keys)
     {
         for (size_t i = 0; i < keys.size(); ++i)
         {
@@ -605,7 +673,7 @@ public:
 
     //joinToString
     template<typename _Key, typename _Tp>
-    static std::string joinToString(const std::map<_Key, _Tp> &pairs, const std::string &sMid, const std::string &sJoin)
+    inline static std::string joinToString(const std::map<_Key, _Tp> &pairs, const std::string &sMid, const std::string &sJoin)
     {
         std::string r;
         for (typename std::map<_Key, _Tp>::const_iterator it = pairs.begin(); it != pairs.end(); ++it)
@@ -617,7 +685,7 @@ public:
     }
 
     template<typename _Key, typename _Tp>
-    static std::string joinToString(const std::map<_Key, std::vector<_Tp> > &pairs, const std::string &sMid, const std::string &sJoin1, const std::string &sJoin2)
+    inline static std::string joinToString(const std::map<_Key, std::vector<_Tp> > &pairs, const std::string &sMid, const std::string &sJoin1, const std::string &sJoin2)
     {
         std::string r;
         for (typename std::map<_Key, std::vector<_Tp> >::const_iterator it = pairs.begin(); it != pairs.end(); ++it)
@@ -631,7 +699,7 @@ public:
     //joinToString
     //iMode : 1 key to hex ; 2 value to hex ; 3 key value to hex
     template<typename _Key, typename _Tp>
-    static std::string joinToHexstring(const std::map<_Key, _Tp> &pairs, const std::string &sMid, const std::string &sJoin, int iMode = 3)
+    inline static std::string joinToHexstring(const std::map<_Key, _Tp> &pairs, const std::string &sMid, const std::string &sJoin, int iMode = 3)
     {
         if (iMode == 1)
         {
@@ -698,7 +766,7 @@ public:
 
 
     template<typename _Tp>
-    static void clear(std::queue<_Tp>& ss)
+    inline static void clear(std::queue<_Tp>& ss)
     {
         while (!ss.empty())
         {
@@ -739,7 +807,7 @@ public:
 
 
     template<typename _Tp>
-    static void clear(std::stack<_Tp>& ss)
+    inline static void clear(std::stack<_Tp>& ss)
     {
         while (!ss.empty())
         {
