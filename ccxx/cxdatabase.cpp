@@ -29,7 +29,7 @@ CxDatabaseManager*
 fn_oDatabaseManager()
 {
 #ifndef GM_PROJECT_CXAPPLICATION_NULL
-    CxApplication::registStartFunction(CxDatabaseManager::start);
+    CxApplication::registInitFunction(CxDatabaseManager::start);
     CxApplication::registStopFunction(CxDatabaseManager::stop);
 #endif
     static CxDatabaseManager m;
