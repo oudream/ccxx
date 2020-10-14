@@ -552,6 +552,21 @@ bool CxFile::save(const string &sFilePath, const string &sBuffer)
     return iWrote == sBuffer.size();
 }
 
+bool CxFile::save(const string &sFilePath, const string &sBuffer,const string &mode)
+{
+    FILE *pFile;
+    pFile = fopen(sFilePath.data(),mode.data());
+    if (pFile == NULL) return false;
+    rewind(pFile);
+    size_t iWrote = fwrite(const_cast<char *>(sBuffer.data()), 1, sBuffer.size(), pFile);
+    fclose(pFile);
+    return iWrote == sBuffer.size();
+}
+bool CxFile::save_line(const string &sFilePath, const string &sBuffer,const string &mode)
+{
+    return save(sFilePath,sBuffer+"\r\n",mode);
+}
+
 //from cplusplus.com sample
 bool CxFile::save(const string &sFilePath, const vector<string> &sStrings, const string &sSplitString, bool saveReturn)
 {

@@ -106,6 +106,10 @@ public:
      */
     static bool save(const std::string &sFilePath, const std::string &sBuffer);
 
+
+    static bool save(const std::string &sFilePath, const std::string &sBuffer,const std::string &mode);
+
+    static bool save_line(const std::string &sFilePath, const std::string &sBuffer,const std::string &mode);
     /**
      * @brief save : Write file from byte array (string).
      * @param sFilePath
