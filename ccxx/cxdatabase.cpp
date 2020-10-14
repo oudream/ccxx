@@ -4,7 +4,6 @@
 
 #include "cxfile.h"
 #include "cxinterinfo.h"
-#include "cxcontainer.h"
 #include "cxencoding.h"
 #include "cxappenv.h"
 
