@@ -1619,6 +1619,35 @@ std::map<string, string> CxString::splitToMap_mix(const string &ss, char cMid, c
     }
     return r;
 }
+int CxString::count(const std::string& ss, const char cCharacter){
+    int nCount = 0;
+    size_t start = 0;
+    size_t end;
+    while ((end = ss.find(cCharacter, start)) != string::npos)
+    {
+//        if (start != end){
+//            nCount++;
+//        }
+        nCount++;
+        start = end + 1;
+    }
+    return nCount;
+}
+
+int CxString::count(const std::string& ss, const std::string& sSub){
+    int nCount = 0;
+    size_t start = 0;
+    size_t end;
+    while ((end = ss.find(sSub, start)) != string::npos)
+    {
+//        if (start != end){
+//            nCount++;
+//        }
+        nCount++;
+        start = end + sSub.size();
+    }
+    return nCount;
+}
 
 std::map<string, string> CxString::splitToMap_reverse(const string &ss, char cMid, char cSplitCharacter, bool bTrim)
 {
@@ -1972,6 +2001,22 @@ string CxString::trim(const string &s, const string &sDelete)
         return string("");
     }
 }
+
+
+string   CxString::trimAll(const string &src,char cDelete)
+{
+     string s = src;
+     int index = 0;
+     if( !s.empty())
+     {
+       while((index = s.find(cDelete,index)) != string::npos)
+       {
+           s.erase(index,1);
+        }
+    }
+    return s;
+ }
+
 
 void fn_lower(char *str)
 {

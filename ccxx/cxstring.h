@@ -185,6 +185,9 @@ public:
      */
     static void remove(std::string& s, char c);
 
+    static int count(const std::string& ss, const char cCharacter);
+
+    static int count(const std::string& ss, const std::string& sSub);
     /**
      * @brief split
      * @param ss
@@ -267,6 +270,7 @@ public:
 
     static std::string trim(const std::string& s, const std::string& sDelete);
 
+    static  std::string trimAll(const std::string &src,char cDelete=CxGlobal::spaceChar);
     /**
      * @brief toLowerSelf
      * @param r
