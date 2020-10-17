@@ -564,7 +564,7 @@ bool CxFile::save(const string &sFilePath, const string &sBuffer,const string &m
 }
 bool CxFile::save_line(const string &sFilePath, const string &sBuffer,const string &mode)
 {
-    return save(sFilePath,sBuffer+"\r\n",mode);
+    return save(sFilePath,sBuffer + "\r\n", mode);
 }
 
 //from cplusplus.com sample
