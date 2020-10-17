@@ -562,6 +562,7 @@ bool CxFile::save(const string &sFilePath, const string &sBuffer,const string &m
     fclose(pFile);
     return iWrote == sBuffer.size();
 }
+
 bool CxFile::save_line(const string &sFilePath, const string &sBuffer,const string &mode)
 {
     return save(sFilePath,sBuffer + "\r\n", mode);
