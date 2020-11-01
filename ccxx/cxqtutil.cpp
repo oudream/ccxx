@@ -684,11 +684,11 @@ void CxQDialog::ShowError(const QString& sText){
 }
 
 
-bool CxQDialog::ShowQuery(const QString& sQuery){
-    int ret = QMessageBox::warning(0, GM_QString_TR("Please Option"),
+bool CxQDialog::ShowQuery(const QString& sQuery,const QString& sTitle,const QString& sOk,const QString& sCancle){
+    int ret = QMessageBox::warning(0, sTitle,
                                    sQuery,
-                                   GM_QString_TR("Yes"),
-                                   GM_QString_TR("No"));
+                                   sOk,
+                                   sCancle);
     return ret == 0;
 }
 

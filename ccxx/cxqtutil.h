@@ -144,7 +144,7 @@ public:
 
     static void ShowError(const QString& sText);
 
-    static bool ShowQuery(const QString& sQuery);
+    static bool ShowQuery(const QString& sQuery,const QString& sTitle="系统信息",const QString& sOk="确定",const QString& sCancle="取消");
 
     static int ShowQuery3(const QString& sQuery);
 
