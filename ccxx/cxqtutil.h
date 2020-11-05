@@ -196,6 +196,7 @@ public:
     static void setItemValueDateTime(QTableWidgetItem* oItem, const long long & value);
 
 
+
     //get
     static int getItemValue16(QTableWidgetItem* oItem, const int & value);
 
@@ -231,6 +232,8 @@ public:
 
 
 
+    //
+
     static int setItemValue16(QStandardItem* oItem, const int & value);
 
     static int setItemValue(QStandardItem* oItem, const int & value);
@@ -252,6 +255,15 @@ public:
     static std::vector<int> getSelectRows(QTableWidget * oGrid, QString *pRows = NULL);
 
     static std::vector<int> deleteSelectRows(QTableWidget * oGrid);
+
+    //扩展数据
+    static void setItemValueUserEx(QTableWidgetItem *oItem,const int id,const int value);
+
+    static int  getItemValueUserEx(QTableWidgetItem *oItem,const int id,const int value);
+
+    static void setItemValueUserEx(QListWidgetItem *oItem,const int id,const int value);
+
+    static int  getItemValueUserEx(QListWidgetItem *oItem,const int id,const int value);
 
 };
 

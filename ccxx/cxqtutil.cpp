@@ -1228,17 +1228,6 @@ void CxQWidget::setItemValueDateTime(QListWidgetItem *oItem, const long long &va
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 int CxQWidget::setItemValue16(QStandardItem* oItem, const int & value)
 {
     if (! oItem) return FALSE;
@@ -1415,8 +1404,46 @@ void CxQWidget::setQSS(QWidget *widget, const string &fp)
 }
 
 
+//llb add
+//扩展数据
+void CxQWidget::setItemValueUserEx(QTableWidgetItem *oItem,const int id,const int value){
+    if (! oItem || id<1) return;
+    QVariant data = oItem->data(Qt::UserRole+id);
+    if (data.type() == QVariant::Invalid || data.toInt() != value)
+    {
+        oItem->setData(Qt::UserRole+id, value);
+    }
+}
 
+int  CxQWidget::getItemValueUserEx(QTableWidgetItem *oItem,const int id,const int value){
+    if (oItem && id>0)
+    {
+        QVariant data = oItem->data(Qt::UserRole+id);
+        if (data.type() != QVariant::Invalid )
+        {
+            return data.toInt();
+        }
+    }
+    return value;
+}
 
+void CxQWidget::setItemValueUserEx(QListWidgetItem *oItem,const int id,const int value){
+    if (! oItem || id<1) return;
+    QVariant data = oItem->data(Qt::UserRole+id);
+    if (data.type() == QVariant::Invalid || data.toInt() != value)
+    {
+        oItem->setData(Qt::UserRole+id, value);
+    }
+}
 
-
-
+int  CxQWidget::getItemValueUserEx(QListWidgetItem *oItem,const int id,const int value){
+    if (oItem && id>0)
+    {
+        QVariant data = oItem->data(Qt::UserRole+id);
+        if (data.type() != QVariant::Invalid )
+        {
+            return data.toInt();
+        }
+    }
+    return value;
+}
