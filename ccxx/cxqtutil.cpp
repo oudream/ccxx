@@ -694,7 +694,7 @@ bool CxQDialog::ShowQuery(const QString& sQuery,const QString& sTitle,const QStr
 
 
 int CxQDialog::ShowQuery3(const QString& sQuery){
-    int ret = QMessageBox::warning(0, GM_QString_TR("Please Option"),
+    int ret = QMessageBox::warning(0, GM_QString_TR("选择框"),
                                    sQuery,
                                    GM_QString_TR("Yes"),
                                    GM_QString_TR("No"),
@@ -738,14 +738,14 @@ bool CxQDialog::DialogSave(QString& sFileName, const QString& sExtension){
 
 QString CxQDialog::DialogDir(const QString &sRootDir, const QString &sTitle)
 {
-    QString sCaption = sTitle.size()>0 ? sTitle : "Select Dir";
+    QString sCaption = sTitle.size()>0 ? sTitle : "目录选择";
     return QFileDialog::getExistingDirectory(0,
         sCaption, sRootDir);
 }
 
 bool CxQDialog::DialogInput(const QString& sPrompt, QString& sVaule){
     bool ok;
-    QString text = QInputDialog::getText(0, GM_QString_TR("Input Box"),
+    QString text = QInputDialog::getText(0, GM_QString_TR("输入框"),
                                          sPrompt, QLineEdit::Normal,
                                          sVaule, &ok);
     if (ok){
