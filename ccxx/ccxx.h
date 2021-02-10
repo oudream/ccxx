@@ -45,4 +45,6 @@
 #include "cxresource.h"
 #include "cxwinreg.h"
 
+#include "cxuuid.h"
+
 #endif // CCXX_H
