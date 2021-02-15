@@ -195,8 +195,6 @@ public:
 
     static void setItemValueDateTime(QTableWidgetItem* oItem, const long long & value);
 
-
-
     //get
     static int getItemValue16(QTableWidgetItem* oItem, const int & value);
 

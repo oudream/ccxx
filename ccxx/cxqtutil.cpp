@@ -1031,11 +1031,6 @@ void CxQWidget::setItemValueDateTime(QTableWidgetItem *oItem, const long long &v
     }
 }
 
-
-
-
-
-
 int CxQWidget::getItemValue16(QTableWidgetItem* oItem, const int & value)
 {
     if (oItem)
