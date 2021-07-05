@@ -1,5 +1,9 @@
 
-include(ccxx.cmake)
+include(${gs_ccxx_path}/ccxx/ccxx.cmake)
+
+set(gs_ccxx_sample_path ${gs_ccxx_path}/sample)
+set(gs_ccxx_test_path ${gs_ccxx_path}/test)
+set(gs_ccxx_tools_path ${gs_ccxx_path}/tools)
 
 if (MSVC)
     add_definitions(-D"_CRT_SECURE_NO_WARNINGS")

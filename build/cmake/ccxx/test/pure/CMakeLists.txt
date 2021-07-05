@@ -1,6 +1,6 @@
 
 ###ccxx files
-include(./../../ccxx.cmake)
+include(${gs_ccxx_path}/ccxx/ccxx.cmake)
 
 set(gsl_ccxx_pure_heads
         readme.txt
