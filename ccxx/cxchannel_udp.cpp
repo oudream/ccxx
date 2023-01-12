@@ -21,6 +21,7 @@ CxChannelUdp::CxChannelUdp()
     _receiver = NULL;
     _statusReceiver = ThreadStatus_Creating;
     _isServer = false;
+    _localIpAddress.setIsBind(true);
 }
 
 CxChannelUdp::~CxChannelUdp()
